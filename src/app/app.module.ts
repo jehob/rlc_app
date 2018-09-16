@@ -1,3 +1,5 @@
+import {HttpModule} from '@angular/http';
+
 {/* rlcapp - record and organization management software for refugee law clinics
     Copyright (C) 2018  Dominik Walser
 
@@ -18,16 +20,25 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 
+import {AppRoutingModule} from './app-routing/app-routing.module';
 import {AppComponent} from './app.component';
+import { DashboardComponent } from './components/api/dashboard/dashboard.component';
+import { LoginComponent } from './components/api/authentication/login/login.component';
+import {AuthService} from './services/login.service';
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    DashboardComponent,
+    LoginComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
