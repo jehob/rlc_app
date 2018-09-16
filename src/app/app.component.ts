@@ -12,9 +12,10 @@
     GNU Affero General Public License for more details.
 
     You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>*/}
+    along with this program.  If not, see <https://www.gnu.org/licenses/>*/
+}
 
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -23,4 +24,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'rlcapp';
+
 }
