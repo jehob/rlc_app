@@ -23,7 +23,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.scss"
             ],
             "scripts": []
           },
@@ -36,7 +36,6 @@
                 }
               ],
               "optimization": true,
-              //"outputHashing": "all",
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
@@ -123,5 +122,10 @@
       }
     }
   },
-  "defaultProject": "rlcapp"
+  "defaultProject": "rlcapp",
+  "schematics": {
+    "@schematics/angular:component": {
+      "styleext": "scss"
+    }
+  }
 }
