@@ -24,8 +24,10 @@ import {AppRoutingModule} from './app-routing/app-routing.module';
 import {AppComponent} from './app.component';
 import { DashboardComponent } from './components/api/dashboard/dashboard.component';
 import { LoginComponent } from './components/api/authentication/login/login.component';
-import {AuthService} from './services/login.service';
+import {AuthService} from './services/auth.service';
 import {HttpClientModule} from '@angular/common/http';
+import {AuthGuardService} from './services/auth-guard.service';
+import {CustomMaterialModule} from './custom-material.module';
 
 @NgModule({
   declarations: [
@@ -36,9 +38,10 @@ import {HttpClientModule} from '@angular/common/http';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    CustomMaterialModule
   ],
-  providers: [AuthService],
+  providers: [AuthService, AuthGuardService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

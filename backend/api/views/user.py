@@ -22,24 +22,27 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from django.forms.models import model_to_dict
 
-from .. import models, serializers, permissions
+from ..models import UserProfile, Permission
+from ..serializers import UserProfileSerializer, UserProfileCreatorSerializer, UserProfileNameSerializer
+from ..permissions import UpdateOwnProfile
+from backend.recordmanagement import models, serializers
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
     """Handles creating (for now, remove?), reading and updating profiles"""
 
-    serializer_class = serializers.UserProfileSerializer
-    queryset = models.UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
+    queryset = UserProfile.objects.all()
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (permissions.UpdateOwnProfile, IsAuthenticated)
+    permission_classes = (UpdateOwnProfile, IsAuthenticated)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name', 'email',)
 
 
 class UserProfileCreatorViewSet(viewsets.ModelViewSet):
     """Handles creating profiles"""
-    serializer_class = serializers.UserProfileCreatorSerializer
-    queryset = models.UserProfile.objects.none()
+    serializer_class = UserProfileCreatorSerializer
+    queryset = UserProfile.objects.none()
 
 
 class LoginViewSet(viewsets.ViewSet):
@@ -62,13 +65,13 @@ class LoginViewSet(viewsets.ViewSet):
             token = ObtainAuthToken().post(request)
         except Exception as ex:
             if ex.detail['non_field_errors'][0] == 'Unable to log in with provided credentials.':
-                if models.UserProfile.objects.filter(email=request.data['username']).count() == 1:
+                if UserProfile.objects.filter(email=request.data['username']).count() == 1:
                     return Response({'error': 'wrong password'}, status=400)
                 else:
                     return Response({'error': 'there is no account with this email'}, status=400)
 
         user = Token.objects.get(key=token.data['token']).user
-        serialized_user = serializers.UserProfileSerializer(user).data
+        serialized_user = UserProfileSerializer(user).data
 
         statics = LoginViewSet.get_statics(user)
         returnObject = {
@@ -85,11 +88,11 @@ class LoginViewSet(viewsets.ViewSet):
         states_for_records = models.Record.record_states_possible
         states_for_countries = models.OriginCountry.origin_country_states_possible
 
-        overall_permissions = [model_to_dict(permission) for permission in models.Permission.objects.all()]
+        overall_permissions = [model_to_dict(permission) for permission in Permission.objects.all()]
         if user.rlc_members.count() == 0:
             consultants = []
         else:
-            consultants = serializers.UserProfileNameSerializer(user.rlc_members.first().get_consultants(),
+            consultants = UserProfileNameSerializer(user.rlc_members.first().get_consultants(),
                                                                 many=True).data
         countries = serializers.OriginCountryNameStateSerializer(models.OriginCountry.objects.all(), many=True).data
         clients = serializers.ClientNameSerializer(models.Client.objects.all(), many=True).data
