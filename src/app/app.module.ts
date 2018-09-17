@@ -27,6 +27,7 @@ import { LoginComponent } from './components/api/authentication/login/login.comp
 import {AuthService} from './services/auth.service';
 import {HttpClientModule} from '@angular/common/http';
 import {AuthGuardService} from './services/auth-guard.service';
+import {CustomMaterialModule} from './custom-material.module';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import {AuthGuardService} from './services/auth-guard.service';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    CustomMaterialModule
   ],
   providers: [AuthService, AuthGuardService],
   bootstrap: [AppComponent]
