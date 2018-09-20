@@ -1,3 +1,16 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
-@import 'styles/basic.scss';
 
+*{
+    font-family: 'Roboto', sans-serif !important;
+    font-weight: 400;
+}
+
+html, body{
+    margin:0;
+    padding:0;
+}
+
+button{
+    width: 125px;
+    border-radius: 28px !important;
+}

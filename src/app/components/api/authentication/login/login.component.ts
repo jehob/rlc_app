@@ -11,10 +11,15 @@ export class LoginComponent implements OnInit {
 
   }
 
+  login = {
+    email: 'velox9995@gmail.com',
+    password: 'rlcmaster'
+  }
+
   ngOnInit() {}
 
-  loginClick(){
-    this.auth.login('jehob@web.de', 'qwe123');
+  onLogIn(){
+    this.auth.login('velox9995@gmail.com', 'rlcmaster');
 
   }
 }

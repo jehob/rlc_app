@@ -28,12 +28,16 @@ import {AuthService} from './services/auth.service';
 import {HttpClientModule} from '@angular/common/http';
 import {AuthGuardService} from './services/auth-guard.service';
 import {CustomMaterialModule} from './custom-material.module';
+import { ProfileComponent } from './components/profile/profile.component';
+import { RecordsComponent } from './components/records/records.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DashboardComponent,
-    LoginComponent
+    LoginComponent,
+    ProfileComponent,
+    RecordsComponent
   ],
   imports: [
     BrowserModule,

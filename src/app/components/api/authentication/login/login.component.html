@@ -1,4 +1,31 @@
-<p>
-  login works!
-  <button mat-raised-button (click)="loginClick()">login</button>
-</p>
+<div class="login-container">
+
+  <div class="holder register">
+    <div class="content-container">
+        <p>rlc <br>app</p> 
+    </div>
+    <div class="action-holder">
+      <button mat-button>register</button>
+    </div>
+  </div>
+
+  <div class="holder login">
+    <div class="content-container">
+      <p>login</p>
+      <mat-form-field>
+        <input matInput placeholder="Email" value="{{login.email}}">
+      </mat-form-field>
+    
+      <mat-form-field>
+        <input matInput placeholder="Password" type="password" value="{{login.password}}">
+      </mat-form-field>   
+    </div>
+    <div class="action-holder">
+      <button mat-button (click)="onLogIn()">login</button>
+    </div> 
+  </div>
+  
+
+    
+
+</div>
