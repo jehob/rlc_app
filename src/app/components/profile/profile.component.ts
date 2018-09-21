@@ -11,5 +11,12 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit() {
   }
-
+  profile = {
+    id: 1,
+    email:"sol.seong@gmail.com",
+    tel:"0123 456789101",
+    street:"Samplestr. 10",
+    postal:"12345",
+    city:"Sample City"
+  }
 }

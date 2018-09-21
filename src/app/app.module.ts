@@ -19,10 +19,11 @@ import {HttpModule} from '@angular/http';
 
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
+import { FormsModule }   from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
 
 import {AppRoutingModule} from './app-routing/app-routing.module';
 import {AppComponent} from './app.component';
-import { DashboardComponent } from './components/api/dashboard/dashboard.component';
 import { LoginComponent } from './components/api/authentication/login/login.component';
 import {AuthService} from './services/auth.service';
 import {HttpClientModule} from '@angular/common/http';
@@ -34,16 +35,17 @@ import { RecordsComponent } from './components/records/records.component';
 @NgModule({
   declarations: [
     AppComponent,
-    DashboardComponent,
     LoginComponent,
     ProfileComponent,
-    RecordsComponent
+    RecordsComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    CustomMaterialModule
+    CustomMaterialModule,
+    FormsModule,
+    BrowserAnimationsModule
   ],
   providers: [AuthService, AuthGuardService],
   bootstrap: [AppComponent]

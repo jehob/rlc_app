@@ -13,15 +13,15 @@
     <div class="content-container">
       <p>login</p>
       <mat-form-field>
-        <input matInput placeholder="Email" value="{{login.email}}">
+        <input matInput placeholder="Email" [(ngModel)]="login.email">
       </mat-form-field>
     
       <mat-form-field>
-        <input matInput placeholder="Password" type="password" value="{{login.password}}">
+        <input matInput placeholder="Password" type="password" [(ngModel)]="login.password">
       </mat-form-field>   
     </div>
     <div class="action-holder">
-      <button mat-button (click)="onLogIn()">login</button>
+      <button mat-button (click)="onLogIn(login.email, login.password)">login</button>
     </div> 
   </div>
   

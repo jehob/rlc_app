@@ -1,13 +1,15 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
+html,body {
+    margin:0;
+    padding:0;
+    height:100%; /* braucht es für die min-height des Containers */
+}
+
+
 *{
     font-family: 'Roboto', sans-serif !important;
     font-weight: 400;
-}
-
-html, body{
-    margin:0;
-    padding:0;
 }
 
 button{
