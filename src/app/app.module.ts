@@ -24,28 +24,26 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import {AppRoutingModule} from './app-routing/app-routing.module';
 import {AppComponent} from './app.component';
-import { LoginComponent } from './components/api/authentication/login/login.component';
 import {AuthService} from './services/auth.service';
 import {HttpClientModule} from '@angular/common/http';
 import {AuthGuardService} from './services/auth-guard.service';
 import {CustomMaterialModule} from './custom-material.module';
-import { ProfileComponent } from './components/profile/profile.component';
-import { RecordsComponent } from './components/records/records.component';
+import { AuthenticationModule } from './Authentication/authentication.module';
+import { DashboardModule } from './Dashboard/dashboard.module';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    LoginComponent,
-    ProfileComponent,
-    RecordsComponent,
+    AppComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
+    FormsModule,  
     HttpClientModule,
     CustomMaterialModule,
-    FormsModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    AuthenticationModule,
+    DashboardModule,
+    AppRoutingModule
   ],
   providers: [AuthService, AuthGuardService],
   bootstrap: [AppComponent]

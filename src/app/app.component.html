@@ -16,22 +16,4 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>-->
 
 <!--<img src="/static/images/loading.gif" alt="hello"/>-->
 
-<mat-drawer-container class="root-container">
-    <mat-drawer class="f-white" mode="side" opened>
-        <div class="drawer-header">
-            <img src="../../static/images/rfclogoTemp.png" alt="rfc app">
-        </div>
-
-        <nav class="drawer-navigation-container">
-        <ul class="drawer-navigation">
-            <li><a routerLink="/profile" routerLinkActive="active">Profile</a></li>
-            <li><a routerLink="/records" routerLinkActive="active">Records</a></li>
-            <li><a routerLink="" routerLinkActive="active">Settings</a> </li>
-            </ul> 
-        </nav>   
-    </mat-drawer>
-
-    <mat-drawer-content>
-        <router-outlet></router-outlet>
-    </mat-drawer-content>
-</mat-drawer-container>
+<router-outlet></router-outlet>

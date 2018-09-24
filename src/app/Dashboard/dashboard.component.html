@@ -1,0 +1,19 @@
+<mat-drawer-container class="root-container">
+        <mat-drawer class="f-white" mode="side" opened>
+          <div class="drawer-header">
+              <img src="../../../static/images/rfclogoTemp.png" alt="rfc app">
+          </div>
+      
+          <nav class="drawer-navigation-container">
+            <ul class="drawer-navigation">
+                <li><a (click)='showProfile()'>Profile</a></li>
+                <li><a (click)='showRecords()'>Records</a></li>
+                <li><a (click)='showProfile()'>Settings</a> </li>
+              </ul> 
+          </nav>   
+        </mat-drawer>
+      
+        <mat-drawer-content>
+          <router-outlet></router-outlet>
+        </mat-drawer-content>
+      </mat-drawer-container>

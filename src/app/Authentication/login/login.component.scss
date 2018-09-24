@@ -1,3 +1,5 @@
+@import '../../../styles/basic.scss';
+
 .login-container{
     max-width: 550px;
     height: 275px;
@@ -24,25 +26,25 @@
 }
 
 .register{
-    background-color: black;
-    color: white;
+    background-color: $c-primary;
+    color: $c-on-primary;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
 }
 .login{
-    background-color: white;
-    color: black;
+    background-color: $c-secondary;
+    color: $c-on-secondary;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px; 
 }
 
 .login button{
-    background-color: black;
-    color: white;
+    background-color: $c-primary;
+    color: $c-on-primary;
 }
 .register button{
-    background-color: white;
-    color: black;
+    background-color: $c-secondary;
+    color: $c-on-secondary;
 }
 
 .holder p{
@@ -52,7 +54,7 @@
 
 .register p{   
     font-size: 48px;
-    border-bottom: 5px solid white;
+    border-bottom: 5px solid $c-on-primary;
 }
 
 .login .action-holder{

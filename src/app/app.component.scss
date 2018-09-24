@@ -1,6 +1,8 @@
+@import "../styles/basic.scss";
+/*
 .root-container {
     width: 100%;
-    background-color: #E4EAEE;
+    background-color: $c-on-primary;
 
     position:relative; 
     margin:0 auto; 
@@ -13,7 +15,7 @@ mat-drawer{
     background-color: #003C4D;   
 }
 .drawer-header{
-    border-bottom: 5px solid #F8F8F9;
+    border-bottom: 5px solid $c-on-primary;
     margin-bottom: 15px;
 }
 .drawer-header img{
@@ -30,7 +32,7 @@ mat-drawer{
     margin-bottom: 10px;
 }
 a{  
-    color: #F8F8F9;
+    color: $c-on-primary;
     text-decoration: none;
 }
 .drawer-navigation li{
@@ -39,8 +41,8 @@ a{
 
 mat-drawer-content{
     background-color: #E4EAEE;
-    padding: 15px; /*TODO: Look up MG*/
+    padding: 15px; TODO: Look up MG
     height: 100%;
 }
-
+*/
 
