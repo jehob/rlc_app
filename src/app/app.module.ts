@@ -1,5 +1,3 @@
-import {HttpModule} from '@angular/http';
-
 {/* rlcapp - record and organization management software for refugee law clinics
     Copyright (C) 2018  Dominik Walser
 
@@ -20,7 +18,7 @@ import {HttpModule} from '@angular/http';
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import { FormsModule }   from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import {AppRoutingModule} from './app-routing/app-routing.module';
 import {AppComponent} from './app.component';
