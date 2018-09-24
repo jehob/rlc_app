@@ -16,13 +16,16 @@
 }
 
 import {Component} from '@angular/core';
+import { AuthGuardService } from "../app/services/auth-guard.service";
+import { Router, RouterStateSnapshot, ActivatedRouteSnapshot, ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  showNav="true";
   title = 'rlcapp';
 
 }

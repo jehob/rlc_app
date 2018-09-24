@@ -12,14 +12,10 @@ export class AuthService {
     this.http.post('/api/login/', {'username': email, 'password': password}).subscribe((response: {token}) => {
       console.log(response);
       this.token = response.token;
-      this.router.navigate(['']);
+      this.router.navigate(['/dashboard']);
     }, (error) => {
       console.log(error);
     });
-  }
-
-  bb(){
-
   }
 
   logout() {

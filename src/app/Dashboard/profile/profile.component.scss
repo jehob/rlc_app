@@ -1,0 +1,35 @@
+@import "../../../styles/basic.scss";
+
+.profile-container {
+    max-width: 300px;
+    padding: 30px;
+}
+.avatar-container{
+    vertical-align: top;
+    display: inline-block;
+    text-align: center;
+    width:100%;
+}
+.img-avatar{
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+}
+.caption{
+    display: block;
+}
+.profil-form-container {
+    display: flex;
+    flex-direction: column;
+} 
+.profil-form-container > * {
+    width: 100%;
+}
+mat-card-actions{
+    text-align: right;
+}
+.btn-save-changes{
+    background-color: $c-primary;
+    width: 125px;
+    border-radius: 28px;
+}

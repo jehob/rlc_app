@@ -1,0 +1,63 @@
+@import '../../../styles/basic.scss';
+
+.login-container{
+    max-width: 550px;
+    height: 275px;
+    margin: auto;
+    margin-top: 20%;
+    padding: 0;
+    border-radius: 10px;
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+}
+
+.holder{
+    height: 80%;
+    width: 40%;
+    padding: 5%;
+    float: left;
+}
+
+.content-container {
+    height: 80%;
+    width: 100%;
+}
+.content-container mat-form-field {
+    width: 100%;
+}
+
+.register{
+    background-color: $c-primary;
+    color: $c-on-primary;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+.login{
+    background-color: $c-secondary;
+    color: $c-on-secondary;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px; 
+}
+
+.login button{
+    background-color: $c-primary;
+    color: $c-on-primary;
+}
+.register button{
+    background-color: $c-secondary;
+    color: $c-on-secondary;
+}
+
+.holder p{
+    margin:0;
+    padding:0;
+}
+
+.register p{   
+    font-size: 48px;
+    border-bottom: 5px solid $c-on-primary;
+}
+
+.login .action-holder{
+    text-align: right;
+}
+
