@@ -34,5 +34,5 @@ router.register('get_statics', views.GetStaticsViewSet, base_name='get_statics')
 
 urlpatterns = [
   url(r'', include(router.urls)),
-  url(r'^records/', include(urls))
+  url(r'^records/', include(urls)),
 ]

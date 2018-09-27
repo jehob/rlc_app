@@ -25,7 +25,8 @@ import { Router, RouterStateSnapshot, ActivatedRouteSnapshot, ActivatedRoute } f
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  showNav="true";
+  showNav = "true";
   title = 'rlcapp';
 
+  constructor()
 }
