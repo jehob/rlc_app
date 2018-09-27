@@ -18,6 +18,7 @@ from django.core.management.base import BaseCommand
 from backend.api.models import *
 from backend.recordmanagement.models import *
 
+
 class Command(BaseCommand):
     help = 'resets database'
 
@@ -26,7 +27,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # UserProfile.objects.exclude(is_superuser=True).delete()
-        UserProfile.objects.all().delete()
+        #UserProfile.objects.all().delete()
         Client.objects.all().delete()
         OriginCountry.objects.all().delete()
         RecordTag.objects.all().delete()

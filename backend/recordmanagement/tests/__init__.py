@@ -13,8 +13,7 @@ GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/> """
-from .users_test import *
-from .groups_test import *
-from .permissions_test import *
-from .has_permission import *
-from .rlcs_test import *
+
+from .clients_test import *
+from .origin_countries_test import *
+from .records_test import *

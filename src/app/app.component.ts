@@ -28,5 +28,7 @@ export class AppComponent {
   showNav = "true";
   title = 'rlcapp';
 
-  constructor()
+  constructor(){
+
+  }
 }

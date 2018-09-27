@@ -33,7 +33,7 @@ class Record(models.Model):
     last_contact_date = models.DateTimeField(default=None, null=True)
 
     record_token = models.CharField(
-        max_length=50, unique=True)  # TODO: automatic generation
+        max_length=50, unique=True)
     note = models.CharField(max_length=4096)
 
     working_on_record = models.ManyToManyField(
@@ -50,7 +50,3 @@ class Record(models.Model):
 
     def __str__(self):
         return 'record: ' + str(self.id) + ':' + self.record_token
-
-
-class CanViewRecord(models.Model):
-    pass  # add Time when permission to view expires

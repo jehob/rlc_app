@@ -15,9 +15,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/> """
 from rest_framework.test import APIClient
 from django.test import TransactionTestCase
-from ..models import Record, UserProfile, Client, Rlc
-from .fixtures import CreateFixtures
-from .statics import StaticTestMethods
+from backend.api.models import UserProfile, Rlc
+from backend.recordmanagement.models import Record, Client
+from backend.api.tests.fixtures import CreateFixtures
+from backend.api.tests.statics import StaticTestMethods
 
 
 class RecordTests(TransactionTestCase):

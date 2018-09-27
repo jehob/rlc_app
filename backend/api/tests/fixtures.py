@@ -14,8 +14,8 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/> """
 from datetime import date, datetime
-from ..models import OriginCountry, Client, UserProfile, Record, HasPermission, Permission, Group, RecordTag, Rlc
-
+from backend.api.models import UserProfile, HasPermission, Permission, Group, Rlc
+from backend.recordmanagement.models import OriginCountry, Client, Record, RecordTag
 
 class CreateFixtures:
     @staticmethod
