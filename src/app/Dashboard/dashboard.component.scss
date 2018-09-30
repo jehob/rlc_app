@@ -1,48 +1,65 @@
+/*!
+ * rlcapp - record and organization management software for refugee law clinics
+ * Copyright (C) 2018  Dominik Walser
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>
+ ******************************************************************************/
+
 @import "../../styles/basic.scss";
 
 .root-container {
     width: 100%;
 
-    position:relative; 
-    margin:0 auto; 
-    height:auto !important; 
-    height:100%; 
-    min-height:100%; 
+    position: relative;
+    margin: 0 auto;
+    height: auto !important;
+    height: 100%;
+    min-height: 100%;
 }
-mat-drawer{
+mat-drawer {
     width: 256px;
     padding: 16px;
-    background-color: $c-primary;   
+    background-color: $c-primary;
 }
-.drawer-header{
+.drawer-header {
     border-bottom: 5px solid $c-on-primary;
     margin-bottom: 15px;
 }
-.drawer-header img{
+.drawer-header img {
     width: 200px;
     height: auto;
-    margin-bottom:15px;
+    margin-bottom: 15px;
 }
-.drawer-navigation{
+.drawer-navigation {
     list-style-type: none;
     padding-left: 0;
-    margin:0;
+    margin: 0;
 }
-.drawer-navigation li{
+.drawer-navigation li {
     margin-bottom: 10px;
 }
-a{  
+a {
     cursor: pointer;
     color: $c-on-primary;
     text-decoration: none;
 }
-.drawer-navigation li{
+.drawer-navigation li {
     margin-bottom: 10px;
 }
 
-mat-drawer-content{
+mat-drawer-content {
     //background-color: #E4EAEE;
     padding: 15px; /*TODO: Look up MG*/
     height: 100%;
 }
-

@@ -1,10 +1,29 @@
+/*!
+ * rlcapp - record and organization management software for refugee law clinics
+ * Copyright (C) 2018  Dominik Walser
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>
+ ******************************************************************************/
+
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 @import "styles/basic.scss";
 
-html,body {
-    margin:0;
-    padding:0;
-    height:100%; /* braucht es für die min-height des Containers */
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%; /* braucht es für die min-height des Containers */
     background-color: $c-background;
 }
 
@@ -13,7 +32,7 @@ html,body {
 //    font-weight: 400;
 //}
 
-button{
+button {
     width: 125px;
     border-radius: 28px !important;
 }

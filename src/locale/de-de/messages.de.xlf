@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="login_password" datatype="html">
+        <source>Password</source>
+        <target>Passwort</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/Authentication/login/login.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sidebar_profile" datatype="html">
+        <source>Profile</source>
+        <target>Profil</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/Dashboard/dashboard.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <note priority="1" from="description">sidebar navigation for routing</note>
+      </trans-unit>
+      <trans-unit id="sidebar_records" datatype="html">
+        <source>Records</source>
+        <target>Akten</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/Dashboard/dashboard.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <note priority="1" from="description">sidebar navigation for routing</note>
+      </trans-unit>
+      <trans-unit id="sidebar_settings" datatype="html">
+        <source>settings</source>
+        <target>Einstellungen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/Dashboard/dashboard.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <note priority="1" from="description">sidebar navigation for routing</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
