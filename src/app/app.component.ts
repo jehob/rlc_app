@@ -34,5 +34,11 @@ export class AppComponent {
     showNav = "true";
     title = "rlcapp";
 
-    constructor() {}
+    constructor() {
+        console.log("started");
+        const token = localStorage.getItem("token");
+        if (token !== null) {
+
+        }
+    }
 }

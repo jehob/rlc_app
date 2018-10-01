@@ -34,6 +34,7 @@ export class AuthService {
                 (response: { token }) => {
                     console.log(response);
                     this.token = response.token;
+                    localStorage.setItem('token', this.token);
                     this.router.navigate(["/dashboard"]);
                 },
                 error => {
