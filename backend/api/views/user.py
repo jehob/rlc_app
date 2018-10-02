@@ -55,7 +55,7 @@ class LoginViewSet(viewsets.ViewSet):
         additionally add all important information for app usage
         like static possible states, possible permissions and so on
         Args:
-            request: the request itself
+            request: the request with data: 'username' and 'password"
 
         Returns:
         token, information and permissions of user
@@ -69,17 +69,24 @@ class LoginViewSet(viewsets.ViewSet):
                     return Response({'error': 'wrong password'}, status=400)
                 else:
                     return Response({'error': 'there is no account with this email'}, status=400)
+        return Response(LoginViewSet.getLoginData(token.data['token']))
 
-        user = Token.objects.get(key=token.data['token']).user
+    def get(self, request):
+        token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
+        return Response(LoginViewSet.getLoginData(token))
+
+    @staticmethod
+    def getLoginData(token):
+        user = Token.objects.get(key=token).user
         serialized_user = UserProfileSerializer(user).data
 
         statics = LoginViewSet.get_statics(user)
-        returnObject = {
-            'token': token.data['token'],
+        return_object = {
+            'token': token,
             'user': serialized_user
         }
-        returnObject.update(statics)
-        return Response(returnObject)
+        return_object.update(statics)
+        return return_object
 
     @staticmethod
     def get_statics(user):
