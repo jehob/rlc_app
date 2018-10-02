@@ -94,8 +94,8 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=255)
     birthday = models.DateField(null=True)
     phone_number = models.CharField(validators=[phone_regex], max_length=17, null=True, default=None)
-    # address
 
+    # address
     street = models.CharField(max_length=255, default=None, null=True)  # TODO: number?, but 13a
     city = models.CharField(max_length=255, default=None, null=True)
     zip_code = models.CharField(max_length=255, default=None, null=True)

@@ -59,6 +59,7 @@ class Command(BaseCommand):
         for _ in range(options['clients']):
             ClientFactory.create()
         for _ in range(options['records']):
-            RecordFactory.create(tags=(list(RecordTag.objects.all())), working_on_users=(list(UserProfile.objects.all())))
+            RecordFactory.create(tags=(list(RecordTag.objects.all())),
+                                 working_on_users=(list(UserProfile.objects.all())))
         for _ in range(options['groups']):
             GroupFactory.create(group_members=(list(UserProfile.objects.all())))

@@ -13,8 +13,10 @@ GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/> """
+
 from backend.recordmanagement.models import RecordTag, Record, OriginCountry, Client
 from backend.api.tests import *
+from backend.api.models import Rlc
 from datetime import date, datetime
 from ...statics.staticNames import StaticPermissionNames
 
@@ -73,14 +75,18 @@ class Fixtures:
     @staticmethod
     def create_real_tags():
         tags = [('Familiennachzug',), ('Dublin III',), ('Arbeitserlaubnis',), ('Flüchtlingseigenschaft',),
-                ('subsidiärer Schutz',), ('Eheschließung',), ('Verlobung',), ('illegale Ausreise aus dem Bundesgebiet',),
-                ('Untertauchen',), ('Kinder anerkennen',), ('Ausbildung',), ('Geburt ',), ('Eines Kindes im Asylverfahren',),
-                ('Duldung',), ('Ausbildungsduldung',), ('Visum',), ('Anhörung',), ('Wechsel der Unterkunft',), ('Wohnsitzauflage',),
+                ('subsidiärer Schutz',), ('Eheschließung',), ('Verlobung',),
+                ('illegale Ausreise aus dem Bundesgebiet',),
+                ('Untertauchen',), ('Kinder anerkennen',), ('Ausbildung',), ('Geburt ',),
+                ('Eines Kindes im Asylverfahren',),
+                ('Duldung',), ('Ausbildungsduldung',), ('Visum',), ('Anhörung',), ('Wechsel der Unterkunft',),
+                ('Wohnsitzauflage',),
                 ('Folgeantrag',), ('Zweitantrag',), ('Unterbringung im Asylverfahren',),
                 ('Widerruf und Rücknahme der Asylberechtigung',), ('Passbeschaffung',), ('Mitwirkungspflichten',),
                 ('Nichtbetreiben des Verfahrens',), ('Krankheit im Asylverfahren',), ('Familienasyl',), ('UmF',),
                 ('Familienzusammenführung nach Dublin III',), ('Negativbescheid',), ('Relocation',), ('Resettlement',),
-                ('Asylbewerberleistungsgesetz',), ('Kirchenasyl',), ('Asylantrag',), ('Abschiebung',), ('Untätigkeitsklage',),
+                ('Asylbewerberleistungsgesetz',), ('Kirchenasyl',), ('Asylantrag',), ('Abschiebung',),
+                ('Untätigkeitsklage',),
                 ('Studium',)]
         for tag in tags:
             AddMethods.add_tag(tag)
@@ -135,8 +141,8 @@ class Fixtures:
             (
                 3001,
                 'Hamburg Bucerius Law School',
-                True,                               # visible
-                True,                               # part of umbrella
+                True,  # visible
+                True,  # part of umbrella
                 'beraten auch zu Familienrecht, Sozialrecht und Arbeitsrecht'
             ),
             (
@@ -162,12 +168,12 @@ class Fixtures:
                 4001,
                 'ludwig.maximilian@outlook.de',
                 'Ludwig Maximilian',
-                date(1985, 5, 12),                  # birthday
+                date(1985, 5, 12),  # birthday
                 '01732421123',
                 'Maximilianstrasse 12',
                 'München',
                 '80539',
-                [3003]                              # rlc_member
+                [3003]  # rlc_member
             ),
             (
                 4002,
@@ -264,18 +270,18 @@ class Fixtures:
 
         records = [
             (
-                7001,                                   # id
-                4001,                                   # creator id
-                3003,                                   # rlc id
-                date(2018, 7, 12),                      # created
-                datetime(2018, 8, 29, 13, 54, 0, 0),    # las edited
-                5001,                                   # client
-                date(2018, 7, 10),                      # first contact
-                datetime(2018, 8, 14, 17, 30, 0, 0),    # last contact
-                'AZ-123/18',                            # record token
-                'cl',                                   # status, cl wa op
-                [4001],                                 # working on
-                [1001, 1002]                            # tags
+                7001,  # id
+                4001,  # creator id
+                3003,  # rlc id
+                date(2018, 7, 12),  # created
+                datetime(2018, 8, 29, 13, 54, 0, 0),  # las edited
+                5001,  # client
+                date(2018, 7, 10),  # first contact
+                datetime(2018, 8, 14, 17, 30, 0, 0),  # last contact
+                'AZ-123/18',  # record token
+                'cl',  # status, cl wa op
+                [4001],  # working on
+                [1001, 1002]  # tags
             ), (
                 7002,
                 4004,
@@ -353,14 +359,14 @@ class AddMethods:
     @staticmethod
     def add_user(user):
         """
-        creates a user in database with provided values
-        Args:
-            user: (email [string], name [string], is_superuser [bool], password [string]) or
-                (id [number], email [string], name [string], is_superuser [bool], password [string])
+		creates a user in database with provided values
+		Args:
+			user: (email [string], name [string], is_superuser [bool], password [string]) or
+				(id [number], email [string], name [string], is_superuser [bool], password [string])
 
-        Returns:
+		Returns:
 
-        """
+		"""
         if user.__len__() == 4:
             us = UserProfile(email=user[0], name=user[1], is_superuser=user[2], is_active=True)
             us.set_password(user[3])
@@ -381,14 +387,14 @@ class AddMethods:
     @staticmethod
     def add_rlc(rlc):
         """
-        creates rlc in database with provided values
-        Args:
-            rlc: (name [String], uni_tied [bool], part_of_umbrella [bool]) or
-                (id[number], name [String], uni_tied [bool], part_of_umbrella [bool])
+		creates rlc in database with provided values
+		Args:
+			rlc: (name [String], uni_tied [bool], part_of_umbrella [bool]) or
+				(id[number], name [String], uni_tied [bool], part_of_umbrella [bool])
 
-        Returns:
+		Returns:
 
-        """
+		"""
         if rlc.__len__() == 3:
             lc = Rlc(name=rlc[0], uni_tied=rlc[1], part_of_umbrella=rlc[2])
         elif rlc.__len__() == 4:
@@ -402,16 +408,18 @@ class AddMethods:
     @staticmethod
     def add_permission(permission):
         """
-        creates permissions in database
-        Args:
-            permission: (name of permission [String}) or
-                        (id [number], permissionName [String])
+		creates permissions in database
+		Args:
+			permission: (name of permission [String}) or
+						(id [number], permissionName [String])
 
-        Returns:
+		Returns:
 
-        """
+		"""
         if isinstance(permission, str):
             perm = Permission(name=permission)
+        elif permission.__len__() == 1:
+            perm = Permission(name=permission[0])
         elif permission.__len__() == 2:
             perm = Permission(id=permission[0], name=permission[1])
         else:
@@ -421,14 +429,14 @@ class AddMethods:
     @staticmethod
     def add_tag(tag):
         """
-        creates tag in database
-        Args:
-            tag: (name of tag [String]) or
-                (id [number], name [String])
+		creates tag in database
+		Args:
+			tag: (name of tag [String]) or
+				(id [number], name [String])
 
-        Returns:
+		Returns:
 
-        """
+		"""
         if tag.__len__() == 1:
             t = RecordTag(name=tag[0])
         elif tag.__len__() == 2:
@@ -440,13 +448,13 @@ class AddMethods:
     @staticmethod
     def add_country(country):
         """
-        creates OriginCountry in database with provided values
-        Args:
-            country: (name [String], state [string, length=2, compare to OriginCountry model) or
-                    (id [number], name [String], state [string, length=2, compare to OriginCountry model)
-        Returns:
+		creates OriginCountry in database with provided values
+		Args:
+			country: (name [String], state [string, length=2, compare to OriginCountry model) or
+					(id [number], name [String], state [string, length=2, compare to OriginCountry model)
+		Returns:
 
-        """
+		"""
         if country.__len__() == 2:
             c = OriginCountry(name=country[0], state=country[1])
         elif country.__len__() == 3:
@@ -458,30 +466,42 @@ class AddMethods:
     @staticmethod
     def add_to_rlc(user_id, rlc_id):
         """
-        add the user with user_id as a member to the rlc with rlc_id
-        Args:
-            user_id: id of the user which will be added
-            rlc_id: id of the rlc which will the user will be added  to
+		add the user with user_id as a member to the rlc with rlc_id
+		Args:
+			user_id: id of the user which will be added
+			rlc_id: id of the rlc which will the user will be added  to
 
-        Returns:
+		Returns:
 
-        """
+		"""
         rlc = Rlc.objects.get(pk=rlc_id)
         user = UserProfile.objects.get(pk=user_id)
         user.rlc_members.add(rlc)
 
     @staticmethod
-    def add_group(group):
-        if group.__len__() == 3:
-            g = Group(name=group[0], visible=group[1], from_rlc_id=group[2])
-        elif group.__len__() == 6:
-            g = Group(id=group[0], creator_id=group[1], from_rlc_id=group[2], name=group[3], visible=group[4])
+    def add_group(group, rlc_id=None):
+        if not rlc_id:
+            if group.__len__() == 3:
+                g = Group(name=group[0], visible=group[1], from_rlc_id=group[2])
+            elif group.__len__() == 6:
+                g = Group(id=group[0], creator_id=group[1], from_rlc_id=group[2], name=group[3], visible=group[4])
+                g.save()
+                for user_id in group[5]:
+                    g.group_members.add(UserProfile.objects.get(pk=user_id))
+            else:
+                raise AttributeError
             g.save()
-            for user_id in group[5]:
-                g.group_members.add(UserProfile.objects.get(pk=user_id))
         else:
-            raise AttributeError
-        g.save()
+            if group.__len__() == 2:
+                g = Group(name=group[0], visible=group[1], from_rlc_id=rlc_id)
+            elif group.__len__() == 5:
+                g = Group(id=group[0], creator_id=group[1], from_rlc_id=rlc_id, name=group[2], visible=group[3])
+                g.save()
+                for user_id in group[5]:
+                    g.group_members.add(UserProfile.objects.get(pk=user_id))
+            else:
+                raise AttributeError
+            g.save()
 
     @staticmethod
     def add_client(client):
@@ -494,7 +514,8 @@ class AddMethods:
     def add_record(record):
         if record.__len__() == 12:
             rc = Record(id=record[0], creator_id=record[1], from_rlc_id=record[2], created_on=record[3],
-                        last_edited=record[4], client_id=record[5], first_contact_date=record[6], last_contact_date=record[7],
+                        last_edited=record[4], client_id=record[5], first_contact_date=record[6],
+                        last_contact_date=record[7],
                         record_token=record[8], state=record[9])
             rc.save()
             for user_id in record[10]:

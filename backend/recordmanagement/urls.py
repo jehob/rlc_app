@@ -19,9 +19,9 @@ from rest_framework.routers import DefaultRouter
 from .views import *
 
 router = DefaultRouter()
-router.register('records', RecordsListViewSet, base_name='login')
+router.register('records', RecordsListViewSet, base_name='records')
 router.register('origin_countries', OriginCountriesViewSet)
-router.register('tags', RecordTagViewSet)
+router.register('record_tags', RecordTagViewSet)
 
 urlpatterns = [
   url(r'', include(router.urls)),
