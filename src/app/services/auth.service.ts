@@ -35,7 +35,7 @@ export class AuthService {
                     console.log(response);
                     this.token = response.token;
                     localStorage.setItem('token', this.token);
-                    this.router.navigate(["/dashboard"]);
+                    this.router.navigate([""]);
                 },
                 error => {
                     console.log(error);

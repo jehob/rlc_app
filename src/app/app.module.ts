@@ -21,25 +21,31 @@ import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
-import { AppRoutingModule } from "./app-routing/app-routing.module";
+import { AppRoutingModule } from "./api/app-routing/app-routing.module";
 import { AppComponent } from "./app.component";
 import { AuthService } from "./services/auth.service";
 import { HttpClientModule } from "@angular/common/http";
 import { AuthGuardService } from "./services/auth-guard.service";
 import { CustomMaterialModule } from "./custom-material.module";
-import { AuthenticationModule } from "./Authentication/authentication.module";
-import { DashboardModule } from "./Dashboard/dashboard.module";
+import { DashboardComponent } from "./Dashboard/dashboard.component";
+import { ProfileComponent } from "./Dashboard/profile/profile.component";
+import { RecordsComponent } from "./Dashboard/records/records.component";
+import { LoginComponent } from "./api/auth/login/login.component";
 
 @NgModule({
-    declarations: [AppComponent],
+    declarations: [
+        AppComponent,
+        DashboardComponent,
+        ProfileComponent,
+        RecordsComponent,
+        LoginComponent
+    ],
     imports: [
         BrowserModule,
         FormsModule,
         HttpClientModule,
         CustomMaterialModule,
         BrowserAnimationsModule,
-        AuthenticationModule,
-        DashboardModule,
         AppRoutingModule
     ],
     providers: [AuthService, AuthGuardService],

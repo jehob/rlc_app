@@ -19,32 +19,27 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 
-import { AuthGuardService } from "../services/auth-guard.service";
-import { DashboardComponent } from "../Dashboard/dashboard.component";
-import { AuthenticationComponent } from "../Authentication/authentication.component";
-import { ProfileComponent } from "../Dashboard/profile/profile.component";
-import { RecordsComponent } from "../Dashboard/records/records.component";
-import { LoginComponent } from "../Authentication/login/login.component";
+import { AuthGuardService } from "../../services/auth-guard.service";
+import { DashboardComponent } from "../../Dashboard/dashboard.component";
+import { ProfileComponent } from "../../Dashboard/profile/profile.component";
+import { RecordsComponent } from "../../Dashboard/records/records.component";
+import { LoginComponent } from "../auth/login/login.component";
 
 const appRoutes: Routes = [
-    {
-        path: "dashboard",
-        component: DashboardComponent,
-        canActivate: [AuthGuardService],
-        children: [
-            { path: "profile", component: ProfileComponent },
-            { path: "records", component: RecordsComponent }
-        ]
-    },
-    {
-        path: "auth",
-        component: AuthenticationComponent,
-        children: [
-            { path: "login", component: LoginComponent }
-            //{path: 'register', component: }
-        ]
-    },
-    { path: "", redirectTo: "/auth/login", pathMatch: "full" }
+    // {
+    //     path: "dashboard",
+    //     component: DashboardComponent,
+    //     canActivate: [AuthGuardService],
+    //     children: [
+    //         { path: "profile", component: ProfileComponent },
+    //         { path: "records", component: RecordsComponent }
+    //     ]
+    // },
+    // { path: "", redirectTo: "login", pathMatch: "full" },
+    { path: "", pathMatch: "full" , component: DashboardComponent, canActivate: [AuthGuardService]},
+    { path: "profile", component: ProfileComponent, canActivate: [AuthGuardService] },
+    { path: "records", component: RecordsComponent, canActivate: [AuthGuardService] },
+    { path: "login", component: LoginComponent}
 ];
 
 @NgModule({

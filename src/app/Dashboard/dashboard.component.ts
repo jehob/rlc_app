@@ -42,4 +42,6 @@ export class DashboardComponent implements OnInit {
     showRecords() {
         this.router.navigate(["records"], { relativeTo: this.route });
     }
+
+
 }

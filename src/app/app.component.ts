@@ -24,6 +24,7 @@ import {
     ActivatedRouteSnapshot,
     ActivatedRoute
 } from "@angular/router";
+import {AuthService} from './services/auth.service';
 
 @Component({
     selector: "app-root",
@@ -34,11 +35,28 @@ export class AppComponent {
     showNav = "true";
     title = "rlcapp";
 
-    constructor() {
+    constructor(private route: ActivatedRoute, private router: Router, private auth: AuthService) {
         console.log("started");
         const token = localStorage.getItem("token");
         if (token !== null) {
 
         }
+    }
+
+    showProfile() {
+        this.router.navigate(["profile"], { relativeTo: this.route });
+    }
+
+    showRecords() {
+        this.router.navigate(["records"], { relativeTo: this.route });
+    }
+
+    showSettings(){
+        this.router.navigate(["login"], );
+
+    }
+
+    isAuthenticated(){
+        return this.auth.isAuthenticated();
     }
 }
