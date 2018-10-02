@@ -19,11 +19,11 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 
-import { AuthGuardService } from "../../services/auth-guard.service";
-import { DashboardComponent } from "../../Dashboard/dashboard.component";
-import { ProfileComponent } from "../../Dashboard/profile/profile.component";
-import { RecordsComponent } from "../../Dashboard/records/records.component";
-import { LoginComponent } from "../auth/login/login.component";
+import { AuthGuardService } from "../services/auth-guard.service";
+import { DashboardComponent } from "../components/Dashboard/dashboard.component";
+import { ProfileComponent } from "../components/profile/profile.component";
+import { RecordsComponent } from "../../recordmanagement/components/records/records.component";
+import { LoginComponent } from "../components/auth/login/login.component";
 
 const appRoutes: Routes = [
     // {

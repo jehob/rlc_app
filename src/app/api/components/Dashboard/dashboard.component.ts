@@ -31,17 +31,9 @@ export interface Section {
     styleUrls: ["./dashboard.component.scss"]
 })
 export class DashboardComponent implements OnInit {
-    constructor(private route: ActivatedRoute, private router: Router) {}
+    constructor() {}
 
     ngOnInit() {}
-
-    showProfile() {
-        this.router.navigate(["profile"], { relativeTo: this.route });
-    }
-
-    showRecords() {
-        this.router.navigate(["records"], { relativeTo: this.route });
-    }
 
 
 }

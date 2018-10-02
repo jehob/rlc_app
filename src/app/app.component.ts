@@ -17,14 +17,14 @@
  ******************************************************************************/
 
 import { Component } from "@angular/core";
-import { AuthGuardService } from "../app/services/auth-guard.service";
+import { AuthGuardService } from "./api/services/auth-guard.service";
 import {
     Router,
     RouterStateSnapshot,
     ActivatedRouteSnapshot,
     ActivatedRoute
 } from "@angular/router";
-import {AuthService} from './services/auth.service';
+import {AuthService} from './api/services/auth.service';
 
 @Component({
     selector: "app-root",

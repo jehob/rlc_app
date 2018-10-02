@@ -19,13 +19,14 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
-import { LOGIN_URL } from "../statics/api_urls.statics";
+import { LOGIN_URL } from "../../statics/api_urls.statics";
+import {PersonalUserService} from './personal-user.service';
 
 @Injectable()
 export class AuthService {
     token: string;
 
-    constructor(private router: Router, private http: HttpClient) {}
+    constructor(private router: Router, private http: HttpClient, private personalUser:PersonalUserService) {}
 
     login(email: string, password: string) {
         this.http

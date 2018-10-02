@@ -23,14 +23,15 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 import { AppRoutingModule } from "./api/app-routing/app-routing.module";
 import { AppComponent } from "./app.component";
-import { AuthService } from "./services/auth.service";
+import { AuthService } from "./api/services/auth.service";
 import { HttpClientModule } from "@angular/common/http";
-import { AuthGuardService } from "./services/auth-guard.service";
+import { AuthGuardService } from "./api/services/auth-guard.service";
 import { CustomMaterialModule } from "./custom-material.module";
-import { DashboardComponent } from "./Dashboard/dashboard.component";
-import { ProfileComponent } from "./Dashboard/profile/profile.component";
-import { RecordsComponent } from "./Dashboard/records/records.component";
-import { LoginComponent } from "./api/auth/login/login.component";
+import { DashboardComponent } from "./api/components/Dashboard/dashboard.component";
+import { ProfileComponent } from "./api/components/profile/profile.component";
+import { RecordsComponent } from "./recordmanagement/components/records/records.component";
+import { LoginComponent } from "./api/components/auth/login/login.component";
+import {PersonalUserService} from './api/services/personal-user.service';
 
 @NgModule({
     declarations: [
@@ -48,7 +49,7 @@ import { LoginComponent } from "./api/auth/login/login.component";
         BrowserAnimationsModule,
         AppRoutingModule
     ],
-    providers: [AuthService, AuthGuardService],
+    providers: [AuthService, AuthGuardService, PersonalUserService],
     bootstrap: [AppComponent]
 })
 export class AppModule {}
