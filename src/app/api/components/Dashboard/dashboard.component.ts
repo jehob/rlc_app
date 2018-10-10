@@ -18,6 +18,7 @@
 
 import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
+import {PersonalUserService} from '../../services/personal-user.service';
 
 export interface Section {
     id: string;
@@ -31,7 +32,7 @@ export interface Section {
     styleUrls: ["./dashboard.component.scss"]
 })
 export class DashboardComponent implements OnInit {
-    constructor() {}
+    constructor(private user: PersonalUserService) {}
 
     ngOnInit() {}
 

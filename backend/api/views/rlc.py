@@ -31,5 +31,3 @@ class RlcViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         creator = UserProfile.objects.get(id=self.request.user.id)
         serializer.save(creator=creator)
-
-

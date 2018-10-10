@@ -28,23 +28,23 @@
     <mat-card-content>
       <div class="profil-form-container">
         <mat-form-field>
-          <input matInput placeholder="Email" value={{profile.email}}>
+          <input matInput placeholder="Email" [(value)]="this.user.email">
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput placeholder="Tel. No." value={{profile.tel}}>
+          <input matInput placeholder="Tel. No." value={{this.user.phone_number}}>
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput placeholder="Street, No." value={{profile.street}}>
+          <input matInput placeholder="Street, No." value={{this.user.street}}>
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput placeholder="Postal Code" value={{profile.postal}}>
+          <input matInput placeholder="Postal Code" value={{this.user.postal_code}}>
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput placeholder="City" value={{profile.city}}>
+          <input matInput placeholder="City" value={{this.user.city}}>
         </mat-form-field>
 
         <mat-form-field>
@@ -56,6 +56,6 @@
     </mat-card-content>
 
     <mat-card-actions>
-        <button class="btn-save-changes" mat-flat-button>Save</button>
+        <button class="btn-save-changes" mat-flat-button (click)="this.onSaveClick()">Save</button>
     </mat-card-actions>
 </mat-card>

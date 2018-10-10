@@ -17,6 +17,8 @@
  ******************************************************************************/
 
 import { Component, OnInit } from "@angular/core";
+import {PersonalUserService} from '../../services/personal-user.service';
+import {FullUser} from '../../models/user.model';
 
 @Component({
     selector: "app-profile",
@@ -24,15 +26,19 @@ import { Component, OnInit } from "@angular/core";
     styleUrls: ["./profile.component.scss"]
 })
 export class ProfileComponent implements OnInit {
-    constructor() {}
+    user: FullUser;
 
-    ngOnInit() {}
-    profile = {
-        id: 1,
-        email: "sol.seong@gmail.com",
-        tel: "0123 456789101",
-        street: "Samplestr. 10",
-        postal: "12345",
-        city: "Sample City"
-    };
+    constructor(private userService: PersonalUserService) {
+        console.log('constructor');
+        this.user = new FullUser();
+    }
+
+    ngOnInit() {
+        console.log('ng on init');
+        //his.user = this.userService.getUser();
+    }
+
+    onSaveClick(){
+        console.log(this.user);
+    }
 }

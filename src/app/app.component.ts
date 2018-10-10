@@ -39,7 +39,7 @@ export class AppComponent {
         console.log("started");
         const token = localStorage.getItem("token");
         if (token !== null) {
-
+            this.auth.reload(token);
         }
     }
 
