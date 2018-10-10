@@ -33,7 +33,8 @@ export function authReducer(state = initialState, action: AuthActions){
         case (SET_TOKEN):
             return({
                 ...state,
-                token: action.payload
+                token: action.payload,
+                authenticated: true
             });
         default:
             return state;

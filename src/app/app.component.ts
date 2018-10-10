@@ -17,14 +17,16 @@
  ******************************************************************************/
 
 import { Component } from "@angular/core";
-import { AuthGuardService } from "./api/services/auth-guard.service";
 import {
     Router,
-    RouterStateSnapshot,
-    ActivatedRouteSnapshot,
     ActivatedRoute
 } from "@angular/router";
-import {AuthService} from './api/services/auth.service';
+import {AppState} from './store/app.reducers';
+import {Store} from '@ngrx/store';
+import {SetToken} from './api/components/auth/store/auth.actions';
+import {AuthState} from './api/components/auth/store/auth.reducers';
+import {map, take} from 'rxjs/operators';
+import {Observable} from 'rxjs';
 
 @Component({
     selector: "app-root",
@@ -32,15 +34,18 @@ import {AuthService} from './api/services/auth.service';
     styleUrls: ["./app.component.scss"]
 })
 export class AppComponent {
-    showNav = "true";
     title = "rlcapp";
+    authState: Observable<AuthState>;
 
-    constructor(private route: ActivatedRoute, private router: Router, private auth: AuthService) {
+    constructor(private route: ActivatedRoute, private router: Router, private store: Store<AppState>) {
         console.log("started");
         const token = localStorage.getItem("token");
         if (token !== null) {
-            this.auth.reload(token);
+            //this.auth.reload(token);
+            this.store.dispatch(new SetToken(token));
         }
+
+        this.authState = this.store.select('auth');
     }
 
     showProfile() {
@@ -52,11 +57,13 @@ export class AppComponent {
     }
 
     showSettings(){
-        this.router.navigate(["login"], );
+        this.router.navigate(["login"] );
 
     }
 
-    isAuthenticated(){
-        return this.auth.isAuthenticated();
+    logout(){
+        localStorage.clear();
+        //dispatch logout
+        // redirect to login
     }
 }

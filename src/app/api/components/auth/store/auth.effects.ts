@@ -20,12 +20,15 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {map, mergeMap, switchMap} from 'rxjs/operators';
 import {HttpClient} from '@angular/common/http';
+import {from} from 'rxjs';
+import {Router} from '@angular/router';
 import {SET_TOKEN, TRY_SIGNIN, TrySignin} from './auth.actions';
 import {LOGIN_URL} from '../../../../statics/api_urls.statics';
-import {from} from 'rxjs';
 
 @Injectable()
 export class AuthEffects {
+    constructor(private actions: Actions, private http: HttpClient, private router: Router){}
+
     @Effect()
     authSignin = this.actions.pipe(
         ofType(TRY_SIGNIN),
@@ -34,10 +37,11 @@ export class AuthEffects {
         }),
         switchMap((authData: {username: string, password: string}) => {
             return from(this.http.post(LOGIN_URL, authData));
-
         }),
         mergeMap((response: {token: string}) => {
             console.log(response);
+            localStorage.setItem("token", response.token);
+            this.router.navigate([""]);
             return [
                 {
                     type: SET_TOKEN,
@@ -47,5 +51,5 @@ export class AuthEffects {
         })
     );
 
-    constructor(private actions: Actions, private http: HttpClient){}
+
 }
