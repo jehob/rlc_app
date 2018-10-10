@@ -20,11 +20,13 @@ import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import {StoreModule} from '@ngrx/store';
+import {EffectsModule} from '@ngrx/effects';
+import { HttpClientModule } from "@angular/common/http";
 
 import { AppRoutingModule } from "./api/app-routing/app-routing.module";
 import { AppComponent } from "./app.component";
 import { AuthService } from "./api/services/auth.service";
-import { HttpClientModule } from "@angular/common/http";
 import { AuthGuardService } from "./api/services/auth-guard.service";
 import { CustomMaterialModule } from "./custom-material.module";
 import { DashboardComponent } from "./api/components/Dashboard/dashboard.component";
@@ -32,6 +34,9 @@ import { ProfileComponent } from "./api/components/profile/profile.component";
 import { RecordsComponent } from "./recordmanagement/components/records/records.component";
 import { LoginComponent } from "./api/components/auth/login/login.component";
 import {PersonalUserService} from './api/services/personal-user.service';
+import {reducers} from './store/app.reducers';
+import {AuthEffects} from './api/components/auth/store/auth.effects';
+import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 
 @NgModule({
     declarations: [
@@ -47,7 +52,10 @@ import {PersonalUserService} from './api/services/personal-user.service';
         HttpClientModule,
         CustomMaterialModule,
         BrowserAnimationsModule,
-        AppRoutingModule
+        AppRoutingModule,
+        StoreModule.forRoot(reducers),
+        EffectsModule.forRoot([AuthEffects]),
+        StoreDevtoolsModule.instrument(),
     ],
     providers: [AuthService, AuthGuardService, PersonalUserService],
     bootstrap: [AppComponent]
