@@ -17,16 +17,13 @@
  ******************************************************************************/
 
 import { Component } from "@angular/core";
-import {
-    Router,
-    ActivatedRoute
-} from "@angular/router";
-import {AppState} from './store/app.reducers';
-import {Store} from '@ngrx/store';
-import {SetToken} from './api/components/auth/store/auth.actions';
-import {AuthState} from './api/components/auth/store/auth.reducers';
-import {map, take} from 'rxjs/operators';
-import {Observable} from 'rxjs';
+import { Router, ActivatedRoute } from "@angular/router";
+import { AppState } from "./store/app.reducers";
+import { Store } from "@ngrx/store";
+import { SetToken } from "./api/store/auth/auth.actions";
+import { AuthState } from "./api/store/auth/auth.reducers";
+import { Observable } from "rxjs";
+import { ApiSandboxService } from "./api/services/api-sandbox.service";
 
 @Component({
     selector: "app-root",
@@ -37,15 +34,12 @@ export class AppComponent {
     title = "rlcapp";
     authState: Observable<AuthState>;
 
-    constructor(private route: ActivatedRoute, private router: Router, private store: Store<AppState>) {
-        console.log("started");
-        const token = localStorage.getItem("token");
-        if (token !== null) {
-            //this.auth.reload(token);
-            this.store.dispatch(new SetToken(token));
-        }
-
-        this.authState = this.store.select('auth');
+    constructor(
+        private route: ActivatedRoute,
+        private router: Router,
+        private apiSB: ApiSandboxService
+    ) {
+        this.authState = this.apiSB.startApp();
     }
 
     showProfile() {
@@ -56,14 +50,11 @@ export class AppComponent {
         this.router.navigate(["records"], { relativeTo: this.route });
     }
 
-    showSettings(){
-        this.router.navigate(["login"] );
-
+    showSettings() {
+        this.router.navigate(["login"]);
     }
 
-    logout(){
-        localStorage.clear();
-        //dispatch logout
-        // redirect to login
+    logout() {
+        this.apiSB.logout();
     }
 }

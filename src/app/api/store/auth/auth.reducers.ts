@@ -16,13 +16,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import {authReducer, AuthState} from '../api/store/auth/auth.reducers';
-import {ActionReducerMap} from '@ngrx/store';
+import {AuthActions, LOGOUT, SET_TOKEN} from './auth.actions';
 
-export interface AppState {
-    auth: AuthState
+export interface AuthState {
+    token: string;
+    authenticated: boolean;
 }
 
-export const reducers: ActionReducerMap<AppState> = {
-    auth: authReducer
+const initialState: AuthState = {
+    token: null,
+    authenticated: false
 };
+
+export function authReducer(state = initialState, action: AuthActions){
+    switch (action.type){
+        case (SET_TOKEN):
+            return({
+                ...state,
+                token: action.payload,
+                authenticated: true
+            });
+        case (LOGOUT):
+            return(initialState);
+        default:
+            return state;
+    }
+}

@@ -21,7 +21,7 @@ import { AuthService } from "../../../services/auth.service";
 import { Router, ActivatedRoute } from "@angular/router";
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../store/app.reducers';
-import {TrySignin} from '../store/auth.actions';
+import {TrySignin} from '../../../store/auth/auth.actions';
 
 @Component({
     selector: "app-login",

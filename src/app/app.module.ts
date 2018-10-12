@@ -23,6 +23,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import {StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
 import { HttpClientModule } from "@angular/common/http";
+import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 
 import { AppRoutingModule } from "./api/app-routing/app-routing.module";
 import { AppComponent } from "./app.component";
@@ -35,8 +36,8 @@ import { RecordsComponent } from "./recordmanagement/components/records/records.
 import { LoginComponent } from "./api/components/auth/login/login.component";
 import {PersonalUserService} from './api/services/personal-user.service';
 import {reducers} from './store/app.reducers';
-import {AuthEffects} from './api/components/auth/store/auth.effects';
-import {StoreDevtoolsModule} from '@ngrx/store-devtools';
+import {AuthEffects} from './api/store/auth/auth.effects';
+import {ApiSandboxService} from './api/services/api-sandbox.service';
 
 @NgModule({
     declarations: [
@@ -57,7 +58,7 @@ import {StoreDevtoolsModule} from '@ngrx/store-devtools';
         EffectsModule.forRoot([AuthEffects]),
         StoreDevtoolsModule.instrument(),
     ],
-    providers: [AuthService, AuthGuardService, PersonalUserService],
+    providers: [AuthService, AuthGuardService, PersonalUserService, ApiSandboxService],
     bootstrap: [AppComponent]
 })
 export class AppModule {}

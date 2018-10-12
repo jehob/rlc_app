@@ -23,7 +23,7 @@ import {HttpClient} from '@angular/common/http';
 import {from} from 'rxjs';
 import {Router} from '@angular/router';
 import {SET_TOKEN, TRY_SIGNIN, TrySignin} from './auth.actions';
-import {LOGIN_URL} from '../../../../statics/api_urls.statics';
+import {LOGIN_URL} from '../../../statics/api_urls.statics';
 
 @Injectable()
 export class AuthEffects {

@@ -27,7 +27,7 @@ import {
 } from "@angular/router";
 import { AppState } from "../../store/app.reducers";
 import { AuthService } from "./auth.service";
-import { AuthState } from "../components/auth/store/auth.reducers";
+import { AuthState } from "../store/auth/auth.reducers";
 
 @Injectable()
 export class AuthGuardService implements CanActivate {

@@ -16,27 +16,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import {AuthActions, SET_TOKEN} from './auth.actions';
+import { Injectable } from "@angular/core";
+import { Router } from "@angular/router";
+import { AppState } from "../../store/app.reducers";
+import { Store } from "@ngrx/store";
+import {Logout, SetToken} from '../store/auth/auth.actions';
 
-export interface AuthState {
-    token: string;
-    authenticated: boolean;
-}
+@Injectable()
+export class ApiSandboxService {
+    constructor(private router: Router, private store: Store<AppState>) {}
 
-const initialState: AuthState = {
-    token: null,
-    authenticated: false
-};
+    logout() {
+        localStorage.clear();
+        this.store.dispatch(new Logout());
+        this.router.navigate(["login"]);
+    }
 
-export function authReducer(state = initialState, action: AuthActions){
-    switch (action.type){
-        case (SET_TOKEN):
-            return({
-                ...state,
-                token: action.payload,
-                authenticated: true
-            });
-        default:
-            return state;
+    startApp(){
+        const token = localStorage.getItem("token");
+        if (token !== null) {
+            //this.auth.reload(token);
+            this.store.dispatch(new SetToken(token));
+        }
+
+        return this.store.select("auth");
     }
 }
