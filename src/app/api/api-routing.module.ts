@@ -16,25 +16,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { Component, OnInit } from "@angular/core";
-import { Router, ActivatedRoute } from "@angular/router";
-import {PersonalUserService} from '../../services/personal-user.service';
+import {RouterModule, Routes} from '@angular/router';
+import {AuthGuardService} from './services/auth-guard.service';
+import {NgModule} from '@angular/core';
+import {ProfileComponent} from './components/profile/profile.component';
 
-export interface Section {
-    id: string;
-    type: string;
-    status: string;
-}
+const recordsRoutes: Routes = [
+    {
+        path: "profile",
+        component: ProfileComponent,
+        canActivate: [AuthGuardService]
+    }
+];
 
-@Component({
-    selector: "app-dashboard",
-    templateUrl: "./dashboard.component.html",
-    styleUrls: ["./dashboard.component.scss"]
+@NgModule({
+    imports: [RouterModule.forChild(recordsRoutes)],
+    exports: [RouterModule],
+    providers: [AuthGuardService]
 })
-export class DashboardComponent implements OnInit {
-    constructor() {}
-
-    ngOnInit() {}
-
-
-}
+export class ApiRoutingModule {}

@@ -16,16 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { AppRoutingModule } from "./app-routing.module";
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { RecordsRoutingModule } from "./records-routing.module";
+import {RecordsComponent} from './components/records/records.component';
+import {CustomMaterialModule} from '../custom-material.module';
 
-describe("AppRoutingModule", () => {
-    let appRoutingModule: AppRoutingModule;
-
-    beforeEach(() => {
-        appRoutingModule = new AppRoutingModule();
-    });
-
-    it("should create an instance", () => {
-        expect(appRoutingModule).toBeTruthy();
-    });
-});
+@NgModule({
+    imports: [CommonModule, RecordsRoutingModule, CustomMaterialModule],
+    declarations: [RecordsComponent]
+})
+export class RecordsModule {}

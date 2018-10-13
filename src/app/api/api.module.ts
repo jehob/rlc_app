@@ -16,25 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { Component, OnInit } from "@angular/core";
-import { Router, ActivatedRoute } from "@angular/router";
-import {PersonalUserService} from '../../services/personal-user.service';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { ApiRoutingModule } from "./api-routing.module";
+import { CustomMaterialModule } from "../custom-material.module";
+import {ProfileComponent} from './components/profile/profile.component';
 
-export interface Section {
-    id: string;
-    type: string;
-    status: string;
-}
-
-@Component({
-    selector: "app-dashboard",
-    templateUrl: "./dashboard.component.html",
-    styleUrls: ["./dashboard.component.scss"]
+@NgModule({
+    imports: [CommonModule, ApiRoutingModule, CustomMaterialModule],
+    declarations: [ProfileComponent]
 })
-export class DashboardComponent implements OnInit {
-    constructor() {}
-
-    ngOnInit() {}
-
-
-}
+export class ApiModule {}

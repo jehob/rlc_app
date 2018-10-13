@@ -17,33 +17,22 @@
  ******************************************************************************/
 
 import { NgModule } from "@angular/core";
-import { Routes, RouterModule } from "@angular/router";
+import {Routes, RouterModule, PreloadAllModules} from '@angular/router';
 
-import { AuthGuardService } from "../services/auth-guard.service";
-import { DashboardComponent } from "../components/Dashboard/dashboard.component";
-import { ProfileComponent } from "../components/profile/profile.component";
-import { RecordsComponent } from "../../recordmanagement/components/records/records.component";
-import { LoginComponent } from "../components/auth/login/login.component";
+import { AuthGuardService } from "./api/services/auth-guard.service";
+import { DashboardComponent } from "./api/components/Dashboard/dashboard.component";
+import { LoginComponent } from "./api/components/auth/login/login.component";
+
 
 const appRoutes: Routes = [
-    // {
-    //     path: "dashboard",
-    //     component: DashboardComponent,
-    //     canActivate: [AuthGuardService],
-    //     children: [
-    //         { path: "profile", component: ProfileComponent },
-    //         { path: "records", component: RecordsComponent }
-    //     ]
-    // },
-    // { path: "", redirectTo: "login", pathMatch: "full" },
+    // { path: "records", loadChildren: './recordmanagement/records.module#RecordsModule'},
     { path: "", pathMatch: "full" , component: DashboardComponent, canActivate: [AuthGuardService]},
-    { path: "profile", component: ProfileComponent, canActivate: [AuthGuardService] },
-    { path: "records", component: RecordsComponent, canActivate: [AuthGuardService] },
-    { path: "login", component: LoginComponent}
+    { path: "login", component: LoginComponent},
+
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(appRoutes)],
+    imports: [RouterModule.forRoot(appRoutes,  {preloadingStrategy: PreloadAllModules})],
     exports: [RouterModule]
 })
 export class AppRoutingModule {}

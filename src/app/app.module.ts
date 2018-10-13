@@ -25,26 +25,23 @@ import {EffectsModule} from '@ngrx/effects';
 import { HttpClientModule } from "@angular/common/http";
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 
-import { AppRoutingModule } from "./api/app-routing/app-routing.module";
+import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { AuthService } from "./api/services/auth.service";
 import { AuthGuardService } from "./api/services/auth-guard.service";
 import { CustomMaterialModule } from "./custom-material.module";
 import { DashboardComponent } from "./api/components/Dashboard/dashboard.component";
-import { ProfileComponent } from "./api/components/profile/profile.component";
-import { RecordsComponent } from "./recordmanagement/components/records/records.component";
 import { LoginComponent } from "./api/components/auth/login/login.component";
-import {PersonalUserService} from './api/services/personal-user.service';
 import {reducers} from './store/app.reducers';
 import {AuthEffects} from './api/store/auth/auth.effects';
 import {ApiSandboxService} from './api/services/api-sandbox.service';
+import {ApiModule} from './api/api.module';
+import {RecordsModule} from './recordmanagement/records.module';
 
 @NgModule({
     declarations: [
         AppComponent,
         DashboardComponent,
-        ProfileComponent,
-        RecordsComponent,
         LoginComponent
     ],
     imports: [
@@ -53,12 +50,14 @@ import {ApiSandboxService} from './api/services/api-sandbox.service';
         HttpClientModule,
         CustomMaterialModule,
         BrowserAnimationsModule,
-        AppRoutingModule,
+        ApiModule,
+        RecordsModule,
         StoreModule.forRoot(reducers),
         EffectsModule.forRoot([AuthEffects]),
         StoreDevtoolsModule.instrument(),
+        AppRoutingModule,
     ],
-    providers: [AuthService, AuthGuardService, PersonalUserService, ApiSandboxService],
+    providers: [AuthService, AuthGuardService, ApiSandboxService],
     bootstrap: [AppComponent]
 })
 export class AppModule {}
