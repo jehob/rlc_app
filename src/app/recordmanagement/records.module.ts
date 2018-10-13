@@ -30,7 +30,6 @@ import { recordsReducer } from "./store/records.reducers";
         RecordsRoutingModule,
         CustomMaterialModule,
         StoreModule.forFeature("records", recordsReducer),
-
     ],
     declarations: [RecordsComponent]
 })

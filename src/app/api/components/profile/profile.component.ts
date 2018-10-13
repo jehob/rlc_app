@@ -17,7 +17,6 @@
  ******************************************************************************/
 
 import { Component, OnInit } from "@angular/core";
-import {PersonalUserService} from '../../services/personal-user.service';
 import {FullUser} from '../../models/user.model';
 
 @Component({
@@ -28,7 +27,7 @@ import {FullUser} from '../../models/user.model';
 export class ProfileComponent implements OnInit {
     user: FullUser;
 
-    constructor(private userService: PersonalUserService) {
+    constructor() {
         console.log('constructor');
         this.user = new FullUser();
     }

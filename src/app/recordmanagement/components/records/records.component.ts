@@ -17,6 +17,7 @@
  ******************************************************************************/
 
 import { Component, OnInit } from "@angular/core";
+import {RecordsSandboxService} from '../../services/records-sandbox.service';
 
 export interface Section {
     id: string;
@@ -30,7 +31,9 @@ export interface Section {
     styleUrls: ["./records.component.scss"]
 })
 export class RecordsComponent implements OnInit {
-    constructor() {}
+    constructor(private recordsSandbox: RecordsSandboxService) {
+        this.recordsSandbox.loadRecords();
+    }
 
     ngOnInit() {}
 

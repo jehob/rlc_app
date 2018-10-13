@@ -18,7 +18,6 @@
 
 import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
-import {PersonalUserService} from '../../services/personal-user.service';
 
 export interface Section {
     id: string;

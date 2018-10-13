@@ -20,10 +20,10 @@ import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import {StoreModule} from '@ngrx/store';
-import {EffectsModule} from '@ngrx/effects';
-import { HttpClientModule } from "@angular/common/http";
-import {StoreDevtoolsModule} from '@ngrx/store-devtools';
+import { StoreModule } from "@ngrx/store";
+import { EffectsModule } from "@ngrx/effects";
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -32,18 +32,15 @@ import { AuthGuardService } from "./api/services/auth-guard.service";
 import { CustomMaterialModule } from "./custom-material.module";
 import { DashboardComponent } from "./api/components/Dashboard/dashboard.component";
 import { LoginComponent } from "./api/components/auth/login/login.component";
-import {reducers} from './store/app.reducers';
-import {AuthEffects} from './api/store/auth/auth.effects';
-import {ApiSandboxService} from './api/services/api-sandbox.service';
-import {ApiModule} from './api/api.module';
-//import {RecordsModule} from './recordmanagement/records.module';
+import { reducers } from "./store/app.reducers";
+import { AuthEffects } from "./api/store/auth/auth.effects";
+import { ApiSandboxService } from "./api/services/api-sandbox.service";
+import { ApiModule } from "./api/api.module";
+import { RecordsSandboxService } from "./recordmanagement/services/records-sandbox.service";
+import {AuthInterceptor} from './api/services/auth.interceptor';
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        DashboardComponent,
-        LoginComponent
-    ],
+    declarations: [AppComponent, DashboardComponent, LoginComponent],
     imports: [
         BrowserModule,
         FormsModule,
@@ -51,13 +48,18 @@ import {ApiModule} from './api/api.module';
         CustomMaterialModule,
         BrowserAnimationsModule,
         ApiModule,
-        //RecordsModule,
         StoreModule.forRoot(reducers),
         EffectsModule.forRoot([AuthEffects]),
         StoreDevtoolsModule.instrument(),
-        AppRoutingModule,
+        AppRoutingModule
     ],
-    providers: [AuthService, AuthGuardService, ApiSandboxService],
+    providers: [
+        AuthService,
+        AuthGuardService,
+        ApiSandboxService,
+        RecordsSandboxService,
+        {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule {}

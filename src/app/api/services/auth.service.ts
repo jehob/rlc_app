@@ -20,17 +20,14 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { LOGIN_URL } from "../../statics/api_urls.statics";
-import { PersonalUserService } from "./personal-user.service";
 
 @Injectable()
 export class AuthService {
     token: string;
-    httpOptions;
 
     constructor(
         private router: Router,
-        private http: HttpClient,
-        private personalUser: PersonalUserService
+        private http: HttpClient
     ) {}
 
     login(email: string, password: string) {
@@ -53,8 +50,7 @@ export class AuthService {
 
     reload(token: string) {
         this.token = token;
-        this.setHttpOptions(token);
-        this.http.get(LOGIN_URL, this.httpOptions).subscribe(
+        this.http.get(LOGIN_URL).subscribe(
             response => {
                 this.setOtherValues(response);
                 console.log('reload', response);
@@ -70,7 +66,7 @@ export class AuthService {
      * @param response the response which came from the server after login or reload
      */
     setOtherValues(response) {
-        this.personalUser.setUser(response.user);
+        //this.personalUser.setUser(response.user);
     }
 
     logout() {
@@ -80,17 +76,5 @@ export class AuthService {
 
     isAuthenticated() {
         return this.token != null;
-    }
-
-    setHttpOptions(token: string) {
-        this.httpOptions = {
-            headers: new HttpHeaders({
-                Authorization: "Token " + token
-            })
-        };
-    }
-
-    getHttpOptions() {
-        return this.httpOptions;
     }
 }
