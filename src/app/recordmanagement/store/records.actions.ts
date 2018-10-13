@@ -16,21 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { NgModule } from "@angular/core";
-import { RouterModule, Routes } from "@angular/router";
-import { RecordsComponent } from "./components/records/records.component";
-import { AuthGuardService } from "../api/services/auth-guard.service";
+import {Action} from '@ngrx/store';
 
-const recordsRoutes: Routes = [
-    {
-        path: "",
-        component: RecordsComponent
-    }
-];
+export const SET_RECORDS = 'SET_RECORDS';
 
-@NgModule({
-    imports: [RouterModule.forChild(recordsRoutes)],
-    exports: [RouterModule],
-    providers: [AuthGuardService]
-})
-export class RecordsRoutingModule {}
+export class SetRecords implements Action {
+    readonly type = SET_RECORDS;
+
+    constructor(public payload){}
+}
+
+export type RecordsActions = SetRecords;

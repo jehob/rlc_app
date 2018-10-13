@@ -35,6 +35,14 @@ export class FullRecord {
         this.created_on = created_on;
         this.last_contact_date = last_contact_date;
         this.last_edited = last_edited;
+        this.first_contact_date = first_contact_date;
+        this.record_token = record_token;
+        this.note = note;
+        this.state = state;
+        this.tags = tags;
+        this.from_rlc = from_rlc;
+        this.client = client;
+        this.working_on_record = working_on_record;
     }
 }
 

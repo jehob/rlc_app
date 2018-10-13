@@ -25,7 +25,7 @@ import { LoginComponent } from "./api/components/auth/login/login.component";
 
 
 const appRoutes: Routes = [
-    // { path: "records", loadChildren: './recordmanagement/records.module#RecordsModule'},
+    { path: "records", loadChildren: './recordmanagement/records.module#RecordsModule', canActivate: [AuthGuardService]},
     { path: "", pathMatch: "full" , component: DashboardComponent, canActivate: [AuthGuardService]},
     { path: "login", component: LoginComponent},
 

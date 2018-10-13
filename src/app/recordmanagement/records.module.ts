@@ -19,11 +19,19 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RecordsRoutingModule } from "./records-routing.module";
-import {RecordsComponent} from './components/records/records.component';
-import {CustomMaterialModule} from '../custom-material.module';
+import { RecordsComponent } from "./components/records/records.component";
+import { CustomMaterialModule } from "../custom-material.module";
+import { StoreModule } from "@ngrx/store";
+import { recordsReducer } from "./store/records.reducers";
 
 @NgModule({
-    imports: [CommonModule, RecordsRoutingModule, CustomMaterialModule],
+    imports: [
+        CommonModule,
+        RecordsRoutingModule,
+        CustomMaterialModule,
+        StoreModule.forFeature("records", recordsReducer),
+
+    ],
     declarations: [RecordsComponent]
 })
 export class RecordsModule {}

@@ -36,7 +36,7 @@ import {reducers} from './store/app.reducers';
 import {AuthEffects} from './api/store/auth/auth.effects';
 import {ApiSandboxService} from './api/services/api-sandbox.service';
 import {ApiModule} from './api/api.module';
-import {RecordsModule} from './recordmanagement/records.module';
+//import {RecordsModule} from './recordmanagement/records.module';
 
 @NgModule({
     declarations: [
@@ -51,7 +51,7 @@ import {RecordsModule} from './recordmanagement/records.module';
         CustomMaterialModule,
         BrowserAnimationsModule,
         ApiModule,
-        RecordsModule,
+        //RecordsModule,
         StoreModule.forRoot(reducers),
         EffectsModule.forRoot([AuthEffects]),
         StoreDevtoolsModule.instrument(),
