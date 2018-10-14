@@ -17,19 +17,14 @@
  ******************************************************************************/
 
 import { Action } from "@ngrx/store";
-import { RestrictedRecord } from "../models/record.model";
+import { FullUser } from "../models/user.model";
 
-export const SET_RECORDS = "SET_RECORDS";
-export const START_LOADING_RECORDS = "START_LOADING_RECORDS";
+export const SET_USER = "SET_USER";
 
-export class SetRecords implements Action {
-    readonly type = SET_RECORDS;
+export class SetUser implements Action {
+    readonly type = SET_USER;
 
-    constructor(public payload: Array<RestrictedRecord>) {}
+    constructor(public payload: FullUser) {}
 }
 
-export class StartLoadingRecords implements Action {
-    readonly type = START_LOADING_RECORDS;
-}
-
-export type RecordsActions = SetRecords | StartLoadingRecords;
+export type ApiActions = SetUser;

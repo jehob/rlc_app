@@ -17,4 +17,4 @@
  ******************************************************************************/
 
 export const LOGIN_URL = "/api/login/";
-export const RECORDS_URL = 'api/records/records/';
+export const RECORDS_URL = "api/records/records/";

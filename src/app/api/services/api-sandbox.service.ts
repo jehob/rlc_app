@@ -20,7 +20,7 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { AppState } from "../../store/app.reducers";
 import { Store } from "@ngrx/store";
-import {Logout, SetToken} from '../store/auth/auth.actions';
+import { Logout, SetToken } from "../store/auth/auth.actions";
 
 @Injectable()
 export class ApiSandboxService {
@@ -32,7 +32,7 @@ export class ApiSandboxService {
         this.router.navigate(["login"]);
     }
 
-    startApp(){
+    startApp() {
         const token = localStorage.getItem("token");
         if (token !== null) {
             this.store.dispatch(new SetToken(token));

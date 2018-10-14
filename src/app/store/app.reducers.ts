@@ -16,11 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import {authReducer, AuthState} from '../api/store/auth/auth.reducers';
-import {ActionReducerMap} from '@ngrx/store';
+import { authReducer, AuthState } from "../api/store/auth/auth.reducers";
+import { ActionReducerMap } from "@ngrx/store";
 
 export interface AppState {
-    auth: AuthState
+    auth: AuthState;
 }
 
 export const reducers: ActionReducerMap<AppState> = {

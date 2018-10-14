@@ -16,20 +16,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { Action } from "@ngrx/store";
-import { RestrictedRecord } from "../models/record.model";
+import { FullUser } from "../models/user.model";
+import { ApiActions, SET_USER } from "./api.actions";
 
-export const SET_RECORDS = "SET_RECORDS";
-export const START_LOADING_RECORDS = "START_LOADING_RECORDS";
-
-export class SetRecords implements Action {
-    readonly type = SET_RECORDS;
-
-    constructor(public payload: Array<RestrictedRecord>) {}
+export interface ApiState {
+    user: FullUser;
 }
 
-export class StartLoadingRecords implements Action {
-    readonly type = START_LOADING_RECORDS;
-}
+const initialState: ApiState = {
+    user: null
+};
 
-export type RecordsActions = SetRecords | StartLoadingRecords;
+export function apiReducer(state = initialState, action: ApiActions) {
+    switch (action.type) {
+        case SET_USER:
+            return {
+                user: action.payload
+            };
+        default:
+            return state;
+    }
+}

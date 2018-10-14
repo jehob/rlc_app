@@ -17,7 +17,7 @@
  ******************************************************************************/
 
 import { Component, OnInit } from "@angular/core";
-import {FullUser} from '../../models/user.model';
+import { FullUser } from "../../models/user.model";
 
 @Component({
     selector: "app-profile",
@@ -28,16 +28,16 @@ export class ProfileComponent implements OnInit {
     user: FullUser;
 
     constructor() {
-        console.log('constructor');
+        console.log("constructor");
         this.user = new FullUser();
     }
 
     ngOnInit() {
-        console.log('ng on init');
+        console.log("ng on init");
         //his.user = this.userService.getUser();
     }
 
-    onSaveClick(){
+    onSaveClick() {
         console.log(this.user);
     }
 }

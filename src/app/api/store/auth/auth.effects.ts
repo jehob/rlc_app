@@ -16,18 +16,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
-import {map, mergeMap, switchMap} from 'rxjs/operators';
-import {HttpClient} from '@angular/common/http';
-import {from} from 'rxjs';
-import {Router} from '@angular/router';
-import {SET_TOKEN, TRY_SIGNIN, TrySignin} from './auth.actions';
-import {LOGIN_URL} from '../../../statics/api_urls.statics';
+import { Injectable } from "@angular/core";
+import { Actions, Effect, ofType } from "@ngrx/effects";
+import { map, mergeMap, switchMap } from "rxjs/operators";
+import { HttpClient } from "@angular/common/http";
+import { from } from "rxjs";
+import { Router } from "@angular/router";
+import { SET_TOKEN, TRY_SIGNIN, TrySignin } from "./auth.actions";
+import { LOGIN_URL } from "../../../statics/api_urls.statics";
+import { FullUser } from "../../models/user.model";
 
 @Injectable()
 export class AuthEffects {
-    constructor(private actions: Actions, private http: HttpClient, private router: Router){}
+    constructor(
+        private actions: Actions,
+        private http: HttpClient,
+        private router: Router
+    ) {}
 
     @Effect()
     authSignin = this.actions.pipe(
@@ -35,11 +40,21 @@ export class AuthEffects {
         map((action: TrySignin) => {
             return action.payload;
         }),
-        switchMap((authData: {username: string, password: string}) => {
+        switchMap((authData: { username: string; password: string }) => {
             return from(this.http.post(LOGIN_URL, authData));
         }),
-        mergeMap((response: {token: string}) => {
-            console.log(response);
+        mergeMap((response: { token: string; user }) => {
+            //console.log(response);
+            const user = new FullUser(
+                response.user.id,
+                response.user.email,
+                response.user.name,
+                new Date(response.user.birthday),
+                response.user.phone_number,
+                response.user.street,
+                response.user.city,
+                response.user.postal_code
+            );
             localStorage.setItem("token", response.token);
             this.router.navigate([""]);
             return [
@@ -50,6 +65,4 @@ export class AuthEffects {
             ];
         })
     );
-
-
 }

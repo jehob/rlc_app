@@ -20,14 +20,27 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { ApiRoutingModule } from "./api-routing.module";
 import { CustomMaterialModule } from "../custom-material.module";
-import {ProfileComponent} from './components/profile/profile.component';
-import { RegisterComponent } from './components/auth/register/register.component';
-import {DashboardComponent} from './components/Dashboard/dashboard.component';
-import {LoginComponent} from './components/auth/login/login.component';
-import {FormsModule} from '@angular/forms';
+import { ProfileComponent } from "./components/profile/profile.component";
+import { RegisterComponent } from "./components/auth/register/register.component";
+import { DashboardComponent } from "./components/Dashboard/dashboard.component";
+import { LoginComponent } from "./components/auth/login/login.component";
+import { FormsModule } from "@angular/forms";
+import { StoreModule } from "@ngrx/store";
+import { apiReducer } from "./store/api.reducers";
 
 @NgModule({
-    imports: [CommonModule, ApiRoutingModule, CustomMaterialModule, FormsModule],
-    declarations: [ProfileComponent, RegisterComponent, DashboardComponent, LoginComponent]
+    imports: [
+        CommonModule,
+        ApiRoutingModule,
+        CustomMaterialModule,
+        FormsModule,
+        StoreModule.forFeature("api", apiReducer)
+    ],
+    declarations: [
+        ProfileComponent,
+        RegisterComponent,
+        DashboardComponent,
+        LoginComponent
+    ]
 })
 export class ApiModule {}

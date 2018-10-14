@@ -17,9 +17,9 @@
  ******************************************************************************/
 
 import { Component, OnInit } from "@angular/core";
-import {RecordsSandboxService} from '../../services/records-sandbox.service';
-import {Observable, Subscription} from 'rxjs';
-import {RestrictedRecord} from '../../models/record.model';
+import { RecordsSandboxService } from "../../services/records-sandbox.service";
+import { Observable, Subscription } from "rxjs";
+import { RestrictedRecord } from "../../models/record.model";
 
 export interface Section {
     id: string;
@@ -43,5 +43,4 @@ export class RecordsComponent implements OnInit {
     ngOnInit() {
         this.records = this.recordsSandbox.getRecords();
     }
-
 }

@@ -27,14 +27,14 @@ export class FullUser {
     public postal_code: string;
 
     constructor(
-        id: string = '',
-        email: string = '',
-        name: string = '',
+        id: string = "",
+        email: string = "",
+        name: string = "",
         birthday: Date = new Date(),
-        phone_number: string = '',
-        street: string = '',
-        city: string = '',
-        postal_code: string = ''
+        phone_number: string = "",
+        street: string = "",
+        city: string = "",
+        postal_code: string = ""
     ) {
         this.id = id;
         this.email = email;
@@ -44,6 +44,10 @@ export class FullUser {
         this.street = street;
         this.city = city;
         this.postal_code = postal_code;
+    }
+
+    getInfo() {
+        return this.email;
     }
 }
 

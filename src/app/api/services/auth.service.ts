@@ -25,10 +25,7 @@ import { LOGIN_URL } from "../../statics/api_urls.statics";
 export class AuthService {
     token: string;
 
-    constructor(
-        private router: Router,
-        private http: HttpClient
-    ) {}
+    constructor(private router: Router, private http: HttpClient) {}
 
     login(email: string, password: string) {
         this.http
@@ -53,7 +50,7 @@ export class AuthService {
         this.http.get(LOGIN_URL).subscribe(
             response => {
                 this.setOtherValues(response);
-                console.log('reload', response);
+                console.log("reload", response);
             },
             error => {
                 console.log("error: ", error);

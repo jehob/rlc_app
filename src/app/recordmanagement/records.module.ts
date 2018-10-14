@@ -23,6 +23,8 @@ import { RecordsComponent } from "./components/records/records.component";
 import { CustomMaterialModule } from "../custom-material.module";
 import { StoreModule } from "@ngrx/store";
 import { recordsReducer } from "./store/records.reducers";
+import { EffectsModule } from "@ngrx/effects";
+import { RecordsEffects } from "./store/records.effects";
 
 @NgModule({
     imports: [
@@ -30,6 +32,7 @@ import { recordsReducer } from "./store/records.reducers";
         RecordsRoutingModule,
         CustomMaterialModule,
         StoreModule.forFeature("records", recordsReducer),
+        EffectsModule.forRoot([RecordsEffects])
     ],
     declarations: [RecordsComponent]
 })

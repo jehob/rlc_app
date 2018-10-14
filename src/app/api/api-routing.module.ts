@@ -16,12 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import {RouterModule, Routes} from '@angular/router';
-import {AuthGuardService} from './services/auth-guard.service';
-import {NgModule} from '@angular/core';
-import {ProfileComponent} from './components/profile/profile.component';
-import {DashboardComponent} from './components/Dashboard/dashboard.component';
-import {LoginComponent} from './components/auth/login/login.component';
+import { RouterModule, Routes } from "@angular/router";
+import { AuthGuardService } from "./services/auth-guard.service";
+import { NgModule } from "@angular/core";
+import { ProfileComponent } from "./components/profile/profile.component";
+import { DashboardComponent } from "./components/Dashboard/dashboard.component";
+import { LoginComponent } from "./components/auth/login/login.component";
 
 const apiRoutes: Routes = [
     {
@@ -29,8 +29,13 @@ const apiRoutes: Routes = [
         component: ProfileComponent,
         canActivate: [AuthGuardService]
     },
-    { path: "", pathMatch: "full" , component: DashboardComponent, canActivate: [AuthGuardService]},
-    { path: "login", component: LoginComponent},
+    {
+        path: "",
+        pathMatch: "full",
+        component: DashboardComponent,
+        canActivate: [AuthGuardService]
+    },
+    { path: "login", component: LoginComponent }
 ];
 
 @NgModule({

@@ -17,17 +17,24 @@
  ******************************************************************************/
 
 import { NgModule } from "@angular/core";
-import {Routes, RouterModule, PreloadAllModules} from '@angular/router';
+import { Routes, RouterModule, PreloadAllModules } from "@angular/router";
 
 import { AuthGuardService } from "./api/services/auth-guard.service";
 
-
 const appRoutes: Routes = [
-    { path: "records", loadChildren: './recordmanagement/records.module#RecordsModule', canActivate: [AuthGuardService]},
+    {
+        path: "records",
+        loadChildren: "./recordmanagement/records.module#RecordsModule",
+        canActivate: [AuthGuardService]
+    }
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(appRoutes,  {preloadingStrategy: PreloadAllModules})],
+    imports: [
+        RouterModule.forRoot(appRoutes, {
+            preloadingStrategy: PreloadAllModules
+        })
+    ],
     exports: [RouterModule]
 })
 export class AppRoutingModule {}

@@ -21,7 +21,7 @@ import { NgModule } from "@angular/core";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { StoreModule } from "@ngrx/store";
 import { EffectsModule } from "@ngrx/effects";
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 
 import { AppRoutingModule } from "./app-routing.module";
@@ -34,8 +34,8 @@ import { AuthEffects } from "./api/store/auth/auth.effects";
 import { ApiSandboxService } from "./api/services/api-sandbox.service";
 import { ApiModule } from "./api/api.module";
 import { RecordsSandboxService } from "./recordmanagement/services/records-sandbox.service";
-import {AuthInterceptor} from './api/services/auth.interceptor';
-import {environment} from '../environments/environment';
+import { AuthInterceptor } from "./api/services/auth.interceptor";
+import { environment } from "../environments/environment";
 
 @NgModule({
     declarations: [AppComponent],
@@ -48,14 +48,14 @@ import {environment} from '../environments/environment';
         AppRoutingModule,
         StoreModule.forRoot(reducers),
         EffectsModule.forRoot([AuthEffects]),
-        !environment.production ? StoreDevtoolsModule.instrument() : [],
+        !environment.production ? StoreDevtoolsModule.instrument() : []
     ],
     providers: [
         AuthService,
         AuthGuardService,
         ApiSandboxService,
         RecordsSandboxService,
-        {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
     ],
     bootstrap: [AppComponent]
 })

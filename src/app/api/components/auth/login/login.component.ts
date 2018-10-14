@@ -19,9 +19,9 @@
 import { Component, OnInit } from "@angular/core";
 import { AuthService } from "../../../services/auth.service";
 import { Router, ActivatedRoute } from "@angular/router";
-import {Store} from '@ngrx/store';
-import {AppState} from '../../../../store/app.reducers';
-import {TrySignin} from '../../../store/auth/auth.actions';
+import { Store } from "@ngrx/store";
+import { AppState } from "../../../../store/app.reducers";
+import { TrySignin } from "../../../store/auth/auth.actions";
 
 @Component({
     selector: "app-login",
@@ -49,7 +49,12 @@ export class LoginComponent implements OnInit {
 
     onLogIn() {
         //console.log('clicked');
-        this.store.dispatch(new TrySignin({username: this.login.email, password: this.login.password}))
+        this.store.dispatch(
+            new TrySignin({
+                username: this.login.email,
+                password: this.login.password
+            })
+        );
         //this.auth.login(this.login.email, this.login.password);
     }
 }
