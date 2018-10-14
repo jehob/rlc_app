@@ -41,7 +41,7 @@ export class AuthInterceptor implements HttpInterceptor {
             take(1),
             switchMap((authState: AuthState) => {
                 const copiedReq = req.clone({
-                    params: req.params.set(
+                    headers: req.headers.set(
                         "Authorization",
                         "Token " + authState.token
                     )

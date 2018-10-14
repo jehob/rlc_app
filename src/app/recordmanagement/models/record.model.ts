@@ -16,34 +16,47 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-export class FullRecord {
+export class RestrictedRecord {
+    // origin country name and state
+    // record official note, tags, working on record
     constructor(
         public id: number,
-        public created_on: Date,
-        public last_edited: Date,
-        public first_contact_date: Date,
         public last_contact_date: Date,
-        public record_token: string,
-        public note: string,
         public state: string,
         public tags: [number, string],
-        public from_rlc: number,
-        public client: number,
         public working_on_record: [number]
-    ) {
+    ){
         this.id = id;
-        this.created_on = created_on;
         this.last_contact_date = last_contact_date;
-        this.last_edited = last_edited;
-        this.first_contact_date = first_contact_date;
-        this.record_token = record_token;
-        this.note = note;
         this.state = state;
         this.tags = tags;
-        this.from_rlc = from_rlc;
-        this.client = client;
         this.working_on_record = working_on_record;
     }
 }
 
-export class RestrictedRecord {}
+export class FullRecord extends RestrictedRecord{
+    constructor(
+        id: number,
+        last_contact_date: Date,
+        state: string,
+        tags: [number, string],
+        working_on_record: [number],
+        public created_on: Date,
+        public last_edited: Date,
+        public first_contact_date: Date,
+        public record_token: string,
+        public note: string,
+        public from_rlc: number,
+        public client: number,
+    ) {
+        super(id, last_edited, state, tags, working_on_record);
+        this.created_on = created_on;
+        this.last_edited = last_edited;
+        this.first_contact_date = first_contact_date;
+        this.record_token = record_token;
+        this.note = note;
+        this.from_rlc = from_rlc;
+        this.client = client;
+    }
+}
+

@@ -16,11 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import {FullRecord} from '../models/record.model';
+import { RestrictedRecord} from '../models/record.model';
 import {RecordsActions, SET_RECORDS} from './records.actions';
 
 export interface RecordsState {
-    records: Array<FullRecord>
+    records: Array<RestrictedRecord>
 }
 
 const initialState: RecordsState = {
@@ -31,7 +31,7 @@ export function recordsReducer(state = initialState, action: RecordsActions){
     switch (action.type) {
         case(SET_RECORDS):
             return ({
-
+                records: action.payload
             });
         default:
             return state;

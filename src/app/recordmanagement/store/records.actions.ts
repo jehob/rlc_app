@@ -16,14 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import {Action} from '@ngrx/store';
+import { Action } from "@ngrx/store";
+import { RestrictedRecord } from "../models/record.model";
 
-export const SET_RECORDS = 'SET_RECORDS';
+export const SET_RECORDS = "SET_RECORDS";
 
 export class SetRecords implements Action {
     readonly type = SET_RECORDS;
 
-    constructor(public payload){}
+    constructor(public payload: Array<RestrictedRecord>) {}
 }
 
 export type RecordsActions = SetRecords;
