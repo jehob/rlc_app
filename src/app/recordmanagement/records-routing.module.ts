@@ -16,16 +16,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { AppRoutingModule } from "./app-routing.module";
+import { NgModule } from "@angular/core";
+import { RouterModule, Routes } from "@angular/router";
+import { RecordsComponent } from "./components/records/records.component";
+import { AuthGuardService } from "../api/services/auth-guard.service";
 
-describe("AppRoutingModule", () => {
-    let appRoutingModule: AppRoutingModule;
+const recordsRoutes: Routes = [
+    {
+        path: "",
+        component: RecordsComponent
+    }
+];
 
-    beforeEach(() => {
-        appRoutingModule = new AppRoutingModule();
-    });
-
-    it("should create an instance", () => {
-        expect(appRoutingModule).toBeTruthy();
-    });
-});
+@NgModule({
+    imports: [RouterModule.forChild(recordsRoutes)],
+    exports: [RouterModule],
+    providers: [AuthGuardService]
+})
+export class RecordsRoutingModule {}

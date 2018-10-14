@@ -16,5 +16,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-export const LOGIN_URL = "/api/login/";
-export const RECORDS_URL = 'api/records/records/';
+import { RestrictedRecord} from '../models/record.model';
+import {RecordsActions, SET_RECORDS} from './records.actions';
+
+export interface RecordsState {
+    records: Array<RestrictedRecord>
+}
+
+const initialState: RecordsState = {
+    records: null,
+};
+
+export function recordsReducer(state = initialState, action: RecordsActions){
+    switch (action.type) {
+        case(SET_RECORDS):
+            return ({
+                records: action.payload
+            });
+        default:
+            return state;
+    }
+}
+

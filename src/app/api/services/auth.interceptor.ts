@@ -17,39 +17,36 @@
  ******************************************************************************/
 
 import { Injectable } from "@angular/core";
-import { Store } from "@ngrx/store";
-import { map, take } from "rxjs/operators";
 import {
-    ActivatedRouteSnapshot,
-    CanActivate,
-    Router,
-    RouterStateSnapshot
-} from "@angular/router";
-import { AppState } from "../../store/app.reducers";
-import { AuthService } from "./auth.service";
+    HttpEvent,
+    HttpHandler,
+    HttpInterceptor,
+    HttpRequest
+} from "@angular/common/http";
 import { AuthState } from "../store/auth/auth.reducers";
+import { Store } from "@ngrx/store";
+import { Observable } from "rxjs";
+import { switchMap, take } from "rxjs/operators";
 
 @Injectable()
-export class AuthGuardService implements CanActivate {
-    constructor(
-        private auth: AuthService,
-        private router: Router,
-        private store: Store<AppState>
-    ) {}
+export class AuthInterceptor implements HttpInterceptor {
+    constructor(private store: Store<AuthState>) {}
 
-    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        // const authenticated = this.auth.isAuthenticated();
-        // if (!authenticated) {
-        //     this.router.navigate(["login"]);
-        // }
-        // return authenticated;
+    intercept(
+        req: HttpRequest<any>,
+        next: HttpHandler
+    ): Observable<HttpEvent<any>> {
+        console.log("Intercepted!", req);
         return this.store.select("auth").pipe(
             take(1),
-            map((authState: AuthState) => {
-                if (!authState.authenticated) {
-                    this.router.navigate(["login"]);
-                }
-                return authState.authenticated;
+            switchMap((authState: AuthState) => {
+                const copiedReq = req.clone({
+                    headers: req.headers.set(
+                        "Authorization",
+                        "Token " + authState.token
+                    )
+                });
+                return next.handle(copiedReq);
             })
         );
     }

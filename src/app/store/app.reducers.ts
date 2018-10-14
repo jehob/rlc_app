@@ -16,5 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-export const LOGIN_URL = "/api/login/";
-export const RECORDS_URL = 'api/records/records/';
+import {authReducer, AuthState} from '../api/store/auth/auth.reducers';
+import {ActionReducerMap} from '@ngrx/store';
+
+export interface AppState {
+    auth: AuthState
+}
+
+export const reducers: ActionReducerMap<AppState> = {
+    auth: authReducer
+};

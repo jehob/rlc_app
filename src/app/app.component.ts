@@ -17,14 +17,13 @@
  ******************************************************************************/
 
 import { Component } from "@angular/core";
-import { AuthGuardService } from "./api/services/auth-guard.service";
-import {
-    Router,
-    RouterStateSnapshot,
-    ActivatedRouteSnapshot,
-    ActivatedRoute
-} from "@angular/router";
-import {AuthService} from './api/services/auth.service';
+import { Router, ActivatedRoute } from "@angular/router";
+import { AppState } from "./store/app.reducers";
+import { Store } from "@ngrx/store";
+import { SetToken } from "./api/store/auth/auth.actions";
+import { AuthState } from "./api/store/auth/auth.reducers";
+import { Observable } from "rxjs";
+import { ApiSandboxService } from "./api/services/api-sandbox.service";
 
 @Component({
     selector: "app-root",
@@ -32,15 +31,15 @@ import {AuthService} from './api/services/auth.service';
     styleUrls: ["./app.component.scss"]
 })
 export class AppComponent {
-    showNav = "true";
     title = "rlcapp";
+    authState: Observable<AuthState>;
 
-    constructor(private route: ActivatedRoute, private router: Router, private auth: AuthService) {
-        console.log("started");
-        const token = localStorage.getItem("token");
-        if (token !== null) {
-
-        }
+    constructor(
+        private route: ActivatedRoute,
+        private router: Router,
+        private apiSB: ApiSandboxService
+    ) {
+        this.authState = this.apiSB.startApp();
     }
 
     showProfile() {
@@ -51,12 +50,11 @@ export class AppComponent {
         this.router.navigate(["records"], { relativeTo: this.route });
     }
 
-    showSettings(){
-        this.router.navigate(["login"], );
-
+    showSettings() {
+        this.router.navigate(["login"]);
     }
 
-    isAuthenticated(){
-        return this.auth.isAuthenticated();
+    logout() {
+        this.apiSB.logout();
     }
 }

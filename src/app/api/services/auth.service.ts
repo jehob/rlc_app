@@ -18,15 +18,17 @@
 
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { LOGIN_URL } from "../../statics/api_urls.statics";
-import {PersonalUserService} from './personal-user.service';
 
 @Injectable()
 export class AuthService {
     token: string;
 
-    constructor(private router: Router, private http: HttpClient, private personalUser:PersonalUserService) {}
+    constructor(
+        private router: Router,
+        private http: HttpClient
+    ) {}
 
     login(email: string, password: string) {
         this.http
@@ -35,7 +37,9 @@ export class AuthService {
                 (response: { token }) => {
                     console.log(response);
                     this.token = response.token;
-                    localStorage.setItem('token', this.token);
+                    localStorage.setItem("token", this.token);
+
+                    this.setOtherValues(response);
                     this.router.navigate([""]);
                 },
                 error => {
@@ -44,15 +48,33 @@ export class AuthService {
             );
     }
 
+    reload(token: string) {
+        this.token = token;
+        this.http.get(LOGIN_URL).subscribe(
+            response => {
+                this.setOtherValues(response);
+                console.log('reload', response);
+            },
+            error => {
+                console.log("error: ", error);
+            }
+        );
+    }
+
+    /**
+     * Sets all other values which came from the server except of the token
+     * @param response the response which came from the server after login or reload
+     */
+    setOtherValues(response) {
+        //this.personalUser.setUser(response.user);
+    }
+
     logout() {
+        localStorage.removeItem("token");
         this.token = null;
     }
 
     isAuthenticated() {
         return this.token != null;
-    }
-
-    getToken() {
-        return this.token;
     }
 }

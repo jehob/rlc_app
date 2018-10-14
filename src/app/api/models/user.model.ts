@@ -27,14 +27,14 @@ export class FullUser {
     public postal_code: string;
 
     constructor(
-        id: string,
-        email: string,
-        name: string,
-        birthday: Date,
-        phone_number: string,
-        street: string,
-        city: string,
-        postal_code: string
+        id: string = '',
+        email: string = '',
+        name: string = '',
+        birthday: Date = new Date(),
+        phone_number: string = '',
+        street: string = '',
+        city: string = '',
+        postal_code: string = ''
     ) {
         this.id = id;
         this.email = email;

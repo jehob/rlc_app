@@ -21,6 +21,7 @@ from django.db.models import Q
 
 from backend.recordmanagement import models, serializers
 from backend.api import permissions
+from backend.api.models import UserProfile
 from backend.api.statics.staticNames import StaticPermissionNames as Static
 
 
@@ -92,7 +93,7 @@ class RecordsListViewSet(viewsets.ViewSet):
         for tag_id in request.data['tagged']:
             record.tagged.add(models.RecordTag.objects.get(pk=tag_id))
         for user_id in request.data['working_on_record']:
-            record.working_on_record.add(models.UserProfile.objects.get(pk=user_id))
+            record.working_on_record.add(UserProfile.objects.get(pk=user_id))
         record.save()
         return Response(serializers.RecordFullDetailSerializer(record).data)
 

@@ -16,5 +16,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-export const LOGIN_URL = "/api/login/";
-export const RECORDS_URL = 'api/records/records/';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { RecordsRoutingModule } from "./records-routing.module";
+import { RecordsComponent } from "./components/records/records.component";
+import { CustomMaterialModule } from "../custom-material.module";
+import { StoreModule } from "@ngrx/store";
+import { recordsReducer } from "./store/records.reducers";
+
+@NgModule({
+    imports: [
+        CommonModule,
+        RecordsRoutingModule,
+        CustomMaterialModule,
+        StoreModule.forFeature("records", recordsReducer),
+    ],
+    declarations: [RecordsComponent]
+})
+export class RecordsModule {}

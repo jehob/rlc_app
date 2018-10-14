@@ -16,5 +16,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-export const LOGIN_URL = "/api/login/";
-export const RECORDS_URL = 'api/records/records/';
+import {Action} from '@ngrx/store';
+
+export const TRY_SIGNIN = 'TRY_SIGNIN';
+export const SET_TOKEN = 'SET_TOKEN';
+export const LOGOUT = 'LOGOUT';
+
+export class TrySignin implements Action {
+    readonly type = TRY_SIGNIN;
+
+    constructor(public payload: {username: string, password: string}){}
+}
+
+export class SetToken implements Action {
+    readonly type = SET_TOKEN;
+
+    constructor(public payload: string){}
+}
+
+export class Logout implements Action {
+    readonly type = LOGOUT;
+}
+
+export type AuthActions = TrySignin | SetToken | Logout;

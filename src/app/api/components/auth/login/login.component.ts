@@ -19,6 +19,9 @@
 import { Component, OnInit } from "@angular/core";
 import { AuthService } from "../../../services/auth.service";
 import { Router, ActivatedRoute } from "@angular/router";
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../../store/app.reducers';
+import {TrySignin} from '../../../store/auth/auth.actions';
 
 @Component({
     selector: "app-login",
@@ -29,7 +32,8 @@ export class LoginComponent implements OnInit {
     constructor(
         private auth: AuthService,
         private route: ActivatedRoute,
-        private router: Router
+        private router: Router,
+        private store: Store<AppState>
     ) {
         if (this.auth.isAuthenticated()) {
             this.router.navigate([""]);
@@ -44,6 +48,8 @@ export class LoginComponent implements OnInit {
     ngOnInit() {}
 
     onLogIn() {
-        this.auth.login(this.login.email, this.login.password);
+        console.log('clicked');
+        this.store.dispatch(new TrySignin({username: this.login.email, password: this.login.password}))
+        //this.auth.login(this.login.email, this.login.password);
     }
 }

@@ -16,5 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-export const LOGIN_URL = "/api/login/";
-export const RECORDS_URL = 'api/records/records/';
+import { Action } from "@ngrx/store";
+import { RestrictedRecord } from "../models/record.model";
+
+export const SET_RECORDS = "SET_RECORDS";
+
+export class SetRecords implements Action {
+    readonly type = SET_RECORDS;
+
+    constructor(public payload: Array<RestrictedRecord>) {}
+}
+
+export type RecordsActions = SetRecords;

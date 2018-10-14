@@ -16,5 +16,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-export const LOGIN_URL = "/api/login/";
-export const RECORDS_URL = 'api/records/records/';
+import {AuthActions, LOGOUT, SET_TOKEN} from './auth.actions';
+
+export interface AuthState {
+    token: string;
+    authenticated: boolean;
+}
+
+const initialState: AuthState = {
+    token: null,
+    authenticated: false
+};
+
+export function authReducer(state = initialState, action: AuthActions){
+    switch (action.type){
+        case (SET_TOKEN):
+            return({
+                ...state,
+                token: action.payload,
+                authenticated: true
+            });
+        case (LOGOUT):
+            return(initialState);
+        default:
+            return state;
+    }
+}

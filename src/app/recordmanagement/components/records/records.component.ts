@@ -17,6 +17,10 @@
  ******************************************************************************/
 
 import { Component, OnInit } from "@angular/core";
+import {RecordsSandboxService} from '../../services/records-sandbox.service';
+import {Observable, Subscription} from 'rxjs';
+import {RecordsState} from '../../store/records.reducers';
+import {RestrictedRecord} from '../../models/record.model';
 
 export interface Section {
     id: string;
@@ -30,57 +34,15 @@ export interface Section {
     styleUrls: ["./records.component.scss"]
 })
 export class RecordsComponent implements OnInit {
-    constructor() {}
-
-    ngOnInit() {}
-
+    records: Observable<RestrictedRecord[]>;
     value = "Search...";
 
-    records: Section[] = [
-        {
-            id: "2152-432-46283133-9",
-            type: "employment",
-            status: "orange"
-        },
-        {
-            id: "2152-432-46283133-9",
-            type: "employment",
-            status: "orange"
-        },
-        {
-            id: "2152-432-46283133-9",
-            type: "stay",
-            status: "red"
-        },
-        {
-            id: "2152-432-46283133-9",
-            type: "stay",
-            status: "green"
-        },
-        {
-            id: "2152-432-46283133-9",
-            type: "asylum",
-            status: "green"
-        },
-        {
-            id: "2152-432-46283133-9",
-            type: "asylum",
-            status: "red"
-        },
-        {
-            id: "2152-432-46283133-9",
-            type: "stay",
-            status: "green"
-        },
-        {
-            id: "2152-432-46283133-9",
-            type: "asylum",
-            status: "green"
-        },
-        {
-            id: "2152-432-46283133-9",
-            type: "asylum",
-            status: "red"
-        }
-    ];
+    constructor(private recordsSandbox: RecordsSandboxService) {
+        this.recordsSandbox.loadRecords();
+    }
+
+    ngOnInit() {
+        this.records = this.recordsSandbox.getRecords();
+    }
+
 }

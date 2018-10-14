@@ -16,5 +16,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-export const LOGIN_URL = "/api/login/";
-export const RECORDS_URL = 'api/records/records/';
+import {RouterModule, Routes} from '@angular/router';
+import {AuthGuardService} from './services/auth-guard.service';
+import {NgModule} from '@angular/core';
+import {ProfileComponent} from './components/profile/profile.component';
+
+const recordsRoutes: Routes = [
+    {
+        path: "profile",
+        component: ProfileComponent,
+        canActivate: [AuthGuardService]
+    }
+];
+
+@NgModule({
+    imports: [RouterModule.forChild(recordsRoutes)],
+    exports: [RouterModule],
+    providers: [AuthGuardService]
+})
+export class ApiRoutingModule {}

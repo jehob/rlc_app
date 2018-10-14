@@ -16,5 +16,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-export const LOGIN_URL = "/api/login/";
-export const RECORDS_URL = 'api/records/records/';
+import { Injectable } from "@angular/core";
+import { Router } from "@angular/router";
+import { AppState } from "../../store/app.reducers";
+import { Store } from "@ngrx/store";
+import {Logout, SetToken} from '../store/auth/auth.actions';
+
+@Injectable()
+export class ApiSandboxService {
+    constructor(private router: Router, private store: Store<AppState>) {}
+
+    logout() {
+        localStorage.clear();
+        this.store.dispatch(new Logout());
+        this.router.navigate(["login"]);
+    }
+
+    startApp(){
+        const token = localStorage.getItem("token");
+        if (token !== null) {
+            //this.auth.reload(token);
+            this.store.dispatch(new SetToken(token));
+        }
+
+        return this.store.select("auth");
+    }
+}

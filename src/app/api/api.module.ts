@@ -16,5 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-export const LOGIN_URL = "/api/login/";
-export const RECORDS_URL = 'api/records/records/';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { ApiRoutingModule } from "./api-routing.module";
+import { CustomMaterialModule } from "../custom-material.module";
+import {ProfileComponent} from './components/profile/profile.component';
+
+@NgModule({
+    imports: [CommonModule, ApiRoutingModule, CustomMaterialModule],
+    declarations: [ProfileComponent]
+})
+export class ApiModule {}
