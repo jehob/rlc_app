@@ -17,8 +17,6 @@
  ******************************************************************************/
 
 export class RestrictedRecord {
-    // origin country name and state
-    // record official note, tags, working on record
     constructor(
         public id: number,
         public last_contact_date: Date,
