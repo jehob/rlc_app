@@ -19,7 +19,6 @@
 import { Component, OnInit } from "@angular/core";
 import {RecordsSandboxService} from '../../services/records-sandbox.service';
 import {Observable, Subscription} from 'rxjs';
-import {RecordsState} from '../../store/records.reducers';
 import {RestrictedRecord} from '../../models/record.model';
 
 export interface Section {

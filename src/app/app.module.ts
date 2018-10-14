@@ -18,7 +18,6 @@
 
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
-import { FormsModule } from "@angular/forms";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { StoreModule } from "@ngrx/store";
 import { EffectsModule } from "@ngrx/effects";
@@ -30,28 +29,26 @@ import { AppComponent } from "./app.component";
 import { AuthService } from "./api/services/auth.service";
 import { AuthGuardService } from "./api/services/auth-guard.service";
 import { CustomMaterialModule } from "./custom-material.module";
-import { DashboardComponent } from "./api/components/Dashboard/dashboard.component";
-import { LoginComponent } from "./api/components/auth/login/login.component";
 import { reducers } from "./store/app.reducers";
 import { AuthEffects } from "./api/store/auth/auth.effects";
 import { ApiSandboxService } from "./api/services/api-sandbox.service";
 import { ApiModule } from "./api/api.module";
 import { RecordsSandboxService } from "./recordmanagement/services/records-sandbox.service";
 import {AuthInterceptor} from './api/services/auth.interceptor';
+import {environment} from '../environments/environment';
 
 @NgModule({
-    declarations: [AppComponent, DashboardComponent, LoginComponent],
+    declarations: [AppComponent],
     imports: [
         BrowserModule,
-        FormsModule,
         HttpClientModule,
         CustomMaterialModule,
         BrowserAnimationsModule,
         ApiModule,
+        AppRoutingModule,
         StoreModule.forRoot(reducers),
         EffectsModule.forRoot([AuthEffects]),
-        StoreDevtoolsModule.instrument(),
-        AppRoutingModule
+        !environment.production ? StoreDevtoolsModule.instrument() : [],
     ],
     providers: [
         AuthService,

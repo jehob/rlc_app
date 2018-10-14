@@ -102,14 +102,12 @@ class LoginViewSet(viewsets.ViewSet):
             consultants = UserProfileNameSerializer(user.rlc_members.first().get_consultants(),
                                                                 many=True).data
         countries = serializers.OriginCountryNameStateSerializer(models.OriginCountry.objects.all(), many=True).data
-        clients = serializers.ClientNameSerializer(models.Client.objects.all(), many=True).data
 
         tags = serializers.RecordTagNameSerializer(models.RecordTag.objects.all(), many=True).data
         return {
             'tags': tags,
             'permissions': user_permissions,
             'consultants': consultants,
-            'clients': clients,
             'countries': countries,
             'all_permissions': overall_permissions,
             'record_states': states_for_records,

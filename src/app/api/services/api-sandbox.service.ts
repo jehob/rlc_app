@@ -35,7 +35,6 @@ export class ApiSandboxService {
     startApp(){
         const token = localStorage.getItem("token");
         if (token !== null) {
-            //this.auth.reload(token);
             this.store.dispatch(new SetToken(token));
         }
 

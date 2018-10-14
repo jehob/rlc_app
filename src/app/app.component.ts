@@ -40,6 +40,7 @@ export class AppComponent {
         private apiSB: ApiSandboxService
     ) {
         this.authState = this.apiSB.startApp();
+
     }
 
     showProfile() {

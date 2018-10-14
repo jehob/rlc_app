@@ -21,9 +21,13 @@ import { CommonModule } from "@angular/common";
 import { ApiRoutingModule } from "./api-routing.module";
 import { CustomMaterialModule } from "../custom-material.module";
 import {ProfileComponent} from './components/profile/profile.component';
+import { RegisterComponent } from './components/auth/register/register.component';
+import {DashboardComponent} from './components/Dashboard/dashboard.component';
+import {LoginComponent} from './components/auth/login/login.component';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
-    imports: [CommonModule, ApiRoutingModule, CustomMaterialModule],
-    declarations: [ProfileComponent]
+    imports: [CommonModule, ApiRoutingModule, CustomMaterialModule, FormsModule],
+    declarations: [ProfileComponent, RegisterComponent, DashboardComponent, LoginComponent]
 })
 export class ApiModule {}

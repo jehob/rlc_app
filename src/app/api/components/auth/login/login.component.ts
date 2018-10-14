@@ -48,7 +48,7 @@ export class LoginComponent implements OnInit {
     ngOnInit() {}
 
     onLogIn() {
-        console.log('clicked');
+        //console.log('clicked');
         this.store.dispatch(new TrySignin({username: this.login.email, password: this.login.password}))
         //this.auth.login(this.login.email, this.login.password);
     }

@@ -20,17 +20,21 @@ import {RouterModule, Routes} from '@angular/router';
 import {AuthGuardService} from './services/auth-guard.service';
 import {NgModule} from '@angular/core';
 import {ProfileComponent} from './components/profile/profile.component';
+import {DashboardComponent} from './components/Dashboard/dashboard.component';
+import {LoginComponent} from './components/auth/login/login.component';
 
-const recordsRoutes: Routes = [
+const apiRoutes: Routes = [
     {
         path: "profile",
         component: ProfileComponent,
         canActivate: [AuthGuardService]
-    }
+    },
+    { path: "", pathMatch: "full" , component: DashboardComponent, canActivate: [AuthGuardService]},
+    { path: "login", component: LoginComponent},
 ];
 
 @NgModule({
-    imports: [RouterModule.forChild(recordsRoutes)],
+    imports: [RouterModule.forChild(apiRoutes)],
     exports: [RouterModule],
     providers: [AuthGuardService]
 })
