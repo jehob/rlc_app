@@ -24,8 +24,8 @@ import {
     SetRecords,
     START_LOADING_RECORDS
 } from "./records.actions";
-import { mergeMap, switchMap } from "rxjs/operators";
-import { from } from "rxjs";
+import {catchError, mergeMap, switchMap} from 'rxjs/operators';
+import {from, of} from 'rxjs';
 import { RECORDS_URL } from "../../statics/api_urls.statics";
 import { FullRecord, RestrictedRecord } from "../models/record.model";
 import { load } from "@angular/core/src/render3/instructions";
@@ -38,42 +38,51 @@ export class RecordsEffects {
     recordsLoad = this.actions.pipe(
         ofType(START_LOADING_RECORDS),
         switchMap(() => {
-            return from(this.http.get(RECORDS_URL));
-        }),
-        mergeMap(response => {
-            const loadedRecords: Array<RestrictedRecord> = [];
-            Object.values(response).map(record => {
-                if (record.note) {
-                    loadedRecords.push(
-                        new FullRecord(
-                            record.id,
-                            new Date(record.last_contact_date),
-                            record.state,
-                            record.tagged,
-                            record.working_on_record,
-                            new Date(record.created_on),
-                            new Date(record.last_edited),
-                            new Date(record.first_contact_date),
-                            record.record_token,
-                            record.note,
-                            record.from_rlc,
-                            record.client
-                        )
-                    );
-                } else {
-                    loadedRecords.push(
-                        new RestrictedRecord(
-                            record.id,
-                            new Date(record.last_contact_date),
-                            record.state,
-                            record.tagged,
-                            record.working_on_record
-                        )
-                    );
-                }
-            });
-            console.log(loadedRecords);
-            return [{ type: SET_RECORDS, payload: loadedRecords }];
+            return from(
+                this.http.get(RECORDS_URL).pipe(
+                    mergeMap(response => {
+                        console.log('recordsFromBackend', response);
+                        const loadedRecords: Array<RestrictedRecord> = [];
+                        Object.values(response).map(record => {
+                            if (record.note) {
+                                loadedRecords.push(
+                                    new FullRecord(
+                                        record.id,
+                                        record.record_token,
+                                        new Date(record.last_contact_date),
+                                        record.state,
+                                        record.tagged,
+                                        record.working_on_record,
+                                        new Date(record.created_on),
+                                        new Date(record.last_edited),
+                                        new Date(record.first_contact_date),
+                                        record.record_token,
+                                        record.note,
+                                        record.from_rlc,
+                                        record.client
+                                    )
+                                );
+                            } else {
+                                loadedRecords.push(
+                                    new RestrictedRecord(
+                                        record.id,
+                                        record.record_token,
+                                        new Date(record.last_contact_date),
+                                        record.state,
+                                        record.tagged,
+                                        record.working_on_record
+                                    )
+                                );
+                            }
+                        });
+                        console.log(loadedRecords);
+                        return [{ type: SET_RECORDS, payload: loadedRecords }];
+                    }),
+                    catchError(error => {
+                        return of({'error': 'error at loading '})
+                    })
+                )
+            );
         })
     );
 }

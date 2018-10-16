@@ -18,13 +18,13 @@
 
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { RecordsComponent } from "./components/records/records.component";
+import { RecordsListComponent } from "./components/records/records-list.component";
 import { AuthGuardService } from "../api/services/auth-guard.service";
 
 const recordsRoutes: Routes = [
     {
         path: "",
-        component: RecordsComponent
+        component: RecordsListComponent
     }
 ];
 

@@ -29,10 +29,10 @@ export interface Section {
 
 @Component({
     selector: "app-records",
-    templateUrl: "./records.component.html",
-    styleUrls: ["./records.component.scss"]
+    templateUrl: "./records-list.component.html",
+    styleUrls: ["./records-list.component.scss"]
 })
-export class RecordsComponent implements OnInit {
+export class RecordsListComponent implements OnInit {
     records: Observable<RestrictedRecord[]>;
     value = "Search...";
 

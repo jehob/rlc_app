@@ -19,6 +19,7 @@
 export class RestrictedRecord {
     constructor(
         public id: number,
+        public token: string,
         public last_contact_date: Date,
         public state: string,
         public tags: [number, string],
@@ -35,6 +36,7 @@ export class RestrictedRecord {
 export class FullRecord extends RestrictedRecord {
     constructor(
         id: number,
+        token: string,
         last_contact_date: Date,
         state: string,
         tags: [number, string],
@@ -47,7 +49,7 @@ export class FullRecord extends RestrictedRecord {
         public from_rlc: number,
         public client: number
     ) {
-        super(id, last_edited, state, tags, working_on_record);
+        super(id, token, last_edited, state, tags, working_on_record);
         this.created_on = created_on;
         this.last_edited = last_edited;
         this.first_contact_date = first_contact_date;

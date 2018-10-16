@@ -19,12 +19,13 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RecordsRoutingModule } from "./records-routing.module";
-import { RecordsComponent } from "./components/records/records.component";
+import { RecordsListComponent } from "./components/records/records-list.component";
 import { CustomMaterialModule } from "../custom-material.module";
 import { StoreModule } from "@ngrx/store";
 import { recordsReducer } from "./store/records.reducers";
 import { EffectsModule } from "@ngrx/effects";
 import { RecordsEffects } from "./store/records.effects";
+import { RecordsListItemComponent } from './components/records/records-list-item/records-list-item.component';
 
 @NgModule({
     imports: [
@@ -34,6 +35,6 @@ import { RecordsEffects } from "./store/records.effects";
         StoreModule.forFeature("records", recordsReducer),
         EffectsModule.forFeature([RecordsEffects])
     ],
-    declarations: [RecordsComponent]
+    declarations: [RecordsListComponent, RecordsListItemComponent]
 })
 export class RecordsModule {}

@@ -87,7 +87,7 @@ export class ApiSandboxService {
                 userFromStore = loadedUser;
             });
         const id = userFromStore.id;
-
+        console.log('updates', userFromStore.getUpdates(user));
         this.apiStateStore.dispatch(new PatchUser({id, userUpdates: userFromStore.getUpdates(user)}));
     }
 }

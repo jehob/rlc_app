@@ -19,43 +19,46 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Actions, Effect, ofType } from "@ngrx/effects";
-import {PATCH_USER, PatchUser, SET_USER} from './api.actions';
-import {catchError, map, mergeMap, switchMap} from 'rxjs/operators';
-import {from, of} from 'rxjs';
+import { PATCH_USER, PatchUser } from "./api.actions";
+import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
+import { from, of } from "rxjs";
 import { GetSpecialProfileURL } from "../../statics/api_urls.statics";
+import {ApiSandboxService} from '../services/api-sandbox.service';
 
 @Injectable()
 export class ApiEffects {
-    constructor(
-        private actions: Actions,
-        private http: HttpClient
-    ) {}
+    constructor(private actions: Actions, private http: HttpClient, ) {}
 
     @Effect()
     patchUser = this.actions.pipe(
         ofType(PATCH_USER),
         map((action: PatchUser) => {
+            console.log("getPayload", action.payload);
             return action.payload;
         }),
-        switchMap((updates: {id: string, userUpdates: any}) => {
+        switchMap((updates: { id: string; userUpdates: any }) => {
             console.log("userUpdates", updates.userUpdates);
             return from(
-                this.http.patch(GetSpecialProfileURL(updates.id), updates.userUpdates)
+                this.http
+                    .patch(
+                        GetSpecialProfileURL(updates.id),
+                        updates.userUpdates
+                    )
+                    .pipe(
+                        catchError((error) => {
+                            if (error.status === 400) return of({ error: "1" });
+                            else if (error.status === 500)
+                                return of({ error: "2" });
+                            return of({ error: "unknown" });
+                        }),
+                        mergeMap((response: any) => {
+                            console.log("yay", response);
+                            return [
+                                ...ApiSandboxService.getFullUserFromJson(response)
+                            ];
+                        })
+                    )
             );
-        }),
-        catchError((error) => {
-            console.log('error', error);
-            if (error.status === 400)
-                return of({'error': '1'});
-            else if (error.status === 500)
-                return of({'error': '2'})
-
-        }),
-        mergeMap((response: any) => {
-            console.log("yay", response);
-            return [
-
-            ];
         })
     );
 }
