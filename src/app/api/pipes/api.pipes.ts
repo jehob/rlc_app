@@ -16,22 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { Action } from "@ngrx/store";
-import { FullUser } from "../models/user.model";
+import { Pipe, PipeTransform} from '@angular/core';
+import { DatePipe } from '@angular/common';
 
-export const SET_USER = "SET_USER";
-export const PATCH_USER = "PATCH_USER";
-
-export class SetUser implements Action {
-    readonly type = SET_USER;
-
-    constructor(public payload: FullUser) {}
+@Pipe({
+    name: 'dateFormat'
+})
+export class DateFormatPipe extends DatePipe implements PipeTransform {
+    transform(value: any, args?: any): any {
+        return super.transform(value, "yyyy-dd-MM").replace(/\b0/g, '');
+    }
 }
-
-export class PatchUser implements Action {
-    readonly type = PATCH_USER;
-
-    constructor(public payload: {id: string, userUpdates: any}){}
-}
-
-export type ApiActions = SetUser | PatchUser;

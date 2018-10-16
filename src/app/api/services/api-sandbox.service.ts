@@ -19,25 +19,75 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { AppState } from "../../store/app.reducers";
-import { Store } from "@ngrx/store";
-import { Logout, SetToken } from "../store/auth/auth.actions";
+import { select, Store } from "@ngrx/store";
+import {
+    Logout,
+    ReloadStaticInformation,
+    SetToken
+} from "../store/auth/auth.actions";
+import { ApiState } from "../store/api.reducers";
+import { FullUser } from "../models/user.model";
+import { take } from "rxjs/operators";
+import {PatchUser, SET_USER} from '../store/api.actions';
+import {load} from '@angular/core/src/render3/instructions';
 
 @Injectable()
 export class ApiSandboxService {
-    constructor(private router: Router, private store: Store<AppState>) {}
+    constructor(
+        private router: Router,
+        private appStateStore: Store<AppState>,
+        private apiStateStore: Store<ApiState>
+    ) {}
+
+    static getFullUserFromJson(user){
+        const userObj = new FullUser(
+            user.id,
+            user.email,
+            user.name,
+            new Date(user.birthday),
+            user.phone_number,
+            user.street,
+            user.city,
+            user.postal_code
+        );
+        return [
+            {
+                type: SET_USER,
+                payload: userObj
+            }
+        ];
+    };
 
     logout() {
         localStorage.clear();
-        this.store.dispatch(new Logout());
+        this.appStateStore.dispatch(new Logout());
         this.router.navigate(["login"]);
     }
 
     startApp() {
         const token = localStorage.getItem("token");
         if (token !== null) {
-            this.store.dispatch(new SetToken(token));
+            this.appStateStore.dispatch(new SetToken(token));
+            this.appStateStore.dispatch(new ReloadStaticInformation());
         }
 
-        return this.store.select("auth");
+        return this.appStateStore.select("auth");
+    }
+
+    getUser() {
+        return this.apiStateStore.pipe(select((state: any) => state.api.user));
+    }
+
+    saveUser(user: FullUser) {
+        let userFromStore: FullUser;
+        this.apiStateStore
+            .pipe(select((state: any) => state.api.user))
+            .pipe(take(1))
+            .subscribe((loadedUser: FullUser) => {
+                userFromStore = loadedUser;
+            });
+        const id = userFromStore.id;
+
+        this.apiStateStore.dispatch(new PatchUser({id, userUpdates: userFromStore.getUpdates(user)}));
     }
 }

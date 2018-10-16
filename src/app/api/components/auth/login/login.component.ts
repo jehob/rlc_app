@@ -21,7 +21,7 @@ import { AuthService } from "../../../services/auth.service";
 import { Router, ActivatedRoute } from "@angular/router";
 import { Store } from "@ngrx/store";
 import { AppState } from "../../../../store/app.reducers";
-import { TrySignin } from "../../../store/auth/auth.actions";
+import { TryLogin } from "../../../store/auth/auth.actions";
 
 @Component({
     selector: "app-login",
@@ -41,20 +41,18 @@ export class LoginComponent implements OnInit {
     }
 
     login = {
-        email: "jehob@web.de",
+        email: "abc@web.de",
         password: "qwe123"
     };
 
     ngOnInit() {}
 
     onLogIn() {
-        //console.log('clicked');
         this.store.dispatch(
-            new TrySignin({
+            new TryLogin({
                 username: this.login.email,
                 password: this.login.password
             })
         );
-        //this.auth.login(this.login.email, this.login.password);
     }
 }

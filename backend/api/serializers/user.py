@@ -63,7 +63,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         if 'city' in validated_data:
             user.city = validated_data['city']
         if 'zip_code' in validated_data:
-            user.zip_code = validated_data['zip_code']
+            user.postal_code = validated_data['zip_code']
         # TODO: if name is member of rlc, is_active=True, real name is important (or same email)
 
         user.save()
@@ -110,7 +110,7 @@ class UserProfileCreatorSerializer(serializers.ModelSerializer):
         if 'city' in validated_data:
             user.city = validated_data['city']
         if 'zip_code' in validated_data:
-            user.zip_code = validated_data['zip_code']
+            user.postal_code = validated_data['zip_code']
 
         user.save()
         rlc = models.Rlc.objects.get(name='München')

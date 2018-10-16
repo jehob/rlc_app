@@ -24,9 +24,12 @@ import { ProfileComponent } from "./components/profile/profile.component";
 import { RegisterComponent } from "./components/auth/register/register.component";
 import { DashboardComponent } from "./components/Dashboard/dashboard.component";
 import { LoginComponent } from "./components/auth/login/login.component";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { StoreModule } from "@ngrx/store";
 import { apiReducer } from "./store/api.reducers";
+import { EffectsModule } from "@ngrx/effects";
+import { ApiEffects } from "./store/api.effects";
+import { DateFormatPipe } from "./pipes/api.pipes";
 
 @NgModule({
     imports: [
@@ -34,13 +37,17 @@ import { apiReducer } from "./store/api.reducers";
         ApiRoutingModule,
         CustomMaterialModule,
         FormsModule,
-        StoreModule.forFeature("api", apiReducer)
+        ReactiveFormsModule,
+        StoreModule.forFeature("api", apiReducer),
+        EffectsModule.forFeature([ApiEffects])
     ],
     declarations: [
         ProfileComponent,
         RegisterComponent,
         DashboardComponent,
-        LoginComponent
-    ]
+        LoginComponent,
+        DateFormatPipe
+    ],
+    providers: [DateFormatPipe]
 })
 export class ApiModule {}

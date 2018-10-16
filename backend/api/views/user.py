@@ -39,6 +39,8 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     search_fields = ('name', 'email',)
 
 
+
+
 class UserProfileCreatorViewSet(viewsets.ModelViewSet):
     """Handles creating profiles"""
     serializer_class = UserProfileCreatorSerializer
@@ -69,14 +71,14 @@ class LoginViewSet(viewsets.ViewSet):
                     return Response({'error': 'wrong password'}, status=400)
                 else:
                     return Response({'error': 'there is no account with this email'}, status=400)
-        return Response(LoginViewSet.getLoginData(token.data['token']))
+        return Response(LoginViewSet.get_login_data(token.data['token']))
 
     def get(self, request):
         token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
-        return Response(LoginViewSet.getLoginData(token))
+        return Response(LoginViewSet.get_login_data(token))
 
     @staticmethod
-    def getLoginData(token):
+    def get_login_data(token):
         user = Token.objects.get(key=token).user
         serialized_user = UserProfileSerializer(user).data
 

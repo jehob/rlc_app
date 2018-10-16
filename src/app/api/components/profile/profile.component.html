@@ -19,40 +19,38 @@
 <mat-card class="profile-container">
 
     <mat-card-header>
-      <div class="avatar-container">
-        <img class="img-avatar" src="../../../../../static/images/avater.jpg" alt="Avater">
-        <span class="caption">Sol Seong</span>
-      </div>    
+        <div class="avatar-container">
+            <img class="img-avatar" src="../../../../../static/images/avater.jpg" alt="Avater">
+            <span class="caption">{{name}}</span>
+        </div>
     </mat-card-header>
-  
+
     <mat-card-content>
-      <div class="profil-form-container">
-        <mat-form-field>
-          <input matInput placeholder="Email" [(value)]="this.user.email">
-        </mat-form-field>
+        <div class="profile-form-container">
+            <form [formGroup]="userForm">
+                <mat-form-field>
+                    <input matInput placeholder="Email" formControlName="email">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="Tel. No." formControlName="phone_number">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="Street, No." formControlName="street">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="Postal Code" formControlName="postal_code">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="City" formControlName="city">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput [matDatepicker]="picker" placeholder="Birth Date" formControlName="birthday">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </form>
 
-        <mat-form-field>
-          <input matInput placeholder="Tel. No." value={{this.user.phone_number}}>
-        </mat-form-field>
-
-        <mat-form-field>
-          <input matInput placeholder="Street, No." value={{this.user.street}}>
-        </mat-form-field>
-
-        <mat-form-field>
-          <input matInput placeholder="Postal Code" value={{this.user.postal_code}}>
-        </mat-form-field>
-
-        <mat-form-field>
-          <input matInput placeholder="City" value={{this.user.city}}>
-        </mat-form-field>
-
-        <mat-form-field>
-          <input matInput [matDatepicker]="picker" placeholder="Birth Date">
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
-      </div>
+        </div>
     </mat-card-content>
 
     <mat-card-actions>

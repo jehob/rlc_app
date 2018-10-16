@@ -18,6 +18,9 @@
 
 import { Component, OnInit } from "@angular/core";
 import { FullUser } from "../../models/user.model";
+import { ApiSandboxService } from "../../services/api-sandbox.service";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { take } from "rxjs/operators";
 
 @Component({
     selector: "app-profile",
@@ -25,19 +28,52 @@ import { FullUser } from "../../models/user.model";
     styleUrls: ["./profile.component.scss"]
 })
 export class ProfileComponent implements OnInit {
-    user: FullUser;
+    userForm: FormGroup;
+    name = "";
 
-    constructor() {
-        console.log("constructor");
-        this.user = new FullUser();
+    constructor(private apiSB: ApiSandboxService) {
+        this.userForm = new FormGroup({
+            email: new FormControl(""),
+            phone_number: new FormControl(""),
+            street: new FormControl(""),
+            postal_code: new FormControl(""),
+            city: new FormControl(""),
+            birthday: new FormControl("")
+        });
     }
 
     ngOnInit() {
-        console.log("ng on init");
-        //his.user = this.userService.getUser();
+        this.apiSB
+            .getUser()
+            .pipe(take(2))
+            .subscribe((user: FullUser) => {
+                if (user) {
+                    this.name = user.name;
+                    this.userForm = new FormGroup({
+                        email: new FormControl(user.email, Validators.required),
+                        phone_number: new FormControl(user.phone_number),
+                        street: new FormControl(user.street),
+                        postal_code: new FormControl(user.postal_code),
+                        city: new FormControl(user.city),
+                        birthday: new FormControl(user.birthday)
+                    });
+                }
+            });
     }
 
     onSaveClick() {
-        console.log(this.user);
+        console.log('saveClicked');
+        this.apiSB.saveUser(
+            new FullUser(
+                undefined,
+                this.userForm.value.email,
+                undefined,
+                new Date(this.userForm.value.birthday),
+                this.userForm.value.phone_number,
+                this.userForm.value.street,
+                this.userForm.value.city,
+                this.userForm.value.postal_code
+            )
+        );
     }
 }

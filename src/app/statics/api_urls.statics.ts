@@ -16,5 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-export const LOGIN_URL = "/api/login/";
+export const LOGIN_URL = "api/login/";
 export const RECORDS_URL = "api/records/records/";
+export const PROFILE_URL = "api/profiles/";
+
+export function GetSpecialProfileURL(id: string){
+    return PROFILE_URL + id + "/";
+}

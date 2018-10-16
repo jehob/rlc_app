@@ -22,9 +22,11 @@ import { map, mergeMap, switchMap } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
 import { from } from "rxjs";
 import { Router } from "@angular/router";
-import { SET_TOKEN, TRY_SIGNIN, TrySignin } from "./auth.actions";
+import {RELOAD_STATIC_INFORMATION, SET_TOKEN, TRY_LOGIN, TryLogin} from './auth.actions';
 import { LOGIN_URL } from "../../../statics/api_urls.statics";
 import { FullUser } from "../../models/user.model";
+import { SET_USER } from "../api.actions";
+import {ApiSandboxService} from '../../services/api-sandbox.service';
 
 @Injectable()
 export class AuthEffects {
@@ -36,33 +38,46 @@ export class AuthEffects {
 
     @Effect()
     authSignin = this.actions.pipe(
-        ofType(TRY_SIGNIN),
-        map((action: TrySignin) => {
+        ofType(TRY_LOGIN),
+        map((action: TryLogin) => {
             return action.payload;
         }),
         switchMap((authData: { username: string; password: string }) => {
             return from(this.http.post(LOGIN_URL, authData));
         }),
         mergeMap((response: { token: string; user }) => {
-            //console.log(response);
-            const user = new FullUser(
-                response.user.id,
-                response.user.email,
-                response.user.name,
-                new Date(response.user.birthday),
-                response.user.phone_number,
-                response.user.street,
-                response.user.city,
-                response.user.postal_code
-            );
             localStorage.setItem("token", response.token);
             this.router.navigate([""]);
+
             return [
                 {
                     type: SET_TOKEN,
                     payload: response.token
-                }
+                },
+                ...AuthEffects.getStaticInformation(response)
             ];
         })
     );
+
+    @Effect()
+    reload = this.actions.pipe(
+        ofType(RELOAD_STATIC_INFORMATION),
+        switchMap(() => {
+            return from(this.http.get(LOGIN_URL));
+        }),
+        mergeMap((response: any) => {
+            console.log(response);
+
+            return [
+                ...AuthEffects.getStaticInformation(response)
+            ]
+        })
+    );
+
+    static getStaticInformation(response: {user: any}){
+        return [
+            ...ApiSandboxService.getFullUserFromJson(response.user),
+        ];
+    }
 }
+

@@ -16,6 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
+import { DateFormatPipe } from "../pipes/api.pipes";
+
 export class FullUser {
     public id: string;
     public email: string;
@@ -48,6 +50,22 @@ export class FullUser {
 
     getInfo() {
         return this.email;
+    }
+
+    /**
+     * compares this instance with another and returns updateObject with every field which will be changed
+     * used to generated the update object for patching user in backend
+     * @param updates potential updates for object
+     */
+    getUpdates(updates: FullUser) {
+        const changes = {};
+        // if (this.birthday !== updates.birthday)
+        //     changes["birthday"] = this.datePipe.transform(updates.birthday);
+        if (this.phone_number !== updates.phone_number) changes["phone_number"] = updates.phone_number;
+        if (this.street !== updates.street) changes["street"] = updates.street;
+        if (this.city !== updates.city) changes["city"] = updates.city;
+        if (this.postal_code !== updates.postal_code) changes["postal_code"] = updates.postal_code;
+        return changes;
     }
 }
 

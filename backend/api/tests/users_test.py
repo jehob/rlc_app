@@ -108,7 +108,7 @@ class UsersTests(TransactionTestCase):
     def test_create_new_user_full_success(self):
         client = APIClient()
         before = UserProfile.objects.count()
-        response = client.post(self.base_url_create, {
+        user = {
             'email': 'peter_parker@gmx.de',
             'name': 'Peter Parker',
             'birthday': '1990-13-4',
@@ -116,8 +116,9 @@ class UsersTests(TransactionTestCase):
             'phone_number': '1283812812',
             'street': 'Klausweg 12',
             'city': 'munich',
-            'zip_code': '12321'
-        })
+            'postal_code': '12321'
+        }
+        response = client.post(self.base_url_create, user)
         after = UserProfile.objects.count()
         self.assertTrue(response.status_code == 201)
         self.assertTrue(before + 1 == after)
@@ -134,7 +135,7 @@ class UsersTests(TransactionTestCase):
             'phone_number': '1283812812',
             'street': 'Klausweg 12',
             'city': 'munich',
-            'zip_code': '12322'
+            'postal_code': '12322'
         })
         after = UserProfile.objects.count()
         self.assertTrue(response.status_code == 201)
@@ -227,6 +228,15 @@ class UsersTests(TransactionTestCase):
         self.assertTrue(response.status_code == 200)
         self.assertTrue(user_from_db.__len__() == 1)
         self.assertTrue(user_from_db[0].name == 'this is a test')
+
+    def test_edit_patch_own_profile_success_postal_code(self):
+        response = self.client.patch(self.base_url_profile + '{}/'.format(self.user.id), {
+            'postal_code': '151515'
+        })
+        user_from_db = list(UserProfile.objects.filter(id=self.user.id))
+        self.assertTrue(response.status_code == 200)
+        self.assertTrue(user_from_db.__len__() == 1)
+        self.assertTrue(user_from_db[0].postal_code == '151515')
 
     def test_edit_patch_own_profile_error_no_name(self):
         user_from_db_before = list(UserProfile.objects.filter(id=self.user.id))

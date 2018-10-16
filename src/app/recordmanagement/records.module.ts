@@ -32,7 +32,7 @@ import { RecordsEffects } from "./store/records.effects";
         RecordsRoutingModule,
         CustomMaterialModule,
         StoreModule.forFeature("records", recordsReducer),
-        EffectsModule.forRoot([RecordsEffects])
+        EffectsModule.forFeature([RecordsEffects])
     ],
     declarations: [RecordsComponent]
 })
