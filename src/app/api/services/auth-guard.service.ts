@@ -31,6 +31,8 @@ import { AuthState } from "../store/auth/auth.reducers";
 
 @Injectable()
 export class AuthGuardService implements CanActivate {
+    lastVisitedUrl: string = undefined;
+
     constructor(
         private auth: AuthService,
         private router: Router,
@@ -38,19 +40,24 @@ export class AuthGuardService implements CanActivate {
     ) {}
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        // const authenticated = this.auth.isAuthenticated();
-        // if (!authenticated) {
-        //     this.router.navigate(["login"]);
-        // }
-        // return authenticated;
         return this.store.select("auth").pipe(
             take(1),
             map((authState: AuthState) => {
+                console.log('guarded');
                 if (!authState.authenticated) {
+                    this.lastVisitedUrl = route.routeConfig.path;
                     this.router.navigate(["login"]);
                 }
                 return authState.authenticated;
             })
         );
+    }
+
+    getLastVisitedUrl(){
+        let returnVal;
+        if (this.lastVisitedUrl)
+            returnVal = this.lastVisitedUrl;
+        this.lastVisitedUrl = undefined;
+        return returnVal;
     }
 }

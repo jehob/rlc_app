@@ -18,43 +18,59 @@
 
 import { Injectable } from "@angular/core";
 import { Actions, Effect, ofType } from "@ngrx/effects";
-import { map, mergeMap, switchMap } from "rxjs/operators";
+import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
 import { from } from "rxjs";
 import { Router } from "@angular/router";
-import {TRY_RELOAD_STATIC_INFORMATION, SET_TOKEN, TRY_LOGIN, TryLogin} from './auth.actions';
+import {
+    TRY_RELOAD_STATIC_INFORMATION,
+    SET_TOKEN,
+    TRY_LOGIN,
+    TryLogin
+} from "./auth.actions";
 import { LOGIN_URL } from "../../../statics/api_urls.statics";
-import {ApiSandboxService} from '../../services/api-sandbox.service';
-import {SET_USER} from '../api.actions';
+import { ApiSandboxService } from "../../services/api-sandbox.service";
+import { SET_USER } from "../api.actions";
+import { AuthGuardService } from "../../services/auth-guard.service";
 
 @Injectable()
 export class AuthEffects {
     constructor(
         private actions: Actions,
         private http: HttpClient,
-        private router: Router
+        private router: Router,
+        private guard: AuthGuardService
     ) {}
 
     @Effect()
-    authSignin = this.actions.pipe(
+    tryLogin = this.actions.pipe(
         ofType(TRY_LOGIN),
         map((action: TryLogin) => {
             return action.payload;
         }),
         switchMap((authData: { username: string; password: string }) => {
-            return from(this.http.post(LOGIN_URL, authData));
-        }),
-        mergeMap((response: { token: string; user }) => {
-            localStorage.setItem("token", response.token);
-            this.router.navigate([""]);
+            return from(
+                this.http.post(LOGIN_URL, authData).pipe(
+                    catchError(error => []),
+                    mergeMap((response: { token: string; user }) => {
+                        localStorage.setItem("token", response.token);
 
-            return [
-                {
-                    type: SET_TOKEN,
-                    payload: response.token
-                },
-                ...AuthEffects.getStaticInformation(response)
-            ];
+                        if (this.guard.lastVisitedUrl)
+                            this.router.navigate([
+                                this.guard.getLastVisitedUrl()
+                            ]);
+                        else this.router.navigate([""]);
+
+                        return [
+                            {
+                                type: SET_TOKEN,
+                                payload: response.token
+                            },
+                            ...AuthEffects.getStaticInformation(response)
+                        ];
+                    })
+                )
+            );
         })
     );
 
@@ -67,13 +83,11 @@ export class AuthEffects {
         mergeMap((response: any) => {
             console.log(response);
 
-            return [
-                ...AuthEffects.getStaticInformation(response)
-            ]
+            return [...AuthEffects.getStaticInformation(response)];
         })
     );
 
-    static getStaticInformation(response: {user: any}){
+    static getStaticInformation(response: { user: any }) {
         return [
             {
                 type: SET_USER,
@@ -82,4 +96,3 @@ export class AuthEffects {
         ];
     }
 }
-
