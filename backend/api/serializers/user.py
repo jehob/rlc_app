@@ -62,8 +62,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
             user.street = validated_data['street']
         if 'city' in validated_data:
             user.city = validated_data['city']
-        if 'zip_code' in validated_data:
-            user.postal_code = validated_data['zip_code']
+        if 'postal_code' in validated_data:
+            user.postal_code = validated_data['postal_code']
         # TODO: if name is member of rlc, is_active=True, real name is important (or same email)
 
         user.save()
@@ -86,7 +86,7 @@ class UserProfileCreatorSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserProfile
         fields = ('id', 'password', 'email', 'name',
-                  'phone_number', 'street', 'city', 'zip_code')
+                  'phone_number', 'street', 'city', 'postal_code')
         extra_kwargs = {
             'password': {
                 'write_only': True
@@ -109,15 +109,17 @@ class UserProfileCreatorSerializer(serializers.ModelSerializer):
             user.street = validated_data['street']
         if 'city' in validated_data:
             user.city = validated_data['city']
-        if 'zip_code' in validated_data:
-            user.postal_code = validated_data['zip_code']
+        if 'postal_code' in validated_data:
+            user.postal_code = validated_data['postal_code']
+        if 'birthday' in validated_data:
+            user.birthday = validated_data['birthday']
 
         user.save()
-        rlc = models.Rlc.objects.get(name='München')
-        if rlc is not None:
-            user.rlc_members.add(rlc)
-        group = models.Group.objects.get(name='RLC München member')
-        if group is not None:
-            user.group_members.add(group)
-        user.save()
+        # rlc = models.Rlc.objects.get(name='München')
+        # if rlc is not None:
+        #     user.rlc_members.add(rlc)
+        # group = models.Group.objects.get(name='RLC München member')
+        # if group is not None:
+        #     user.group_members.add(group)
+        # user.save()
         return user

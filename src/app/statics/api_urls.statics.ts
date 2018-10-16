@@ -19,6 +19,7 @@
 export const LOGIN_URL = "api/login/";
 export const RECORDS_URL = "api/records/records/";
 export const PROFILE_URL = "api/profiles/";
+export const CREATE_PROFILE_URL = "api/create_profile/";
 
 export function GetSpecialProfileURL(id: string){
     return PROFILE_URL + id + "/";

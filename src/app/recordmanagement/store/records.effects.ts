@@ -22,7 +22,7 @@ import { HttpClient } from "@angular/common/http";
 import {
     SET_RECORDS,
     SetRecords,
-    START_LOADING_RECORDS
+    TRY_LOADING_RECORDS
 } from "./records.actions";
 import {catchError, mergeMap, switchMap} from 'rxjs/operators';
 import {from, of} from 'rxjs';
@@ -36,7 +36,7 @@ export class RecordsEffects {
 
     @Effect()
     recordsLoad = this.actions.pipe(
-        ofType(START_LOADING_RECORDS),
+        ofType(TRY_LOADING_RECORDS),
         switchMap(() => {
             return from(
                 this.http.get(RECORDS_URL).pipe(

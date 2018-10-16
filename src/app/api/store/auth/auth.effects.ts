@@ -22,7 +22,7 @@ import { map, mergeMap, switchMap } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
 import { from } from "rxjs";
 import { Router } from "@angular/router";
-import {RELOAD_STATIC_INFORMATION, SET_TOKEN, TRY_LOGIN, TryLogin} from './auth.actions';
+import {TRY_RELOAD_STATIC_INFORMATION, SET_TOKEN, TRY_LOGIN, TryLogin} from './auth.actions';
 import { LOGIN_URL } from "../../../statics/api_urls.statics";
 import {ApiSandboxService} from '../../services/api-sandbox.service';
 import {SET_USER} from '../api.actions';
@@ -60,7 +60,7 @@ export class AuthEffects {
 
     @Effect()
     reload = this.actions.pipe(
-        ofType(RELOAD_STATIC_INFORMATION),
+        ofType(TRY_RELOAD_STATIC_INFORMATION),
         switchMap(() => {
             return from(this.http.get(LOGIN_URL));
         }),

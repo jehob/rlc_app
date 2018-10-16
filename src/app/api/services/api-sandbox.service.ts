@@ -28,14 +28,16 @@ import {
 import { ApiState } from "../store/api.reducers";
 import { FullUser } from "../models/user.model";
 import { take } from "rxjs/operators";
-import { PatchUser } from "../store/api.actions";
+import {CreateUser, PatchUser} from '../store/api.actions';
 import {MatSnackBar, MatSnackBarConfig} from '@angular/material';
+import {DateFormatPipe} from '../pipes/api.pipes';
 
 @Injectable()
 export class ApiSandboxService {
     constructor(
-        private router: Router,
+        public router: Router,
         private snackBar: MatSnackBar,
+        private dateTransformer: DateFormatPipe,
         private appStateStore: Store<AppState>,
         private apiStateStore: Store<ApiState>
     ) {}
@@ -83,14 +85,14 @@ export class ApiSandboxService {
                 userFromStore = loadedUser;
             });
         const id = userFromStore.id;
-        console.log("updates", userFromStore.getUpdates(user));
+        console.log("updates", userFromStore.getUpdates(user, this.dateTransformer));
         this.apiStateStore.dispatch(
-            new PatchUser({ id, userUpdates: userFromStore.getUpdates(user) })
+            new PatchUser({ id, userUpdates: userFromStore.getUpdates(user, this.dateTransformer) })
         );
     }
 
-    registerUser(user: FullUser){
-
+    registerUser(user: any){
+        this.apiStateStore.dispatch(new CreateUser(user));
     }
 
 

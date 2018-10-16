@@ -19,19 +19,33 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Actions, Effect, ofType } from "@ngrx/effects";
-import {CREATE_USER, CreateUser, PATCH_USER, PatchUser, SET_USER} from './api.actions';
+import {
+    TRY_CREATE_USER,
+    CreateUser,
+    TRY_PATCH_USER,
+    PatchUser,
+    SET_USER
+} from "./api.actions";
 import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
 import { from, of } from "rxjs";
-import { GetSpecialProfileURL } from "../../statics/api_urls.statics";
-import {ApiSandboxService} from '../services/api-sandbox.service';
+import {
+    CREATE_PROFILE_URL,
+    GetSpecialProfileURL,
+    PROFILE_URL
+} from "../../statics/api_urls.statics";
+import { ApiSandboxService } from "../services/api-sandbox.service";
 
 @Injectable()
 export class ApiEffects {
-    constructor(private actions: Actions, private http: HttpClient, private apiSB: ApiSandboxService) {}
+    constructor(
+        private actions: Actions,
+        private http: HttpClient,
+        private apiSB: ApiSandboxService
+    ) {}
 
     @Effect()
     patchUser = this.actions.pipe(
-        ofType(PATCH_USER),
+        ofType(TRY_PATCH_USER),
         map((action: PatchUser) => {
             //console.log("getPayload", action.payload);
             return action.payload;
@@ -45,7 +59,7 @@ export class ApiEffects {
                         updates.userUpdates
                     )
                     .pipe(
-                        catchError((error) => {
+                        catchError(error => {
                             if (error.status === 400) return of({ error: "1" });
                             else if (error.status === 500)
                                 return of({ error: "2" });
@@ -53,11 +67,15 @@ export class ApiEffects {
                         }),
                         mergeMap((response: any) => {
                             //console.log("yay", response);
-                            this.apiSB.showSuccessSnackBar("successfully saved");
+                            this.apiSB.showSuccessSnackBar(
+                                "successfully saved"
+                            );
                             return [
                                 {
                                     type: SET_USER,
-                                    payload: ApiSandboxService.getFullUserFromJson(response)
+                                    payload: ApiSandboxService.getFullUserFromJson(
+                                        response
+                                    )
                                 }
                             ];
                         })
@@ -68,9 +86,29 @@ export class ApiEffects {
 
     @Effect()
     createUser = this.actions.pipe(
-        ofType(CREATE_USER),
+        ofType(TRY_CREATE_USER),
         map((action: CreateUser) => {
-
+            return action.payload;
+        }),
+        switchMap((user: any) => {
+            return from(
+                this.http.post(CREATE_PROFILE_URL, user).pipe(
+                    catchError(error => {
+                        console.log(error);
+                        return of({ error: "error" });
+                    }),
+                    mergeMap((response: any) => {
+                        console.log(response);
+                        if (!response.error) {
+                            this.apiSB.showSuccessSnackBar(
+                                "successfully created account"
+                            );
+                            this.apiSB.router.navigate(["login"]);
+                        }
+                        return [];
+                    })
+                )
+            );
         })
     );
 }

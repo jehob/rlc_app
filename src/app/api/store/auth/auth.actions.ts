@@ -19,7 +19,7 @@
 import { Action } from "@ngrx/store";
 
 export const TRY_LOGIN = "TRY_LOGIN";
-export const RELOAD_STATIC_INFORMATION = "RELOAD_STATIC_INFORMATION";
+export const TRY_RELOAD_STATIC_INFORMATION = "TRY_RELOAD_STATIC_INFORMATION";
 export const SET_TOKEN = "SET_TOKEN";
 export const LOGOUT = "LOGOUT";
 
@@ -30,7 +30,7 @@ export class TryLogin implements Action {
 }
 
 export class ReloadStaticInformation implements Action {
-    readonly type = RELOAD_STATIC_INFORMATION;
+    readonly type = TRY_RELOAD_STATIC_INFORMATION;
 }
 
 export class SetToken implements Action {

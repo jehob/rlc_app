@@ -22,6 +22,8 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { Store } from "@ngrx/store";
 import { AppState } from "../../../../store/app.reducers";
 import { TryLogin } from "../../../store/auth/auth.actions";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { ReadFromInjectorFn } from "@angular/core/src/render3/di";
 
 @Component({
     selector: "app-login",
@@ -29,6 +31,8 @@ import { TryLogin } from "../../../store/auth/auth.actions";
     styleUrls: ["./login.component.scss"]
 })
 export class LoginComponent implements OnInit {
+    loginForm: FormGroup;
+
     constructor(
         private auth: AuthService,
         private route: ActivatedRoute,
@@ -38,25 +42,29 @@ export class LoginComponent implements OnInit {
         if (this.auth.isAuthenticated()) {
             this.router.navigate([""]);
         }
-    }
 
-    login = {
-        email: "abc@web.de",
-        password: "qwe123"
-    };
+        this.loginForm = new FormGroup({
+            email: new FormControl("abc@web.de", [
+                Validators.required,
+                Validators.email
+            ]),
+            password: new FormControl("qwe123", [Validators.required])
+        });
+    }
 
     ngOnInit() {}
 
     onLogInClick() {
-        this.store.dispatch(
-            new TryLogin({
-                username: this.login.email,
-                password: this.login.password
-            })
-        );
+        if (this.loginForm.valid)
+            this.store.dispatch(
+                new TryLogin({
+                    username: this.loginForm.value.email,
+                    password: this.loginForm.value.password
+                })
+            );
     }
 
-    onRegisterClick(){
-        this.router.navigate(['register']);
+    onRegisterClick() {
+        this.router.navigate(["register"]);
     }
 }

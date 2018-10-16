@@ -20,7 +20,7 @@ import { Action } from "@ngrx/store";
 import { RestrictedRecord } from "../models/record.model";
 
 export const SET_RECORDS = "SET_RECORDS";
-export const START_LOADING_RECORDS = "START_LOADING_RECORDS";
+export const TRY_LOADING_RECORDS = "TRY_LOADING_RECORDS";
 
 export class SetRecords implements Action {
     readonly type = SET_RECORDS;
@@ -29,7 +29,7 @@ export class SetRecords implements Action {
 }
 
 export class StartLoadingRecords implements Action {
-    readonly type = START_LOADING_RECORDS;
+    readonly type = TRY_LOADING_RECORDS;
 }
 
 export type RecordsActions = SetRecords | StartLoadingRecords;

@@ -39,8 +39,6 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     search_fields = ('name', 'email',)
 
 
-
-
 class UserProfileCreatorViewSet(viewsets.ModelViewSet):
     """Handles creating profiles"""
     serializer_class = UserProfileCreatorSerializer

@@ -1,31 +1,34 @@
 <div class="register-container rlc-box-shadow">
     <h1>Register</h1>
     <form [formGroup]="userForm" class="register-form-container">
-        <mat-form-field>
+        <mat-form-field class="input-item">
             <input matInput placeholder="email" formControlName="email">
+            <mat-error *ngIf="userForm.controls['email'].invalid">{{getErrorMessage('email')}}</mat-error>
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field class="input-item">
             <input matInput placeholder="name" formControlName="name">
         </mat-form-field>
-        <mat-form-field>
-            <input matInput placeholder="password" formControlName="password">
+        <mat-form-field class="input-item">
+            <input matInput placeholder="password" type="password" formControlName="password">
+            <mat-error *ngIf="userForm.controls['password'].invalid">{{getErrorMessage('password')}}</mat-error>
         </mat-form-field>
-        <mat-form-field>
-            <input matInput placeholder="repeat password" formControlName="password_repeat">
+        <mat-form-field class="input-item">
+            <input matInput placeholder="confirm password" type="password" formControlName="password_confirm">
+            <mat-error *ngIf="userForm.controls['password_confirm'].invalid">{{getErrorMessage('password_confirm')}}</mat-error>
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field class="input-item">
             <input matInput placeholder="phone number" formControlName="phone_number">
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field class="input-item">
             <input matInput placeholder="street" formControlName="street">
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field class="input-item">
             <input matInput placeholder="postal code" formControlName="postal_code">
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field class="input-item">
             <input matInput placeholder="city" formControlName="city">
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field class="input-item">
             <input matInput [matDatepicker]="picker" placeholder="Birth Date" formControlName="birthday">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>

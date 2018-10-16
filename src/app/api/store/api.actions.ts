@@ -20,8 +20,8 @@ import { Action } from "@ngrx/store";
 import { FullUser } from "../models/user.model";
 
 export const SET_USER = "SET_USER";
-export const PATCH_USER = "PATCH_USER";
-export const CREATE_USER = "CREATE_USER";
+export const TRY_PATCH_USER = "TRY_PATCH_USER";
+export const TRY_CREATE_USER = "TRY_CREATE_USER";
 
 export class SetUser implements Action {
     readonly type = SET_USER;
@@ -30,15 +30,15 @@ export class SetUser implements Action {
 }
 
 export class PatchUser implements Action {
-    readonly type = PATCH_USER;
+    readonly type = TRY_PATCH_USER;
 
     constructor(public payload: {id: string, userUpdates: any}){}
 }
 
 export class CreateUser implements Action {
-    readonly type = CREATE_USER;
+    readonly type = TRY_CREATE_USER;
 
-    constructor(public payload: {newUser: any}){}
+    constructor(public payload: any){}
 }
 
 export type ApiActions = SetUser | PatchUser | CreateUser;

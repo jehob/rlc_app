@@ -57,10 +57,10 @@ export class FullUser {
      * used to generated the update object for patching user in backend
      * @param updates potential updates for object
      */
-    getUpdates(updates: FullUser) {
+    getUpdates(updates: FullUser, datePipe: DateFormatPipe) {
         const changes = {};
-        // if (this.birthday !== updates.birthday)
-        //     changes["birthday"] = this.datePipe.transform(updates.birthday);
+        if (this.birthday !== updates.birthday)
+            changes["birthday"] = datePipe.transform(updates.birthday);
         if (this.phone_number !== updates.phone_number) changes["phone_number"] = updates.phone_number;
         if (this.street !== updates.street) changes["street"] = updates.street;
         if (this.city !== updates.city) changes["city"] = updates.city;

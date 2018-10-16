@@ -21,8 +21,8 @@
     <mat-card-header>
       <h2>Records</h2>
       <mat-form-field class="records-search-input">
-        <input matInput type="text" placeholder="Search...">
-        <button mat-button *ngIf="value" matSuffix mat-icon-button aria-label="Search" (click)="value=''">
+        <input matInput type="text" placeholder="Search..." (value)="value">
+        <button mat-button matSuffix mat-icon-button aria-label="Search" (click)="value=''">
         </button>
       </mat-form-field>   
     </mat-card-header>
