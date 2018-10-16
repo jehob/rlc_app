@@ -17,14 +17,11 @@
  ******************************************************************************/
 
 import { Component } from "@angular/core";
-import {Router, ActivatedRoute, RoutesRecognized} from '@angular/router';
-import { AppState } from "./store/app.reducers";
-import { Store } from "@ngrx/store";
-import { SetToken } from "./api/store/auth/auth.actions";
+import {Router, ActivatedRoute} from '@angular/router';
 import { AuthState } from "./api/store/auth/auth.reducers";
 import { Observable } from "rxjs";
 import { ApiSandboxService } from "./api/services/api-sandbox.service";
-import {filter, pairwise} from 'rxjs/operators';
+import LogRocket from 'logrocket';
 
 @Component({
     selector: "app-root",
@@ -41,13 +38,7 @@ export class AppComponent {
         private apiSB: ApiSandboxService
     ) {
         this.authState = this.apiSB.startApp();
-
-        // this.router.events
-        //     .pipe(filter((e: any) => e instanceof RoutesRecognized),
-        //         pairwise()
-        //     ).subscribe((e: any) => {
-        //     console.log('routeeee', e[0].urlAfterRedirects); // previous url
-        // });
+        LogRocket.init('mndnnu/rlc_app');
     }
 
     showProfile() {

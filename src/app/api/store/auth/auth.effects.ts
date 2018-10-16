@@ -28,6 +28,7 @@ import {
     TRY_LOGIN,
     TryLogin
 } from "./auth.actions";
+import LogRocket from 'logrocket';
 import { LOGIN_URL } from "../../../statics/api_urls.statics";
 import { ApiSandboxService } from "../../services/api-sandbox.service";
 import { SET_USER } from "../api.actions";
@@ -88,6 +89,8 @@ export class AuthEffects {
     );
 
     static getStaticInformation(response: { user: any }) {
+        LogRocket.identify(response.user.id);
+        console.log('identified: ', response.user.id);
         return [
             {
                 type: SET_USER,

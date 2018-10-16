@@ -19,10 +19,11 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { StoreModule } from "@ngrx/store";
+import { ActionReducer, StoreModule } from "@ngrx/store";
 import { EffectsModule } from "@ngrx/effects";
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { StoreDevtoolsModule } from "@ngrx/store-devtools";
+import LogRocket from "logrocket";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -36,6 +37,21 @@ import { ApiModule } from "./api/api.module";
 import { RecordsSandboxService } from "./recordmanagement/services/records-sandbox.service";
 import { AuthInterceptor } from "./api/services/auth.interceptor";
 import { environment } from "../environments/environment";
+const reduxMiddleware = LogRocket.reduxMiddleware();
+
+export function logrocketMiddleware(reducer): ActionReducer<any, any> {
+    let currentState;
+    const fakeDispatch = reduxMiddleware({
+        getState: () => currentState
+    })(() => {});
+
+    return function(state, action) {
+        const newState = reducer(state, action);
+        currentState = state;
+        fakeDispatch(action);
+        return newState;
+    };
+}
 
 @NgModule({
     declarations: [AppComponent],
@@ -46,7 +62,7 @@ import { environment } from "../environments/environment";
         BrowserAnimationsModule,
         ApiModule,
         AppRoutingModule,
-        StoreModule.forRoot(reducers),
+        StoreModule.forRoot(reducers, { metaReducers: [logrocketMiddleware] }),
         EffectsModule.forRoot([AuthEffects]),
         !environment.production ? StoreDevtoolsModule.instrument() : []
     ],
