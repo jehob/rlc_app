@@ -1,4 +1,4 @@
- /*
+/*!
  * rlcapp - record and organization management software for refugee law clinics
  * Copyright (C) 2018  Dominik Walser
  *
@@ -16,13 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-export const error_codes = {
-    E0001: "wrong password"
-};
+.rlc-box-shadow{
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+    0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
 
-abstract class Errors{
-    abstract errors: {
-        "api.login.wrong_password": "you have entered the wrong password",
-
-    }
+.snackbar__success {
+    background: green;
+    color: white;
+    vertical-align: center;
 }

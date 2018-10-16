@@ -22,6 +22,7 @@ import { NgModule } from "@angular/core";
 import { ProfileComponent } from "./components/profile/profile.component";
 import { DashboardComponent } from "./components/Dashboard/dashboard.component";
 import { LoginComponent } from "./components/auth/login/login.component";
+import {RegisterComponent} from './components/auth/register/register.component';
 
 const apiRoutes: Routes = [
     {
@@ -35,7 +36,8 @@ const apiRoutes: Routes = [
         component: DashboardComponent,
         canActivate: [AuthGuardService]
     },
-    { path: "login", component: LoginComponent }
+    { path: "login", component: LoginComponent },
+    { path: "register", component: RegisterComponent}
 ];
 
 @NgModule({

@@ -21,6 +21,7 @@ import { FullUser } from "../models/user.model";
 
 export const SET_USER = "SET_USER";
 export const PATCH_USER = "PATCH_USER";
+export const CREATE_USER = "CREATE_USER";
 
 export class SetUser implements Action {
     readonly type = SET_USER;
@@ -34,4 +35,10 @@ export class PatchUser implements Action {
     constructor(public payload: {id: string, userUpdates: any}){}
 }
 
-export type ApiActions = SetUser | PatchUser;
+export class CreateUser implements Action {
+    readonly type = CREATE_USER;
+
+    constructor(public payload: {newUser: any}){}
+}
+
+export type ApiActions = SetUser | PatchUser | CreateUser;

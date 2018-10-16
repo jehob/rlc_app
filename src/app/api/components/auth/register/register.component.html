@@ -1,3 +1,35 @@
-<p>
-  register works!
-</p>
+<div class="register-container rlc-box-shadow">
+    <h1>Register</h1>
+    <form [formGroup]="userForm" class="register-form-container">
+        <mat-form-field>
+            <input matInput placeholder="email" formControlName="email">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="name" formControlName="name">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="password" formControlName="password">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="repeat password" formControlName="password_repeat">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="phone number" formControlName="phone_number">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="street" formControlName="street">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="postal code" formControlName="postal_code">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="city" formControlName="city">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput [matDatepicker]="picker" placeholder="Birth Date" formControlName="birthday">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <button class="btn-register" mat-flat-button (click)="this.onRegisterClick()">Save</button>
+    </form>
+</div>

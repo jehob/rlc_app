@@ -24,9 +24,8 @@ import { from } from "rxjs";
 import { Router } from "@angular/router";
 import {RELOAD_STATIC_INFORMATION, SET_TOKEN, TRY_LOGIN, TryLogin} from './auth.actions';
 import { LOGIN_URL } from "../../../statics/api_urls.statics";
-import { FullUser } from "../../models/user.model";
-import { SET_USER } from "../api.actions";
 import {ApiSandboxService} from '../../services/api-sandbox.service';
+import {SET_USER} from '../api.actions';
 
 @Injectable()
 export class AuthEffects {
@@ -76,7 +75,10 @@ export class AuthEffects {
 
     static getStaticInformation(response: {user: any}){
         return [
-            ...ApiSandboxService.getFullUserFromJson(response.user),
+            {
+                type: SET_USER,
+                payload: ApiSandboxService.getFullUserFromJson(response.user)
+            }
         ];
     }
 }

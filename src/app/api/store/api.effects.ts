@@ -19,7 +19,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Actions, Effect, ofType } from "@ngrx/effects";
-import { PATCH_USER, PatchUser } from "./api.actions";
+import {CREATE_USER, CreateUser, PATCH_USER, PatchUser, SET_USER} from './api.actions';
 import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
 import { from, of } from "rxjs";
 import { GetSpecialProfileURL } from "../../statics/api_urls.statics";
@@ -27,17 +27,17 @@ import {ApiSandboxService} from '../services/api-sandbox.service';
 
 @Injectable()
 export class ApiEffects {
-    constructor(private actions: Actions, private http: HttpClient, ) {}
+    constructor(private actions: Actions, private http: HttpClient, private apiSB: ApiSandboxService) {}
 
     @Effect()
     patchUser = this.actions.pipe(
         ofType(PATCH_USER),
         map((action: PatchUser) => {
-            console.log("getPayload", action.payload);
+            //console.log("getPayload", action.payload);
             return action.payload;
         }),
         switchMap((updates: { id: string; userUpdates: any }) => {
-            console.log("userUpdates", updates.userUpdates);
+            //console.log("userUpdates", updates.userUpdates);
             return from(
                 this.http
                     .patch(
@@ -52,13 +52,25 @@ export class ApiEffects {
                             return of({ error: "unknown" });
                         }),
                         mergeMap((response: any) => {
-                            console.log("yay", response);
+                            //console.log("yay", response);
+                            this.apiSB.showSuccessSnackBar("successfully saved");
                             return [
-                                ...ApiSandboxService.getFullUserFromJson(response)
+                                {
+                                    type: SET_USER,
+                                    payload: ApiSandboxService.getFullUserFromJson(response)
+                                }
                             ];
                         })
                     )
             );
+        })
+    );
+
+    @Effect()
+    createUser = this.actions.pipe(
+        ofType(CREATE_USER),
+        map((action: CreateUser) => {
+
         })
     );
 }

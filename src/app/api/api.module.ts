@@ -30,6 +30,7 @@ import { apiReducer } from "./store/api.reducers";
 import { EffectsModule } from "@ngrx/effects";
 import { ApiEffects } from "./store/api.effects";
 import { DateFormatPipe } from "./pipes/api.pipes";
+import {MatSnackBar} from '@angular/material';
 
 @NgModule({
     imports: [

@@ -28,18 +28,19 @@ import {
 import { ApiState } from "../store/api.reducers";
 import { FullUser } from "../models/user.model";
 import { take } from "rxjs/operators";
-import {PatchUser, SET_USER} from '../store/api.actions';
-import {load} from '@angular/core/src/render3/instructions';
+import { PatchUser } from "../store/api.actions";
+import {MatSnackBar, MatSnackBarConfig} from '@angular/material';
 
 @Injectable()
 export class ApiSandboxService {
     constructor(
         private router: Router,
+        private snackBar: MatSnackBar,
         private appStateStore: Store<AppState>,
         private apiStateStore: Store<ApiState>
     ) {}
 
-    static getFullUserFromJson(user){
+    static getFullUserFromJson(user) {
         const userObj = new FullUser(
             user.id,
             user.email,
@@ -50,13 +51,8 @@ export class ApiSandboxService {
             user.city,
             user.postal_code
         );
-        return [
-            {
-                type: SET_USER,
-                payload: userObj
-            }
-        ];
-    };
+        return userObj;
+    }
 
     logout() {
         localStorage.clear();
@@ -78,7 +74,7 @@ export class ApiSandboxService {
         return this.apiStateStore.pipe(select((state: any) => state.api.user));
     }
 
-    saveUser(user: FullUser) {
+    patchUser(user: FullUser) {
         let userFromStore: FullUser;
         this.apiStateStore
             .pipe(select((state: any) => state.api.user))
@@ -87,7 +83,24 @@ export class ApiSandboxService {
                 userFromStore = loadedUser;
             });
         const id = userFromStore.id;
-        console.log('updates', userFromStore.getUpdates(user));
-        this.apiStateStore.dispatch(new PatchUser({id, userUpdates: userFromStore.getUpdates(user)}));
+        console.log("updates", userFromStore.getUpdates(user));
+        this.apiStateStore.dispatch(
+            new PatchUser({ id, userUpdates: userFromStore.getUpdates(user) })
+        );
     }
+
+    registerUser(user: FullUser){
+
+    }
+
+
+    showSuccessSnackBar(message: string) {
+        const config = new MatSnackBarConfig();
+        config.panelClass = ['snackbar__success'];
+        config.duration = 2500;
+        config.verticalPosition = "top";
+        this.snackBar.open(message, '', config);
+    }
+
+
 }

@@ -68,7 +68,7 @@ class LoginViewSet(viewsets.ViewSet):
         except Exception as ex:
             if ex.detail['non_field_errors'][0] == 'Unable to log in with provided credentials.':
                 if UserProfile.objects.filter(email=request.data['username']).count() == 1:
-                    return Response({'error': 'wrong password'}, status=400)
+                    return Response({'error': 'wrong password', 'error_token': 'api.login.wrong_password'}, status=400)
                 else:
                     return Response({'error': 'there is no account with this email'}, status=400)
         return Response(LoginViewSet.get_login_data(token.data['token']))

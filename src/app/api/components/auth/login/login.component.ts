@@ -47,12 +47,16 @@ export class LoginComponent implements OnInit {
 
     ngOnInit() {}
 
-    onLogIn() {
+    onLogInClick() {
         this.store.dispatch(
             new TryLogin({
                 username: this.login.email,
                 password: this.login.password
             })
         );
+    }
+
+    onRegisterClick(){
+        this.router.navigate(['register']);
     }
 }

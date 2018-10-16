@@ -1,0 +1,21 @@
+@import "../../../../../styles/basic";
+
+.register-container{
+    max-width: 550px;
+    height: auto;
+    margin: 20% auto auto;
+    padding: 25px;
+    border-radius: 10px;
+}
+
+
+.register-form-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.btn-register {
+    background-color: $c-primary;
+    width: 125px;
+    border-radius: 28px;
+}

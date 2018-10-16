@@ -16,14 +16,14 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<div class="login-container">
+<div class="login-container rlc-box-shadow">
 
   <div class="holder register">
     <div class="content-container">
         <p>rlc <br>app</p> 
     </div>
     <div class="action-holder">
-      <button mat-button>register</button>
+      <button mat-button (click)="onRegisterClick()">register</button>
     </div>
   </div>
 
@@ -39,7 +39,7 @@
       </mat-form-field>   
     </div>
     <div class="action-holder">
-      <button mat-button (click)="onLogIn()">login</button>
+      <button mat-button (click)="onLogInClick()">login</button>
     </div>
   </div>
 </div>
