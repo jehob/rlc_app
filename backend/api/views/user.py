@@ -103,9 +103,9 @@ class LoginViewSet(viewsets.ViewSet):
                                                                 many=True).data
         countries = serializers.OriginCountryNameStateSerializer(models.OriginCountry.objects.all(), many=True).data
 
-        tags = serializers.RecordTagNameSerializer(models.RecordTag.objects.all(), many=True).data
+        record_tags = serializers.RecordTagNameSerializer(models.RecordTag.objects.all(), many=True).data
         return {
-            'tags': tags,
+            'record_tags': record_tags,
             'permissions': user_permissions,
             'consultants': consultants,
             'countries': countries,

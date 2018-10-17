@@ -28,11 +28,13 @@ import {
     TRY_LOGIN,
     TryLogin
 } from "./auth.actions";
-import LogRocket from 'logrocket';
+import LogRocket from "logrocket";
 import { LOGIN_URL } from "../../../statics/api_urls.statics";
-import { ApiSandboxService } from "../../services/api-sandbox.service";
 import { SET_USER } from "../api.actions";
 import { AuthGuardService } from "../../services/auth-guard.service";
+import { FullUser, RestrictedUser } from "../../models/user.model";
+import {SET_CONSULTANTS, SET_ORIGIN_COUNTRIES} from '../../../recordmanagement/store/records.actions';
+import {OriginCountry} from '../../../recordmanagement/models/country.models';
 
 @Injectable()
 export class AuthEffects {
@@ -53,23 +55,33 @@ export class AuthEffects {
             return from(
                 this.http.post(LOGIN_URL, authData).pipe(
                     catchError(error => []),
-                    mergeMap((response: { token: string; user }) => {
-                        localStorage.setItem("token", response.token);
+                    mergeMap(
+                        (response: {
+                            token: string;
+                            user: any;
+                            consultants: any;
+                            countries: any;
+                        }) => {
+                            // local storage
+                            localStorage.setItem("token", response.token);
 
-                        if (this.guard.lastVisitedUrl)
-                            this.router.navigate([
-                                this.guard.getLastVisitedUrl()
-                            ]);
-                        else this.router.navigate([""]);
+                            console.log("loginResponse", response);
 
-                        return [
-                            {
-                                type: SET_TOKEN,
-                                payload: response.token
-                            },
-                            ...AuthEffects.getStaticInformation(response)
-                        ];
-                    })
+                            if (this.guard.lastVisitedUrl)
+                                this.router.navigate([
+                                    this.guard.getLastVisitedUrl()
+                                ]);
+                            else this.router.navigate([""]);
+
+                            return [
+                                {
+                                    type: SET_TOKEN,
+                                    payload: response.token
+                                },
+                                ...AuthEffects.getStaticInformation(response)
+                            ];
+                        }
+                    )
                 )
             );
         })
@@ -88,13 +100,25 @@ export class AuthEffects {
         })
     );
 
-    static getStaticInformation(response: { user: any }) {
+    static getStaticInformation(response: { user: any; consultants: any; countries: any }) {
+        // for logging
         LogRocket.identify(response.user.id);
-        console.log('identified: ', response.user.id);
+        console.log("identified: ", response.user.id);
+
         return [
             {
                 type: SET_USER,
-                payload: ApiSandboxService.getFullUserFromJson(response.user)
+                payload: FullUser.getFullUserFromJson(response.user)
+            },
+            {
+                type: SET_CONSULTANTS,
+                payload: RestrictedUser.getRestrictedUsersFromJsonArray(
+                    response.consultants
+                )
+            },
+            {
+                type: SET_ORIGIN_COUNTRIES,
+                payload: OriginCountry.getOriginCountriesFromJsonArray(response.countries)
             }
         ];
     }

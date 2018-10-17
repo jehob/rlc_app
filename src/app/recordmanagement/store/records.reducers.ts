@@ -17,21 +17,37 @@
  ******************************************************************************/
 
 import { RestrictedRecord } from "../models/record.model";
-import { RecordsActions, SET_RECORDS } from "./records.actions";
+import {RecordsActions, SET_CONSULTANTS, SET_ORIGIN_COUNTRIES, SET_RECORDS} from './records.actions';
+import {OriginCountry} from '../models/country.models';
 
 export interface RecordsState {
     records: Array<RestrictedRecord>;
+    consultants: Array<RestrictedRecord>;
+    origin_countries: Array<OriginCountry>;
 }
 
 const initialState: RecordsState = {
-    records: null
+    records: null,
+    consultants: null,
+    origin_countries: null
 };
 
 export function recordsReducer(state = initialState, action: RecordsActions) {
     switch (action.type) {
         case SET_RECORDS:
             return {
+                ...state,
                 records: action.payload
+            };
+        case SET_CONSULTANTS:
+            return {
+                ...state,
+                consultants: action.payload
+            };
+        case SET_ORIGIN_COUNTRIES:
+            return {
+                ...state,
+                origin_countries: action.payload
             };
         default:
             return state;

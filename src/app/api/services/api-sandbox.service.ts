@@ -42,20 +42,6 @@ export class ApiSandboxService {
         private apiStateStore: Store<ApiState>
     ) {}
 
-    static getFullUserFromJson(user) {
-        const userObj = new FullUser(
-            user.id,
-            user.email,
-            user.name,
-            new Date(user.birthday),
-            user.phone_number,
-            user.street,
-            user.city,
-            user.postal_code
-        );
-        return userObj;
-    }
-
     logout() {
         localStorage.clear();
         this.appStateStore.dispatch(new Logout());
@@ -77,7 +63,7 @@ export class ApiSandboxService {
     }
 
     patchUser(user: FullUser) {
-        let userFromStore: FullUser;
+        let userFromStore: FullUser = null;
         this.apiStateStore
             .pipe(select((state: any) => state.api.user))
             .pipe(take(1))
@@ -104,5 +90,11 @@ export class ApiSandboxService {
         this.snackBar.open(message, '', config);
     }
 
-
+    showErrorSnackBar(message: string) {
+        const config = new MatSnackBarConfig();
+        config.panelClass = ['snackbar__error'];
+        config.duration = 2500;
+        config.verticalPosition = "top";
+        this.snackBar.open(message, '', config);
+    }
 }

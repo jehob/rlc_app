@@ -105,3 +105,5 @@ class RecordsListViewSet(viewsets.ViewSet):
         else:
             serializer = serializers.RecordNoDetailSerializer(queryset)
         return Response(serializer.data)
+
+

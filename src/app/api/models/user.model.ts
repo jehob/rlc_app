@@ -18,29 +18,39 @@
 
 import { DateFormatPipe } from "../pipes/api.pipes";
 
-export class FullUser {
-    public id: string;
-    public email: string;
-    public name: string;
-    public birthday: Date;
-    public phone_number: string;
-    public street: string;
-    public city: string;
-    public postal_code: string;
+export class RestrictedUser {
+    constructor(public id: string, public name: string) {
+        this.id = id;
+        this.name = name;
+    }
+
+    static getRestrictedUsersFromJsonArray(jsonArray) {
+        const restrictedUsers: Array<RestrictedUser> = [];
+        Object.values(jsonArray).map(restrictedJsonUser => {
+            restrictedUsers.push(RestrictedUser.getRestrictedUserFromJson(restrictedJsonUser));
+        });
+        return restrictedUsers;
+    }
+
+    static getRestrictedUserFromJson(json){
+        return new RestrictedUser(json.id, json.name);
+    }
+}
+
+export class FullUser extends RestrictedUser {
 
     constructor(
         id: string = "",
-        email: string = "",
+        public email: string = "",
         name: string = "",
-        birthday: Date = new Date(),
-        phone_number: string = "",
-        street: string = "",
-        city: string = "",
-        postal_code: string = ""
+        public birthday: Date = new Date(),
+        public phone_number: string = "",
+        public street: string = "",
+        public city: string = "",
+        public postal_code: string = ""
     ) {
-        this.id = id;
+        super(id, name);
         this.email = email;
-        this.name = name;
         this.birthday = birthday;
         this.phone_number = phone_number;
         this.street = street;
@@ -48,8 +58,17 @@ export class FullUser {
         this.postal_code = postal_code;
     }
 
-    getInfo() {
-        return this.email;
+    static getFullUserFromJson(json) {
+        return new FullUser(
+            json.id,
+            json.email,
+            json.name,
+            new Date(json.birthday),
+            json.phone_number,
+            json.street,
+            json.city,
+            json.postal_code
+        );
     }
 
     /**
@@ -61,12 +80,12 @@ export class FullUser {
         const changes = {};
         if (this.birthday !== updates.birthday)
             changes["birthday"] = datePipe.transform(updates.birthday);
-        if (this.phone_number !== updates.phone_number) changes["phone_number"] = updates.phone_number;
+        if (this.phone_number !== updates.phone_number)
+            changes["phone_number"] = updates.phone_number;
         if (this.street !== updates.street) changes["street"] = updates.street;
         if (this.city !== updates.city) changes["city"] = updates.city;
-        if (this.postal_code !== updates.postal_code) changes["postal_code"] = updates.postal_code;
+        if (this.postal_code !== updates.postal_code)
+            changes["postal_code"] = updates.postal_code;
         return changes;
     }
 }
-
-export class RestrictedUser {}

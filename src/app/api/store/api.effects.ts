@@ -34,6 +34,7 @@ import {
     PROFILE_URL
 } from "../../statics/api_urls.statics";
 import { ApiSandboxService } from "../services/api-sandbox.service";
+import {FullUser} from '../models/user.model';
 
 @Injectable()
 export class ApiEffects {
@@ -73,7 +74,7 @@ export class ApiEffects {
                             return [
                                 {
                                     type: SET_USER,
-                                    payload: ApiSandboxService.getFullUserFromJson(
+                                    payload: FullUser.getFullUserFromJson(
                                         response
                                     )
                                 }

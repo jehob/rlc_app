@@ -24,8 +24,8 @@ import {
     SetRecords,
     TRY_LOADING_RECORDS
 } from "./records.actions";
-import {catchError, mergeMap, switchMap} from 'rxjs/operators';
-import {from, of} from 'rxjs';
+import { catchError, mergeMap, switchMap } from "rxjs/operators";
+import { from, of } from "rxjs";
 import { RECORDS_URL } from "../../statics/api_urls.statics";
 import { FullRecord, RestrictedRecord } from "../models/record.model";
 import { load } from "@angular/core/src/render3/instructions";
@@ -41,36 +41,17 @@ export class RecordsEffects {
             return from(
                 this.http.get(RECORDS_URL).pipe(
                     mergeMap(response => {
-                        console.log('recordsFromBackend', response);
+                        console.log("recordsFromBackend", response);
                         const loadedRecords: Array<RestrictedRecord> = [];
                         Object.values(response).map(record => {
                             if (record.note) {
                                 loadedRecords.push(
-                                    new FullRecord(
-                                        record.id,
-                                        record.record_token,
-                                        new Date(record.last_contact_date),
-                                        record.state,
-                                        record.tagged,
-                                        record.working_on_record,
-                                        new Date(record.created_on),
-                                        new Date(record.last_edited),
-                                        new Date(record.first_contact_date),
-                                        record.record_token,
-                                        record.note,
-                                        record.from_rlc,
-                                        record.client
-                                    )
+                                    FullRecord.getFullRecordFromJson(record)
                                 );
                             } else {
                                 loadedRecords.push(
-                                    new RestrictedRecord(
-                                        record.id,
-                                        record.record_token,
-                                        new Date(record.last_contact_date),
-                                        record.state,
-                                        record.tagged,
-                                        record.working_on_record
+                                    RestrictedRecord.getRestrictedRecordFromJson(
+                                        record
                                     )
                                 );
                             }
@@ -79,7 +60,7 @@ export class RecordsEffects {
                         return [{ type: SET_RECORDS, payload: loadedRecords }];
                     }),
                     catchError(error => {
-                        return of({'error': 'error at loading '})
+                        return of({ error: "error at loading records" });
                     })
                 )
             );

@@ -18,9 +18,16 @@
 
 import { Action } from "@ngrx/store";
 import { RestrictedRecord } from "../models/record.model";
+import {RestrictedUser} from '../../api/models/user.model';
+import {OriginCountry} from '../models/country.models';
 
 export const SET_RECORDS = "SET_RECORDS";
 export const TRY_LOADING_RECORDS = "TRY_LOADING_RECORDS";
+export const SET_CONSULTANTS = 'SET_CONSULTANTS';
+export const SET_RECORD_STATES = 'SET_RECORD_STATES';
+export const SET_COUNTRY_STATES = 'SET_COUNTRY_STATES';
+export const SET_ORIGIN_COUNTRIES = 'SET_ORIGIN_COUNTRIES';
+export const SET_RECORD_TAGS = 'SET_RECORD_TAGS';
 
 export class SetRecords implements Action {
     readonly type = SET_RECORDS;
@@ -32,4 +39,16 @@ export class StartLoadingRecords implements Action {
     readonly type = TRY_LOADING_RECORDS;
 }
 
-export type RecordsActions = SetRecords | StartLoadingRecords;
+export class SetConsultants implements Action {
+    readonly type = SET_CONSULTANTS;
+
+    constructor(public payload: Array<RestrictedUser>){}
+}
+
+export class SetOriginCountries implements Action{
+    readonly type = SET_ORIGIN_COUNTRIES;
+
+    constructor(public payload: Array<OriginCountry>){}
+}
+
+export type RecordsActions = SetRecords | StartLoadingRecords | SetConsultants | SetOriginCountries;
