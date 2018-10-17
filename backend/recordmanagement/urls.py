@@ -24,5 +24,6 @@ router.register('origin_countries', OriginCountriesViewSet)
 router.register('record_tags', RecordTagViewSet)
 
 urlpatterns = [
-  url(r'', include(router.urls)),
+    url(r'', include(router.urls)),
+    url(r'statics', StaticViewSet.as_view())
 ]

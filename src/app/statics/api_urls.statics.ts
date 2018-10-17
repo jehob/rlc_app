@@ -18,9 +18,14 @@
 
 export const LOGIN_URL = "api/login/";
 export const RECORDS_URL = "api/records/records/";
+export const RECORDS_STATICS_URL = "api/records/statics/";
 export const PROFILE_URL = "api/profiles/";
 export const CREATE_PROFILE_URL = "api/create_profile/";
 
+
 export function GetSpecialProfileURL(id: string){
-    return PROFILE_URL + id + "/";
+    return `${PROFILE_URL}${id}/`;
+}
+export function GetRecordsSearchURL(toSearch: string){
+    return `${RECORDS_URL}?search=${toSearch}`;
 }

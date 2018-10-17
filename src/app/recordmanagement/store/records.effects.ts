@@ -20,15 +20,23 @@ import { Injectable } from "@angular/core";
 import { Actions, Effect, ofType } from "@ngrx/effects";
 import { HttpClient } from "@angular/common/http";
 import {
+    SET_CONSULTANTS,
+    SET_ORIGIN_COUNTRIES,
     SET_RECORDS,
     SetRecords,
-    TRY_LOADING_RECORDS
+    START_LOADING_RECORD_STATICS,
+    START_LOADING_RECORDS
 } from "./records.actions";
 import { catchError, mergeMap, switchMap } from "rxjs/operators";
 import { from, of } from "rxjs";
-import { RECORDS_URL } from "../../statics/api_urls.statics";
+import {
+    RECORDS_STATICS_URL,
+    RECORDS_URL
+} from "../../statics/api_urls.statics";
 import { FullRecord, RestrictedRecord } from "../models/record.model";
 import { load } from "@angular/core/src/render3/instructions";
+import { RestrictedUser } from "../../api/models/user.model";
+import { OriginCountry } from "../models/country.models";
 
 @Injectable()
 export class RecordsEffects {
@@ -36,7 +44,7 @@ export class RecordsEffects {
 
     @Effect()
     recordsLoad = this.actions.pipe(
-        ofType(TRY_LOADING_RECORDS),
+        ofType(START_LOADING_RECORDS),
         switchMap(() => {
             return from(
                 this.http.get(RECORDS_URL).pipe(
@@ -61,6 +69,38 @@ export class RecordsEffects {
                     }),
                     catchError(error => {
                         return of({ error: "error at loading records" });
+                    })
+                )
+            );
+        })
+    );
+
+    @Effect()
+    recordStaticsLoad = this.actions.pipe(
+        ofType(START_LOADING_RECORD_STATICS),
+        switchMap(() => {
+            return from(
+                this.http.get(RECORDS_STATICS_URL).pipe(
+                    mergeMap(
+                        (response: { consultants: any; countries: any }) => {
+                            return [
+                                {
+                                    type: SET_CONSULTANTS,
+                                    payload: RestrictedUser.getRestrictedUsersFromJsonArray(
+                                        response.consultants
+                                    )
+                                },
+                                {
+                                    type: SET_ORIGIN_COUNTRIES,
+                                    payload: OriginCountry.getOriginCountriesFromJsonArray(
+                                        response.countries
+                                    )
+                                }
+                            ];
+                        }
+                    ),
+                    catchError(error => {
+                        return of({ error: "error at loading record statics" });
                     })
                 )
             );

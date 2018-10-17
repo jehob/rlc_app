@@ -91,25 +91,9 @@ class LoginViewSet(viewsets.ViewSet):
     @staticmethod
     def get_statics(user):
         user_permissions = [model_to_dict(perm) for perm in user.get_overall_permissions()]
-
-        states_for_records = models.Record.record_states_possible
-        states_for_countries = models.OriginCountry.origin_country_states_possible
-
         overall_permissions = [model_to_dict(permission) for permission in Permission.objects.all()]
-        if user.rlc_members.count() == 0:
-            consultants = []
-        else:
-            consultants = UserProfileNameSerializer(user.rlc_members.first().get_consultants(),
-                                                                many=True).data
-        countries = serializers.OriginCountryNameStateSerializer(models.OriginCountry.objects.all(), many=True).data
 
-        record_tags = serializers.RecordTagNameSerializer(models.RecordTag.objects.all(), many=True).data
         return {
-            'record_tags': record_tags,
             'permissions': user_permissions,
-            'consultants': consultants,
-            'countries': countries,
-            'all_permissions': overall_permissions,
-            'record_states': states_for_records,
-            'country_states': states_for_countries
+            'all_permissions': overall_permissions
         }

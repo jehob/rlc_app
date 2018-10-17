@@ -43,7 +43,6 @@ export class AuthGuardService implements CanActivate {
         return this.store.select("auth").pipe(
             take(1),
             map((authState: AuthState) => {
-                console.log('guarded');
                 if (!authState.authenticated) {
                     this.lastVisitedUrl = route.routeConfig.path;
                     this.router.navigate(["login"]);

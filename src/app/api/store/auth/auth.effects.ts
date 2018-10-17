@@ -94,31 +94,21 @@ export class AuthEffects {
             return from(this.http.get(LOGIN_URL));
         }),
         mergeMap((response: any) => {
-            console.log(response);
+            console.log('reloaded', response);
 
             return [...AuthEffects.getStaticInformation(response)];
         })
     );
 
-    static getStaticInformation(response: { user: any; consultants: any; countries: any }) {
+    static getStaticInformation(response: { user: any; }) {
         // for logging
         LogRocket.identify(response.user.id);
         console.log("identified: ", response.user.id);
 
-        return [
+        return  [
             {
                 type: SET_USER,
                 payload: FullUser.getFullUserFromJson(response.user)
-            },
-            {
-                type: SET_CONSULTANTS,
-                payload: RestrictedUser.getRestrictedUsersFromJsonArray(
-                    response.consultants
-                )
-            },
-            {
-                type: SET_ORIGIN_COUNTRIES,
-                payload: OriginCountry.getOriginCountriesFromJsonArray(response.countries)
             }
         ];
     }

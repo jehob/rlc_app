@@ -18,16 +18,17 @@
 
 import { Action } from "@ngrx/store";
 import { RestrictedRecord } from "../models/record.model";
-import {RestrictedUser} from '../../api/models/user.model';
-import {OriginCountry} from '../models/country.models';
+import { RestrictedUser } from "../../api/models/user.model";
+import { OriginCountry } from "../models/country.models";
 
 export const SET_RECORDS = "SET_RECORDS";
-export const TRY_LOADING_RECORDS = "TRY_LOADING_RECORDS";
-export const SET_CONSULTANTS = 'SET_CONSULTANTS';
-export const SET_RECORD_STATES = 'SET_RECORD_STATES';
-export const SET_COUNTRY_STATES = 'SET_COUNTRY_STATES';
-export const SET_ORIGIN_COUNTRIES = 'SET_ORIGIN_COUNTRIES';
-export const SET_RECORD_TAGS = 'SET_RECORD_TAGS';
+export const START_LOADING_RECORDS = "START_LOADING_RECORDS";
+export const START_LOADING_RECORD_STATICS = "START_LOADING_RECORD_STATICS";
+export const SET_CONSULTANTS = "SET_CONSULTANTS";
+export const SET_RECORD_STATES = "SET_RECORD_STATES";
+export const SET_COUNTRY_STATES = "SET_COUNTRY_STATES";
+export const SET_ORIGIN_COUNTRIES = "SET_ORIGIN_COUNTRIES";
+export const SET_RECORD_TAGS = "SET_RECORD_TAGS";
 
 export class SetRecords implements Action {
     readonly type = SET_RECORDS;
@@ -36,19 +37,28 @@ export class SetRecords implements Action {
 }
 
 export class StartLoadingRecords implements Action {
-    readonly type = TRY_LOADING_RECORDS;
+    readonly type = START_LOADING_RECORDS;
+}
+
+export class StartLoadingRecordStatics implements Action {
+    readonly type = START_LOADING_RECORD_STATICS;
 }
 
 export class SetConsultants implements Action {
     readonly type = SET_CONSULTANTS;
 
-    constructor(public payload: Array<RestrictedUser>){}
+    constructor(public payload: Array<RestrictedUser>) {}
 }
 
-export class SetOriginCountries implements Action{
+export class SetOriginCountries implements Action {
     readonly type = SET_ORIGIN_COUNTRIES;
 
-    constructor(public payload: Array<OriginCountry>){}
+    constructor(public payload: Array<OriginCountry>) {}
 }
 
-export type RecordsActions = SetRecords | StartLoadingRecords | SetConsultants | SetOriginCountries;
+export type RecordsActions =
+    | SetRecords
+    | StartLoadingRecords
+    | StartLoadingRecordStatics
+    | SetConsultants
+    | SetOriginCountries;
