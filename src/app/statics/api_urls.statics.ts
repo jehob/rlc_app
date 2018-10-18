@@ -18,6 +18,7 @@
 
 export const LOGIN_URL = "api/login/";
 export const RECORDS_URL = "api/records/records/";
+export const CLIENTS_BY_BIRTHDAY_URL = "api/records/clients_by_birthday/";
 export const RECORDS_STATICS_URL = "api/records/statics/";
 export const PROFILE_URL = "api/profiles/";
 export const CREATE_PROFILE_URL = "api/create_profile/";

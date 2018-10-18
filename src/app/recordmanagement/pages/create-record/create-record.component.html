@@ -1,0 +1,15 @@
+<mat-card>
+    <mat-card-content>
+        <h1>Create record</h1>
+        <form [formGroup]="createRecordForm">
+
+            <mat-form-field>
+                <input matInput [matDatepicker]="picker" placeholder="Birth Date" formControlName="client_birthday">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+        </form>
+    </mat-card-content>
+
+
+</mat-card>

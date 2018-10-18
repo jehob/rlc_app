@@ -21,15 +21,18 @@ import { RestrictedRecord } from "../models/record.model";
 import { RestrictedUser } from "../../api/models/user.model";
 import { OriginCountry } from "../models/country.model";
 import { RecordTag } from "../models/record_tags.model";
+import {FullClient} from '../models/client.model';
 
 export const SET_RECORDS = "SET_RECORDS";
 export const START_LOADING_RECORDS = "START_LOADING_RECORDS";
 export const START_LOADING_RECORD_STATICS = "START_LOADING_RECORD_STATICS";
+export const START_LOADING_CLIENT_POSSIBILITIES = "START_LOADING_CLIENT_POSSIBILITIES";
 export const SET_CONSULTANTS = "SET_CONSULTANTS";
 export const SET_RECORD_STATES = "SET_RECORD_STATES";
 export const SET_COUNTRY_STATES = "SET_COUNTRY_STATES";
 export const SET_ORIGIN_COUNTRIES = "SET_ORIGIN_COUNTRIES";
 export const SET_RECORD_TAGS = "SET_RECORD_TAGS";
+export const SET_POSSIBLE_CLIENTS = "SET_POSSIBLE_CLIENTS";
 
 export class SetRecords implements Action {
     readonly type = SET_RECORDS;
@@ -43,6 +46,12 @@ export class StartLoadingRecords implements Action {
 
 export class StartLoadingRecordStatics implements Action {
     readonly type = START_LOADING_RECORD_STATICS;
+}
+
+export class StartLoadingClientPossibilities implements Action {
+    readonly type = START_LOADING_CLIENT_POSSIBILITIES;
+
+    constructor(public payload: Date){}
 }
 
 export class SetConsultants implements Action {
@@ -75,12 +84,20 @@ export class SetCountryStates implements Action{
     constructor(public payload){}
 }
 
+export class SetPossibleClients implements Action{
+    readonly type = SET_POSSIBLE_CLIENTS;
+
+    constructor(public payload: FullClient[]){}
+}
+
 export type RecordsActions =
     | SetRecords
     | StartLoadingRecords
     | StartLoadingRecordStatics
+    | StartLoadingClientPossibilities
     | SetConsultants
     | SetOriginCountries
     | SetRecordTags
     | SetRecordStates
-    | SetCountryStates;
+    | SetCountryStates
+    | SetPossibleClients;

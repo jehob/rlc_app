@@ -53,6 +53,10 @@ export class AppComponent {
         this.router.navigate(["login"]);
     }
 
+    showAddRecord(){
+        this.router.navigate(["records/add"])
+    }
+
     logout() {
         this.apiSB.logout();
     }

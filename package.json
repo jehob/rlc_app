@@ -29,6 +29,7 @@
     "core-js": "^2.5.4",
     "logrocket": "^0.6.17",
     "logrocket-ngrx": "^0.1.1",
+    "moment": "^2.22.2",
     "rxjs": "^6.2.2",
     "zone.js": "~0.8.26"
   },

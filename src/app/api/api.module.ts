@@ -29,8 +29,6 @@ import { StoreModule } from "@ngrx/store";
 import { apiReducer } from "./store/api.reducers";
 import { EffectsModule } from "@ngrx/effects";
 import { ApiEffects } from "./store/api.effects";
-import { DateFormatPipe } from "./pipes/api.pipes";
-import {MatSnackBar} from '@angular/material';
 
 @NgModule({
     imports: [
@@ -46,9 +44,8 @@ import {MatSnackBar} from '@angular/material';
         ProfileComponent,
         RegisterComponent,
         DashboardComponent,
-        LoginComponent,
-        DateFormatPipe
+        LoginComponent
     ],
-    providers: [DateFormatPipe]
+    providers: []
 })
 export class ApiModule {}

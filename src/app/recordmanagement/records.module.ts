@@ -19,7 +19,7 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RecordsRoutingModule } from "./records-routing.module";
-import { RecordsListComponent } from "./components/records/records-list.component";
+import { RecordsListComponent } from "./pages/record-list/records-list.component";
 import { CustomMaterialModule } from "../custom-material.module";
 import { Store, StoreModule } from "@ngrx/store";
 import { recordsReducer, RecordsState } from "./store/records.reducers";
@@ -27,16 +27,19 @@ import { EffectsModule } from "@ngrx/effects";
 import { RecordsEffects } from "./store/records.effects";
 import { RecordsListItemComponent } from "./components/records/records-list-item/records-list-item.component";
 import { StartLoadingRecordStatics } from "./store/records.actions";
+import { CreateRecordComponent } from './pages/create-record/create-record.component';
+import {ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
     imports: [
         CommonModule,
         RecordsRoutingModule,
         CustomMaterialModule,
+        ReactiveFormsModule,
         StoreModule.forFeature("records", recordsReducer),
         EffectsModule.forFeature([RecordsEffects])
     ],
-    declarations: [RecordsListComponent, RecordsListItemComponent]
+    declarations: [RecordsListComponent, RecordsListItemComponent, CreateRecordComponent]
 })
 export class RecordsModule {
     constructor(private recordsStore: Store<RecordsState>) {

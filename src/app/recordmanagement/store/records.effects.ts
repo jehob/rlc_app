@@ -20,17 +20,23 @@ import { Injectable } from "@angular/core";
 import { Actions, Effect, ofType } from "@ngrx/effects";
 import { HttpClient } from "@angular/common/http";
 import {
-    SET_CONSULTANTS, SET_COUNTRY_STATES,
-    SET_ORIGIN_COUNTRIES, SET_RECORD_STATES,
+    SET_CONSULTANTS,
+    SET_COUNTRY_STATES,
+    SET_ORIGIN_COUNTRIES,
+    SET_POSSIBLE_CLIENTS,
+    SET_RECORD_STATES,
     SET_RECORD_TAGS,
     SET_RECORDS,
     SetRecords,
+    START_LOADING_CLIENT_POSSIBILITIES,
     START_LOADING_RECORD_STATICS,
-    START_LOADING_RECORDS
-} from './records.actions';
-import { catchError, mergeMap, switchMap } from "rxjs/operators";
+    START_LOADING_RECORDS,
+    StartLoadingClientPossibilities
+} from "./records.actions";
+import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
 import { from, of } from "rxjs";
 import {
+    CLIENTS_BY_BIRTHDAY_URL,
     RECORDS_STATICS_URL,
     RECORDS_URL
 } from "../../statics/api_urls.statics";
@@ -39,10 +45,17 @@ import { load } from "@angular/core/src/render3/instructions";
 import { RestrictedUser } from "../../api/models/user.model";
 import { OriginCountry } from "../models/country.model";
 import { RecordTag } from "../models/record_tags.model";
+import { RecordsSandboxService } from "../services/records-sandbox.service";
+import { ApiSandboxService } from "../../api/services/api-sandbox.service";
+import { FullClient } from "../models/client.model";
 
 @Injectable()
 export class RecordsEffects {
-    constructor(private actions: Actions, private http: HttpClient) {}
+    constructor(
+        private actions: Actions,
+        private http: HttpClient,
+        private recordsSB: RecordsSandboxService
+    ) {}
 
     @Effect()
     recordsLoad = this.actions.pipe(
@@ -66,7 +79,6 @@ export class RecordsEffects {
                                 );
                             }
                         });
-                        console.log(loadedRecords);
                         return [{ type: SET_RECORDS, payload: loadedRecords }];
                     }),
                     catchError(error => {
@@ -91,7 +103,6 @@ export class RecordsEffects {
                             record_states: any;
                             country_states: any;
                         }) => {
-                            console.log(response);
                             return [
                                 {
                                     type: SET_CONSULTANTS,
@@ -126,6 +137,43 @@ export class RecordsEffects {
                         return of({ error: "error at loading record statics" });
                     })
                 )
+            );
+        })
+    );
+
+    @Effect()
+    loadingClientPossibilities = this.actions.pipe(
+        ofType(START_LOADING_CLIENT_POSSIBILITIES),
+        map((action: StartLoadingClientPossibilities) => {
+            return action.payload;
+        }),
+        switchMap((birthday: Date) => {
+            console.log(
+                `${ApiSandboxService.transformDate(
+                    birthday
+                )}} to ${CLIENTS_BY_BIRTHDAY_URL}`
+            );
+            return from(
+                this.http
+                    .post(CLIENTS_BY_BIRTHDAY_URL, {
+                        birthday: ApiSandboxService.transformDate(birthday)
+                    })
+                    .pipe(
+                        mergeMap(response => {
+                            console.log("response", response);
+                            const clients = FullClient.getFullClientsFromJsonArray(
+                                response
+                            );
+                            return [
+                                { type: SET_POSSIBLE_CLIENTS, payload: clients }
+                            ];
+                        }),
+                        catchError(error => {
+                            return of({
+                                error: "error at loading client possibilities"
+                            });
+                        })
+                    )
             );
         })
     );

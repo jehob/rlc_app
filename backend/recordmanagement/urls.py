@@ -25,5 +25,6 @@ router.register('record_tags', RecordTagViewSet)
 
 urlpatterns = [
     url(r'', include(router.urls)),
-    url(r'statics', StaticViewSet.as_view())
+    url(r'statics', StaticViewSet.as_view()),
+    url(r'clients_by_birthday', GetClientsFromBirthday.as_view()),
 ]

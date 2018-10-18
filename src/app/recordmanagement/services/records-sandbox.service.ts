@@ -3,7 +3,7 @@ import { Router } from "@angular/router";
 import { select, Store } from "@ngrx/store";
 import { RecordsState } from "../store/records.reducers";
 import { HttpClient } from "@angular/common/http";
-import { StartLoadingRecords } from "../store/records.actions";
+import {StartLoadingClientPossibilities, StartLoadingRecords} from '../store/records.actions';
 
 @Injectable({
     providedIn: "root"
@@ -21,5 +21,9 @@ export class RecordsSandboxService {
 
     getRecords() {
         return this.store.pipe(select((state: any) => state.records.records));
+    }
+
+    loadClientPossibilities(birthday: Date){
+        this.store.dispatch(new StartLoadingClientPossibilities(birthday));
     }
 }

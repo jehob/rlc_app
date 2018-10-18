@@ -24,7 +24,7 @@ import {
     MAT_SNACK_BAR_DEFAULT_OPTIONS,
     MatButtonModule,
     MatSnackBarModule,
-    MatCheckboxModule
+    MatCheckboxModule, MatTreeModule
 } from '@angular/material';
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatCardModule } from "@angular/material/card";
@@ -52,7 +52,8 @@ import { MatIconModule } from "@angular/material/icon";
         MatNativeDateModule,
         MatExpansionModule,
         MatListModule,
-        MatSnackBarModule
+        MatSnackBarModule,
+        MatTreeModule,
     ],
     exports: [
         MatButtonModule,
@@ -67,7 +68,8 @@ import { MatIconModule } from "@angular/material/icon";
         MatNativeDateModule,
         MatExpansionModule,
         MatListModule,
-        MatSnackBarModule
+        MatSnackBarModule,
+        MatTreeModule
     ],
     declarations: [],
     providers: [

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { DateFormatPipe } from "../pipes/api.pipes";
+import {ApiSandboxService} from '../services/api-sandbox.service';
 
 export class RestrictedUser {
     constructor(public id: string, public name: string) {
@@ -76,10 +76,10 @@ export class FullUser extends RestrictedUser {
      * used to generated the update object for patching user in backend
      * @param updates potential updates for object
      */
-    getUpdates(updates: FullUser, datePipe: DateFormatPipe) {
+    getUpdates(updates: FullUser) {
         const changes = {};
         if (this.birthday !== updates.birthday)
-            changes["birthday"] = datePipe.transform(updates.birthday);
+            changes["birthday"] = ApiSandboxService.transformDate(updates.birthday);
         if (this.phone_number !== updates.phone_number)
             changes["phone_number"] = updates.phone_number;
         if (this.street !== updates.street) changes["street"] = updates.street;

@@ -30,17 +30,20 @@ import { FullUser } from "../models/user.model";
 import { take } from "rxjs/operators";
 import {CreateUser, PatchUser} from '../store/api.actions';
 import {MatSnackBar, MatSnackBarConfig} from '@angular/material';
-import {DateFormatPipe} from '../pipes/api.pipes';
+import moment from 'moment';
 
 @Injectable()
 export class ApiSandboxService {
     constructor(
         public router: Router,
         private snackBar: MatSnackBar,
-        private dateTransformer: DateFormatPipe,
         private appStateStore: Store<AppState>,
         private apiStateStore: Store<ApiState>
     ) {}
+
+    static transformDate(date: Date){
+        return moment(date).format('YYYY-MM-DD');
+    }
 
     logout() {
         localStorage.clear();
@@ -71,9 +74,9 @@ export class ApiSandboxService {
                 userFromStore = loadedUser;
             });
         const id = userFromStore.id;
-        console.log("updates", userFromStore.getUpdates(user, this.dateTransformer));
+        console.log("updates", userFromStore.getUpdates(user));
         this.apiStateStore.dispatch(
-            new PatchUser({ id, userUpdates: userFromStore.getUpdates(user, this.dateTransformer) })
+            new PatchUser({ id, userUpdates: userFromStore.getUpdates(user) })
         );
     }
 
@@ -97,4 +100,6 @@ export class ApiSandboxService {
         config.verticalPosition = "top";
         this.snackBar.open(message, '', config);
     }
+
+
 }
