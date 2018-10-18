@@ -1,4 +1,4 @@
-/*!
+/*
  * rlcapp - record and organization management software for refugee law clinics
  * Copyright (C) 2018  Dominik Walser
  *
@@ -16,19 +16,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-@import "../../../../styles/basic";
+export class OriginCountry{
+    constructor(public id: string, public name: string, public state: string){
+        this.id = id;
+        this.name = name;
+        this.state = state;
+    }
 
-.records-container {
-    max-width: 500px;
-    padding: 30px;
-    //overflow-y: scroll;
-    //max-height: content-box;
-}
-mat-card-header {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-}
-.records-search-input {
-    margin-left: auto;
+    static getOriginCountriesFromJsonArray(jsonArray){
+        const countries: OriginCountry[] = [];
+        Object.values(jsonArray).map(jsonCountry => {
+            countries.push(OriginCountry.getOriginCountryFromJson(jsonCountry));
+        });
+        return countries;
+    }
+
+    static getOriginCountryFromJson(json){
+        return new OriginCountry(json.id, json.name, json.state);
+    }
 }

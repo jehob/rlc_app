@@ -34,7 +34,7 @@ import { SET_USER } from "../api.actions";
 import { AuthGuardService } from "../../services/auth-guard.service";
 import { FullUser, RestrictedUser } from "../../models/user.model";
 import {SET_CONSULTANTS, SET_ORIGIN_COUNTRIES} from '../../../recordmanagement/store/records.actions';
-import {OriginCountry} from '../../../recordmanagement/models/country.models';
+import {OriginCountry} from '../../../recordmanagement/models/country.model';
 
 @Injectable()
 export class AuthEffects {

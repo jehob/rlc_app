@@ -19,7 +19,8 @@
 import { Action } from "@ngrx/store";
 import { RestrictedRecord } from "../models/record.model";
 import { RestrictedUser } from "../../api/models/user.model";
-import { OriginCountry } from "../models/country.models";
+import { OriginCountry } from "../models/country.model";
+import { RecordTag } from "../models/record_tags.model";
 
 export const SET_RECORDS = "SET_RECORDS";
 export const START_LOADING_RECORDS = "START_LOADING_RECORDS";
@@ -47,13 +48,31 @@ export class StartLoadingRecordStatics implements Action {
 export class SetConsultants implements Action {
     readonly type = SET_CONSULTANTS;
 
-    constructor(public payload: Array<RestrictedUser>) {}
+    constructor(public payload: RestrictedUser[]) {}
 }
 
 export class SetOriginCountries implements Action {
     readonly type = SET_ORIGIN_COUNTRIES;
 
-    constructor(public payload: Array<OriginCountry>) {}
+    constructor(public payload: OriginCountry[]) {}
+}
+
+export class SetRecordTags implements Action {
+    readonly type = SET_RECORD_TAGS;
+
+    constructor(public payload: RecordTag[]) {}
+}
+
+export class SetRecordStates implements Action{
+    readonly type = SET_RECORD_STATES;
+
+    constructor(public payload){}
+}
+
+export class SetCountryStates implements Action{
+    readonly type = SET_COUNTRY_STATES;
+
+    constructor(public payload){}
 }
 
 export type RecordsActions =
@@ -61,4 +80,7 @@ export type RecordsActions =
     | StartLoadingRecords
     | StartLoadingRecordStatics
     | SetConsultants
-    | SetOriginCountries;
+    | SetOriginCountries
+    | SetRecordTags
+    | SetRecordStates
+    | SetCountryStates;

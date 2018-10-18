@@ -17,19 +17,34 @@
  ******************************************************************************/
 
 import { RestrictedRecord } from "../models/record.model";
-import {RecordsActions, SET_CONSULTANTS, SET_ORIGIN_COUNTRIES, SET_RECORDS} from './records.actions';
-import {OriginCountry} from '../models/country.models';
+import {
+    RecordsActions,
+    SET_CONSULTANTS,
+    SET_COUNTRY_STATES,
+    SET_ORIGIN_COUNTRIES,
+    SET_RECORD_STATES,
+    SET_RECORD_TAGS,
+    SET_RECORDS
+} from './records.actions';
+import {OriginCountry} from '../models/country.model';
+import {RecordTag} from '../models/record_tags.model';
 
 export interface RecordsState {
-    records: Array<RestrictedRecord>;
-    consultants: Array<RestrictedRecord>;
-    origin_countries: Array<OriginCountry>;
+    records: RestrictedRecord[];
+    consultants: RestrictedRecord[];
+    origin_countries: OriginCountry[];
+    record_tags: RecordTag[];
+    record_states: any,
+    country_states: any,
 }
 
 const initialState: RecordsState = {
     records: null,
     consultants: null,
-    origin_countries: null
+    origin_countries: null,
+    record_tags: null,
+    record_states: null,
+    country_states: null,
 };
 
 export function recordsReducer(state = initialState, action: RecordsActions) {
@@ -48,6 +63,21 @@ export function recordsReducer(state = initialState, action: RecordsActions) {
             return {
                 ...state,
                 origin_countries: action.payload
+            };
+        case SET_RECORD_TAGS:
+            return {
+                ...state,
+                record_tags: action.payload
+            };
+        case SET_RECORD_STATES:
+            return{
+                ...state,
+                record_states: action.payload
+            };
+        case SET_COUNTRY_STATES:
+            return {
+                ...state,
+                country_states: action.payload
             };
         default:
             return state;

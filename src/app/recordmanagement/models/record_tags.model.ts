@@ -16,22 +16,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-export class OriginCountry{
-    constructor(public id: string, public name: string, public state: string){
+export class RecordTag{
+    constructor(public id: string, public name: string){
         this.id = id;
         this.name = name;
-        this.state = state;
     }
 
-    static getOriginCountriesFromJsonArray(jsonArray){
-        const countries: Array<OriginCountry> = [];
-        Object.values(jsonArray).map(jsonCountry => {
-            countries.push(OriginCountry.getOriginCountryFromJson(jsonCountry));
+    static getRecordTagsFromJsonArray(jsonArray){
+        const tags: RecordTag[] = [];
+        Object.values(jsonArray).map(jsonTag => {
+            tags.push(RecordTag.getRecordTagFromJson(jsonTag));
         });
-        return countries;
+        return tags;
     }
 
-    static getOriginCountryFromJson(json){
-        return new OriginCountry(json.id, json.name, json.state);
+    static getRecordTagFromJson(json){
+        return new RecordTag(json.id, json.name);
     }
 }

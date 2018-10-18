@@ -20,13 +20,14 @@ import { Injectable } from "@angular/core";
 import { Actions, Effect, ofType } from "@ngrx/effects";
 import { HttpClient } from "@angular/common/http";
 import {
-    SET_CONSULTANTS,
-    SET_ORIGIN_COUNTRIES,
+    SET_CONSULTANTS, SET_COUNTRY_STATES,
+    SET_ORIGIN_COUNTRIES, SET_RECORD_STATES,
+    SET_RECORD_TAGS,
     SET_RECORDS,
     SetRecords,
     START_LOADING_RECORD_STATICS,
     START_LOADING_RECORDS
-} from "./records.actions";
+} from './records.actions';
 import { catchError, mergeMap, switchMap } from "rxjs/operators";
 import { from, of } from "rxjs";
 import {
@@ -36,7 +37,8 @@ import {
 import { FullRecord, RestrictedRecord } from "../models/record.model";
 import { load } from "@angular/core/src/render3/instructions";
 import { RestrictedUser } from "../../api/models/user.model";
-import { OriginCountry } from "../models/country.models";
+import { OriginCountry } from "../models/country.model";
+import { RecordTag } from "../models/record_tags.model";
 
 @Injectable()
 export class RecordsEffects {
@@ -82,7 +84,14 @@ export class RecordsEffects {
             return from(
                 this.http.get(RECORDS_STATICS_URL).pipe(
                     mergeMap(
-                        (response: { consultants: any; countries: any }) => {
+                        (response: {
+                            consultants: any;
+                            countries: any;
+                            record_tags: any;
+                            record_states: any;
+                            country_states: any;
+                        }) => {
+                            console.log(response);
                             return [
                                 {
                                     type: SET_CONSULTANTS,
@@ -95,6 +104,20 @@ export class RecordsEffects {
                                     payload: OriginCountry.getOriginCountriesFromJsonArray(
                                         response.countries
                                     )
+                                },
+                                {
+                                    type: SET_RECORD_TAGS,
+                                    payload: RecordTag.getRecordTagsFromJsonArray(
+                                        response.record_tags
+                                    )
+                                },
+                                {
+                                    type: SET_RECORD_STATES,
+                                    payload: response.record_states
+                                },
+                                {
+                                    type: SET_COUNTRY_STATES,
+                                    payload: response.country_states
                                 }
                             ];
                         }
