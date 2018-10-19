@@ -27,19 +27,27 @@ import { EffectsModule } from "@ngrx/effects";
 import { RecordsEffects } from "./store/records.effects";
 import { RecordsListItemComponent } from "./components/records/records-list-item/records-list-item.component";
 import { StartLoadingRecordStatics } from "./store/records.actions";
-import { CreateRecordComponent } from './pages/create-record/create-record.component';
-import {ReactiveFormsModule} from '@angular/forms';
+import { CreateRecordComponent } from "./pages/create-record/create-record.component";
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { SelectClientDialogComponent } from "./components/select-client-dialog/select-client-dialog.component";
 
 @NgModule({
     imports: [
         CommonModule,
         RecordsRoutingModule,
         CustomMaterialModule,
+        FormsModule,
         ReactiveFormsModule,
         StoreModule.forFeature("records", recordsReducer),
         EffectsModule.forFeature([RecordsEffects])
     ],
-    declarations: [RecordsListComponent, RecordsListItemComponent, CreateRecordComponent]
+    declarations: [
+        RecordsListComponent,
+        RecordsListItemComponent,
+        CreateRecordComponent,
+        SelectClientDialogComponent
+    ],
+    entryComponents: [SelectClientDialogComponent]
 })
 export class RecordsModule {
     constructor(private recordsStore: Store<RecordsState>) {

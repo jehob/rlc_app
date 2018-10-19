@@ -24,7 +24,9 @@ import {
     MAT_SNACK_BAR_DEFAULT_OPTIONS,
     MatButtonModule,
     MatSnackBarModule,
-    MatCheckboxModule, MatTreeModule
+    MatCheckboxModule,
+    MatTreeModule,
+    MatChipsModule, MatDialogModule, MatRadioModule, MatRadioGroup
 } from '@angular/material';
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatCardModule } from "@angular/material/card";
@@ -54,6 +56,9 @@ import { MatIconModule } from "@angular/material/icon";
         MatListModule,
         MatSnackBarModule,
         MatTreeModule,
+        MatChipsModule,
+        MatDialogModule,
+        MatRadioModule
     ],
     exports: [
         MatButtonModule,
@@ -69,12 +74,18 @@ import { MatIconModule } from "@angular/material/icon";
         MatExpansionModule,
         MatListModule,
         MatSnackBarModule,
-        MatTreeModule
+        MatTreeModule,
+        MatChipsModule,
+        MatDialogModule,
+        MatRadioModule
     ],
     declarations: [],
     providers: [
-        {provide: MAT_DATE_LOCALE, useValue: 'de-DE'},
-        {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 2500, verticalPosition: 'top'}},
-    ],
+        { provide: MAT_DATE_LOCALE, useValue: "de-DE" },
+        {
+            provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
+            useValue: { duration: 2500, verticalPosition: "top" }
+        }
+    ]
 })
 export class CustomMaterialModule {}

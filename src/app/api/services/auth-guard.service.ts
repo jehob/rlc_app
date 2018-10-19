@@ -26,7 +26,6 @@ import {
     RouterStateSnapshot
 } from "@angular/router";
 import { AppState } from "../../store/app.reducers";
-import { AuthService } from "./auth.service";
 import { AuthState } from "../store/auth/auth.reducers";
 
 @Injectable()
@@ -34,7 +33,6 @@ export class AuthGuardService implements CanActivate {
     lastVisitedUrl: string = undefined;
 
     constructor(
-        private auth: AuthService,
         private router: Router,
         private store: Store<AppState>
     ) {}

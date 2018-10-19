@@ -48,13 +48,14 @@ import { RecordTag } from "../models/record_tags.model";
 import { RecordsSandboxService } from "../services/records-sandbox.service";
 import { ApiSandboxService } from "../../api/services/api-sandbox.service";
 import { FullClient } from "../models/client.model";
+import { AuthService } from "../../api/services/auth.service";
 
 @Injectable()
 export class RecordsEffects {
     constructor(
         private actions: Actions,
         private http: HttpClient,
-        private recordsSB: RecordsSandboxService
+        private authService: AuthService
     ) {}
 
     @Effect()
@@ -93,8 +94,14 @@ export class RecordsEffects {
     recordStaticsLoad = this.actions.pipe(
         ofType(START_LOADING_RECORD_STATICS),
         switchMap(() => {
+            console.log("authenticated", this.authService.isAuthenticated());
             return from(
                 this.http.get(RECORDS_STATICS_URL).pipe(
+                    catchError(error => {
+                        return of({
+                            error: "error at loading record statics"
+                        });
+                    }),
                     mergeMap(
                         (response: {
                             consultants: any;
@@ -132,10 +139,7 @@ export class RecordsEffects {
                                 }
                             ];
                         }
-                    ),
-                    catchError(error => {
-                        return of({ error: "error at loading record statics" });
-                    })
+                    )
                 )
             );
         })

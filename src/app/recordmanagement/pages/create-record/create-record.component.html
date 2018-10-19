@@ -8,6 +8,13 @@
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
+
+            <mat-form-field>
+                <input type="text" matInput formControlName="client_name" placeholder="client name">
+            </mat-form-field>
+            <mat-form-field>
+                <input type="text" matInput formControlName="client_origin_country" placeholder="client origin country">
+            </mat-form-field>
         </form>
     </mat-card-content>
 

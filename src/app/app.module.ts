@@ -37,6 +37,8 @@ import { ApiModule } from "./api/api.module";
 import { RecordsSandboxService } from "./recordmanagement/services/records-sandbox.service";
 import { AuthInterceptor } from "./api/services/auth.interceptor";
 import { environment } from "../environments/environment";
+
+
 const reduxMiddleware = LogRocket.reduxMiddleware();
 
 export function logrocketMiddleware(reducer): ActionReducer<any, any> {

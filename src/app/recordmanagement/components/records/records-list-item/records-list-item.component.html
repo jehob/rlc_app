@@ -1,5 +1,5 @@
 <mat-list-item>
     <h4 mat-line>{{ record.token }}</h4>
-    <p mat-line> 1 </p>
+    <mat-chip-list><mat-chip *ngFor="let tag of record.tags">{{ tag.name }}</mat-chip></mat-chip-list>
 </mat-list-item>
 <mat-divider></mat-divider>

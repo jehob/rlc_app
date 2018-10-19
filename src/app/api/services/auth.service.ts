@@ -20,56 +20,60 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { LOGIN_URL } from "../../statics/api_urls.statics";
+import {AppState} from '../../store/app.reducers';
+import {Store} from '@ngrx/store';
 
 @Injectable()
 export class AuthService {
     token: string;
 
-    constructor(private router: Router, private http: HttpClient) {}
+    constructor(private router: Router, private http: HttpClient, private store: Store<AppState>) {}
 
-    login(email: string, password: string) {
-        this.http
-            .post(LOGIN_URL, { username: email, password: password })
-            .subscribe(
-                (response: { token }) => {
-                    console.log(response);
-                    this.token = response.token;
-                    localStorage.setItem("token", this.token);
-
-                    this.setOtherValues(response);
-                    this.router.navigate([""]);
-                },
-                error => {
-                    console.log(error);
-                }
-            );
-    }
-
-    reload(token: string) {
-        this.token = token;
-        this.http.get(LOGIN_URL).subscribe(
-            response => {
-                this.setOtherValues(response);
-                console.log("reload", response);
-            },
-            error => {
-                console.log("error: ", error);
-            }
-        );
-    }
+    // login(email: string, password: string) {
+    //     this.http
+    //         .post(LOGIN_URL, { username: email, password: password })
+    //         .subscribe(
+    //             (response: { token }) => {
+    //                 console.log(response);
+    //                 this.token = response.token;
+    //                 localStorage.setItem("token", this.token);
+    //
+    //                 this.setOtherValues(response);
+    //                 this.router.navigate([""]);
+    //             },
+    //             error => {
+    //                 console.log(error);
+    //             }
+    //         );
+    // }
+    //
+    // reload(token: string) {
+    //     this.token = token;
+    //     console.log('reload');
+    //     this.http.get(LOGIN_URL).subscribe(
+    //         response => {
+    //             this.setOtherValues(response);
+    //             console.log("reload", response);
+    //         },
+    //         error => {
+    //             console.log("error: ", error);
+    //         }
+    //     );
+    // }
 
     /**
      * Sets all other values which came from the server except of the token
      * @param response the response which came from the server after login or reload
      */
-    setOtherValues(response) {
-        //this.personalUser.setUser(response.user);
-    }
+    // setOtherValues(response) {
+    //     //this.personalUser.setUser(response.user);
+    // }
 
-    logout() {
-        localStorage.removeItem("token");
-        this.token = null;
-    }
+    // logout() {
+    //     console.log('logout');
+    //     localStorage.removeItem("token");
+    //     this.token = null;
+    // }
 
     isAuthenticated() {
         return this.token != null;
