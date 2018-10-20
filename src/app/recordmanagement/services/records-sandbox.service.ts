@@ -13,6 +13,7 @@ import { take } from "rxjs/operators";
 import { FullClient } from "../models/client.model";
 import { Observable } from "rxjs";
 import { OriginCountry } from "../models/country.model";
+import {RestrictedUser} from '../../api/models/user.model';
 
 @Injectable({
     providedIn: "root"
@@ -37,7 +38,7 @@ export class RecordsSandboxService {
         );
     }
 
-    getConsultants() {
+    getConsultants(): Observable<RestrictedUser[]> {
         return this.store.pipe(
             select((state: any) => state.records.consultants)
         );
@@ -89,5 +90,11 @@ export class RecordsSandboxService {
 
     resetPossibleClients(){
         this.store.dispatch(new ResetPossibleClients());
+    }
+
+    getOriginCountries(): Observable<OriginCountry[]>{
+        return this.store.pipe(
+            select((state: any) => state.records.origin_countries)
+        );
     }
 }

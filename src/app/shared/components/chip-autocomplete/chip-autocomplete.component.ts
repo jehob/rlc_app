@@ -6,19 +6,14 @@ import {
     OnChanges,
     OnInit,
     Output,
-    SimpleChange,
     SimpleChanges,
     ViewChild
 } from "@angular/core";
 import {
     FormControl,
-    FormControlName,
     FormGroup,
-    ValidatorFn
 } from "@angular/forms";
-import { FullClient } from "../../../recordmanagement/models/client.model";
-import { OriginCountry } from "../../../recordmanagement/models/country.model";
-import { Filterable, RestrictedUser } from "../../../api/models/user.model";
+
 import { Observable } from "rxjs";
 import {
     MatAutocomplete,
@@ -26,6 +21,7 @@ import {
     MatChipInputEvent
 } from "@angular/material";
 import { map, startWith } from "rxjs/operators";
+import {Filterable} from '../../models/filterable.model';
 
 @Component({
     selector: "app-chip-autocomplete",

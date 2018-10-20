@@ -17,10 +17,7 @@
  ******************************************************************************/
 
 import {ApiSandboxService} from '../services/api-sandbox.service';
-
-export abstract class Filterable {
-    abstract getFilterableProperty();
-}
+import {Filterable} from '../../shared/models/filterable.model';
 
 export class RestrictedUser implements Filterable{
     constructor(public id: string, public name: string) {

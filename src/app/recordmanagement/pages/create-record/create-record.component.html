@@ -2,20 +2,39 @@
     <mat-card-content>
         <h1>Create record</h1>
         <form [formGroup]="createRecordForm">
+            <div>
+                <mat-form-field>
+                    <input matInput [matDatepicker]="picker_first_contact_date" placeholder="contact date" formControlName="first_contact_date"
+                           (click)="picker_first_contact_date.open()">
+                    <mat-datepicker-toggle matSuffix [for]="picker_first_contact_date"></mat-datepicker-toggle>
+                    <mat-datepicker #picker_first_contact_date></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field>
+                    <input matInput [matDatepicker]="picker" placeholder="birthday" formControlName="client_birthday"
+                           (click)="picker.open()">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
 
-            <mat-form-field>
-                <input matInput [matDatepicker]="picker" placeholder="Birth Date" formControlName="client_birthday"
-                       (click)="picker.open()">
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
+                <mat-form-field>
+                    <input type="text" matInput formControlName="client_name" placeholder="client name">
+                </mat-form-field>
+                <mat-form-field>
+                    <input type="text" matInput formControlName="client_origin_country" placeholder="origin country">
 
-            <mat-form-field>
-                <input type="text" matInput formControlName="client_name" placeholder="client name">
-            </mat-form-field>
-            <mat-form-field>
-                <input type="text" matInput formControlName="client_origin_country" placeholder="client origin country">
-            </mat-form-field>
+                </mat-form-field>
+                <mat-form-field>
+                    <input type="text" matInput formControlName="client_phone_number" placeholder="phone number">
+                </mat-form-field>
+                <mat-form-field>
+                    <textarea type="text" matInput formControlName="client_note" placeholder="note about client">
+
+                    </textarea>
+                </mat-form-field>
+            </div>
+
 
             <app-chip-autocomplete [allValues]="allConsultants"
                                    (selectedValuesChanged)="selectedConsultantsChanged($event)"
@@ -24,6 +43,8 @@
                     at least one consultant for case
                 </mat-error>
             </app-chip-autocomplete>
+
+            <button mat-flat-button (click)="this.onAddRecordClick()">Add record</button>
         </form>
     </mat-card-content>
 </mat-card>
