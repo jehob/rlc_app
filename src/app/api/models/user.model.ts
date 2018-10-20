@@ -18,7 +18,11 @@
 
 import {ApiSandboxService} from '../services/api-sandbox.service';
 
-export class RestrictedUser {
+export abstract class Filterable {
+    abstract getFilterableProperty();
+}
+
+export class RestrictedUser implements Filterable{
     constructor(public id: string, public name: string) {
         this.id = id;
         this.name = name;
@@ -34,6 +38,10 @@ export class RestrictedUser {
 
     static getRestrictedUserFromJson(json){
         return new RestrictedUser(json.id, json.name);
+    }
+
+    getFilterableProperty(){
+        return this.name;
     }
 }
 

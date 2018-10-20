@@ -1,11 +1,18 @@
-import { Component, OnInit } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import { FormControl, FormGroup } from "@angular/forms";
 import { RecordsSandboxService } from "../../services/records-sandbox.service";
-import { MatDialog } from "@angular/material";
+import {
+    MatAutocomplete,
+    MatAutocompleteSelectedEvent,
+    MatChipInputEvent,
+    MatDialog
+} from "@angular/material";
 import { SelectClientDialogComponent } from "../../components/select-client-dialog/select-client-dialog.component";
-import { map, take } from "rxjs/operators";
+import { map, startWith } from "rxjs/operators";
 import { FullClient } from "../../models/client.model";
-import {OriginCountry} from '../../models/country.model';
+import { OriginCountry } from "../../models/country.model";
+import { RestrictedUser } from "../../../api/models/user.model";
+import { Observable } from "rxjs";
 
 @Component({
     selector: "app-add-record",
@@ -16,6 +23,10 @@ export class CreateRecordComponent implements OnInit {
     createRecordForm: FormGroup;
     client: FullClient;
     originCountry: OriginCountry;
+
+    allConsultants: RestrictedUser[];
+    consultantErrors: any;
+    selectedConsultants: RestrictedUser[];
 
     constructor(
         private recordSB: RecordsSandboxService,
@@ -29,12 +40,14 @@ export class CreateRecordComponent implements OnInit {
             client_origin_country: new FormControl(""),
             record_token: new FormControl(""),
             consultants: new FormControl(""),
-            client: new FormGroup({
-                name: new FormControl('')
-            })
+            tags: new FormControl()
         });
 
         this.onClientBirthdayChanges();
+
+        this.recordSB.getConsultants().subscribe(consultants => {
+            this.allConsultants = consultants;
+        });
     }
 
     ngOnInit() {}
@@ -43,39 +56,55 @@ export class CreateRecordComponent implements OnInit {
         this.createRecordForm
             .get("client_birthday")
             .valueChanges.subscribe(val => {
-                console.log("new val", val);
                 this.recordSB.loadClientPossibilities(val);
 
                 this.openSelectClientDialog();
             });
     }
 
+    selectedConsultantsChanged(selectedConsultants) {
+        this.selectedConsultants = selectedConsultants;
+        if (selectedConsultants.length === 0) {
+            this.consultantErrors = { null: "true" };
+        } else {
+            this.consultantErrors = null;
+        }
+
+    }
+
     openSelectClientDialog() {
         const dialogRef = this.dialog.open(SelectClientDialogComponent);
         dialogRef.afterClosed().subscribe(result => {
-            console.log("closedDialog", result);
+
             if (result) {
-                console.log("i got something");
                 if (result !== -1) {
                     this.client = this.recordSB.getSpecialPossibleClient(
                         result
                     );
-                    this.originCountry = this.recordSB.getOriginCountryById(this.client.origin_country);
-                    console.log('client', this.client);
-                    console.log('originCountry', this.originCountry);
+                    this.originCountry = this.recordSB.getOriginCountryById(
+                        this.client.origin_country
+                    );
+                    //console.log('client', this.client);
+                    //console.log('originCountry', this.originCountry);
 
                     this.createRecordForm.controls["client_name"].setValue(
                         this.client.name
                     );
-                    this.createRecordForm.controls["client_phone_number"].setValue(
-                        this.client.phone_number
-                    );
-                    this.createRecordForm.controls["client_origin_country"].setValue(
-                        this.recordSB.getOriginCountryById(this.originCountry.name)
-                    );
-
+                    this.createRecordForm.controls[
+                        "client_phone_number"
+                    ].setValue(this.client.phone_number);
+                    this.createRecordForm.controls[
+                        "client_origin_country"
+                    ].setValue(this.originCountry.name);
+                    this.createRecordForm.controls[
+                        "client_origin_country"
+                    ].disable();
+                } else {
+                    this.client = null;
+                    this.originCountry = null;
                 }
             }
+            this.recordSB.resetPossibleClients();
         });
     }
 }

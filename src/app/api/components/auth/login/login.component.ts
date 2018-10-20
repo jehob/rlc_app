@@ -24,6 +24,8 @@ import { AppState } from "../../../../store/app.reducers";
 import { TryLogin } from "../../../store/auth/auth.actions";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ReadFromInjectorFn } from "@angular/core/src/render3/di";
+import {ApiSandboxService} from '../../../services/api-sandbox.service';
+import {AppSandboxService} from '../../../services/app-sandbox.service';
 
 @Component({
     selector: "app-login",
@@ -34,12 +36,11 @@ export class LoginComponent implements OnInit {
     loginForm: FormGroup;
 
     constructor(
-        private auth: AuthService,
         private route: ActivatedRoute,
         private router: Router,
-        private store: Store<AppState>
+        private appSB: AppSandboxService
     ) {
-        if (this.auth.isAuthenticated()) {
+        if (this.appSB.isAuthenticated()) {
             this.router.navigate([""]);
         }
 
@@ -56,12 +57,7 @@ export class LoginComponent implements OnInit {
 
     onLogInClick() {
         if (this.loginForm.valid)
-            this.store.dispatch(
-                new TryLogin({
-                    username: this.loginForm.value.email,
-                    password: this.loginForm.value.password
-                })
-            );
+            this.appSB.login(this.loginForm.value.email, this.loginForm.value.password);
     }
 
     onRegisterClick() {

@@ -18,7 +18,7 @@
 
 import { RestrictedRecord } from "../models/record.model";
 import {
-    RecordsActions,
+    RecordsActions, RESET_POSSIBLE_CLIENTS,
     SET_CONSULTANTS,
     SET_COUNTRY_STATES,
     SET_ORIGIN_COUNTRIES,
@@ -26,7 +26,7 @@ import {
     SET_RECORD_STATES,
     SET_RECORD_TAGS,
     SET_RECORDS
-} from "./records.actions";
+} from './records.actions';
 import { OriginCountry } from "../models/country.model";
 import { RecordTag } from "../models/record_tags.model";
 import { FullClient } from "../models/client.model";
@@ -42,13 +42,13 @@ export interface RecordsState {
 }
 
 const initialState: RecordsState = {
-    records: null,
-    consultants: null,
-    origin_countries: null,
-    record_tags: null,
-    record_states: null,
-    country_states: null,
-    possible_clients: null
+    records: [],
+    consultants: [],
+    origin_countries: [],
+    record_tags: [],
+    record_states: [],
+    country_states: [],
+    possible_clients: []
 };
 
 export function recordsReducer(state = initialState, action: RecordsActions) {
@@ -87,6 +87,11 @@ export function recordsReducer(state = initialState, action: RecordsActions) {
             return {
                 ...state,
                 possible_clients: action.payload
+            };
+        case RESET_POSSIBLE_CLIENTS:
+            return {
+                ...state,
+                possible_clients: []
             };
         default:
             return state;

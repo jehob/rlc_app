@@ -21,18 +21,20 @@ import { RestrictedRecord } from "../models/record.model";
 import { RestrictedUser } from "../../api/models/user.model";
 import { OriginCountry } from "../models/country.model";
 import { RecordTag } from "../models/record_tags.model";
-import {FullClient} from '../models/client.model';
+import { FullClient } from "../models/client.model";
 
 export const SET_RECORDS = "SET_RECORDS";
 export const START_LOADING_RECORDS = "START_LOADING_RECORDS";
 export const START_LOADING_RECORD_STATICS = "START_LOADING_RECORD_STATICS";
-export const START_LOADING_CLIENT_POSSIBILITIES = "START_LOADING_CLIENT_POSSIBILITIES";
+export const START_LOADING_CLIENT_POSSIBILITIES =
+    "START_LOADING_CLIENT_POSSIBILITIES";
 export const SET_CONSULTANTS = "SET_CONSULTANTS";
 export const SET_RECORD_STATES = "SET_RECORD_STATES";
 export const SET_COUNTRY_STATES = "SET_COUNTRY_STATES";
 export const SET_ORIGIN_COUNTRIES = "SET_ORIGIN_COUNTRIES";
 export const SET_RECORD_TAGS = "SET_RECORD_TAGS";
 export const SET_POSSIBLE_CLIENTS = "SET_POSSIBLE_CLIENTS";
+export const RESET_POSSIBLE_CLIENTS = "RESET_POSSIBLE_CLIENTS";
 
 export class SetRecords implements Action {
     readonly type = SET_RECORDS;
@@ -51,7 +53,7 @@ export class StartLoadingRecordStatics implements Action {
 export class StartLoadingClientPossibilities implements Action {
     readonly type = START_LOADING_CLIENT_POSSIBILITIES;
 
-    constructor(public payload: Date){}
+    constructor(public payload: Date) {}
 }
 
 export class SetConsultants implements Action {
@@ -72,22 +74,26 @@ export class SetRecordTags implements Action {
     constructor(public payload: RecordTag[]) {}
 }
 
-export class SetRecordStates implements Action{
+export class SetRecordStates implements Action {
     readonly type = SET_RECORD_STATES;
 
-    constructor(public payload){}
+    constructor(public payload) {}
 }
 
-export class SetCountryStates implements Action{
+export class SetCountryStates implements Action {
     readonly type = SET_COUNTRY_STATES;
 
-    constructor(public payload){}
+    constructor(public payload) {}
 }
 
-export class SetPossibleClients implements Action{
+export class SetPossibleClients implements Action {
     readonly type = SET_POSSIBLE_CLIENTS;
 
-    constructor(public payload: FullClient[]){}
+    constructor(public payload: FullClient[]) {}
+}
+
+export class ResetPossibleClients implements Action {
+    readonly type = RESET_POSSIBLE_CLIENTS;
 }
 
 export type RecordsActions =
@@ -100,4 +106,5 @@ export type RecordsActions =
     | SetRecordTags
     | SetRecordStates
     | SetCountryStates
-    | SetPossibleClients;
+    | SetPossibleClients
+    | ResetPossibleClients;

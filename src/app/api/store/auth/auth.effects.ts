@@ -32,9 +32,8 @@ import LogRocket from "logrocket";
 import { LOGIN_URL } from "../../../statics/api_urls.statics";
 import { SET_USER } from "../api.actions";
 import { AuthGuardService } from "../../services/auth-guard.service";
-import { FullUser, RestrictedUser } from "../../models/user.model";
-import {SET_CONSULTANTS, SET_ORIGIN_COUNTRIES} from '../../../recordmanagement/store/records.actions';
-import {OriginCountry} from '../../../recordmanagement/models/country.model';
+import { FullUser } from "../../models/user.model";
+import {RecordsSandboxService} from '../../../recordmanagement/services/records-sandbox.service';
 
 @Injectable()
 export class AuthEffects {
@@ -42,7 +41,8 @@ export class AuthEffects {
         private actions: Actions,
         private http: HttpClient,
         private router: Router,
-        private guard: AuthGuardService
+        private guard: AuthGuardService,
+        private recordSB: RecordsSandboxService
     ) {}
 
     @Effect()
@@ -62,7 +62,6 @@ export class AuthEffects {
                             consultants: any;
                             countries: any;
                         }) => {
-                            // local storage
                             localStorage.setItem("token", response.token);
 
                             console.log("loginResponse", response);
@@ -84,6 +83,15 @@ export class AuthEffects {
                     )
                 )
             );
+        }),
+    );
+
+    @Effect()
+    setToken = this.actions.pipe(
+        ofType(SET_TOKEN),
+        switchMap(() => {
+            this.recordSB.startLoadingRecordStatics();
+            return [];
         })
     );
 
@@ -95,7 +103,6 @@ export class AuthEffects {
         }),
         mergeMap((response: any) => {
             console.log('reloaded', response);
-
             return [...AuthEffects.getStaticInformation(response)];
         })
     );
@@ -103,6 +110,7 @@ export class AuthEffects {
     static getStaticInformation(response: { user: any; }) {
         // for logging
         LogRocket.identify(response.user.id);
+        // keep this console.log
         console.log("identified: ", response.user.id);
 
         return  [

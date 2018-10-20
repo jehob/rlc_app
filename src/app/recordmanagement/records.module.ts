@@ -21,21 +21,24 @@ import { CommonModule } from "@angular/common";
 import { RecordsRoutingModule } from "./records-routing.module";
 import { RecordsListComponent } from "./pages/record-list/records-list.component";
 import { CustomMaterialModule } from "../custom-material.module";
-import { Store, StoreModule } from "@ngrx/store";
-import { recordsReducer, RecordsState } from "./store/records.reducers";
+import { StoreModule } from "@ngrx/store";
+import { recordsReducer } from "./store/records.reducers";
 import { EffectsModule } from "@ngrx/effects";
 import { RecordsEffects } from "./store/records.effects";
 import { RecordsListItemComponent } from "./components/records/records-list-item/records-list-item.component";
-import { StartLoadingRecordStatics } from "./store/records.actions";
 import { CreateRecordComponent } from "./pages/create-record/create-record.component";
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { SelectClientDialogComponent } from "./components/select-client-dialog/select-client-dialog.component";
+import {RecordsSandboxService} from './services/records-sandbox.service';
+import {ChipAutocompleteComponent} from '../shared/components/chip-autocomplete/chip-autocomplete.component';
+import {SharedModule} from '../shared/shared.module';
 
 @NgModule({
     imports: [
         CommonModule,
         RecordsRoutingModule,
         CustomMaterialModule,
+        SharedModule,
         FormsModule,
         ReactiveFormsModule,
         StoreModule.forFeature("records", recordsReducer),
@@ -49,8 +52,9 @@ import { SelectClientDialogComponent } from "./components/select-client-dialog/s
     ],
     entryComponents: [SelectClientDialogComponent]
 })
+
 export class RecordsModule {
-    constructor(private recordsStore: Store<RecordsState>) {
-        this.recordsStore.dispatch(new StartLoadingRecordStatics());
+    constructor(private recordSB: RecordsSandboxService) {
+        this.recordSB.startLoadingRecordStatics();
     }
 }

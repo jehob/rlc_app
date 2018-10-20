@@ -28,9 +28,9 @@ import {
 import { ApiState } from "../store/api.reducers";
 import { FullUser } from "../models/user.model";
 import { take } from "rxjs/operators";
-import {CreateUser, PatchUser} from '../store/api.actions';
-import {MatSnackBar, MatSnackBarConfig} from '@angular/material';
-import moment from 'moment';
+import { CreateUser, PatchUser } from "../store/api.actions";
+import { MatSnackBar, MatSnackBarConfig } from "@angular/material";
+import moment from "moment";
 
 @Injectable()
 export class ApiSandboxService {
@@ -41,24 +41,8 @@ export class ApiSandboxService {
         private apiStateStore: Store<ApiState>
     ) {}
 
-    static transformDate(date: Date){
-        return moment(date).format('YYYY-MM-DD');
-    }
-
-    logout() {
-        localStorage.clear();
-        this.appStateStore.dispatch(new Logout());
-        this.router.navigate(["login"]);
-    }
-
-    startApp() {
-        const token = localStorage.getItem("token");
-        if (token !== null) {
-            this.appStateStore.dispatch(new SetToken(token));
-            this.appStateStore.dispatch(new ReloadStaticInformation());
-        }
-
-        return this.appStateStore.select("auth");
+    static transformDate(date: Date) {
+        return moment(date).format("YYYY-MM-DD");
     }
 
     getUser() {
@@ -80,26 +64,23 @@ export class ApiSandboxService {
         );
     }
 
-    registerUser(user: any){
+    registerUser(user: any) {
         this.apiStateStore.dispatch(new CreateUser(user));
     }
 
-
     showSuccessSnackBar(message: string) {
         const config = new MatSnackBarConfig();
-        config.panelClass = ['snackbar__success'];
+        config.panelClass = ["snackbar__success"];
         config.duration = 2500;
         config.verticalPosition = "top";
-        this.snackBar.open(message, '', config);
+        this.snackBar.open(message, "", config);
     }
 
     showErrorSnackBar(message: string) {
         const config = new MatSnackBarConfig();
-        config.panelClass = ['snackbar__error'];
+        config.panelClass = ["snackbar__error"];
         config.duration = 2500;
         config.verticalPosition = "top";
-        this.snackBar.open(message, '', config);
+        this.snackBar.open(message, "", config);
     }
-
-
 }

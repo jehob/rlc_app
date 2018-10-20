@@ -27,7 +27,6 @@ import LogRocket from "logrocket";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
-import { AuthService } from "./api/services/auth.service";
 import { AuthGuardService } from "./api/services/auth-guard.service";
 import { CustomMaterialModule } from "./custom-material.module";
 import { reducers } from "./store/app.reducers";
@@ -37,6 +36,7 @@ import { ApiModule } from "./api/api.module";
 import { RecordsSandboxService } from "./recordmanagement/services/records-sandbox.service";
 import { AuthInterceptor } from "./api/services/auth.interceptor";
 import { environment } from "../environments/environment";
+import {AppSandboxService} from './api/services/app-sandbox.service';
 
 
 const reduxMiddleware = LogRocket.reduxMiddleware();
@@ -69,8 +69,8 @@ export function logrocketMiddleware(reducer): ActionReducer<any, any> {
         !environment.production ? StoreDevtoolsModule.instrument() : []
     ],
     providers: [
-        AuthService,
         AuthGuardService,
+        AppSandboxService,
         ApiSandboxService,
         RecordsSandboxService,
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }

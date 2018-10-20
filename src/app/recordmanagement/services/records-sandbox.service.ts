@@ -4,9 +4,11 @@ import { select, Store } from "@ngrx/store";
 import { RecordsState } from "../store/records.reducers";
 import { HttpClient } from "@angular/common/http";
 import {
+    ResetPossibleClients,
     StartLoadingClientPossibilities,
-    StartLoadingRecords
-} from "../store/records.actions";
+    StartLoadingRecords,
+    StartLoadingRecordStatics
+} from '../store/records.actions';
 import { take } from "rxjs/operators";
 import { FullClient } from "../models/client.model";
 import { Observable } from "rxjs";
@@ -18,8 +20,7 @@ import { OriginCountry } from "../models/country.model";
 export class RecordsSandboxService {
     constructor(
         private router: Router,
-        private store: Store<RecordsState>,
-        private http: HttpClient
+        private store: Store<RecordsState>
     ) {}
 
     loadRecords() {
@@ -36,8 +37,20 @@ export class RecordsSandboxService {
         );
     }
 
+    getConsultants() {
+        return this.store.pipe(
+            select((state: any) => state.records.consultants)
+        );
+    }
+
+    getTags(){
+        return this.store.pipe(
+            select((state: any) => state.records.record_tags)
+        );
+    }
+
     getSpecialPossibleClient(id: string): FullClient {
-        let returnState: FullClient;
+        let returnState: FullClient = null;
         this.store
             .pipe(
                 take(1),
@@ -52,7 +65,7 @@ export class RecordsSandboxService {
     }
 
     getOriginCountryById(id: string): OriginCountry {
-        let originCountry: OriginCountry;
+        let originCountry: OriginCountry = null;
         this.store
             .pipe(
                 take(1),
@@ -68,5 +81,13 @@ export class RecordsSandboxService {
 
     loadClientPossibilities(birthday: Date) {
         this.store.dispatch(new StartLoadingClientPossibilities(birthday));
+    }
+
+    startLoadingRecordStatics() {
+        this.store.dispatch(new StartLoadingRecordStatics());
+    }
+
+    resetPossibleClients(){
+        this.store.dispatch(new ResetPossibleClients());
     }
 }

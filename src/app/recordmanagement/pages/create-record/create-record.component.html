@@ -4,7 +4,8 @@
         <form [formGroup]="createRecordForm">
 
             <mat-form-field>
-                <input matInput [matDatepicker]="picker" placeholder="Birth Date" formControlName="client_birthday">
+                <input matInput [matDatepicker]="picker" placeholder="Birth Date" formControlName="client_birthday"
+                       (click)="picker.open()">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
@@ -15,8 +16,14 @@
             <mat-form-field>
                 <input type="text" matInput formControlName="client_origin_country" placeholder="client origin country">
             </mat-form-field>
+
+            <app-chip-autocomplete [allValues]="allConsultants"
+                                   (selectedValuesChanged)="selectedConsultantsChanged($event)"
+                                   [errors]="consultantErrors">
+                <mat-error *ngIf="consultantErrors && consultantErrors.null">
+                    at least one consultant for case
+                </mat-error>
+            </app-chip-autocomplete>
         </form>
     </mat-card-content>
-
-
 </mat-card>

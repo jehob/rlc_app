@@ -49,7 +49,6 @@ export class RegisterComponent implements OnInit {
     ngOnInit() {}
 
     onRegisterClick() {
-        console.log("registerClick");
         if (this.userForm.errors && this.userForm.errors.mismatch) {
             this.userForm.controls["password_confirm"].setErrors({
                 mismatch: "true"
@@ -58,7 +57,6 @@ export class RegisterComponent implements OnInit {
 
         if (this.userForm.valid) {
             const values = this.userForm.value;
-            console.log('values', values);
             const user = {
                 'name': values.name,
                 'email': values.email,
@@ -74,7 +72,6 @@ export class RegisterComponent implements OnInit {
             if (values.city !== '')
                 user['city'] = values.city;
 
-            console.log('user', user);
             this.apiSB.registerUser(user);
         }
     }
@@ -91,30 +88,12 @@ export class RegisterComponent implements OnInit {
             const hasNumber = /\d/.test(password);
             const hasUpper = /[A-Z]/.test(password);
             const hasLower = /[a-z]/.test(password);
-            const hasSpecial = /[$@!%*?&+=#'"`/^()[\]\\|{}]/.test(password);
+            const hasSpecial = /[$@!%*?&+=#'"`\/<>,.^()[\]\\|{}]/.test(password);
             const length = password.length >= 9;
             if (!hasNumber || !hasUpper || !hasLower || !hasSpecial)
-                return { weak: "its too weak" };
-            else if (!length) return { short: "password is too short" };
+                return { weak: "true" };
+            else if (!length) return { short: "true" };
             return null;
         };
-    }
-
-    getErrorMessage(sender: string) {
-        switch (sender) {
-            case "password_confirm":
-                if (this.userForm.controls[sender].errors["mismatch"])
-                    return "passwords are not identical";
-                break;
-            case "password":
-                if (this.userForm.controls[sender].errors["weak"])
-                    return "password must contain at least 1 special char, 1 upper case, 1 lower case and a digit";
-                else if (this.userForm.controls[sender].errors["shirt"])
-                    return "password must be longer than 8 chars";
-                break;
-            case "email":
-                return "provide a valid email address";
-        }
-        return "unknown error";
     }
 }

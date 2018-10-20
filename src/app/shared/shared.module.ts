@@ -18,37 +18,18 @@
 
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { ApiRoutingModule } from "./api-routing.module";
+import { ChipAutocompleteComponent } from "./components/chip-autocomplete/chip-autocomplete.component";
 import { CustomMaterialModule } from "../custom-material.module";
-import { ProfileComponent } from "./components/profile/profile.component";
-import { RegisterComponent } from "./components/auth/register/register.component";
-import { DashboardComponent } from "./components/Dashboard/dashboard.component";
-import { LoginComponent } from "./components/auth/login/login.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { StoreModule } from "@ngrx/store";
-import { apiReducer } from "./store/api.reducers";
-import { EffectsModule } from "@ngrx/effects";
-import { ApiEffects } from "./store/api.effects";
-import {SharedModule} from '../shared/shared.module';
 
 @NgModule({
     imports: [
         CommonModule,
-        ApiRoutingModule,
-        SharedModule,
         CustomMaterialModule,
         FormsModule,
-        ReactiveFormsModule,
-        StoreModule.forFeature("api", apiReducer),
-        EffectsModule.forFeature([ApiEffects])
+        ReactiveFormsModule
     ],
-    declarations: [
-        ProfileComponent,
-        RegisterComponent,
-        DashboardComponent,
-        LoginComponent
-    ],
-    providers: [],
-    exports: []
+    declarations: [ChipAutocompleteComponent],
+    exports: [ChipAutocompleteComponent]
 })
-export class ApiModule {}
+export class SharedModule {}

@@ -3,18 +3,24 @@
     <form [formGroup]="userForm" class="register-form-container">
         <mat-form-field class="input-item">
             <input matInput placeholder="email" formControlName="email">
-            <mat-error *ngIf="userForm.controls['email'].invalid">{{getErrorMessage('email')}}</mat-error>
+            <mat-error *ngIf="userForm.controls['email'].errors">invalid email address</mat-error>
         </mat-form-field>
         <mat-form-field class="input-item">
             <input matInput placeholder="name" formControlName="name">
         </mat-form-field>
         <mat-form-field class="input-item">
             <input matInput placeholder="password" type="password" formControlName="password">
-            <mat-error *ngIf="userForm.controls['password'].invalid">{{getErrorMessage('password')}}</mat-error>
+            <mat-error *ngIf="userForm.controls['password'].errors && userForm.controls['password'].errors.weak">password must contain at least 1 special,
+                1 upper case, 1 lower case and a digit character
+            </mat-error>
+            <mat-error *ngIf="userForm.controls['password'].errors && userForm.controls['password'].errors.short">password too short
+            </mat-error>
         </mat-form-field>
         <mat-form-field class="input-item">
             <input matInput placeholder="confirm password" type="password" formControlName="password_confirm">
-            <mat-error *ngIf="userForm.controls['password_confirm'].invalid">{{getErrorMessage('password_confirm')}}</mat-error>
+            <mat-error *ngIf="userForm.errors && userForm.errors.mismatch">
+                passwords must be the same
+            </mat-error>
         </mat-form-field>
         <mat-form-field class="input-item">
             <input matInput placeholder="phone number" formControlName="phone_number">

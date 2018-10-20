@@ -48,14 +48,14 @@ import { RecordTag } from "../models/record_tags.model";
 import { RecordsSandboxService } from "../services/records-sandbox.service";
 import { ApiSandboxService } from "../../api/services/api-sandbox.service";
 import { FullClient } from "../models/client.model";
-import { AuthService } from "../../api/services/auth.service";
+import {AppSandboxService} from '../../api/services/app-sandbox.service';
 
 @Injectable()
 export class RecordsEffects {
     constructor(
         private actions: Actions,
         private http: HttpClient,
-        private authService: AuthService
+        private appSB: AppSandboxService
     ) {}
 
     @Effect()
@@ -94,54 +94,56 @@ export class RecordsEffects {
     recordStaticsLoad = this.actions.pipe(
         ofType(START_LOADING_RECORD_STATICS),
         switchMap(() => {
-            console.log("authenticated", this.authService.isAuthenticated());
-            return from(
-                this.http.get(RECORDS_STATICS_URL).pipe(
-                    catchError(error => {
-                        return of({
-                            error: "error at loading record statics"
-                        });
-                    }),
-                    mergeMap(
-                        (response: {
-                            consultants: any;
-                            countries: any;
-                            record_tags: any;
-                            record_states: any;
-                            country_states: any;
-                        }) => {
-                            return [
-                                {
-                                    type: SET_CONSULTANTS,
-                                    payload: RestrictedUser.getRestrictedUsersFromJsonArray(
-                                        response.consultants
-                                    )
-                                },
-                                {
-                                    type: SET_ORIGIN_COUNTRIES,
-                                    payload: OriginCountry.getOriginCountriesFromJsonArray(
-                                        response.countries
-                                    )
-                                },
-                                {
-                                    type: SET_RECORD_TAGS,
-                                    payload: RecordTag.getRecordTagsFromJsonArray(
-                                        response.record_tags
-                                    )
-                                },
-                                {
-                                    type: SET_RECORD_STATES,
-                                    payload: response.record_states
-                                },
-                                {
-                                    type: SET_COUNTRY_STATES,
-                                    payload: response.country_states
-                                }
-                            ];
-                        }
+            if (this.appSB.isAuthenticated()){
+                return from(
+                    this.http.get(RECORDS_STATICS_URL).pipe(
+                        catchError(error => {
+                            return of({
+                                error: "error at loading record statics"
+                            });
+                        }),
+                        mergeMap(
+                            (response: {
+                                consultants: any;
+                                countries: any;
+                                record_tags: any;
+                                record_states: any;
+                                country_states: any;
+                            }) => {
+                                return [
+                                    {
+                                        type: SET_CONSULTANTS,
+                                        payload: RestrictedUser.getRestrictedUsersFromJsonArray(
+                                            response.consultants
+                                        )
+                                    },
+                                    {
+                                        type: SET_ORIGIN_COUNTRIES,
+                                        payload: OriginCountry.getOriginCountriesFromJsonArray(
+                                            response.countries
+                                        )
+                                    },
+                                    {
+                                        type: SET_RECORD_TAGS,
+                                        payload: RecordTag.getRecordTagsFromJsonArray(
+                                            response.record_tags
+                                        )
+                                    },
+                                    {
+                                        type: SET_RECORD_STATES,
+                                        payload: response.record_states
+                                    },
+                                    {
+                                        type: SET_COUNTRY_STATES,
+                                        payload: response.country_states
+                                    }
+                                ];
+                            }
+                        )
                     )
-                )
-            );
+                );
+            }
+            return [];
         })
     );
 
