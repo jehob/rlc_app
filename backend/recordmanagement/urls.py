@@ -27,4 +27,5 @@ urlpatterns = [
     url(r'', include(router.urls)),
     url(r'statics', StaticViewSet.as_view()),
     url(r'clients_by_birthday', GetClientsFromBirthday.as_view()),
+    url(r'create_record', CreateRecordViewSet.as_view()),
 ]

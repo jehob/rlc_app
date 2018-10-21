@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import { FormControl, FormGroup } from "@angular/forms";
 import { Filterable } from "../../models/filterable.model";
 import { Observable } from "rxjs";
@@ -9,7 +9,7 @@ import { map, startWith } from "rxjs/operators";
     templateUrl: "./autocomplete.component.html",
     styleUrls: ["./autocomplete.component.scss"]
 })
-export class AutocompleteComponent implements OnInit {
+export class AutocompleteComponent implements OnInit, OnChanges {
     valueForm: FormGroup;
     @Input()
     placeholder: string;
@@ -17,6 +17,9 @@ export class AutocompleteComponent implements OnInit {
     allValues: Filterable[];
     @Input()
     errors;
+    @Input()
+    setSelectedValue;
+
 
     filteredValues: Observable<Filterable[]>;
 
@@ -41,6 +44,23 @@ export class AutocompleteComponent implements OnInit {
                         : this.allValues.slice()
             )
         );
+    }
+
+    ngOnChanges(changes: SimpleChanges){
+        if (changes.errors){
+           this.valueForm.controls["value"].setErrors(changes.errors.currentValue);
+        } else {
+            this.valueForm.controls["value"].setErrors(null);
+        }
+        if (changes.setSelectedValue){
+            if (changes.setSelectedValue.currentValue){
+                this.valueForm.controls["value"].setValue(changes.setSelectedValue.currentValue);
+                this.valueForm.controls["value"].disable()
+            } else {
+                this.valueForm.controls["value"].setValue("");
+                this.valueForm.controls["value"].enable();
+            }
+        }
     }
 
     display(filterable?: Filterable) {

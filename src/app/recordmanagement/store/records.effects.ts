@@ -27,7 +27,6 @@ import {
     SET_RECORD_STATES,
     SET_RECORD_TAGS,
     SET_RECORDS,
-    SetRecords,
     START_LOADING_CLIENT_POSSIBILITIES,
     START_LOADING_RECORD_STATICS,
     START_LOADING_RECORDS,
@@ -41,11 +40,9 @@ import {
     RECORDS_URL
 } from "../../statics/api_urls.statics";
 import { FullRecord, RestrictedRecord } from "../models/record.model";
-import { load } from "@angular/core/src/render3/instructions";
 import { RestrictedUser } from "../../api/models/user.model";
 import { OriginCountry } from "../models/country.model";
 import { RecordTag } from "../models/record_tags.model";
-import { RecordsSandboxService } from "../services/records-sandbox.service";
 import { ApiSandboxService } from "../../api/services/api-sandbox.service";
 import { FullClient } from "../models/client.model";
 import {AppSandboxService} from '../../api/services/app-sandbox.service';
@@ -154,11 +151,6 @@ export class RecordsEffects {
             return action.payload;
         }),
         switchMap((birthday: Date) => {
-            console.log(
-                `${ApiSandboxService.transformDate(
-                    birthday
-                )}} to ${CLIENTS_BY_BIRTHDAY_URL}`
-            );
             return from(
                 this.http
                     .post(CLIENTS_BY_BIRTHDAY_URL, {

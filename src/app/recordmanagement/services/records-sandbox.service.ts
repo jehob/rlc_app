@@ -14,6 +14,8 @@ import { FullClient } from "../models/client.model";
 import { Observable } from "rxjs";
 import { OriginCountry } from "../models/country.model";
 import {RestrictedUser} from '../../api/models/user.model';
+import {FormControl} from '@angular/forms';
+import {RecordTag} from '../models/record_tags.model';
 
 @Injectable({
     providedIn: "root"
@@ -96,5 +98,13 @@ export class RecordsSandboxService {
         return this.store.pipe(
             select((state: any) => state.records.origin_countries)
         );
+    }
+
+    createNewRecord(createFormValues: any, client: FullClient, consultants: RestrictedUser[], tags: RecordTag[]){
+        console.log('create new record in sandbox');
+        console.log('values', createFormValues);
+        console.log('client', client);
+        console.log('consultants', consultants);
+        console.log('tags', tags);
     }
 }

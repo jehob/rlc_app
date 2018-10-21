@@ -17,6 +17,7 @@ from rest_framework import viewsets, mixins
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from django.db.models import Q
 
 from backend.recordmanagement import models, serializers
@@ -105,3 +106,11 @@ class RecordsListViewSet(viewsets.ViewSet):
         else:
             serializer = serializers.RecordNoDetailSerializer(queryset)
         return Response(serializer.data)
+
+
+class CreateRecordViewSet(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        pass

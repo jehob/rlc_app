@@ -17,6 +17,7 @@ export class CreateRecordComponent implements OnInit {
     createRecordForm: FormGroup;
     client: FullClient;
     originCountry: OriginCountry;
+    givenOriginCountry: OriginCountry;
 
     allConsultants: RestrictedUser[];
     consultantErrors: any;
@@ -41,11 +42,8 @@ export class CreateRecordComponent implements OnInit {
             client_birthday: new FormControl("2018-10-03"), //date
             client_name: new FormControl(""),
             client_phone_number: new FormControl(""),
-            client_origin_country: new FormControl(""),
             client_note: new FormControl(""),
-            record_token: new FormControl(""),
-            consultants: new FormControl(""),
-            tags: new FormControl()
+            record_token: new FormControl("")
         });
 
         this.onClientBirthdayChanges();
@@ -109,10 +107,12 @@ export class CreateRecordComponent implements OnInit {
                     this.originCountry = this.recordSB.getOriginCountryById(
                         this.client.origin_country
                     );
+                    this.givenOriginCountry = this.originCountry;
                     this.setClientFields();
                 } else {
                     this.client = null;
                     this.originCountry = null;
+                    this.givenOriginCountry = null;
                     this.resetClientFields();
                 }
             }
@@ -150,5 +150,6 @@ export class CreateRecordComponent implements OnInit {
 
     onAddRecordClick() {
         console.log("onAddRecordClick");
+        this.recordSB.createNewRecord(this.createRecordForm.value, this.client, this.selectedConsultants, this.selectedRecordTags);
     }
 }
