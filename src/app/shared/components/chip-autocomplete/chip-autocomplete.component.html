@@ -9,7 +9,7 @@
                 <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
 
-            <input placeholder="Values..."
+            <input [placeholder]="placeholder"
                    #valueInput
                    [matChipInputFor]="chipList"
                    (matChipInputTokenEnd)="addValue($event)"

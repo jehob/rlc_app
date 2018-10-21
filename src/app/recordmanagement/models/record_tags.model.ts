@@ -16,7 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-export class RecordTag{
+import {Filterable} from '../../shared/models/filterable.model';
+
+export class RecordTag implements Filterable{
     constructor(public id: string, public name: string){
         this.id = id;
         this.name = name;
@@ -24,6 +26,7 @@ export class RecordTag{
 
     static getRecordTagsFromJsonArray(jsonArray){
         const tags: RecordTag[] = [];
+
         Object.values(jsonArray).map(jsonTag => {
             tags.push(RecordTag.getRecordTagFromJson(jsonTag));
         });
@@ -32,5 +35,9 @@ export class RecordTag{
 
     static getRecordTagFromJson(json){
         return new RecordTag(json.id, json.name);
+    }
+
+    getFilterableProperty(){
+        return this.name;
     }
 }

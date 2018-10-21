@@ -6,6 +6,7 @@ import { SelectClientDialogComponent } from "../../components/select-client-dial
 import { FullClient } from "../../models/client.model";
 import { OriginCountry } from "../../models/country.model";
 import { RestrictedUser } from "../../../api/models/user.model";
+import {RecordTag} from '../../models/record_tags.model';
 
 @Component({
     selector: "app-add-record",
@@ -22,6 +23,11 @@ export class CreateRecordComponent implements OnInit {
     selectedConsultants: RestrictedUser[];
 
     allCountries: OriginCountry[];
+    originCountryError: any;
+
+    allRecordTags: RecordTag[];
+    recordTagErrors: any;
+    selectedRecordTags: RecordTag[];
 
     constructor(
         private recordSB: RecordsSandboxService,
@@ -51,6 +57,10 @@ export class CreateRecordComponent implements OnInit {
         this.recordSB.getOriginCountries().subscribe(countries => {
             this.allCountries = countries;
         });
+
+        this.recordSB.getRecordTags().subscribe(recordTags => {
+            this.allRecordTags = recordTags;
+        });
     }
 
     ngOnInit() {}
@@ -71,6 +81,20 @@ export class CreateRecordComponent implements OnInit {
             this.consultantErrors = { null: "true" };
         } else {
             this.consultantErrors = null;
+        }
+    }
+
+    selectedCountryChanged(selectedCountry){
+        console.log('selCountry in create changed', selectedCountry);
+        this.originCountry = selectedCountry;
+    }
+
+    selectedRecordTagsChanged(selectedRecordTags){
+        this.selectedRecordTags = selectedRecordTags;
+        if (selectedRecordTags.length === 0){
+           this.recordTagErrors = { null: "true"};
+        } else {
+            this.recordTagErrors = null;
         }
     }
 

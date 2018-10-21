@@ -44,7 +44,7 @@ export class RecordsSandboxService {
         );
     }
 
-    getTags(){
+    getRecordTags(){
         return this.store.pipe(
             select((state: any) => state.records.record_tags)
         );

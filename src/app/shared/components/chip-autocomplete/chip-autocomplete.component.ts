@@ -35,7 +35,8 @@ export class ChipAutocompleteComponent implements OnInit, OnChanges {
     allValues: Filterable[];
     @Input()
     errors;
-
+    @Input()
+    placeholder: string;
 
     @ViewChild("valueInput")
     valueInput: ElementRef<HTMLInputElement>;
@@ -51,9 +52,13 @@ export class ChipAutocompleteComponent implements OnInit, OnChanges {
         this.valuesForm = new FormGroup({
             filterValue: new FormControl("")
         });
+    }
+
+    ngOnInit() {
+
         this.filteredValues = this.valuesForm.controls[
             "filterValue"
-        ].valueChanges.pipe(
+            ].valueChanges.pipe(
             startWith(""),
             map(
                 (filterValue: string | null) =>
@@ -63,8 +68,6 @@ export class ChipAutocompleteComponent implements OnInit, OnChanges {
             )
         );
     }
-
-    ngOnInit() {}
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.errors) {

@@ -4,7 +4,8 @@
         <form [formGroup]="createRecordForm">
             <div>
                 <mat-form-field>
-                    <input matInput [matDatepicker]="picker_first_contact_date" placeholder="contact date" formControlName="first_contact_date"
+                    <input matInput [matDatepicker]="picker_first_contact_date" placeholder="contact date"
+                           formControlName="first_contact_date"
                            (click)="picker_first_contact_date.open()">
                     <mat-datepicker-toggle matSuffix [for]="picker_first_contact_date"></mat-datepicker-toggle>
                     <mat-datepicker #picker_first_contact_date></mat-datepicker>
@@ -21,28 +22,53 @@
                 <mat-form-field>
                     <input type="text" matInput formControlName="client_name" placeholder="client name">
                 </mat-form-field>
-                <mat-form-field>
-                    <input type="text" matInput formControlName="client_origin_country" placeholder="origin country">
 
-                </mat-form-field>
+                <app-autocomplete [allValues]="allCountries" placeholder="origin country"
+                                  (selectedValueChanged)="selectedCountryChanged($event)"
+                                  [errors]="originCountryError">
+                    <mat-error *ngIf="originCountryError && originCountryError.null">
+                    </mat-error>
+                </app-autocomplete>
+
+
                 <mat-form-field>
                     <input type="text" matInput formControlName="client_phone_number" placeholder="phone number">
                 </mat-form-field>
+
+            </div>
+            <div>
                 <mat-form-field>
                     <textarea type="text" matInput formControlName="client_note" placeholder="note about client">
 
                     </textarea>
                 </mat-form-field>
             </div>
+            <div>
+                <mat-form-field>
+                    <input type="text" matInput formControlName="record_token" placeholder="record token">
+                </mat-form-field>
+
+                <app-chip-autocomplete [allValues]="allConsultants"
+                                       placeholder="consultants"
+                                       (selectedValuesChanged)="selectedConsultantsChanged($event)"
+                                       [errors]="consultantErrors">
+                    <mat-error *ngIf="consultantErrors && consultantErrors.null">
+                        at least one consultant for case
+                    </mat-error>
+                </app-chip-autocomplete>
+
+                <app-chip-autocomplete [allValues]="allRecordTags"
+                                       placeholder="tags"
+                                       (selectedValuesChanged)="selectedRecordTagsChanged($event)"
+                                       [errors]="recordTagErrors">
+                    <mat-error *ngIf="recordTagErrors && recordTagErrors.null">
+                        at least one tag for case is required
+                    </mat-error>
+                </app-chip-autocomplete>
+            </div>
 
 
-            <app-chip-autocomplete [allValues]="allConsultants"
-                                   (selectedValuesChanged)="selectedConsultantsChanged($event)"
-                                   [errors]="consultantErrors">
-                <mat-error *ngIf="consultantErrors && consultantErrors.null">
-                    at least one consultant for case
-                </mat-error>
-            </app-chip-autocomplete>
+
 
             <button mat-flat-button (click)="this.onAddRecordClick()">Add record</button>
         </form>

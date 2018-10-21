@@ -16,7 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-export class OriginCountry{
+import {Filterable} from '../../shared/models/filterable.model';
+
+export class OriginCountry implements Filterable{
     constructor(public id: string, public name: string, public state: string){
         this.id = id;
         this.name = name;
@@ -33,5 +35,9 @@ export class OriginCountry{
 
     static getOriginCountryFromJson(json){
         return new OriginCountry(json.id, json.name, json.state);
+    }
+
+    getFilterableProperty(){
+        return this.name;
     }
 }
