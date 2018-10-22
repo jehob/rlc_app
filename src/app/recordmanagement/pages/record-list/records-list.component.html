@@ -19,17 +19,18 @@
 <mat-card class="records-container">
 
     <mat-card-header>
-      <h2>Records</h2>
-      <mat-form-field class="records-search-input">
-        <input matInput type="text" placeholder="Search..." (value)="value">
-        <button mat-button matSuffix mat-icon-button aria-label="Search" (click)="value=''">
-        </button>
-      </mat-form-field>   
+        <h2>Records</h2>
+        <mat-form-field class="records-search-input">
+            <input matInput type="text" placeholder="Search" [(ngModel)]="value">
+            <button mat-button matSuffix mat-icon-button aria-label="Search" (click)="onSearchClick()">
+                Search
+            </button>
+        </mat-form-field>
     </mat-card-header>
-  
+
     <mat-card-content>
-      <mat-list >
-          <app-records-list-item *ngFor="let record of (records | async)" [record]="record"></app-records-list-item>
-      </mat-list>
+        <mat-list>
+            <app-records-list-item *ngFor="let record of (records | async)" [record]="record"></app-records-list-item>
+        </mat-list>
     </mat-card-content>
-  </mat-card>
+</mat-card>

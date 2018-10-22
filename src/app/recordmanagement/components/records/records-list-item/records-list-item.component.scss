@@ -2,3 +2,31 @@
 .record-list-item-container {
     height: 100px;
 }
+
+.status-indicator {
+    border-radius: 25px;
+    min-height: 10px;
+    min-width: 10px;
+}
+
+.status-indicator__open{
+    background-color: green;
+}
+
+.status-indicator__waiting{
+    background-color: orange;
+}
+
+.status-indicator__closed {
+    background-color: grey;
+}
+
+.access-indicator {
+    min-width: 4px;
+    min-height: 17px;
+    border: solid black;
+}
+
+.access-indicator__full{
+    background-color: black;
+}

@@ -1,11 +1,25 @@
 <mat-list-item class="record-list-item-container">
-    <h4 mat-line>{{ record.token }}</h4>
+    <div [ngSwitch]="fullAccess">
+        <div class="access-indicator access-indicator__full" *ngSwitchCase="true"></div>
+        <div class="access-indicator" *ngSwitchCase="false"></div>
+    </div>
 
-    <div>
-        <mat-chip-list><mat-chip *ngFor="let consultant of record.working_on_record">{{ consultant }}</mat-chip></mat-chip-list>
+    <h4>{{ record.token }}</h4>
+
+    <div [ngSwitch]="state">
+        <div class="status-indicator status-indicator__open" *ngSwitchCase="'op'"></div>
+        <div class="status-indicator status-indicator__waiting" *ngSwitchCase="'wa'"></div>
+        <div class="status-indicator status-indicator__closed" *ngSwitchCase="'cl'"></div>
     </div>
     <div>
-        <mat-chip-list><mat-chip *ngFor="let tag of record.tags">{{ tag.name }}</mat-chip></mat-chip-list>
+        <mat-chip-list>
+            <mat-chip *ngFor="let consultant of record.working_on_record">{{ consultant.name }}</mat-chip>
+        </mat-chip-list>
+    </div>
+    <div>
+        <mat-chip-list>
+            <mat-chip *ngFor="let tag of record.tags">{{ tag.name }}</mat-chip>
+        </mat-chip-list>
     </div>
 </mat-list-item>
 <mat-divider></mat-divider>

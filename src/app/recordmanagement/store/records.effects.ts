@@ -30,12 +30,12 @@ import {
     START_LOADING_CLIENT_POSSIBILITIES,
     START_LOADING_RECORD_STATICS,
     START_LOADING_RECORDS, StartAddingNewRecord,
-    StartLoadingClientPossibilities
+    StartLoadingClientPossibilities, StartLoadingRecords
 } from './records.actions';
 import {catchError, map, mergeMap, switchMap, switchMapTo} from 'rxjs/operators';
-import { from, of } from "rxjs";
+import {from, merge, of} from 'rxjs';
 import {
-    CLIENTS_BY_BIRTHDAY_URL, CREATE_RECORD_URL,
+    CLIENTS_BY_BIRTHDAY_URL, CREATE_RECORD_URL, GetRecordsSearchURL,
     RECORDS_STATICS_URL,
     RECORDS_URL
 } from '../../statics/api_urls.statics';
@@ -60,11 +60,15 @@ export class RecordsEffects {
     @Effect()
     recordsLoad = this.actions.pipe(
         ofType(START_LOADING_RECORDS),
-        switchMap(() => {
+        map((action: StartLoadingRecords) => {
+            return action.payload;
+        }),
+        switchMap((searchString: string) => {
+            const url = searchString ? GetRecordsSearchURL(searchString) : RECORDS_URL;
             return from(
-                this.http.get(RECORDS_URL).pipe(
+                this.http.get(url).pipe(
                     mergeMap(response => {
-                        console.log("recordsFromBackend", response);
+                        //console.log("recordsFromBackend", response);
                         const loadedRecords: Array<RestrictedRecord> = [];
                         Object.values(response).map(record => {
                             if (record.note) {

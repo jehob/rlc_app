@@ -45,6 +45,8 @@ export class SetRecords implements Action {
 
 export class StartLoadingRecords implements Action {
     readonly type = START_LOADING_RECORDS;
+
+    constructor(public payload: string) {}
 }
 
 export class StartLoadingRecordStatics implements Action {

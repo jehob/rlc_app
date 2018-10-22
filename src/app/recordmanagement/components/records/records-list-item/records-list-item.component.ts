@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {RestrictedRecord} from '../../../models/record.model';
+import {FullRecord, RestrictedRecord} from '../../../models/record.model';
 
 @Component({
     selector: "app-records-list-item",
@@ -8,11 +8,14 @@ import {RestrictedRecord} from '../../../models/record.model';
 })
 export class RecordsListItemComponent implements OnInit {
     @Input() record: RestrictedRecord;
+    state: string;
+    fullAccess: boolean;
 
-    constructor() {}
+    constructor() { }
 
     ngOnInit() {
-        if (this.record)
-            console.log(this.record.working_on_record);
+        this.state = this.record.state;
+
+        this.fullAccess = this.record instanceof FullRecord;
     }
 }

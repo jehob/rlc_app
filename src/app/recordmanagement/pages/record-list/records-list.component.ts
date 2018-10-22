@@ -34,7 +34,7 @@ export interface Section {
 })
 export class RecordsListComponent implements OnInit {
     records: Observable<RestrictedRecord[]>;
-    value = "Search...";
+    value = "";
 
     constructor(private recordsSandbox: RecordsSandboxService) {
         this.recordsSandbox.loadRecords();
@@ -42,5 +42,14 @@ export class RecordsListComponent implements OnInit {
 
     ngOnInit() {
         this.records = this.recordsSandbox.getRecords();
+    }
+
+    onSearchClick(){
+        console.log(this.value);
+        if (this.value && this.value !== "")
+            this.recordsSandbox.loadRecords(this.value);
+        else
+            this.recordsSandbox.loadRecords();
+
     }
 }

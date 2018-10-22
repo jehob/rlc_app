@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { select, Store } from "@ngrx/store";
 import { RecordsState } from "../store/records.reducers";
-import { HttpClient } from "@angular/common/http";
 import {
     ResetPossibleClients,
     StartAddingNewRecord,
@@ -15,7 +14,6 @@ import { FullClient } from "../models/client.model";
 import { Observable } from "rxjs";
 import { OriginCountry } from "../models/country.model";
 import { RestrictedUser } from "../../api/models/user.model";
-import { FormControl } from "@angular/forms";
 import { RecordTag } from "../models/record_tags.model";
 import {ApiSandboxService} from '../../api/services/api-sandbox.service';
 
@@ -25,8 +23,8 @@ import {ApiSandboxService} from '../../api/services/api-sandbox.service';
 export class RecordsSandboxService {
     constructor(private router: Router, private store: Store<RecordsState>, private apiSB: ApiSandboxService) {}
 
-    loadRecords() {
-        this.store.dispatch(new StartLoadingRecords());
+    loadRecords(searchString?: string) {
+        this.store.dispatch(new StartLoadingRecords(searchString));
     }
 
     getRecords() {

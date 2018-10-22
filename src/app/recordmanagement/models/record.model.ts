@@ -23,7 +23,7 @@ export class RestrictedRecord {
         public last_contact_date: Date,
         public state: string,
         public tags: [number, string],
-        public working_on_record: [number]
+        public working_on_record: [number, string]
     ) {
         this.id = id;
         this.last_contact_date = last_contact_date;
@@ -51,7 +51,7 @@ export class FullRecord extends RestrictedRecord {
         last_contact_date: Date,
         state: string,
         tags: [number, string],
-        working_on_record: [number],
+        working_on_record: [number, string],
         public created_on: Date,
         public last_edited: Date,
         public first_contact_date: Date,

@@ -32,6 +32,7 @@ import { SelectClientDialogComponent } from "./components/select-client-dialog/s
 import {RecordsSandboxService} from './services/records-sandbox.service';
 import {ChipAutocompleteComponent} from '../shared/components/chip-autocomplete/chip-autocomplete.component';
 import {SharedModule} from '../shared/shared.module';
+import { RecordComponent } from './pages/record/record.component';
 
 @NgModule({
     imports: [
@@ -48,7 +49,8 @@ import {SharedModule} from '../shared/shared.module';
         RecordsListComponent,
         RecordsListItemComponent,
         CreateRecordComponent,
-        SelectClientDialogComponent
+        SelectClientDialogComponent,
+        RecordComponent
     ],
     entryComponents: [SelectClientDialogComponent]
 })

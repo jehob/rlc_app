@@ -57,6 +57,7 @@ class RecordsListViewSet(viewsets.ViewSet):
         search = request.query_params.get('search', '')
         search_query = Q(tagged__name__contains=search)
         search_query.add(Q(note__contains=search), Q.OR)
+        search_query.add(Q(working_on_record__name__contains=search), Q.OR)
 
         if user.is_superuser:
             queryset = models.Record.objects.filter(search_query)
