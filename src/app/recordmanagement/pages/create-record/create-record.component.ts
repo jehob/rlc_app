@@ -43,7 +43,8 @@ export class CreateRecordComponent implements OnInit {
             client_name: new FormControl(""),
             client_phone_number: new FormControl(""),
             client_note: new FormControl(""),
-            record_token: new FormControl("")
+            record_token: new FormControl(""),
+            record_note: new FormControl("")
         });
 
         this.onClientBirthdayChanges();
@@ -127,25 +128,20 @@ export class CreateRecordComponent implements OnInit {
         this.createRecordForm.controls["client_phone_number"].setValue(
             this.client.phone_number
         );
+
         this.createRecordForm.controls["client_note"].setValue(
             this.client.note
         );
-        this.createRecordForm.controls["client_origin_country"].setValue(
-            this.originCountry.name
-        );
 
         this.createRecordForm.controls["client_name"].disable();
-        this.createRecordForm.controls["client_origin_country"].disable();
     }
 
     resetClientFields() {
         this.createRecordForm.controls["client_name"].setValue("");
         this.createRecordForm.controls["client_phone_number"].setValue("");
         this.createRecordForm.controls["client_note"].setValue("");
-        this.createRecordForm.controls["client_origin_country"].setValue("");
 
         this.createRecordForm.controls["client_name"].enable();
-        this.createRecordForm.controls["client_origin_country"].enable();
     }
 
     onAddRecordClick() {

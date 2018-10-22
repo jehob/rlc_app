@@ -24,6 +24,7 @@ from backend.recordmanagement import models, serializers
 from backend.api import permissions
 from backend.api.models import UserProfile
 from backend.api.statics.staticNames import StaticPermissionNames as Static
+from backend.api.other_functions.emails import EmailSender
 
 
 class RecordsFullDetailViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
@@ -101,7 +102,7 @@ class RecordsListViewSet(viewsets.ViewSet):
     def retrieve(self, request, pk=None):
         queryset = models.Record.objects.get(pk=pk)
         if request.user.has_permission(Static.VIEW_RECORDS_FULL_DETAIL) or request.user.working_on_record.filter(
-                id=pk).count() == 1:
+            id=pk).count() == 1:
             serializer = serializers.RecordFullDetailSerializer(queryset)
         else:
             serializer = serializers.RecordNoDetailSerializer(queryset)
@@ -113,4 +114,27 @@ class CreateRecordViewSet(APIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request):
-        pass
+        data = request.data
+        rlc = request.user.rlc_members.first()
+        if 'client_id' in data:
+            client = models.Client.objects.get(pk=data['client_id'])
+            client.note = data['client_note']
+            client.phone_number = data['client_phone_number']
+            client.save()
+        else:
+            client = models.Client(name=data['client_name'], phone_number=data['client_phone_number'],
+                                   birthday=data['client_birthday'], note=data['client_note'])
+            client.save()
+
+        record = models.Record(client_id=client.id, first_contact_date=data['first_contact_date'],
+                               last_contact_date=data['first_contact_date'], record_token=data['record_token'],
+                               note=data['record_note'], creator_id=request.user.id, from_rlc_id=rlc.id)
+        record.save()
+        for tag_id in data['tags']:
+            record.tagged.add(models.RecordTag.objects.get(pk=tag_id))
+        for user_id in data['consultants']:
+            actual_consultant = UserProfile.objects.get(pk=user_id)
+            # EmailSender.send_email_notification()
+            record.working_on_record.add(actual_consultant)
+        record.save()
+        return Response(serializers.RecordFullDetailSerializer(record).data)

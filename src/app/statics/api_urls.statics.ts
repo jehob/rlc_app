@@ -22,7 +22,7 @@ export const CLIENTS_BY_BIRTHDAY_URL = "api/records/clients_by_birthday/";
 export const RECORDS_STATICS_URL = "api/records/statics/";
 export const PROFILE_URL = "api/profiles/";
 export const CREATE_PROFILE_URL = "api/create_profile/";
-
+export const CREATE_RECORD_URL = "api/records/create_record/";
 
 export function GetSpecialProfileURL(id: string){
     return `${PROFILE_URL}${id}/`;

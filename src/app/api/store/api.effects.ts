@@ -30,8 +30,7 @@ import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
 import { from, of } from "rxjs";
 import {
     CREATE_PROFILE_URL,
-    GetSpecialProfileURL,
-    PROFILE_URL
+    GetSpecialProfileURL
 } from "../../statics/api_urls.statics";
 import { ApiSandboxService } from "../services/api-sandbox.service";
 import {FullUser} from '../models/user.model';

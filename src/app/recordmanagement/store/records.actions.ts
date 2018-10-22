@@ -28,6 +28,7 @@ export const START_LOADING_RECORDS = "START_LOADING_RECORDS";
 export const START_LOADING_RECORD_STATICS = "START_LOADING_RECORD_STATICS";
 export const START_LOADING_CLIENT_POSSIBILITIES =
     "START_LOADING_CLIENT_POSSIBILITIES";
+export const START_ADDING_NEW_RECORD = "START_ADDING_NEW_RECORD";
 export const SET_CONSULTANTS = "SET_CONSULTANTS";
 export const SET_RECORD_STATES = "SET_RECORD_STATES";
 export const SET_COUNTRY_STATES = "SET_COUNTRY_STATES";
@@ -96,6 +97,12 @@ export class ResetPossibleClients implements Action {
     readonly type = RESET_POSSIBLE_CLIENTS;
 }
 
+export class StartAddingNewRecord implements Action {
+    readonly type = START_ADDING_NEW_RECORD;
+
+    constructor(public payload: any) {}
+}
+
 export type RecordsActions =
     | SetRecords
     | StartLoadingRecords
@@ -107,4 +114,5 @@ export type RecordsActions =
     | SetRecordStates
     | SetCountryStates
     | SetPossibleClients
-    | ResetPossibleClients;
+    | ResetPossibleClients
+    | StartAddingNewRecord;

@@ -26,19 +26,19 @@ import {
     SET_POSSIBLE_CLIENTS,
     SET_RECORD_STATES,
     SET_RECORD_TAGS,
-    SET_RECORDS,
+    SET_RECORDS, START_ADDING_NEW_RECORD,
     START_LOADING_CLIENT_POSSIBILITIES,
     START_LOADING_RECORD_STATICS,
-    START_LOADING_RECORDS,
+    START_LOADING_RECORDS, StartAddingNewRecord,
     StartLoadingClientPossibilities
-} from "./records.actions";
-import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
+} from './records.actions';
+import {catchError, map, mergeMap, switchMap, switchMapTo} from 'rxjs/operators';
 import { from, of } from "rxjs";
 import {
-    CLIENTS_BY_BIRTHDAY_URL,
+    CLIENTS_BY_BIRTHDAY_URL, CREATE_RECORD_URL,
     RECORDS_STATICS_URL,
     RECORDS_URL
-} from "../../statics/api_urls.statics";
+} from '../../statics/api_urls.statics';
 import { FullRecord, RestrictedRecord } from "../models/record.model";
 import { RestrictedUser } from "../../api/models/user.model";
 import { OriginCountry } from "../models/country.model";
@@ -46,13 +46,15 @@ import { RecordTag } from "../models/record_tags.model";
 import { ApiSandboxService } from "../../api/services/api-sandbox.service";
 import { FullClient } from "../models/client.model";
 import {AppSandboxService} from '../../api/services/app-sandbox.service';
+import {RecordsSandboxService} from '../services/records-sandbox.service';
 
 @Injectable()
 export class RecordsEffects {
     constructor(
         private actions: Actions,
         private http: HttpClient,
-        private appSB: AppSandboxService
+        private appSB: AppSandboxService,
+        private recordSB: RecordsSandboxService
     ) {}
 
     @Effect()
@@ -157,6 +159,11 @@ export class RecordsEffects {
                         birthday: ApiSandboxService.transformDate(birthday)
                     })
                     .pipe(
+                        catchError(error => {
+                            return of({
+                                error: "error at loading client possibilities"
+                            });
+                        }),
                         mergeMap(response => {
                             console.log("response", response);
                             const clients = FullClient.getFullClientsFromJsonArray(
@@ -165,13 +172,29 @@ export class RecordsEffects {
                             return [
                                 { type: SET_POSSIBLE_CLIENTS, payload: clients }
                             ];
-                        }),
-                        catchError(error => {
-                            return of({
-                                error: "error at loading client possibilities"
-                            });
                         })
                     )
+            );
+        })
+    );
+
+    @Effect()
+    addingNewRecord = this.actions.pipe(
+        ofType(START_ADDING_NEW_RECORD),
+        map((action: StartAddingNewRecord) => {
+            return action.payload;
+        }),
+        switchMap((newRecord: any) => {
+            return from(
+                this.http.post(CREATE_RECORD_URL, newRecord).pipe(
+                    catchError(error => {
+                        return of({error: 'error at creating new record'})
+                    }),
+                    mergeMap(response => {
+                        this.recordSB.successfullyCreatedRecord(response);
+                        return [];
+                    })
+                )
             );
         })
     );

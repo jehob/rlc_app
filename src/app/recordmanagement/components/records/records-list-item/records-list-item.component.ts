@@ -11,5 +11,8 @@ export class RecordsListItemComponent implements OnInit {
 
     constructor() {}
 
-    ngOnInit() {}
+    ngOnInit() {
+        if (this.record)
+            console.log(this.record.working_on_record);
+    }
 }

@@ -1,5 +1,11 @@
-<mat-list-item>
+<mat-list-item class="record-list-item-container">
     <h4 mat-line>{{ record.token }}</h4>
-    <mat-chip-list><mat-chip *ngFor="let tag of record.tags">{{ tag.name }}</mat-chip></mat-chip-list>
+
+    <div>
+        <mat-chip-list><mat-chip *ngFor="let consultant of record.working_on_record">{{ consultant }}</mat-chip></mat-chip-list>
+    </div>
+    <div>
+        <mat-chip-list><mat-chip *ngFor="let tag of record.tags">{{ tag.name }}</mat-chip></mat-chip-list>
+    </div>
 </mat-list-item>
 <mat-divider></mat-divider>
