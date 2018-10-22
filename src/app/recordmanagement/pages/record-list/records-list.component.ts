@@ -20,6 +20,7 @@ import { Component, OnInit } from "@angular/core";
 import { RecordsSandboxService } from "../../services/records-sandbox.service";
 import { Observable } from "rxjs";
 import { RestrictedRecord } from "../../models/record.model";
+import { ActivatedRoute, Router } from "@angular/router";
 
 export interface Section {
     id: string;
@@ -36,20 +37,28 @@ export class RecordsListComponent implements OnInit {
     records: Observable<RestrictedRecord[]>;
     value = "";
 
-    constructor(private recordsSandbox: RecordsSandboxService) {
-        this.recordsSandbox.loadRecords();
+    constructor(
+        private recordsSandbox: RecordsSandboxService,
+        private route: ActivatedRoute,
+        private router: Router
+    ) {
+        this.route.queryParamMap.subscribe(map => {
+            if (map.get("search")) {
+                this.recordsSandbox.loadRecords(map.get("search"));
+                this.value = map.get("search");
+            } else {
+                this.recordsSandbox.loadRecords();
+            }
+        });
     }
 
     ngOnInit() {
         this.records = this.recordsSandbox.getRecords();
     }
 
-    onSearchClick(){
-        console.log(this.value);
-        if (this.value && this.value !== "")
-            this.recordsSandbox.loadRecords(this.value);
-        else
-            this.recordsSandbox.loadRecords();
-
+    onSearchClick() {
+        if (this.value && this.value !== "") {
+            this.router.navigateByUrl(`records?search=${this.value}`);
+        } else this.router.navigateByUrl(`records`);
     }
 }

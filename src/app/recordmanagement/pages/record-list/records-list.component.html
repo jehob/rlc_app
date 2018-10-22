@@ -21,7 +21,7 @@
     <mat-card-header>
         <h2>Records</h2>
         <mat-form-field class="records-search-input">
-            <input matInput type="text" placeholder="Search" [(ngModel)]="value">
+            <input matInput type="text" placeholder="Search" [(ngModel)]="value" (keyup.enter)="onSearchClick()">
             <button mat-button matSuffix mat-icon-button aria-label="Search" (click)="onSearchClick()">
                 Search
             </button>
