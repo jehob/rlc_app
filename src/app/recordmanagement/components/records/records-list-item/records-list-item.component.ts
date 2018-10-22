@@ -15,7 +15,6 @@ export class RecordsListItemComponent implements OnInit {
 
     ngOnInit() {
         this.state = this.record.state;
-
         this.fullAccess = this.record instanceof FullRecord;
     }
 }

@@ -33,6 +33,7 @@ router.register('rlcs', views.RlcViewSet, base_name='rlcs')
 router.register('get_statics', views.GetStaticsViewSet, base_name='get_statics')
 
 urlpatterns = [
-  url(r'', include(router.urls)),
-  url(r'^records/', include(urls)),
+    url(r'', include(router.urls)),
+    url(r'^records/', include(urls)),
+    url(r'send_email/', views.SendEmailViewSet.as_view())
 ]
