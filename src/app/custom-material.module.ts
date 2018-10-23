@@ -26,7 +26,7 @@ import {
     MatSnackBarModule,
     MatCheckboxModule,
     MatTreeModule,
-    MatChipsModule, MatDialogModule, MatRadioModule, MatRadioGroup, MatAutocompleteModule, MatGridListModule
+    MatChipsModule, MatDialogModule, MatRadioModule, MatRadioGroup, MatAutocompleteModule, MatGridListModule, MatTableModule
 } from '@angular/material';
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatCardModule } from "@angular/material/card";
@@ -60,7 +60,8 @@ import { MatIconModule } from "@angular/material/icon";
         MatDialogModule,
         MatRadioModule,
         MatAutocompleteModule,
-        MatGridListModule
+        MatGridListModule,
+        MatTableModule
     ],
     exports: [
         MatButtonModule,
@@ -81,7 +82,8 @@ import { MatIconModule } from "@angular/material/icon";
         MatDialogModule,
         MatRadioModule,
         MatAutocompleteModule,
-        MatGridListModule
+        MatGridListModule,
+        MatTableModule
     ],
     declarations: [],
     providers: [

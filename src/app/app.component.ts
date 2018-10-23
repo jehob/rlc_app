@@ -49,10 +49,6 @@ export class AppComponent {
         this.router.navigate(["records"], { relativeTo: this.route });
     }
 
-    showSettings() {
-        this.router.navigate(["login"]);
-    }
-
     showAddRecord(){
         this.router.navigate(["records/add"])
     }

@@ -19,8 +19,10 @@
 import { Component, OnInit } from "@angular/core";
 import { RecordsSandboxService } from "../../services/records-sandbox.service";
 import { Observable } from "rxjs";
-import { RestrictedRecord } from "../../models/record.model";
+import {FullRecord, RestrictedRecord} from '../../models/record.model';
 import { ActivatedRoute, Router } from "@angular/router";
+import {RestrictedUser} from '../../../api/models/user.model';
+import {RecordTag} from '../../models/record_tags.model';
 
 @Component({
     selector: "app-records",
@@ -55,4 +57,17 @@ export class RecordsListComponent implements OnInit {
             this.router.navigateByUrl(`records?search=${this.value}`);
         } else this.router.navigateByUrl(`records`);
     }
+
+    onRecordSelect(record: RestrictedRecord){
+        this.router.navigateByUrl(`records/${record.id}`);
+    }
+
+    onConsultantClick(consultant: RestrictedUser){
+        this.router.navigateByUrl(`records?search=${consultant.name}`);
+    }
+
+    onTagClick(tag: RecordTag){
+        this.router.navigateByUrl(`records?search=${tag.name}`);
+    }
+
 }

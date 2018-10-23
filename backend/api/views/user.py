@@ -21,8 +21,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from django.forms.models import model_to_dict
+from rest_framework import status
 
-from ..models import UserProfile, Permission
+from ..models import UserProfile, Permission, Rlc
 from ..serializers import UserProfileSerializer, UserProfileCreatorSerializer, UserProfileNameSerializer
 from ..permissions import UpdateOwnProfile
 from backend.recordmanagement import models, serializers
@@ -43,6 +44,18 @@ class UserProfileCreatorViewSet(viewsets.ModelViewSet):
     """Handles creating profiles"""
     serializer_class = UserProfileCreatorSerializer
     queryset = UserProfile.objects.none()
+
+    def create(self, request):  # TODO: password repeat
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+
+        user = UserProfile.objects.get(email=request.data['email'])
+        user.rlc_members.add(Rlc.objects.get(pk=request.data['rlc']))
+        user.save()
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class LoginViewSet(viewsets.ViewSet):
@@ -66,9 +79,11 @@ class LoginViewSet(viewsets.ViewSet):
         except Exception as ex:
             if ex.detail['non_field_errors'][0] == 'Unable to log in with provided credentials.':
                 if UserProfile.objects.filter(email=request.data['username']).count() == 1:
-                    return Response({'error': 'wrong password', 'error_token': 'api.login.wrong_password'}, status=400)
+                    return Response({'error': 'wrong password', 'error_token': 'api.login.wrong_password'},
+                                    status=status.HTTP_400_BAD_REQUEST)
                 else:
-                    return Response({'error': 'there is no account with this email'}, status=400)
+                    return Response({'error': 'there is no account with this email'},
+                                    status=status.HTTP_400_BAD_REQUEST)
         return Response(LoginViewSet.get_login_data(token.data['token']))
 
     def get(self, request):

@@ -137,17 +137,20 @@ class RecordViewSet(APIView):
         for tag_id in data['tags']:
             record.tagged.add(models.RecordTag.objects.get(pk=tag_id))
         for user_id in data['consultants']:
+            record.working_on_record.add(UserProfile.objects.get(pk=user_id))
+        record.save()
+
+        for user_id in data['consultants']:
             actual_consultant = UserProfile.objects.get(pk=user_id)
-            if os.environ['URL']:
+            if "URL" in os.environ:
                 url = os.environ['URL'] + "/records/" + record.id
             else:
                 url = 'no url, please contact the administrator'
 
-            EmailSender.send_email_notification(actual_consultant.email, "New Record",
+            EmailSender.send_email_notification((actual_consultant.email, ), "New Record",
                                                 "RLC Intranet Notification - Your were assigned as a consultant for a new record. Look here:" +
                                                 url)
-            record.working_on_record.add(actual_consultant)
-        record.save()
+
         return Response(serializers.RecordFullDetailSerializer(record).data)
 
     def get(self, request, id):

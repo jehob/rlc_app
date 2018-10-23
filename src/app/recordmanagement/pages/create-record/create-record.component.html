@@ -2,64 +2,71 @@
     <mat-card-content>
         <h1>Create record</h1>
         <form [formGroup]="createRecordForm">
-            <div>
-                <mat-form-field>
-                    <input matInput [matDatepicker]="picker_first_contact_date" placeholder="contact date"
-                           formControlName="first_contact_date"
-                           (click)="picker_first_contact_date.open()">
-                    <mat-datepicker-toggle matSuffix [for]="picker_first_contact_date"></mat-datepicker-toggle>
-                    <mat-datepicker #picker_first_contact_date></mat-datepicker>
-                </mat-form-field>
-            </div>
-            <div>
-                <mat-form-field>
+
+            <div class="create-record__rows">
+                <mat-form-field class="create-record__item">
                     <input matInput [matDatepicker]="picker" placeholder="birthday" formControlName="client_birthday"
                            (click)="picker.open()">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
 
-                <mat-form-field>
+                <mat-form-field class="create-record__item">
                     <input type="text" matInput formControlName="client_name" placeholder="client name">
                 </mat-form-field>
+            </div>
 
-                <app-autocomplete [allValues]="allCountries" placeholder="origin country"
-                                  (selectedValueChanged)="selectedCountryChanged($event)"
-                                  [errors]="originCountryError"
-                                  [setSelectedValue]="givenOriginCountry">
-                    <mat-error *ngIf="originCountryError && originCountryError.null">
-                        please select a country
-                    </mat-error>
-                </app-autocomplete>
+            <div  class="create-record__rows">
+                <div class="create-record__item">
+                    <app-autocomplete [allValues]="allCountries" placeholder="origin country"
+                                      (selectedValueChanged)="selectedCountryChanged($event)"
+                                      [errors]="originCountryError"
+                                      [setSelectedValue]="givenOriginCountry">
+                        <mat-error *ngIf="originCountryError && originCountryError.null">
+                            please select a country
+                        </mat-error>
+                    </app-autocomplete>
+                </div>
 
-
-                <mat-form-field>
+                <mat-form-field class="create-record__item">
                     <input type="text" matInput formControlName="client_phone_number" placeholder="phone number">
                 </mat-form-field>
 
             </div>
-            <div>
-                <mat-form-field>
+
+            <div  class="create-record__rows">
+                <mat-form-field class="create-record__item create-record__notes">
                     <textarea type="text" matInput formControlName="client_note" placeholder="note about client">
 
                     </textarea>
                 </mat-form-field>
             </div>
-            <div>
-                <mat-form-field>
-                    <input type="text" matInput formControlName="record_token" placeholder="record token">
+
+            <div  class="create-record__rows">
+                <mat-form-field class="create-record__item">
+                    <input matInput [matDatepicker]="picker_first_contact_date" placeholder="contact date"
+                           formControlName="first_contact_date"
+                           (click)="picker_first_contact_date.open()">
+                    <mat-datepicker-toggle matSuffix [for]="picker_first_contact_date"></mat-datepicker-toggle>
+                    <mat-datepicker #picker_first_contact_date></mat-datepicker>
                 </mat-form-field>
 
+                <mat-form-field class="create-record__item">
+                    <input type="text" matInput formControlName="record_token" placeholder="record token">
+                </mat-form-field>
+            </div>
+
+            <div  class="create-record__rows">
                 <app-chip-autocomplete [allValues]="allConsultants"
                                        placeholder="consultants"
                                        (selectedValuesChanged)="selectedConsultantsChanged($event)"
-                                       [errors]="consultantErrors">
+                                       [errors]="consultantErrors"  class="create-record__item">
                     <mat-error *ngIf="consultantErrors && consultantErrors.null">
                         at least one consultant for case
                     </mat-error>
                 </app-chip-autocomplete>
 
-                <app-chip-autocomplete [allValues]="allRecordTags"
+                <app-chip-autocomplete [allValues]="allRecordTags"  class="create-record__item"
                                        placeholder="tags"
                                        (selectedValuesChanged)="selectedRecordTagsChanged($event)"
                                        [errors]="recordTagErrors">
@@ -68,15 +75,15 @@
                     </mat-error>
                 </app-chip-autocomplete>
             </div>
-            <div>
-                <mat-form-field>
+            <div  class="create-record__rows">
+                <mat-form-field  class="create-record__item create-record__notes">
                     <textarea type="text" matInput formControlName="record_note" placeholder="note about record">
 
                     </textarea>
                 </mat-form-field>
             </div>
 
-            <button mat-flat-button (click)="this.onAddRecordClick()">Add record</button>
+            <button mat-flat-button (click)="this.onAddRecordClick()" class="create-record__button">Add record</button>
         </form>
     </mat-card-content>
 </mat-card>

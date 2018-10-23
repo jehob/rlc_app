@@ -1,22 +1,22 @@
 <mat-list-item class="record-list-item-container">
-    <div [ngSwitch]="fullAccess">
+    <div [ngSwitch]="fullAccess" class="access-indicator-container">
         <div class="access-indicator access-indicator__full" *ngSwitchCase="true"></div>
         <div class="access-indicator" *ngSwitchCase="false"></div>
     </div>
 
-    <p (click)="this.onRecordSelect()">{{ record.token }}</p>
+    <p (click)="this.onRecordSelect()" class="record-token-container">{{ record.token }}</p>
 
-    <div [ngSwitch]="state">
+    <div [ngSwitch]="state" class="state-container">
         <div class="status-indicator status-indicator__open" *ngSwitchCase="'op'"></div>
         <div class="status-indicator status-indicator__waiting" *ngSwitchCase="'wa'"></div>
         <div class="status-indicator status-indicator__closed" *ngSwitchCase="'cl'"></div>
     </div>
-    <div>
+    <div class="consultants-container">
         <mat-chip-list class="mat-chip-list-stacked">
             <mat-chip *ngFor="let consultant of record.working_on_record" selected (click)="this.onConsultantClick(consultant)">{{ consultant.name }}</mat-chip>
         </mat-chip-list>
     </div>
-    <div>
+    <div class="tags-container">
         <mat-chip-list class="mat-chip-list-stacked">
             <mat-chip *ngFor="let tag of record.tags" (click)="this.onTagClick(tag)">{{ tag.name }}</mat-chip>
         </mat-chip-list>

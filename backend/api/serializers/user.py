@@ -115,11 +115,4 @@ class UserProfileCreatorSerializer(serializers.ModelSerializer):
             user.birthday = validated_data['birthday']
 
         user.save()
-        # rlc = models.Rlc.objects.get(name='München')
-        # if rlc is not None:
-        #     user.rlc_members.add(rlc)
-        # group = models.Group.objects.get(name='RLC München member')
-        # if group is not None:
-        #     user.group_members.add(group)
-        # user.save()
         return user

@@ -16,6 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
+
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 @import "styles/basic.scss";
 @import "styles/global.scss";
@@ -28,9 +29,9 @@ body {
     background-color: $c-background;
 }
 
-*{
+* {
     //font-family: 'Roboto', sans-serif !important;
-    font-family: 'Roboto', sans-serif;
+    font-family: "Roboto", sans-serif;
     font-weight: 400;
 }
 

@@ -34,6 +34,7 @@ import { SET_USER } from "../api.actions";
 import { AuthGuardService } from "../../services/auth-guard.service";
 import { FullUser } from "../../models/user.model";
 import {RecordsSandboxService} from '../../../recordmanagement/services/records-sandbox.service';
+import {ApiSandboxService} from '../../services/api-sandbox.service';
 
 @Injectable()
 export class AuthEffects {
@@ -42,7 +43,8 @@ export class AuthEffects {
         private http: HttpClient,
         private router: Router,
         private guard: AuthGuardService,
-        private recordSB: RecordsSandboxService
+        private recordSB: RecordsSandboxService,
+        private apiSB: ApiSandboxService
     ) {}
 
     @Effect()
@@ -54,7 +56,11 @@ export class AuthEffects {
         switchMap((authData: { username: string; password: string }) => {
             return from(
                 this.http.post(LOGIN_URL, authData).pipe(
-                    catchError(error => []),
+                    catchError(error => {
+                        console.log('error', error)
+                        this.apiSB.showErrorSnackBar("Login not successfull");
+                        return [];
+                    }),
                     mergeMap(
                         (response: {
                             token: string;

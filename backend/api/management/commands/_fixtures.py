@@ -1485,7 +1485,7 @@ class AddMethods:
             us.set_password(user[4])
         elif user.__len__() == 9:
             us = UserProfile(id=user[0], email=user[1], name=user[2], birthday=user[3], phone_number=user[4],
-                             street=user[5], city=user[6], zip_code=user[7])
+                             street=user[5], city=user[6], postal_code=user[7])
             us.set_password('qwe123')
             us.save()
             for rlc_id in user[8]:

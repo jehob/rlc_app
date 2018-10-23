@@ -33,3 +33,58 @@ mat-card-header {
 .records-search-input {
     margin-left: auto;
 }
+.table-container {
+    overflow: auto;
+}
+table {
+    width: 100%;
+}
+
+
+.mat-column-consultants{
+    width: auto;
+    padding: 10px;
+    max-width: 100px;
+}
+.mat-column-tags {
+    max-width: 50px;
+}
+.records-list__mat-chip {
+    width: auto !important;
+}
+
+
+
+.status-indicator {
+    border-radius: 25px;
+    margin: 10px;
+    min-height: 10px;
+    min-width: 10px;
+    max-height: 10px;
+    max-width: 10px;
+}
+
+.status-indicator__open{
+    background-color: green;
+}
+
+.status-indicator__waiting{
+    background-color: orange;
+}
+
+.status-indicator__closed {
+    background-color: grey;
+}
+
+.access-indicator {
+    min-width: 4px;
+    min-height: 17px;
+    max-width: 4px;
+    max-height: 17px;
+    border: solid black;
+    margin-right: 20px
+}
+
+.access-indicator__full{
+    background-color: black;
+}
