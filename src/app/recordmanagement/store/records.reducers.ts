@@ -25,13 +25,18 @@ import {
     SET_POSSIBLE_CLIENTS,
     SET_RECORD_STATES,
     SET_RECORD_TAGS,
-    SET_RECORDS
+    SET_RECORDS, SET_SPECIAL_CLIENT, SET_SPECIAL_ORIGIN_COUNTRY, SET_SPECIAL_RECORD
 } from './records.actions';
 import { OriginCountry } from "../models/country.model";
 import { RecordTag } from "../models/record_tags.model";
 import { FullClient } from "../models/client.model";
 
 export interface RecordsState {
+    special_record: {
+        record: RestrictedRecord,
+        client: FullClient,
+        origin_country: OriginCountry
+    },
     records: RestrictedRecord[];
     consultants: RestrictedRecord[];
     origin_countries: OriginCountry[];
@@ -42,6 +47,11 @@ export interface RecordsState {
 }
 
 const initialState: RecordsState = {
+    special_record: {
+        record: null,
+        client: null,
+        origin_country: null
+    },
     records: [],
     consultants: [],
     origin_countries: [],
@@ -53,6 +63,30 @@ const initialState: RecordsState = {
 
 export function recordsReducer(state = initialState, action: RecordsActions) {
     switch (action.type) {
+        case SET_SPECIAL_RECORD:
+            return {
+                ...state,
+                special_record: {
+                    ...state.special_record,
+                    record: action.payload
+                }
+            };
+        case SET_SPECIAL_CLIENT:
+            return {
+                ...state,
+                special_record: {
+                    ...state.special_record,
+                    client: action.payload
+                }
+            };
+        case SET_SPECIAL_ORIGIN_COUNTRY:
+            return {
+                ...state,
+                special_record: {
+                    ...state.special_record,
+                    origin_country: action.payload
+                }
+            };
         case SET_RECORDS:
             return {
                 ...state,

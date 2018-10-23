@@ -7,7 +7,8 @@ import {
     StartAddingNewRecord,
     StartLoadingClientPossibilities,
     StartLoadingRecords,
-    StartLoadingRecordStatics
+    StartLoadingRecordStatics,
+    StartLoadingSpecialRecord
 } from "../store/records.actions";
 import { take } from "rxjs/operators";
 import { FullClient } from "../models/client.model";
@@ -15,13 +16,18 @@ import { Observable } from "rxjs";
 import { OriginCountry } from "../models/country.model";
 import { RestrictedUser } from "../../api/models/user.model";
 import { RecordTag } from "../models/record_tags.model";
-import {ApiSandboxService} from '../../api/services/api-sandbox.service';
+import { ApiSandboxService } from "../../api/services/api-sandbox.service";
+import {FullRecord} from '../models/record.model';
 
 @Injectable({
     providedIn: "root"
 })
 export class RecordsSandboxService {
-    constructor(private router: Router, private store: Store<RecordsState>, private apiSB: ApiSandboxService) {}
+    constructor(
+        private router: Router,
+        private store: Store<RecordsState>,
+        private apiSB: ApiSandboxService
+    ) {}
 
     loadRecords(searchString?: string) {
         this.store.dispatch(new StartLoadingRecords(searchString));
@@ -50,7 +56,7 @@ export class RecordsSandboxService {
     }
 
     getSpecialPossibleClient(id: string): FullClient {
-        let returnState: FullClient = null;
+        let returnClient: FullClient = null;
         this.store
             .pipe(
                 take(1),
@@ -60,8 +66,21 @@ export class RecordsSandboxService {
                     )
                 )
             )
-            .subscribe(state => (returnState = state));
-        return returnState;
+            .subscribe(state => (returnClient = state));
+        return returnClient;
+    }
+
+    loadAndGetSpecialRecord(id: string): Observable<any> {
+        this.store.dispatch(new StartLoadingSpecialRecord(id));
+        return this.store.pipe(
+            select((state: any) => state.records.special_record)
+        );
+    }
+
+    getSpecialRecord(): Observable<any> {
+        return this.store.pipe(
+            select((state: any) => state.records.special_record)
+        );
     }
 
     getOriginCountryById(id: string): OriginCountry {
@@ -103,11 +122,6 @@ export class RecordsSandboxService {
         consultants: RestrictedUser[],
         tags: RecordTag[]
     ) {
-        // console.log("create new record in sandbox");
-        // console.log("values", createFormValues);
-        // console.log("client", client);
-        // console.log("consultants", consultants);
-        // console.log("tags", tags);
         let newRecord = {};
         if (client) {
             newRecord = {
@@ -115,7 +129,9 @@ export class RecordsSandboxService {
             };
         } else {
             newRecord = {
-                client_birthday: ApiSandboxService.transformDate(createFormValues.client_birthday),
+                client_birthday: ApiSandboxService.transformDate(
+                    createFormValues.client_birthday
+                ),
                 client_name: createFormValues.client_name
             };
         }
@@ -123,25 +139,32 @@ export class RecordsSandboxService {
             ...newRecord,
             client_phone_number: createFormValues.client_phone_number,
             client_note: createFormValues.client_note,
-            first_contact_date: ApiSandboxService.transformDate(createFormValues.first_contact_date),
+            first_contact_date: ApiSandboxService.transformDate(
+                createFormValues.first_contact_date
+            ),
             record_token: createFormValues.record_token,
-            record_note: createFormValues.record_note
-        };
-        //      "consultants": [4026,1],
-        //             "tags": [1051,1052],
-        newRecord = {
-            ...newRecord,
+            record_note: createFormValues.record_note,
             consultants: consultants.map(consultant => consultant.id),
             tags: tags.map(tag => tag.id)
-        }
+        };
 
         //console.log('new record which will be send to the backend', newRecord);
         this.store.dispatch(new StartAddingNewRecord(newRecord));
     }
 
-    successfullyCreatedRecord(response: any){
+    successfullyCreatedRecord(response: any) {
         this.apiSB.showSuccessSnackBar("you successfully created the record");
         this.router.navigate(["records"]);
         // do more
     }
+
+    saveRecord(
+        record: FullRecord,
+        client: FullClient
+    ) {
+
+
+    }
+
+
 }

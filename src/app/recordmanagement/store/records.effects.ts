@@ -20,33 +20,53 @@ import { Injectable } from "@angular/core";
 import { Actions, Effect, ofType } from "@ngrx/effects";
 import { HttpClient } from "@angular/common/http";
 import {
+    RecordsActions,
     SET_CONSULTANTS,
     SET_COUNTRY_STATES,
     SET_ORIGIN_COUNTRIES,
     SET_POSSIBLE_CLIENTS,
     SET_RECORD_STATES,
     SET_RECORD_TAGS,
-    SET_RECORDS, START_ADDING_NEW_RECORD,
+    SET_RECORDS,
+    SET_SPECIAL_CLIENT,
+    SET_SPECIAL_ORIGIN_COUNTRY,
+    SET_SPECIAL_RECORD,
+    START_ADDING_NEW_RECORD,
     START_LOADING_CLIENT_POSSIBILITIES,
     START_LOADING_RECORD_STATICS,
-    START_LOADING_RECORDS, StartAddingNewRecord,
-    StartLoadingClientPossibilities, StartLoadingRecords
-} from './records.actions';
-import {catchError, map, mergeMap, switchMap, switchMapTo} from 'rxjs/operators';
-import {from, merge, of} from 'rxjs';
+    START_LOADING_RECORDS,
+    START_LOADING_SPECIAL_RECORD,
+    START_SAVING_RECORD,
+    StartAddingNewRecord,
+    StartLoadingClientPossibilities,
+    StartLoadingRecords,
+    StartLoadingSpecialRecord,
+    StartSavingRecord
+} from "./records.actions";
 import {
-    CLIENTS_BY_BIRTHDAY_URL, CREATE_RECORD_URL, GetRecordsSearchURL,
+    catchError,
+    map,
+    mergeMap,
+    switchMap,
+    switchMapTo
+} from "rxjs/operators";
+import { from, merge, of } from "rxjs";
+import {
+    CLIENTS_BY_BIRTHDAY_URL,
+    CREATE_RECORD_URL,
+    GetRecordsSearchURL,
+    GetSpecialRecordURL,
     RECORDS_STATICS_URL,
     RECORDS_URL
-} from '../../statics/api_urls.statics';
+} from "../../statics/api_urls.statics";
 import { FullRecord, RestrictedRecord } from "../models/record.model";
 import { RestrictedUser } from "../../api/models/user.model";
 import { OriginCountry } from "../models/country.model";
 import { RecordTag } from "../models/record_tags.model";
 import { ApiSandboxService } from "../../api/services/api-sandbox.service";
 import { FullClient } from "../models/client.model";
-import {AppSandboxService} from '../../api/services/app-sandbox.service';
-import {RecordsSandboxService} from '../services/records-sandbox.service';
+import { AppSandboxService } from "../../api/services/app-sandbox.service";
+import { RecordsSandboxService } from "../services/records-sandbox.service";
 
 @Injectable()
 export class RecordsEffects {
@@ -64,7 +84,9 @@ export class RecordsEffects {
             return action.payload;
         }),
         switchMap((searchString: string) => {
-            const url = searchString ? GetRecordsSearchURL(searchString) : RECORDS_URL;
+            const url = searchString
+                ? GetRecordsSearchURL(searchString)
+                : RECORDS_URL;
             return from(
                 this.http.get(url).pipe(
                     mergeMap(response => {
@@ -97,7 +119,7 @@ export class RecordsEffects {
     recordStaticsLoad = this.actions.pipe(
         ofType(START_LOADING_RECORD_STATICS),
         switchMap(() => {
-            if (this.appSB.isAuthenticated()){
+            if (this.appSB.isAuthenticated()) {
                 return from(
                     this.http.get(RECORDS_STATICS_URL).pipe(
                         catchError(error => {
@@ -192,13 +214,91 @@ export class RecordsEffects {
             return from(
                 this.http.post(CREATE_RECORD_URL, newRecord).pipe(
                     catchError(error => {
-                        return of({error: 'error at creating new record'})
+                        return of({ error: "error at creating new record" });
                     }),
                     mergeMap(response => {
                         this.recordSB.successfullyCreatedRecord(response);
                         return [];
                     })
                 )
+            );
+        })
+    );
+
+    @Effect()
+    loadingSpecialRecord = this.actions.pipe(
+        ofType(START_LOADING_SPECIAL_RECORD),
+        map((action: StartLoadingSpecialRecord) => {
+            return action.payload;
+        }),
+        switchMap((id: string) => {
+            return from(
+                this.http.get(GetSpecialRecordURL(id)).pipe(
+                    catchError(error => {
+                        return of({ error: "error at loading special record" });
+                    }),
+                    mergeMap((response: any) => {
+                        if (response.record) {
+                            const record: FullRecord = FullRecord.getFullRecordFromJson(
+                                response.record
+                            );
+                            const client: FullClient = FullClient.getFullClientFromJson(
+                                response.client
+                            );
+                            const originCountry: OriginCountry = OriginCountry.getOriginCountryFromJson(
+                                response.origin_country
+                            );
+
+                            const arr = [];
+                            arr.push({
+                                type: SET_SPECIAL_RECORD,
+                                payload: record
+                            });
+                            arr.push({
+                                type: SET_SPECIAL_CLIENT,
+                                payload: client
+                            });
+                            arr.push({
+                                type: SET_SPECIAL_ORIGIN_COUNTRY,
+                                payload: originCountry
+                            });
+                            return arr;
+                        } else {
+                            const record = RestrictedRecord.getRestrictedRecordFromJson(
+                                response
+                            );
+                            return [
+                                { type: SET_SPECIAL_RECORD, payload: record }
+                            ];
+                        }
+                    })
+                )
+            );
+        })
+    );
+
+    @Effect()
+    savingRecord = this.actions.pipe(
+        ofType(START_SAVING_RECORD),
+        map((action: StartSavingRecord) => {
+            return action.payload;
+        }),
+        switchMap((payload: { record: FullRecord; client: FullClient }) => {
+            return from(
+                this.http
+                    .post(GetSpecialRecordURL(payload.record.id), {
+                        record_note: payload.record.note
+                    })
+                    .pipe(
+                        catchError(error => {
+                            return of({
+                                error: "error at loading special record"
+                            });
+                        }),
+                        mergeMap((response: any) => {
+                            return [];
+                        })
+                    )
             );
         })
     );

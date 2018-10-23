@@ -19,6 +19,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.db.models import Q
+import os
 
 from backend.recordmanagement import models, serializers
 from backend.api import permissions
@@ -102,6 +103,8 @@ class RecordsListViewSet(viewsets.ViewSet):
 
     def retrieve(self, request, pk=None):
         queryset = models.Record.objects.get(pk=pk)
+        if request.user.rlc_members.first() != queryset.from_rlc:
+            return Response({'error': 'wrong rlc', 'error_token': 'api.retrieve_record.wrong_rlc'}, status=400)
         if request.user.has_permission(Static.VIEW_RECORDS_FULL_DETAIL) or request.user.working_on_record.filter(
             id=pk).count() == 1:
             serializer = serializers.RecordFullDetailSerializer(queryset)
@@ -110,7 +113,7 @@ class RecordsListViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
 
-class CreateRecordViewSet(APIView):
+class RecordViewSet(APIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
@@ -135,7 +138,14 @@ class CreateRecordViewSet(APIView):
             record.tagged.add(models.RecordTag.objects.get(pk=tag_id))
         for user_id in data['consultants']:
             actual_consultant = UserProfile.objects.get(pk=user_id)
-            # EmailSender.send_email_notification()
+            if os.environ['URL']:
+                url = os.environ['URL'] + "/records/" + record.id
+            else:
+                url = 'no url, please contact the administrator'
+
+            EmailSender.send_email_notification(actual_consultant.email, "New Record",
+                                                "RLC Intranet Notification - Your were assigned as a consultant for a new record. Look here:" +
+                                                url)
             record.working_on_record.add(actual_consultant)
         record.save()
         return Response(serializers.RecordFullDetailSerializer(record).data)

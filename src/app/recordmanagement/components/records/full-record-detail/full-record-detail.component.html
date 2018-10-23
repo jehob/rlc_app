@@ -1,0 +1,19 @@
+<mat-card>
+    <mat-card-header>
+        <h1>Edit record</h1>
+    </mat-card-header>
+    <mat-card-content>
+        <div>
+            <p>{{ client.name }}</p>
+            <p> {{ record.token }}</p>
+        </div>
+
+
+        <mat-form-field>
+            <textarea matInput type="text" placeholder="note" [(ngModel)]="record.note"></textarea>
+            <button mat-button matSuffix aria-label="Search" (click)="onSaveClick()">
+                Save
+            </button>
+        </mat-form-field>
+    </mat-card-content>
+</mat-card>

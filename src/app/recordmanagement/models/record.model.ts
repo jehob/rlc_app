@@ -26,6 +26,7 @@ export class RestrictedRecord {
         public working_on_record: [number, string]
     ) {
         this.id = id;
+        this.token = token;
         this.last_contact_date = last_contact_date;
         this.state = state;
         this.tags = tags;
@@ -55,7 +56,7 @@ export class FullRecord extends RestrictedRecord {
         public created_on: Date,
         public last_edited: Date,
         public first_contact_date: Date,
-        public record_token: string,
+        //public record_token: string,
         public note: string,
         public from_rlc: number,
         public client: number
@@ -64,7 +65,7 @@ export class FullRecord extends RestrictedRecord {
         this.created_on = created_on;
         this.last_edited = last_edited;
         this.first_contact_date = first_contact_date;
-        this.record_token = record_token;
+        //this.record_token = record_token;
         this.note = note;
         this.from_rlc = from_rlc;
         this.client = client;
@@ -81,7 +82,7 @@ export class FullRecord extends RestrictedRecord {
             new Date(json.created_on),
             new Date(json.last_edited),
             new Date(json.first_contact_date),
-            json.record_token,
+            //json.record_token,
             json.note,
             json.from_rlc,
             json.client

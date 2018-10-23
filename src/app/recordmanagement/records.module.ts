@@ -33,6 +33,8 @@ import {RecordsSandboxService} from './services/records-sandbox.service';
 import {ChipAutocompleteComponent} from '../shared/components/chip-autocomplete/chip-autocomplete.component';
 import {SharedModule} from '../shared/shared.module';
 import { RecordComponent } from './pages/record/record.component';
+import { FullRecordDetailComponent } from './components/records/full-record-detail/full-record-detail.component';
+import { RestrictedRecordDetailComponent } from './components/records/restricted-record-detail/restricted-record-detail.component';
 
 @NgModule({
     imports: [
@@ -50,7 +52,9 @@ import { RecordComponent } from './pages/record/record.component';
         RecordsListItemComponent,
         CreateRecordComponent,
         SelectClientDialogComponent,
-        RecordComponent
+        RecordComponent,
+        FullRecordDetailComponent,
+        RestrictedRecordDetailComponent
     ],
     entryComponents: [SelectClientDialogComponent]
 })

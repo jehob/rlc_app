@@ -38,7 +38,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'srt(vue=+gl&0c_c3pban6a&m2h2iz6mhbx^%^_%9!#-jg0*lz'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if 'ON_HEROKU' in os.environ and 'DEBUG' in os.environ:
+    DEBUG = os.environ['DEBUG']
+else:
+    DEBUG = True
 
 ALLOWED_HOSTS = []
 

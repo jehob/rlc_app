@@ -22,12 +22,6 @@ import { Observable } from "rxjs";
 import { RestrictedRecord } from "../../models/record.model";
 import { ActivatedRoute, Router } from "@angular/router";
 
-export interface Section {
-    id: string;
-    type: string;
-    status: string;
-}
-
 @Component({
     selector: "app-records",
     templateUrl: "./records-list.component.html",

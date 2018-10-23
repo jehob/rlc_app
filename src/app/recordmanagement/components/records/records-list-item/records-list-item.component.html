@@ -4,7 +4,7 @@
         <div class="access-indicator" *ngSwitchCase="false"></div>
     </div>
 
-    <h4>{{ record.token }}</h4>
+    <h4 (click)="this.onRecordSelect()">{{ record.token }}</h4>
 
     <div [ngSwitch]="state">
         <div class="status-indicator status-indicator__open" *ngSwitchCase="'op'"></div>
@@ -13,12 +13,12 @@
     </div>
     <div>
         <mat-chip-list>
-            <mat-chip *ngFor="let consultant of record.working_on_record">{{ consultant.name }}</mat-chip>
+            <mat-chip *ngFor="let consultant of record.working_on_record" (click)="this.onConsultantClick(consultant)">{{ consultant.name }}</mat-chip>
         </mat-chip-list>
     </div>
     <div>
         <mat-chip-list>
-            <mat-chip *ngFor="let tag of record.tags">{{ tag.name }}</mat-chip>
+            <mat-chip *ngFor="let tag of record.tags" (click)="this.onTagClick(tag)">{{ tag.name }}</mat-chip>
         </mat-chip-list>
     </div>
 </mat-list-item>

@@ -41,7 +41,7 @@ export class FullClient {
         const clients: FullClient[] = [];
         Object.values(jsonArray).map(jsonClient => {
             clients.push(FullClient.getFullClientFromJson(jsonClient));
-        })
+        });
         return clients;
     }
 
