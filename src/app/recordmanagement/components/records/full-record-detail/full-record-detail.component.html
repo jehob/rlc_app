@@ -1,12 +1,11 @@
 <mat-card>
     <mat-card-header>
-        <h1>Edit record</h1>
+        <h1>record: {{ record.token }}</h1>
     </mat-card-header>
     <mat-card-content>
-        <div>
-            <p>{{ client.name }}</p>
-            <p> {{ record.token }}</p>
-        </div>
+        <mat-form-field>
+            <input matInput placeholder="client name" value="{{ client.name }}" disabled>
+        </mat-form-field>
 
 
         <mat-form-field>

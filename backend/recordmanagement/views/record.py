@@ -132,7 +132,7 @@ class RecordViewSet(APIView):
 
         record = models.Record(client_id=client.id, first_contact_date=data['first_contact_date'],
                                last_contact_date=data['first_contact_date'], record_token=data['record_token'],
-                               note=data['record_note'], creator_id=request.user.id, from_rlc_id=rlc.id)
+                               note=data['record_note'], creator_id=request.user.id, from_rlc_id=rlc.id, state="op")
         record.save()
         for tag_id in data['tags']:
             record.tagged.add(models.RecordTag.objects.get(pk=tag_id))
@@ -186,7 +186,7 @@ class RecordViewSet(APIView):
 
             for user in record.working_on_record:
                 if os.environ['URL']:
-                    url = os.environ['URL'] + "/records/" + record.id
+                    url = os.environ['URL'] + "records/" + record.id
                 else:
                     url = 'no url, please contact the administrator'
 

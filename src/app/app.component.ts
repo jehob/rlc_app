@@ -17,11 +17,11 @@
  ******************************************************************************/
 
 import { Component } from "@angular/core";
-import {Router, ActivatedRoute} from '@angular/router';
+import { Router, ActivatedRoute } from "@angular/router";
 import { AuthState } from "./api/store/auth/auth.reducers";
 import { Observable } from "rxjs";
-import LogRocket from 'logrocket';
-import {AppSandboxService} from './api/services/app-sandbox.service';
+import LogRocket from "logrocket";
+import { AppSandboxService } from "./api/services/app-sandbox.service";
 
 @Component({
     selector: "app-root",
@@ -38,7 +38,7 @@ export class AppComponent {
         private appSB: AppSandboxService
     ) {
         this.authState = this.appSB.startApp();
-        LogRocket.init('mndnnu/rlc_app');
+        LogRocket.init("mndnnu/rlc_app");
     }
 
     showProfile() {
@@ -49,11 +49,15 @@ export class AppComponent {
         this.router.navigate(["records"], { relativeTo: this.route });
     }
 
-    showAddRecord(){
-        this.router.navigate(["records/add"])
+    showAddRecord() {
+        this.router.navigate(["records/add"]);
     }
 
     logout() {
         this.appSB.logout();
+    }
+
+    showLandingPage() {
+        this.router.navigate([""]);
     }
 }

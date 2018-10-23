@@ -16,10 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { Component, OnInit } from "@angular/core";
+import {Component, OnInit} from '@angular/core';
 import { RecordsSandboxService } from "../../services/records-sandbox.service";
 import { Observable } from "rxjs";
-import {FullRecord, RestrictedRecord} from '../../models/record.model';
+import { RestrictedRecord} from '../../models/record.model';
 import { ActivatedRoute, Router } from "@angular/router";
 import {RestrictedUser} from '../../../api/models/user.model';
 import {RecordTag} from '../../models/record_tags.model';
@@ -31,6 +31,7 @@ import {RecordTag} from '../../models/record_tags.model';
 })
 export class RecordsListComponent implements OnInit {
     records: Observable<RestrictedRecord[]>;
+    columns = ['access', 'token', 'state', 'consultants', 'tags'];
     value = "";
 
     constructor(
@@ -46,11 +47,15 @@ export class RecordsListComponent implements OnInit {
                 this.recordsSandbox.loadRecords();
             }
         });
+
     }
 
     ngOnInit() {
         this.records = this.recordsSandbox.getRecords();
     }
+
+
+
 
     onSearchClick() {
         if (this.value && this.value !== "") {

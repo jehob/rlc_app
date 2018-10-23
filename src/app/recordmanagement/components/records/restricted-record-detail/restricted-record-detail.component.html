@@ -1,3 +1,15 @@
-<p>
-  restricted-record-detail works!
-</p>
+<mat-card>
+    <mat-card-header>
+        <h1>Restricted record</h1>
+    </mat-card-header>
+    <mat-card-content>
+
+        <mat-form-field>
+            <input matInput placeholder="record token" value="{{ record.token }}" disabled>
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="record state" value="{{ record.state }}" disabled>
+        </mat-form-field>
+
+    </mat-card-content>
+</mat-card>

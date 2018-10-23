@@ -70,7 +70,6 @@ export class RegisterComponent implements OnInit {
             this.allRlcs = RestrictedRlc.getRestrictedRlcsFromJsonArray(
                 response
             );
-            console.log("allrlcs", this.allRlcs);
         });
     }
 

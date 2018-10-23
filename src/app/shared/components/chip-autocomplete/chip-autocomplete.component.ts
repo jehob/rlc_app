@@ -27,10 +27,7 @@ import {
     SimpleChanges,
     ViewChild
 } from "@angular/core";
-import {
-    FormControl,
-    FormGroup,
-} from "@angular/forms";
+import { FormControl, FormGroup } from "@angular/forms";
 
 import { Observable } from "rxjs";
 import {
@@ -39,7 +36,7 @@ import {
     MatChipInputEvent
 } from "@angular/material";
 import { map, startWith } from "rxjs/operators";
-import {Filterable} from '../../models/filterable.model';
+import { Filterable } from "../../models/filterable.model";
 
 @Component({
     selector: "app-chip-autocomplete",
@@ -49,8 +46,12 @@ import {Filterable} from '../../models/filterable.model';
 export class ChipAutocompleteComponent implements OnInit, OnChanges {
     selectedValues: Filterable[] = [];
     filteredValues: Observable<Filterable[]>;
-    @Input()
+
     allValues: Filterable[];
+
+    @Input()
+    allValuesObservable: Observable<Filterable[]>;
+
     @Input()
     errors;
     @Input()
@@ -73,18 +74,21 @@ export class ChipAutocompleteComponent implements OnInit, OnChanges {
     }
 
     ngOnInit() {
+        this.allValuesObservable.subscribe(values => {
+            this.allValues = values;
 
-        this.filteredValues = this.valuesForm.controls[
-            "filterValue"
+            this.filteredValues = this.valuesForm.controls[
+                "filterValue"
             ].valueChanges.pipe(
-            startWith(""),
-            map(
-                (filterValue: string | null) =>
-                    filterValue
-                        ? this._filter(filterValue)
-                        : this.allValues.slice()
-            )
-        );
+                startWith(""),
+                map(
+                    (filterValue: string | null) =>
+                        filterValue
+                            ? this._filter(filterValue)
+                            : this.allValues.slice()
+                )
+            );
+        });
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -141,7 +145,7 @@ export class ChipAutocompleteComponent implements OnInit, OnChanges {
             if (input) {
                 input.value = "";
             }
-            this.valuesForm.setValue(null);
+            this.valuesForm.controls["filterValue"].setValue("");
         }
     }
 }

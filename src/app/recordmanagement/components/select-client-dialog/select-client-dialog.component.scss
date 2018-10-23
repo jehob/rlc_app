@@ -17,5 +17,10 @@
  ******************************************************************************/
 
 .radio-group {
+    display: inline-flex;
     flex-direction: column;
+}
+
+.select-client-dialog__radio-button {
+    padding: 10px;
 }

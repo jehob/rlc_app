@@ -62,7 +62,6 @@ export class ProfileComponent implements OnInit {
     }
 
     onSaveClick() {
-        console.log('saveClicked');
         this.apiSB.patchUser(
             new FullUser(
                 undefined,

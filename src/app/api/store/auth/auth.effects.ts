@@ -70,8 +70,6 @@ export class AuthEffects {
                         }) => {
                             localStorage.setItem("token", response.token);
 
-                            console.log("loginResponse", response);
-
                             if (this.guard.lastVisitedUrl)
                                 this.router.navigate([
                                     this.guard.getLastVisitedUrl()
@@ -108,7 +106,6 @@ export class AuthEffects {
             return from(this.http.get(LOGIN_URL));
         }),
         mergeMap((response: any) => {
-            console.log('reloaded', response);
             return [...AuthEffects.getStaticInformation(response)];
         })
     );

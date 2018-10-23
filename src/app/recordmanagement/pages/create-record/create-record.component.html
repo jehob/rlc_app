@@ -16,9 +16,9 @@
                 </mat-form-field>
             </div>
 
-            <div  class="create-record__rows">
+            <div class="create-record__rows">
                 <div class="create-record__item">
-                    <app-autocomplete [allValues]="allCountries" placeholder="origin country"
+                    <app-autocomplete [allValuesObservable]="allCountries" placeholder="origin country"
                                       (selectedValueChanged)="selectedCountryChanged($event)"
                                       [errors]="originCountryError"
                                       [setSelectedValue]="givenOriginCountry">
@@ -34,7 +34,7 @@
 
             </div>
 
-            <div  class="create-record__rows">
+            <div class="create-record__rows">
                 <mat-form-field class="create-record__item create-record__notes">
                     <textarea type="text" matInput formControlName="client_note" placeholder="note about client">
 
@@ -42,7 +42,7 @@
                 </mat-form-field>
             </div>
 
-            <div  class="create-record__rows">
+            <div class="create-record__rows">
                 <mat-form-field class="create-record__item">
                     <input matInput [matDatepicker]="picker_first_contact_date" placeholder="contact date"
                            formControlName="first_contact_date"
@@ -56,17 +56,17 @@
                 </mat-form-field>
             </div>
 
-            <div  class="create-record__rows">
-                <app-chip-autocomplete [allValues]="allConsultants"
+            <div class="create-record__rows">
+                <app-chip-autocomplete [allValuesObservable]="allConsultants"
                                        placeholder="consultants"
                                        (selectedValuesChanged)="selectedConsultantsChanged($event)"
-                                       [errors]="consultantErrors"  class="create-record__item">
+                                       [errors]="consultantErrors" class="create-record__item">
                     <mat-error *ngIf="consultantErrors && consultantErrors.null">
                         at least one consultant for case
                     </mat-error>
                 </app-chip-autocomplete>
 
-                <app-chip-autocomplete [allValues]="allRecordTags"  class="create-record__item"
+                <app-chip-autocomplete [allValuesObservable]="allRecordTags" class="create-record__item"
                                        placeholder="tags"
                                        (selectedValuesChanged)="selectedRecordTagsChanged($event)"
                                        [errors]="recordTagErrors">
@@ -75,15 +75,18 @@
                     </mat-error>
                 </app-chip-autocomplete>
             </div>
-            <div  class="create-record__rows">
-                <mat-form-field  class="create-record__item create-record__notes">
+            <div class="create-record__rows">
+                <mat-form-field class="create-record__item create-record__notes">
                     <textarea type="text" matInput formControlName="record_note" placeholder="note about record">
 
                     </textarea>
                 </mat-form-field>
             </div>
-
-            <button mat-flat-button (click)="this.onAddRecordClick()" class="create-record__button">Add record</button>
         </form>
     </mat-card-content>
+    <mat-card-actions>
+        <button mat-flat-button (click)="this.onAddRecordClick()" class="create-record__button">
+            Add record
+        </button>
+    </mat-card-actions>
 </mat-card>

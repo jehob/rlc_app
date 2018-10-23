@@ -98,7 +98,6 @@ export class ApiEffects {
                         return of({ error: "error" });
                     }),
                     mergeMap((response: any) => {
-                        console.log(response);
                         if (!response.error) {
                             this.apiSB.showSuccessSnackBar(
                                 "successfully created account"

@@ -26,7 +26,7 @@ export class RestrictedRlc implements Filterable{
 
     static getRestrictedRlcsFromJsonArray(jsonArray) {
         const restrictedRlcs: Array<RestrictedRlc> = [];
-        Object.values(jsonArray).map(restrictedJsonUser => {
+        Object.values(jsonArray).forEach(restrictedJsonUser => {
             restrictedRlcs.push(RestrictedRlc.getRestrictedRlcFromJson(restrictedJsonUser));
         });
         return restrictedRlcs;

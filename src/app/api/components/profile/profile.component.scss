@@ -19,7 +19,7 @@
 @import "../../../../styles/basic";
 
 .profile-container {
-    max-width: 300px;
+    max-width: 500px;
     padding: 30px;
 }
 .avatar-container {
@@ -27,11 +27,12 @@
     display: inline-block;
     text-align: center;
     width: 100%;
+    margin-bottom: 30px;
 }
 .img-avatar {
     border-radius: 50%;
-    width: 200px;
-    height: 200px;
+    height: 150px;
+    width: 150px;
 }
 .caption {
     display: block;

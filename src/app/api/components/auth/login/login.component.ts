@@ -17,14 +17,8 @@
  ******************************************************************************/
 
 import { Component, OnInit } from "@angular/core";
-import { AuthService } from "../../../services/auth.service";
 import { Router, ActivatedRoute } from "@angular/router";
-import { Store } from "@ngrx/store";
-import { AppState } from "../../../../store/app.reducers";
-import { TryLogin } from "../../../store/auth/auth.actions";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { ReadFromInjectorFn } from "@angular/core/src/render3/di";
-import {ApiSandboxService} from '../../../services/api-sandbox.service';
 import {AppSandboxService} from '../../../services/app-sandbox.service';
 
 @Component({
@@ -45,11 +39,11 @@ export class LoginComponent implements OnInit {
         }
 
         this.loginForm = new FormGroup({
-            email: new FormControl("", [
+            email: new FormControl("aaaa@web.de", [
                 Validators.required,
                 Validators.email
             ]),
-            password: new FormControl("", [Validators.required])
+            password: new FormControl("1Rras/.;and", [Validators.required])
         });
     }
 

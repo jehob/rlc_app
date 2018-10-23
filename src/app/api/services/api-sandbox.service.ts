@@ -20,18 +20,13 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { AppState } from "../../store/app.reducers";
 import { select, Store } from "@ngrx/store";
-import {
-    Logout,
-    ReloadStaticInformation,
-    SetToken
-} from "../store/auth/auth.actions";
 import { ApiState } from "../store/api.reducers";
 import { FullUser } from "../models/user.model";
 import { take } from "rxjs/operators";
 import { CreateUser, PatchUser } from "../store/api.actions";
 import { MatSnackBar, MatSnackBarConfig } from "@angular/material";
 import moment from "moment";
-import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {RLCS_URL} from '../../statics/api_urls.statics';
 
 @Injectable()
@@ -61,7 +56,6 @@ export class ApiSandboxService {
                 userFromStore = loadedUser;
             });
         const id = userFromStore.id;
-        console.log("updates", userFromStore.getUpdates(user));
         this.apiStateStore.dispatch(
             new PatchUser({ id, userUpdates: userFromStore.getUpdates(user) })
         );

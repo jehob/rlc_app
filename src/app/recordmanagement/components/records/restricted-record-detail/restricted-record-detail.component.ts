@@ -16,18 +16,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
+import {FullRecord, RestrictedRecord} from '../../../models/record.model';
+import {RecordsSandboxService} from '../../../services/records-sandbox.service';
+import {FullClient} from '../../../models/client.model';
+import {OriginCountry} from '../../../models/country.model';
 
 @Component({
-  selector: 'app-restricted-record-detail',
-  templateUrl: './restricted-record-detail.component.html',
-  styleUrls: ['./restricted-record-detail.component.scss']
+    selector: "app-restricted-record-detail",
+    templateUrl: "./restricted-record-detail.component.html",
+    styleUrls: ["./restricted-record-detail.component.scss"]
 })
 export class RestrictedRecordDetailComponent implements OnInit {
+    record: RestrictedRecord;
 
-  constructor() { }
+    constructor(private recordSB: RecordsSandboxService) {}
 
-  ngOnInit() {
-  }
-
+    ngOnInit() {
+        this.recordSB
+            .getSpecialRecord()
+            .subscribe(
+                (special_record: {
+                    record: RestrictedRecord;
+                }) => {
+                    this.record = special_record.record;
+                }
+            );
+    }
 }

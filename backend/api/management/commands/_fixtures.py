@@ -1477,6 +1477,7 @@ class AddMethods:
 		Returns:
 
 		"""
+
         if user.__len__() == 4:
             us = UserProfile(email=user[0], name=user[1], is_superuser=user[2], is_active=True)
             us.set_password(user[3])

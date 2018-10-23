@@ -16,7 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnInit,
+    Output,
+    SimpleChanges
+} from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { Filterable } from "../../models/filterable.model";
 import { Observable } from "rxjs";
@@ -31,13 +39,14 @@ export class AutocompleteComponent implements OnInit, OnChanges {
     valueForm: FormGroup;
     @Input()
     placeholder: string;
-    @Input()
     allValues: Filterable[];
+    @Input()
+    allValuesObservable: Observable<Filterable[]>;
+
     @Input()
     errors;
     @Input()
     setSelectedValue;
-
 
     filteredValues: Observable<Filterable[]>;
 
@@ -51,29 +60,36 @@ export class AutocompleteComponent implements OnInit, OnChanges {
     }
 
     ngOnInit() {
-        this.filteredValues = this.valueForm.controls[
-            "value"
-        ].valueChanges.pipe(
-            startWith(""),
-            map(
-                filterValue =>
-                    filterValue
-                        ? this._filter(filterValue)
-                        : this.allValues.slice()
-            )
-        );
+        this.allValuesObservable.subscribe(values => {
+            this.allValues = values;
+            this.filteredValues = this.valueForm.controls[
+                "value"
+            ].valueChanges.pipe(
+                startWith(""),
+                map(
+                    filterValue =>
+                        filterValue
+                            ? this._filter(filterValue)
+                            : this.allValues.slice()
+                )
+            );
+        });
     }
 
-    ngOnChanges(changes: SimpleChanges){
-        if (changes.errors){
-           this.valueForm.controls["value"].setErrors(changes.errors.currentValue);
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.errors) {
+            this.valueForm.controls["value"].setErrors(
+                changes.errors.currentValue
+            );
         } else {
             this.valueForm.controls["value"].setErrors(null);
         }
-        if (changes.setSelectedValue){
-            if (changes.setSelectedValue.currentValue){
-                this.valueForm.controls["value"].setValue(changes.setSelectedValue.currentValue);
-                this.valueForm.controls["value"].disable()
+        if (changes.setSelectedValue) {
+            if (changes.setSelectedValue.currentValue) {
+                this.valueForm.controls["value"].setValue(
+                    changes.setSelectedValue.currentValue
+                );
+                this.valueForm.controls["value"].disable();
             } else {
                 this.valueForm.controls["value"].setValue("");
                 this.valueForm.controls["value"].enable();
@@ -99,6 +115,6 @@ export class AutocompleteComponent implements OnInit, OnChanges {
     }
 
     selected() {
-        this.selectedValueChanged.emit(this.valueForm.controls['value'].value)
+        this.selectedValueChanged.emit(this.valueForm.controls["value"].value);
     }
 }

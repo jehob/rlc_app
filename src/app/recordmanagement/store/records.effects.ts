@@ -191,7 +191,6 @@ export class RecordsEffects {
                             });
                         }),
                         mergeMap(response => {
-                            console.log("response", response);
                             const clients = FullClient.getFullClientsFromJsonArray(
                                 response
                             );

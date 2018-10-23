@@ -32,9 +32,14 @@
 }
 
 .create-record__button{
-    align-self: end;
+    margin-right: 20px;
+    margin-bottom: 20px;
 }
 
 .create-record__notes{
     //height: 100px;
+}
+
+mat-card-actions {
+    text-align: right;
 }

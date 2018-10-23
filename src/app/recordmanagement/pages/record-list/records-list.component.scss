@@ -19,11 +19,12 @@
 @import "../../../../styles/basic";
 
 .records-container {
-    max-width: 1200px;
+    max-width: 1500px;
     padding: 30px;
-    width: 900px;
+    //width: 900px;
     //overflow-y: scroll;
-    //max-height: content-box;
+    max-height: 93vh;
+    height: auto;
 }
 mat-card-header {
     width: 100%;
@@ -35,6 +36,8 @@ mat-card-header {
 }
 .table-container {
     overflow: auto;
+    max-height: 89vh;
+    //overflow-y: scroll;
 }
 table {
     width: 100%;
@@ -52,7 +55,10 @@ table {
 .records-list__mat-chip {
     width: auto !important;
 }
-
+.records-list__link-button {
+    color: $c-link-color;
+    text-decoration: underline;
+}
 
 
 .status-indicator {

@@ -25,6 +25,7 @@ import { FullClient } from "../../models/client.model";
 import { OriginCountry } from "../../models/country.model";
 import { RestrictedUser } from "../../../api/models/user.model";
 import {RecordTag} from '../../models/record_tags.model';
+import {Observable} from 'rxjs';
 
 @Component({
     selector: "app-add-record",
@@ -37,14 +38,14 @@ export class CreateRecordComponent implements OnInit {
     originCountry: OriginCountry;
     givenOriginCountry: OriginCountry;
 
-    allConsultants: RestrictedUser[];
+    allConsultants: Observable<RestrictedUser[]>;
     consultantErrors: any;
     selectedConsultants: RestrictedUser[];
 
-    allCountries: OriginCountry[];
+    allCountries: Observable<OriginCountry[]>;
     originCountryError: any;
 
-    allRecordTags: RecordTag[];
+    allRecordTags: Observable<RecordTag[]>;
     recordTagErrors: any;
     selectedRecordTags: RecordTag[];
 
@@ -57,7 +58,7 @@ export class CreateRecordComponent implements OnInit {
 
         this.createRecordForm = new FormGroup({
             first_contact_date: new FormControl(new Date()),
-            client_birthday: new FormControl("2018-10-03"), //date
+            client_birthday: new FormControl("1980-03-27"), //date
             client_name: new FormControl(""),
             client_phone_number: new FormControl(""),
             client_note: new FormControl(""),
@@ -67,17 +68,9 @@ export class CreateRecordComponent implements OnInit {
 
         this.onClientBirthdayChanges();
 
-        this.recordSB.getConsultants().subscribe(consultants => {
-            this.allConsultants = consultants;
-        });
-
-        this.recordSB.getOriginCountries().subscribe(countries => {
-            this.allCountries = countries;
-        });
-
-        this.recordSB.getRecordTags().subscribe(recordTags => {
-            this.allRecordTags = recordTags;
-        });
+        this.allConsultants = this.recordSB.getConsultants();
+        this.allCountries = this.recordSB.getOriginCountries();
+        this.allRecordTags = this.recordSB.getRecordTags();
     }
 
     ngOnInit() {}
@@ -102,7 +95,6 @@ export class CreateRecordComponent implements OnInit {
     }
 
     selectedCountryChanged(selectedCountry){
-        console.log('selCountry in create changed', selectedCountry);
         this.originCountry = selectedCountry;
     }
 
