@@ -286,7 +286,7 @@ export class RecordsEffects {
         switchMap((payload: { record: FullRecord; client: FullClient }) => {
             return from(
                 this.http
-                    .post(GetSpecialRecordURL(payload.record.id), {
+                    .patch(GetSpecialRecordURL(payload.record.id), {
                         record_note: payload.record.note
                     })
                     .pipe(
@@ -296,6 +296,7 @@ export class RecordsEffects {
                             });
                         }),
                         mergeMap((response: any) => {
+                            this.recordSB.successfullySavedRecord(response);
                             return [];
                         })
                     )

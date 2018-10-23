@@ -18,4 +18,3 @@ from .origin_country import *
 from .record import *
 from .record_tag import *
 from .statics import *
-from .other import *

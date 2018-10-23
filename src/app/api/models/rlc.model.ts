@@ -16,23 +16,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-export const LOGIN_URL = "api/login/";
-export const RECORDS_URL = "api/records/records/";
-const RECORD_SPECIAL_URL = "api/records/record/";
-export const CLIENTS_BY_BIRTHDAY_URL = "api/records/clients_by_birthday/";
-export const RECORDS_STATICS_URL = "api/records/statics/";
-export const PROFILE_URL = "api/profiles/";
-export const CREATE_PROFILE_URL = "api/create_profile/";
-export const CREATE_RECORD_URL = "api/records/create_record/";
-export const RLCS_URL = "api/get_rlcs/";
+import {Filterable} from '../../shared/models/filterable.model';
 
-export function GetSpecialProfileURL(id: string | number){
-    return `${PROFILE_URL}${id}/`;
-}
-export function GetRecordsSearchURL(toSearch: string){
-    return `${RECORDS_URL}?search=${toSearch}`;
-}
+export class RestrictedRlc implements Filterable{
+    constructor(public id: string, public name: string) {
+        this.id = id;
+        this.name = name;
+    }
 
-export function GetSpecialRecordURL(id: string | number){
-    return `${RECORD_SPECIAL_URL}${id}/`;
+    static getRestrictedRlcsFromJsonArray(jsonArray) {
+        const restrictedRlcs: Array<RestrictedRlc> = [];
+        Object.values(jsonArray).map(restrictedJsonUser => {
+            restrictedRlcs.push(RestrictedRlc.getRestrictedRlcFromJson(restrictedJsonUser));
+        });
+        return restrictedRlcs;
+    }
+
+    static getRestrictedRlcFromJson(json){
+        return new RestrictedRlc(json.id, json.name);
+    }
+
+    getFilterableProperty(){
+        return this.name;
+    }
 }

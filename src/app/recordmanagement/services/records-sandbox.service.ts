@@ -8,8 +8,8 @@ import {
     StartLoadingClientPossibilities,
     StartLoadingRecords,
     StartLoadingRecordStatics,
-    StartLoadingSpecialRecord
-} from "../store/records.actions";
+    StartLoadingSpecialRecord, StartSavingRecord
+} from '../store/records.actions';
 import { take } from "rxjs/operators";
 import { FullClient } from "../models/client.model";
 import { Observable } from "rxjs";
@@ -158,11 +158,16 @@ export class RecordsSandboxService {
         // do more
     }
 
+    successfullySavedRecord(response: any) {
+        this.apiSB.showSuccessSnackBar("you successfully saved the record");
+        // do more
+    }
+
     saveRecord(
         record: FullRecord,
         client: FullClient
     ) {
-
+        this.store.dispatch(new StartSavingRecord({record, client}));
 
     }
 

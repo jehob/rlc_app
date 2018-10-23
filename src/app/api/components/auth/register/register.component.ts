@@ -8,6 +8,7 @@ import {
 } from "@angular/forms";
 import { MatSnackBar } from "@angular/material";
 import { ApiSandboxService } from "../../../services/api-sandbox.service";
+import { RestrictedRlc } from "../../../models/rlc.model";
 
 @Component({
     selector: "app-register",
@@ -16,6 +17,7 @@ import { ApiSandboxService } from "../../../services/api-sandbox.service";
 })
 export class RegisterComponent implements OnInit {
     userForm: FormGroup;
+    allRlcs: RestrictedRlc[] = [];
 
     constructor(
         private snackBar: MatSnackBar,
@@ -40,10 +42,18 @@ export class RegisterComponent implements OnInit {
                 street: new FormControl(""),
                 postal_code: new FormControl(""),
                 city: new FormControl(""),
-                birthday: new FormControl(date)
+                birthday: new FormControl(date),
+                rlc: new FormControl("", [Validators.required])
             },
             this.passwordMatchValidator
         );
+
+        this.apiSB.getAllRlcs().subscribe((response: any) => {
+            this.allRlcs = RestrictedRlc.getRestrictedRlcsFromJsonArray(
+                response
+            );
+            console.log("allrlcs", this.allRlcs);
+        });
     }
 
     ngOnInit() {}
@@ -58,19 +68,17 @@ export class RegisterComponent implements OnInit {
         if (this.userForm.valid) {
             const values = this.userForm.value;
             const user = {
-                'name': values.name,
-                'email': values.email,
-                'password': values.password,
-                'birthday': values.birthday
+                name: values.name,
+                email: values.email,
+                password: values.password,
+                birthday: values.birthday
             };
-            if (values.phone_number !== '')
-                user['phone_number'] = values.phone_number;
-            if (values.street !== '')
-                user['street'] = values.street;
-            if (values.postal_code !== '')
-                user['postal_code'] = values.postal_code;
-            if (values.city !== '')
-                user['city'] = values.city;
+            if (values.phone_number !== "")
+                user["phone_number"] = values.phone_number;
+            if (values.street !== "") user["street"] = values.street;
+            if (values.postal_code !== "")
+                user["postal_code"] = values.postal_code;
+            if (values.city !== "") user["city"] = values.city;
 
             this.apiSB.registerUser(user);
         }
@@ -88,7 +96,9 @@ export class RegisterComponent implements OnInit {
             const hasNumber = /\d/.test(password);
             const hasUpper = /[A-Z]/.test(password);
             const hasLower = /[a-z]/.test(password);
-            const hasSpecial = /[$@!%*?&+=#'"`\/<>,.^()[\]\\|{}]/.test(password);
+            const hasSpecial = /[$@!%*?&+=#'"`\/<>,.^()[\]\\|{}]/.test(
+                password
+            );
             const length = password.length >= 9;
             if (!hasNumber || !hasUpper || !hasLower || !hasSpecial)
                 return { weak: "true" };

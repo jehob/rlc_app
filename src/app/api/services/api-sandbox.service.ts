@@ -31,6 +31,8 @@ import { take } from "rxjs/operators";
 import { CreateUser, PatchUser } from "../store/api.actions";
 import { MatSnackBar, MatSnackBarConfig } from "@angular/material";
 import moment from "moment";
+import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {RLCS_URL} from '../../statics/api_urls.statics';
 
 @Injectable()
 export class ApiSandboxService {
@@ -38,7 +40,8 @@ export class ApiSandboxService {
         public router: Router,
         private snackBar: MatSnackBar,
         private appStateStore: Store<AppState>,
-        private apiStateStore: Store<ApiState>
+        private apiStateStore: Store<ApiState>,
+        private http: HttpClient
     ) {}
 
     static transformDate(date: Date) {
@@ -66,6 +69,10 @@ export class ApiSandboxService {
 
     registerUser(user: any) {
         this.apiStateStore.dispatch(new CreateUser(user));
+    }
+
+    getAllRlcs(){
+        return this.http.get(RLCS_URL);
     }
 
     showSuccessSnackBar(message: string) {
