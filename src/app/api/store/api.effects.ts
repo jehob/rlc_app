@@ -20,20 +20,23 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Actions, Effect, ofType } from "@ngrx/effects";
 import {
-    TRY_CREATE_USER,
-    CreateUser,
-    TRY_PATCH_USER,
-    PatchUser,
-    SET_USER
+    START_CREATE_USER,
+    StartCreateUser,
+    START_PATCH_USER,
+    StartPatchUser,
+    SET_USER,
+    START_LOADING_OTHER_USERS,
+    SET_OTHER_USERS
 } from "./api.actions";
 import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
 import { from, of } from "rxjs";
 import {
     CREATE_PROFILE_URL,
-    GetSpecialProfileURL
+    GetSpecialProfileURL,
+    PROFILES_URL
 } from "../../statics/api_urls.statics";
 import { ApiSandboxService } from "../services/api-sandbox.service";
-import {FullUser} from '../models/user.model';
+import { FullUser, RestrictedUser } from "../models/user.model";
 
 @Injectable()
 export class ApiEffects {
@@ -45,8 +48,8 @@ export class ApiEffects {
 
     @Effect()
     patchUser = this.actions.pipe(
-        ofType(TRY_PATCH_USER),
-        map((action: PatchUser) => {
+        ofType(START_PATCH_USER),
+        map((action: StartPatchUser) => {
             //console.log("getPayload", action.payload);
             return action.payload;
         }),
@@ -86,8 +89,8 @@ export class ApiEffects {
 
     @Effect()
     createUser = this.actions.pipe(
-        ofType(TRY_CREATE_USER),
-        map((action: CreateUser) => {
+        ofType(START_CREATE_USER),
+        map((action: StartCreateUser) => {
             return action.payload;
         }),
         switchMap((user: any) => {
@@ -105,6 +108,28 @@ export class ApiEffects {
                             this.apiSB.router.navigate(["login"]);
                         }
                         return [];
+                    })
+                )
+            );
+        })
+    );
+
+    @Effect()
+    getProfiles = this.actions.pipe(
+        ofType(START_LOADING_OTHER_USERS),
+        switchMap(() => {
+            return from(
+                this.http.get(PROFILES_URL).pipe(
+                    catchError(error => {
+                        console.log(error);
+                        return of({ error: "error" });
+                    }),
+                    mergeMap((response: any) => {
+                        console.log(response);
+                        const users = RestrictedUser.getRestrictedUsersFromJsonArray(
+                            response
+                        );
+                        return [{ type: SET_OTHER_USERS, payload: users }];
                     })
                 )
             );

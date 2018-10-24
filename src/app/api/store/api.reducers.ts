@@ -16,22 +16,30 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { FullUser } from "../models/user.model";
-import { ApiActions, SET_USER } from "./api.actions";
+import {FullUser, RestrictedUser} from '../models/user.model';
+import {ApiActions, SET_OTHER_USERS, SET_USER} from './api.actions';
 
 export interface ApiState {
     user: FullUser;
+    other_users: RestrictedUser[]
 }
 
 const initialState: ApiState = {
-    user: null
+    user: null,
+    other_users: []
 };
 
 export function apiReducer(state = initialState, action: ApiActions) {
     switch (action.type) {
         case SET_USER:
             return {
+                ...state,
                 user: action.payload
+            };
+        case SET_OTHER_USERS:
+            return {
+                ...state,
+                other_users: action.payload
             };
         default:
             return state;

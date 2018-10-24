@@ -26,7 +26,6 @@ from rest_framework import status
 from ..models import UserProfile, Permission, Rlc
 from ..serializers import UserProfileSerializer, UserProfileCreatorSerializer, UserProfileNameSerializer
 from ..permissions import UpdateOwnProfile
-from backend.recordmanagement import models, serializers
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
@@ -38,6 +37,24 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     permission_classes = (UpdateOwnProfile, IsAuthenticated)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name', 'email',)
+
+    def list(self, request, *args, **kwargs):
+        if request.user.is_superuser:
+            queryset = UserProfile.objects.all()
+            page = self.paginate_queryset(queryset)
+            if page is not None:
+                serializer = self.get_serializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(serializer.data)
+        else:
+            queryset = UserProfile.objects.filter(rlc_members__in=[request.user.rlc_members.first().id])
+            page = self.paginate_queryset(queryset)
+            if page is not None:
+                serializer = UserProfileNameSerializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+            serializer = UserProfileNameSerializer(queryset, many=True)
+            return Response(serializer.data)
 
 
 class UserProfileCreatorViewSet(viewsets.ModelViewSet):

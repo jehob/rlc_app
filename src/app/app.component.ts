@@ -57,6 +57,10 @@ export class AppComponent {
         this.appSB.logout();
     }
 
+    showProfiles(){
+        this.router.navigate(["profiles"]);
+    }
+
     showLandingPage() {
         this.router.navigate([""]);
     }

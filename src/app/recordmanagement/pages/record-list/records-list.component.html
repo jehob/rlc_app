@@ -40,8 +40,8 @@
                 </ng-container>
                 <ng-container matColumnDef="token">
                     <th mat-header-cell *matHeaderCellDef>token</th>
-                    <td mat-cell *matCellDef="let record" (click)="this.onRecordSelect(record)">
-                        {{ record.token }}
+                    <td mat-cell *matCellDef="let record" (click)="this.onRecordSelect(record)" class="is_clickable">
+                        <p>{{ record.token }}</p>
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="state">
@@ -57,8 +57,10 @@
                 <ng-container matColumnDef="consultants">
                     <th mat-header-cell *matHeaderCellDef>consultants</th>
                     <td mat-cell *matCellDef="let record">
+
                         <div class="consultants-cont">
-                            <a *ngFor="let consultant of record.working_on_record" mat-button class="records-list__link-button"
+                            <a *ngFor="let consultant of record.working_on_record" mat-button
+                               class="records-list__link-button"
                                (click)="this.onConsultantClick(consultant)">@{{ consultant.name }}</a>
                         </div>
                     </td>
@@ -66,7 +68,7 @@
                 <ng-container matColumnDef="tags">
                     <th mat-header-cell *matHeaderCellDef>tags</th>
                     <td mat-cell *matCellDef="let record">
-                        <div>
+                        <div class="records-list__chip-container">
                             <mat-chip-list>
                                 <mat-chip *ngFor="let tag of record.tags" (click)="this.onTagClick(tag)"
                                           class="records-list__mat-chip">{{ tag.name }}</mat-chip>

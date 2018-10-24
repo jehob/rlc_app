@@ -46,7 +46,7 @@ table {
 
 .mat-column-consultants{
     width: auto;
-    padding: 10px;
+    padding: 2px;
     max-width: 100px;
 }
 .mat-column-tags {
@@ -60,10 +60,12 @@ table {
     text-decoration: underline;
 }
 
+.records-list__chip-container{
+    margin: 2px;
+}
 
 .status-indicator {
     border-radius: 25px;
-    margin: 10px;
     min-height: 10px;
     min-width: 10px;
     max-height: 10px;

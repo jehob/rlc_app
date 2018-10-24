@@ -20,16 +20,18 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { ApiRoutingModule } from "./api-routing.module";
 import { CustomMaterialModule } from "../custom-material.module";
-import { ProfileComponent } from "./components/profile/profile.component";
-import { RegisterComponent } from "./components/auth/register/register.component";
-import { DashboardComponent } from "./components/Dashboard/dashboard.component";
-import { LoginComponent } from "./components/auth/login/login.component";
+import { ProfileComponent } from "./pages/profile/profile.component";
+import { RegisterComponent } from "./pages/auth/register/register.component";
+import { DashboardComponent } from "./pages/Dashboard/dashboard.component";
+import { LoginComponent } from "./pages/auth/login/login.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { StoreModule } from "@ngrx/store";
 import { apiReducer } from "./store/api.reducers";
 import { EffectsModule } from "@ngrx/effects";
 import { ApiEffects } from "./store/api.effects";
 import {SharedModule} from '../shared/shared.module';
+import { ProfilesListComponent } from './pages/profiles-list/profiles-list.component';
+import { ProfilesListItemComponent } from './components/profiles-list-item/profiles-list-item.component';
 
 @NgModule({
     imports: [
@@ -46,7 +48,9 @@ import {SharedModule} from '../shared/shared.module';
         ProfileComponent,
         RegisterComponent,
         DashboardComponent,
-        LoginComponent
+        LoginComponent,
+        ProfilesListComponent,
+        ProfilesListItemComponent
     ],
     providers: [],
     exports: []

@@ -17,11 +17,13 @@
  ******************************************************************************/
 
 import { Action } from "@ngrx/store";
-import { FullUser } from "../models/user.model";
+import {FullUser, RestrictedUser} from '../models/user.model';
 
 export const SET_USER = "SET_USER";
-export const TRY_PATCH_USER = "TRY_PATCH_USER";
-export const TRY_CREATE_USER = "TRY_CREATE_USER";
+export const START_PATCH_USER = "START_PATCH_USER";
+export const START_CREATE_USER = "START_CREATE_USER";
+export const START_LOADING_OTHER_USERS = "START_LOADING_OTHER_USERS";
+export const SET_OTHER_USERS = "SET_OTHER_USERS";
 
 export class SetUser implements Action {
     readonly type = SET_USER;
@@ -29,16 +31,31 @@ export class SetUser implements Action {
     constructor(public payload: FullUser) {}
 }
 
-export class PatchUser implements Action {
-    readonly type = TRY_PATCH_USER;
+export class SetOtherUsers implements Action {
+    readonly type = SET_OTHER_USERS;
 
-    constructor(public payload: {id: string, userUpdates: any}){}
+    constructor(public payload: RestrictedUser[]) {}
 }
 
-export class CreateUser implements Action {
-    readonly type = TRY_CREATE_USER;
+export class StartPatchUser implements Action {
+    readonly type = START_PATCH_USER;
 
-    constructor(public payload: any){}
+    constructor(public payload: { id: string; userUpdates: any }) {}
 }
 
-export type ApiActions = SetUser | PatchUser | CreateUser;
+export class StartCreateUser implements Action {
+    readonly type = START_CREATE_USER;
+
+    constructor(public payload: any) {}
+}
+
+export class StartLoadingOtherUsers implements Action {
+    readonly type = START_LOADING_OTHER_USERS;
+}
+
+export type ApiActions =
+    | SetUser
+    | SetOtherUsers
+    | StartPatchUser
+    | StartCreateUser
+    | StartLoadingOtherUsers;

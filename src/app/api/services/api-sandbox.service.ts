@@ -23,11 +23,15 @@ import { select, Store } from "@ngrx/store";
 import { ApiState } from "../store/api.reducers";
 import { FullUser } from "../models/user.model";
 import { take } from "rxjs/operators";
-import { CreateUser, PatchUser } from "../store/api.actions";
+import {
+    StartCreateUser,
+    StartLoadingOtherUsers,
+    StartPatchUser
+} from "../store/api.actions";
 import { MatSnackBar, MatSnackBarConfig } from "@angular/material";
 import moment from "moment";
-import {HttpClient} from '@angular/common/http';
-import {RLCS_URL} from '../../statics/api_urls.statics';
+import { HttpClient } from "@angular/common/http";
+import { RLCS_URL } from "../../statics/api_urls.statics";
 
 @Injectable()
 export class ApiSandboxService {
@@ -57,16 +61,28 @@ export class ApiSandboxService {
             });
         const id = userFromStore.id;
         this.apiStateStore.dispatch(
-            new PatchUser({ id, userUpdates: userFromStore.getUpdates(user) })
+            new StartPatchUser({
+                id,
+                userUpdates: userFromStore.getUpdates(user)
+            })
         );
     }
 
     registerUser(user: any) {
-        this.apiStateStore.dispatch(new CreateUser(user));
+        this.apiStateStore.dispatch(new StartCreateUser(user));
     }
 
-    getAllRlcs(){
+    getAllRlcs() {
         return this.http.get(RLCS_URL);
+    }
+
+    startLoadingOtherUsers() {
+        this.apiStateStore.dispatch(new StartLoadingOtherUsers());
+    }
+    getOtherUsers() {
+        return this.apiStateStore.pipe(
+            select((state: any) => state.api.other_users)
+        );
     }
 
     showSuccessSnackBar(message: string) {

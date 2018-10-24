@@ -19,15 +19,21 @@
 import { RouterModule, Routes } from "@angular/router";
 import { AuthGuardService } from "./services/auth-guard.service";
 import { NgModule } from "@angular/core";
-import { ProfileComponent } from "./components/profile/profile.component";
-import { DashboardComponent } from "./components/Dashboard/dashboard.component";
-import { LoginComponent } from "./components/auth/login/login.component";
-import {RegisterComponent} from './components/auth/register/register.component';
+import { ProfileComponent } from "./pages/profile/profile.component";
+import { DashboardComponent } from "./pages/Dashboard/dashboard.component";
+import { LoginComponent } from "./pages/auth/login/login.component";
+import {RegisterComponent} from './pages/auth/register/register.component';
+import {ProfilesListComponent} from './pages/profiles-list/profiles-list.component';
 
 const apiRoutes: Routes = [
     {
         path: "profile",
         component: ProfileComponent,
+        canActivate: [AuthGuardService]
+    },
+    {
+        path: "profiles",
+        component: ProfilesListComponent,
         canActivate: [AuthGuardService]
     },
     {
