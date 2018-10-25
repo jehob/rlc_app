@@ -18,7 +18,7 @@
 
 @import "../../../../../styles/basic";
 
-.login-container {
+.login__login-container {
     max-width: 550px;
     height: 275px;
     margin: 20% auto auto;
@@ -26,53 +26,53 @@
     border-radius: 10px;
 }
 
-.holder {
+.login__holder {
     height: 80%;
     width: 40%;
     padding: 5%;
     float: left;
 }
 
-.content-container {
+.login__content-container {
     height: 80%;
     width: 100%;
 }
-.content-container mat-form-field {
+.login__content-container mat-form-field {
     width: 100%;
 }
 
-.register {
+.login__register {
     background-color: $c-primary;
     color: $c-on-primary;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
 }
-.login {
+.login__login {
     background-color: $c-secondary;
     color: $c-on-secondary;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
 }
 
-.login button {
+.login__login button {
     background-color: $c-primary;
     color: $c-on-primary;
 }
-.register button {
+.login__register button {
     background-color: $c-secondary;
     color: $c-on-secondary;
 }
 
-.holder p {
+.login__holder p {
     margin: 0;
     padding: 0;
 }
 
-.register p {
+.login__register p {
     font-size: 48px;
     border-bottom: 5px solid $c-on-primary;
 }
 
-.login .action-holder {
+.login__login .action-holder {
     text-align: right;
 }

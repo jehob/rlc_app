@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>Choose client</h1>
 <div mat-dialog-content>
-    <mat-radio-group [(ngModel)]="selectedClient" class="radio-group">
+    <mat-radio-group [(ngModel)]="selectedClient" class="select-client-dialog__radio-group">
         <mat-radio-button *ngFor="let client of (possibleClients | async)" class="select-client-dialog__radio-button"
                           [value]="client.id">{{ client.name }}</mat-radio-button>
         <mat-radio-button [value]="-1" class="select-client-dialog__radio-button">new client</mat-radio-button>

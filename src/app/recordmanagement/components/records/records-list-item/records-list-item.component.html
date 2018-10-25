@@ -1,22 +1,22 @@
-<mat-list-item class="record-list-item-container">
-    <div [ngSwitch]="fullAccess" class="access-indicator-container">
-        <div class="access-indicator access-indicator__full" *ngSwitchCase="true"></div>
-        <div class="access-indicator" *ngSwitchCase="false"></div>
+<mat-list-item class="record-list-item__container">
+    <div [ngSwitch]="fullAccess" class="record-list-item__access-indicator-container">
+        <div class="record-list-item__access-indicator record-list-item__access-indicator--full" *ngSwitchCase="true"></div>
+        <div class="record-list-item__access-indicator" *ngSwitchCase="false"></div>
     </div>
 
-    <p (click)="this.onRecordSelect()" class="record-token-container">{{ record.token }}</p>
+    <p (click)="this.onRecordSelect()" class="record-list-item__record-token-container">{{ record.token }}</p>
 
-    <div [ngSwitch]="state" class="state-container">
-        <div class="status-indicator status-indicator__open" *ngSwitchCase="'op'"></div>
-        <div class="status-indicator status-indicator__waiting" *ngSwitchCase="'wa'"></div>
-        <div class="status-indicator status-indicator__closed" *ngSwitchCase="'cl'"></div>
+    <div [ngSwitch]="state" class="record-list-item__state-container">
+        <div class="record-list-item__status-indicator record-list-item__status-indicator--open" *ngSwitchCase="'op'"></div>
+        <div class="record-list-item__status-indicator record-list-item__status-indicator--waiting" *ngSwitchCase="'wa'"></div>
+        <div class="record-list-item__status-indicator record-list-item__status-indicator--closed" *ngSwitchCase="'cl'"></div>
     </div>
-    <div class="consultants-container">
+    <div class="record-list-item__consultants-container">
         <mat-chip-list class="mat-chip-list-stacked">
             <mat-chip *ngFor="let consultant of record.working_on_record" selected (click)="this.onConsultantClick(consultant)">{{ consultant.name }}</mat-chip>
         </mat-chip-list>
     </div>
-    <div class="tags-container">
+    <div class="record-list-item__tags-container">
         <mat-chip-list class="mat-chip-list-stacked">
             <mat-chip *ngFor="let tag of record.tags" (click)="this.onTagClick(tag)">{{ tag.name }}</mat-chip>
         </mat-chip-list>

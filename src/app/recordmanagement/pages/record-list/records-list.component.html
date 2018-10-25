@@ -16,11 +16,11 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<mat-card class="records-container">
+<mat-card class="records-list__container">
 
     <mat-card-header>
         <h2>Records</h2>
-        <mat-form-field class="records-search-input">
+        <mat-form-field class="records-list__search-input">
             <input matInput type="text" placeholder="Search" [(ngModel)]="value" (keyup.enter)="onSearchClick()">
             <button mat-button matSuffix mat-icon-button aria-label="Search" (click)="onSearchClick()">
                 <mat-icon>search</mat-icon>
@@ -29,13 +29,13 @@
     </mat-card-header>
 
     <mat-card-content>
-        <div class="table-container mat-elevation-z8">
+        <div class="records-list__table-container mat-elevation-z8">
             <table mat-table [dataSource]="(records | async)">
                 <ng-container matColumnDef="access" class="records-list__access-container">
                     <th mat-header-cell *matHeaderCellDef>access</th>
                     <td mat-cell *matCellDef="let record">
                         <div
-                            [class]="record.note ? 'access-indicator access-indicator__full' : 'access-indicator'"></div>
+                            [class]="record.note ? 'record-list-item__access-indicator record-list-item__access-indicator--full' : 'record-list-item__access-indicator '"></div>
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="token">
@@ -48,9 +48,12 @@
                     <th mat-header-cell *matHeaderCellDef>state</th>
                     <td mat-cell *matCellDef="let record">
                         <div [ngSwitch]="record.state">
-                            <div class="status-indicator status-indicator__open" *ngSwitchCase="'op'"></div>
-                            <div class="status-indicator status-indicator__waiting" *ngSwitchCase="'wa'"></div>
-                            <div class="status-indicator status-indicator__closed" *ngSwitchCase="'cl'"></div>
+                            <div class="record-list-item__status-indicator record-list-item__status-indicator--open"
+                                 *ngSwitchCase="'op'"></div>
+                            <div class="record-list-item__status-indicator record-list-item__status-indicator--waiting"
+                                 *ngSwitchCase="'wa'"></div>
+                            <div class="record-list-item__status-indicator record-list-item__status-indicator--closed"
+                                 *ngSwitchCase="'cl'"></div>
                         </div>
                     </td>
                 </ng-container>

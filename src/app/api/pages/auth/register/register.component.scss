@@ -16,28 +16,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-@import "../../../../../styles/basic";
+@import "~src/styles/basic";
 
-.register-container{
+.register__register-container{
     max-width: 550px;
     height: auto;
-    margin: 20% auto auto;
+    margin: 100px auto auto;
     padding: 25px;
     border-radius: 10px;
 }
 
 
-.register-form-container {
+.register__form-container {
     display: flex;
     flex-direction: column;
 }
 
-.btn-register {
+.register__btn-register {
     background-color: $c-primary;
+    color: $c-on-primary;
     width: 125px;
     border-radius: 28px;
 }
 
-.input-item {
+.register__input-item {
     min-height: 75px;
 }

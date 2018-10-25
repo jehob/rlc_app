@@ -18,36 +18,36 @@
 
 @import "../../../../styles/basic";
 
-.profile-container {
+.profile__profile-container {
     max-width: 500px;
     padding: 30px;
 }
-.avatar-container {
+.profile__avatar-container {
     vertical-align: top;
     display: inline-block;
     text-align: center;
     width: 100%;
     margin-bottom: 30px;
 }
-.img-avatar {
+.profile__img-avatar {
     border-radius: 50%;
     height: 150px;
     width: 150px;
 }
-.caption {
+.profile__caption {
     display: block;
 }
-.profile-form-container {
+.profile__form-container {
     display: flex;
     flex-direction: column;
 }
-.profile-form-container > * {
+.profile__form-container > * {
     width: 100%;
 }
 mat-card-actions {
     text-align: right;
 }
-.btn-save-changes {
+.profile__btn-save-changes {
     background-color: $c-primary;
     width: 125px;
     border-radius: 28px;

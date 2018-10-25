@@ -16,18 +16,18 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<mat-card class="profile-container">
+<mat-card class="profile__profile-container">
 
     <mat-card-header>
-        <div class="avatar-container">
-            <img class="img-avatar" src="../../../../../static/images/empty-profile.png" alt="Avater">
-            <span class="caption">{{name}}</span>
+        <div class="profile__avatar-container">
+            <img class="profile__img-avatar" src="../../../../../static/images/empty-profile.png" alt="Avater">
+            <span class="profile__caption">{{name}}</span>
         </div>
     </mat-card-header>
 
     <mat-card-content>
-        <div class="profile-form-container">
-            <form [formGroup]="userForm" class="profile-form-container">
+        <div class="profile__form-container">
+            <form [formGroup]="userForm" class="profile__form-container">
                 <mat-form-field>
                     <input matInput placeholder="Email" formControlName="email">
                 </mat-form-field>
@@ -54,6 +54,6 @@
     </mat-card-content>
 
     <mat-card-actions>
-        <button class="btn-save-changes" mat-flat-button (click)="this.onSaveClick()">Save</button>
+        <button class="profile__btn-save-changes" mat-flat-button (click)="this.onSaveClick()">Save</button>
     </mat-card-actions>
 </mat-card>

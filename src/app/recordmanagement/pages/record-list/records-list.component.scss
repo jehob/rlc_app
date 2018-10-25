@@ -18,7 +18,7 @@
 
 @import "~src/styles/basic";
 
-.records-container {
+.records-list__container {
     max-width: 1500px;
     padding: 30px;
     //width: 900px;
@@ -31,10 +31,10 @@ mat-card-header {
     display: flex;
     justify-content: space-between;
 }
-.records-search-input {
+.records-list__search-input {
     margin-left: auto;
 }
-.table-container {
+.records-list__table-container {
     overflow: auto;
     max-height: 89vh;
     //overflow-y: scroll;
@@ -44,14 +44,14 @@ table {
 }
 
 .records-list__access-container {
-    max-width: 40px;
+    max-width: 60px;
 }
-.mat-column-consultants{
+.records-list__mat-column-consultants{
     width: auto;
     padding: 2px;
     max-width: 100px;
 }
-.mat-column-tags {
+.records-list__mat-column-tags {
     max-width: 50px;
 }
 .records-list__mat-chip {
@@ -66,7 +66,7 @@ table {
     margin: 2px;
 }
 
-.status-indicator {
+.record-list-item__status-indicator {
     border-radius: 25px;
     min-height: 10px;
     min-width: 10px;
@@ -74,19 +74,19 @@ table {
     max-width: 10px;
 }
 
-.status-indicator__open{
+.record-list-item__status-indicator--open{
     background-color: green;
 }
 
-.status-indicator__waiting{
+.record-list-item__status-indicator--waiting{
     background-color: orange;
 }
 
-.status-indicator__closed {
+.record-list-item__status-indicator--closed {
     background-color: grey;
 }
 
-.access-indicator {
+.record-list-item__access-indicator {
     min-width: 4px;
     min-height: 17px;
     max-width: 4px;
@@ -95,6 +95,6 @@ table {
     margin-right: 20px
 }
 
-.access-indicator__full{
+.record-list-item__access-indicator--full{
     background-color: black;
 }

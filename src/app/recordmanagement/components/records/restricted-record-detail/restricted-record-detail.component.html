@@ -19,10 +19,10 @@
         </div>
         <div>
             <mat-label>Tags</mat-label>
-            <div>
-            <p *ngFor="let tag of record.tags">{{ tag.name }}</p>
+            <mat-chip-list>
+                <mat-chip *ngFor="let tag of record.tags" (click)="this.onTagClick(tag)">{{ tag.name }}</mat-chip>
 
-            </div>
+            </mat-chip-list>
         </div>
 
 

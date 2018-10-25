@@ -1,4 +1,4 @@
-<mat-card >
+<mat-card class="profiles-list__mat-card">
     <mat-card-header class="profiles-list__card-header">
         <h1 matLine>Profiles list</h1>
         <p matLine>list of all users which are registered in your rlc at the moment</p>
@@ -7,6 +7,7 @@
         <mat-list>
             <mat-list-item *ngFor="let user of (otherUsers | async)">
                 <p>{{ user.name }}</p>
+                <mat-divider></mat-divider>
             </mat-list-item>
         </mat-list>
 
