@@ -73,6 +73,10 @@ export class ChipAutocompleteComponent implements OnInit, OnChanges {
         });
     }
 
+    onFormFieldClick(){
+        this.valueInput.nativeElement.focus();
+    }
+
     ngOnInit() {
         this.allValuesObservable.subscribe(values => {
             this.allValues = values;

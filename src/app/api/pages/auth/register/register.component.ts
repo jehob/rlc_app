@@ -88,7 +88,7 @@ export class RegisterComponent implements OnInit {
                 name: values.name,
                 email: values.email,
                 password: values.password,
-                birthday: values.birthday,
+                birthday: ApiSandboxService.transformDate(values.birthday),
                 rlc: values.rlc
             };
             if (values.phone_number !== "")

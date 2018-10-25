@@ -1,5 +1,5 @@
 <form [formGroup]="valuesForm">
-    <mat-form-field>
+    <mat-form-field (click)="onFormFieldClick()">
         <mat-chip-list #chipList>
             <mat-chip
                 *ngFor="let value of selectedValues"

@@ -69,6 +69,7 @@ class UserProfileCreatorViewSet(viewsets.ModelViewSet):
 
         user = UserProfile.objects.get(email=request.data['email'])
         user.rlc_members.add(Rlc.objects.get(pk=request.data['rlc']))
+        user.birthday = request.data['birthday']
         user.save()
 
         headers = self.get_success_headers(serializer.data)

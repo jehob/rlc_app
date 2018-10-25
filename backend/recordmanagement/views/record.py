@@ -146,7 +146,7 @@ class RecordViewSet(APIView):
         for user_id in data['consultants']:
             actual_consultant = UserProfile.objects.get(pk=user_id)
             if "URL" in os.environ:
-                url = os.environ['URL'] + "/records/" + record.id
+                url = os.environ['URL'] + "/records/" + str(record.id)
             else:
                 url = 'no url, please contact the administrator'
 
@@ -189,7 +189,7 @@ class RecordViewSet(APIView):
 
             for user in record.working_on_record.all():
                 if 'URL' in os.environ:
-                    url = os.environ['URL'] + "records/" + record.id
+                    url = os.environ['URL'] + "records/" + str(record.id)
                 else:
                     url = 'no url, please contact the administrator'
 
