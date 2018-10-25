@@ -3,16 +3,37 @@
         <h1>record: {{ record.token }}</h1>
     </mat-card-header>
     <mat-card-content>
-        <mat-form-field>
-            <input matInput placeholder="client name" value="{{ client.name }}" disabled>
-        </mat-form-field>
+        <div>
+            <form [formGroup]="recordEditForm" (ngSubmit)="onSaveClick()" class="full-record-detail__form">
+                <mat-form-field>
+                    <input matInput placeholder="client name" value="{{ client.name }}" disabled>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="origin country" value="{{ origin_country.name }}" disabled>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="last contact date" value="{{ record.last_contact_date | date }}" disabled>
+                </mat-form-field>
+                <div>
+                    <mat-label>Consultants</mat-label>
+                    <app-consultants-field [consultants]="record.working_on_record"></app-consultants-field>
+                </div>
+                <div>
+                    <mat-label>Tags</mat-label>
+                    <mat-chip-list>
+                        <mat-chip *ngFor="let tag of record.tags" (click)="this.onTagClick(tag)">{{ tag.name }}</mat-chip>
+
+                    </mat-chip-list>
+                </div>
+                <mat-form-field>
+                    <textarea matInput type="text" placeholder="note" formControlName="note"></textarea>
+                </mat-form-field>
 
 
-        <mat-form-field>
-            <textarea matInput type="text" placeholder="note" [(ngModel)]="record.note"></textarea>
-            <button mat-button matSuffix aria-label="Search" (click)="onSaveClick()">
-                Save
-            </button>
-        </mat-form-field>
+                <button mat-button matSuffix aria-label="Search" type="submit">
+                    Save
+                </button>
+            </form>
+        </div>
     </mat-card-content>
 </mat-card>

@@ -17,15 +17,15 @@
  ******************************************************************************/
 
 import { Component, OnInit } from "@angular/core";
-import { FormControl, FormGroup } from "@angular/forms";
+import {FormControl, FormGroup,  Validators} from '@angular/forms';
 import { RecordsSandboxService } from "../../services/records-sandbox.service";
 import { MatDialog } from "@angular/material";
 import { SelectClientDialogComponent } from "../../components/select-client-dialog/select-client-dialog.component";
 import { FullClient } from "../../models/client.model";
 import { OriginCountry } from "../../models/country.model";
 import { RestrictedUser } from "../../../api/models/user.model";
-import {RecordTag} from '../../models/record_tags.model';
-import {Observable} from 'rxjs';
+import { RecordTag } from "../../models/record_tags.model";
+import { Observable } from "rxjs";
 
 @Component({
     selector: "app-add-record",
@@ -59,10 +59,10 @@ export class CreateRecordComponent implements OnInit {
         this.createRecordForm = new FormGroup({
             first_contact_date: new FormControl(new Date()),
             client_birthday: new FormControl("1980-03-27"), //date
-            client_name: new FormControl(""),
+            client_name: new FormControl("", [Validators.required]),
             client_phone_number: new FormControl(""),
             client_note: new FormControl(""),
-            record_token: new FormControl(""),
+            record_token: new FormControl("", [Validators.required]),
             record_note: new FormControl("")
         });
 
@@ -94,14 +94,14 @@ export class CreateRecordComponent implements OnInit {
         }
     }
 
-    selectedCountryChanged(selectedCountry){
+    selectedCountryChanged(selectedCountry) {
         this.originCountry = selectedCountry;
     }
 
-    selectedRecordTagsChanged(selectedRecordTags){
+    selectedRecordTagsChanged(selectedRecordTags) {
         this.selectedRecordTags = selectedRecordTags;
-        if (selectedRecordTags.length === 0){
-           this.recordTagErrors = { null: "true"};
+        if (selectedRecordTags.length === 0) {
+            this.recordTagErrors = { null: "true" };
         } else {
             this.recordTagErrors = null;
         }
@@ -156,6 +156,24 @@ export class CreateRecordComponent implements OnInit {
 
     onAddRecordClick() {
         console.log("onAddRecordClick");
-        this.recordSB.createNewRecord(this.createRecordForm.value, this.client, this.selectedConsultants, this.selectedRecordTags);
+        console.log(this.selectedConsultants);
+        let invalid = false;
+        if (!this.selectedRecordTags || this.selectedRecordTags.length < 1) {
+            this.recordTagErrors = { null: "true" };
+            invalid = true;
+        }
+        if (!this.selectedConsultants || this.selectedConsultants.length < 2) {
+            this.consultantErrors = { null: "true" };
+            invalid = true;
+        }
+
+        if (!invalid) {
+            this.recordSB.createNewRecord(
+                this.createRecordForm.value,
+                this.client,
+                this.selectedConsultants,
+                this.selectedRecordTags
+            );
+        }
     }
 }

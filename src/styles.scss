@@ -37,5 +37,7 @@ body {
 
 button {
     width: 125px;
+    color: $c-on-primary;
+    background-color: $c-primary;
     border-radius: 28px !important;
 }

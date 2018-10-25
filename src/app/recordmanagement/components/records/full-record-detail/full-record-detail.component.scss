@@ -16,3 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
+.full-record-detail__form {
+    display: flex;
+    flex-direction: column;
+    max-width: 800px;
+}

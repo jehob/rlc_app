@@ -51,7 +51,10 @@ export class ProfileComponent implements OnInit {
                     this.name = user.name;
                     this.userForm = new FormGroup({
                         email: new FormControl(user.email, Validators.required),
-                        phone_number: new FormControl(user.phone_number),
+                        phone_number: new FormControl(user.phone_number, [
+                            Validators.maxLength(15),
+                            Validators.minLength(9)
+                        ]),
                         street: new FormControl(user.street),
                         postal_code: new FormControl(user.postal_code),
                         city: new FormControl(user.city),
@@ -62,6 +65,7 @@ export class ProfileComponent implements OnInit {
     }
 
     onSaveClick() {
+        
         this.apiSB.patchUser(
             new FullUser(
                 undefined,

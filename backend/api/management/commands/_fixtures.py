@@ -1592,27 +1592,35 @@ class AddMethods:
     @staticmethod
     def add_group(group, rlc_id=None):
         if not rlc_id:
-            if group.__len__() == 3:
-                g = Group(name=group[0], visible=group[1], from_rlc_id=group[2])
-            elif group.__len__() == 6:
-                g = Group(id=group[0], creator_id=group[1], from_rlc_id=group[2], name=group[3], visible=group[4])
-                g.save()
-                for user_id in group[5]:
-                    g.group_members.add(UserProfile.objects.get(pk=user_id))
-            else:
-                raise AttributeError
-            g.save()
+            AddMethods.add_group_not_in_rlc(group)
         else:
-            if group.__len__() == 2:
-                g = Group(name=group[0], visible=group[1], from_rlc_id=rlc_id)
-            elif group.__len__() == 5:
-                g = Group(id=group[0], creator_id=group[1], from_rlc_id=rlc_id, name=group[2], visible=group[3])
-                g.save()
-                for user_id in group[5]:
-                    g.group_members.add(UserProfile.objects.get(pk=user_id))
-            else:
-                raise AttributeError
+            AddMethods.add_group_in_rlc(group, rlc_id)
+
+    @staticmethod
+    def add_group_in_rlc(group, rlc_id):
+        if group.__len__() == 2:
+            g = Group(name=group[0], visible=group[1], from_rlc_id=rlc_id)
+        elif group.__len__() == 5:
+            g = Group(id=group[0], creator_id=group[1], from_rlc_id=rlc_id, name=group[2], visible=group[3])
             g.save()
+            for user_id in group[5]:
+                g.group_members.add(UserProfile.objects.get(pk=user_id))
+        else:
+            raise AttributeError
+        g.save()
+
+    @staticmethod
+    def add_group_not_in_rlc(group):
+        if group.__len__() == 3:
+            g = Group(name=group[0], visible=group[1], from_rlc_id=group[2])
+        elif group.__len__() == 6:
+            g = Group(id=group[0], creator_id=group[1], from_rlc_id=group[2], name=group[3], visible=group[4])
+            g.save()
+            for user_id in group[5]:
+                g.group_members.add(UserProfile.objects.get(pk=user_id))
+        else:
+            raise AttributeError
+        g.save()
 
     @staticmethod
     def add_client(client):

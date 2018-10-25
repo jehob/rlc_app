@@ -187,13 +187,13 @@ class RecordViewSet(APIView):
                 record.note = request.data['record_note']
             record.save()
 
-            for user in record.working_on_record:
-                if os.environ['URL']:
+            for user in record.working_on_record.all():
+                if 'URL' in os.environ:
                     url = os.environ['URL'] + "records/" + record.id
                 else:
                     url = 'no url, please contact the administrator'
 
-                EmailSender.send_email_notification(user.email, "Patched Record",
+                EmailSender.send_email_notification((user.email, ), "Patched Record",
                                                     "RLC Intranet Notification - A record of yours was changed. Look here:" +
                                                     url)
 

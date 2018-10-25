@@ -162,8 +162,8 @@ export class RecordsSandboxService {
             ),
             record_token: createFormValues.record_token,
             record_note: createFormValues.record_note,
-            consultants: consultants.map(consultant => consultant.id),
-            tags: tags.map(tag => tag.id)
+            consultants: consultants ? consultants.map(consultant => consultant.id) : "",
+            tags: tags ? tags.map(tag => tag.id) : []
         };
 
         //console.log('new record which will be send to the backend', newRecord);

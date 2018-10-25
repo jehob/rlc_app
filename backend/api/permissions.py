@@ -37,7 +37,7 @@ class EditRecord(permissions.BasePermission):
 
 class TestIt(permissions.BasePermission):
     def has_permission(self, request, view):
-        a = request.method
+        # TODO: remove this class
         return True
 
 

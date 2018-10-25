@@ -21,6 +21,7 @@ import { FullRecord } from "../../../models/record.model";
 import { RecordsSandboxService } from "../../../services/records-sandbox.service";
 import { FullClient } from "../../../models/client.model";
 import { OriginCountry } from "../../../models/country.model";
+import {FormControl, FormGroup} from '@angular/forms';
 
 @Component({
     selector: "app-full-record-detail",
@@ -31,8 +32,13 @@ export class FullRecordDetailComponent implements OnInit {
     record: FullRecord;
     client: FullClient;
     origin_country: OriginCountry;
+    recordEditForm: FormGroup;
 
-    constructor(private recordSB: RecordsSandboxService) {}
+    constructor(private recordSB: RecordsSandboxService) {
+        this.recordEditForm = new FormGroup({
+            note: new FormControl('')
+        })
+    }
 
     ngOnInit() {
         this.recordSB
@@ -46,17 +52,16 @@ export class FullRecordDetailComponent implements OnInit {
                     this.record = special_record.record;
                     this.client = special_record.client;
                     this.origin_country = special_record.origin_country;
+                    console.log(this.origin_country.name);
 
-                    // console.log(this.record);
-                    // console.log(this.client);
-                    // console.log(this.origin_country);
+                    this.recordEditForm.controls['note'].setValue(this.record.note);
                 }
             );
     }
 
     onSaveClick(){
-        //console.log('save click');
-        //console.log(this.record.note);
+        console.log(this.recordEditForm.value['note']);
+        this.record.note = this.recordEditForm.value['note'];
         this.recordSB.saveRecord(this.record, this.client);
     }
 }

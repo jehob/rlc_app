@@ -21,7 +21,7 @@
     <mat-card-header>
         <div class="profile__avatar-container">
             <img class="profile__img-avatar" src="../../../../../static/images/empty-profile.png" alt="Avater">
-            <span class="profile__caption">{{name}}</span>
+            <span class="profile__caption">{{ name }}</span>
         </div>
     </mat-card-header>
 
@@ -54,6 +54,6 @@
     </mat-card-content>
 
     <mat-card-actions>
-        <button class="profile__btn-save-changes" mat-flat-button (click)="this.onSaveClick()">Save</button>
+        <button class="profile__btn-save-changes" mat-flat-button [disabled]="!userForm.valid" (click)="onSaveClick()">Save</button>
     </mat-card-actions>
 </mat-card>

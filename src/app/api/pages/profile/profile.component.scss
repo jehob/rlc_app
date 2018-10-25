@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-@import "../../../../styles/basic";
+@import "~src/styles/basic";
 
 .profile__profile-container {
     max-width: 500px;
@@ -49,6 +49,7 @@ mat-card-actions {
 }
 .profile__btn-save-changes {
     background-color: $c-primary;
+    color: $c-on-primary;
     width: 125px;
     border-radius: 28px;
 }
