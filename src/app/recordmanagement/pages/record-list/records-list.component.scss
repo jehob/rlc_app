@@ -1,0 +1,100 @@
+/*!
+ * rlcapp - record and organization management software for refugee law clinics
+ * Copyright (C) 2018  Dominik Walser
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>
+ ******************************************************************************/
+
+@import "~src/styles/basic";
+
+.records-list__container {
+    max-width: 1500px;
+    padding: 30px;
+    //width: 900px;
+    //overflow-y: scroll;
+    max-height: 93vh;
+    height: auto;
+}
+mat-card-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.records-list__search-input {
+    margin-left: auto;
+}
+.records-list__table-container {
+    overflow: auto;
+    max-height: 89vh;
+    //overflow-y: scroll;
+}
+table {
+    width: 100%;
+}
+
+.records-list__access-container {
+    max-width: 60px;
+}
+.records-list__mat-column-consultants{
+    width: auto;
+    padding: 2px;
+    max-width: 100px;
+}
+.records-list__mat-column-tags {
+    max-width: 50px;
+}
+.records-list__mat-chip {
+    width: auto !important;
+}
+.records-list__link-button {
+    color: $c-link-color;
+    text-decoration: underline;
+}
+
+.records-list__chip-container{
+    margin: 2px;
+}
+
+.record-list-item__status-indicator {
+    border-radius: 25px;
+    min-height: 10px;
+    min-width: 10px;
+    max-height: 10px;
+    max-width: 10px;
+}
+
+.record-list-item__status-indicator--open{
+    background-color: green;
+}
+
+.record-list-item__status-indicator--waiting{
+    background-color: orange;
+}
+
+.record-list-item__status-indicator--closed {
+    background-color: grey;
+}
+
+.record-list-item__access-indicator {
+    min-width: 4px;
+    min-height: 17px;
+    max-width: 4px;
+    max-height: 17px;
+    border: solid black;
+    margin-right: 20px
+}
+
+.record-list-item__access-indicator--full{
+    background-color: black;
+}

@@ -1,0 +1,84 @@
+<!--
+  ~ rlcapp - record and organization management software for refugee law clinics
+  ~ Copyright (C) 2018  Dominik Walser
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<mat-card class="records-list__container">
+
+    <mat-card-header>
+        <h2>Records</h2>
+        <mat-form-field class="records-list__search-input">
+            <input matInput type="text" placeholder="Search" [(ngModel)]="value" (keyup.enter)="onSearchClick()">
+            <button mat-button matSuffix mat-icon-button aria-label="Search" (click)="onSearchClick()">
+                <mat-icon>search</mat-icon>
+            </button>
+        </mat-form-field>
+    </mat-card-header>
+
+    <mat-card-content>
+        <div class="records-list__table-container mat-elevation-z8">
+            <table mat-table [dataSource]="(records | async)">
+                <ng-container matColumnDef="access" class="records-list__access-container">
+                    <th mat-header-cell *matHeaderCellDef>access</th>
+                    <td mat-cell *matCellDef="let record">
+                        <div
+                            [class]="record.note ? 'record-list-item__access-indicator record-list-item__access-indicator--full' : 'record-list-item__access-indicator'"></div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="token">
+                    <th mat-header-cell *matHeaderCellDef>token</th>
+                    <td mat-cell *matCellDef="let record" (click)="this.onRecordSelect(record)" class="is_clickable">
+                        <p>{{ record.token }}</p>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="state">
+                    <th mat-header-cell *matHeaderCellDef>state</th>
+                    <td mat-cell *matCellDef="let record">
+                        <div [ngSwitch]="record.state">
+                            <div class="record-list-item__status-indicator record-list-item__status-indicator--open"
+                                 *ngSwitchCase="'op'"></div>
+                            <div class="record-list-item__status-indicator record-list-item__status-indicator--waiting"
+                                 *ngSwitchCase="'wa'"></div>
+                            <div class="record-list-item__status-indicator record-list-item__status-indicator--closed"
+                                 *ngSwitchCase="'cl'"></div>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="consultants">
+                    <th mat-header-cell *matHeaderCellDef>consultants</th>
+                    <td mat-cell *matCellDef="let record">
+                        <app-consultants-field [consultants]="record.working_on_record"></app-consultants-field>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="tags">
+                    <th mat-header-cell *matHeaderCellDef>tags</th>
+                    <td mat-cell *matCellDef="let record">
+                        <div class="records-list__chip-container">
+                            <mat-chip-list>
+                                <mat-chip *ngFor="let tag of record.tags" (click)="this.onTagClick(tag)"
+                                          class="records-list__mat-chip">{{ tag.name }}</mat-chip>
+                            </mat-chip-list>
+                        </div>
+                    </td>
+                </ng-container>
+                <tr mat-header-row
+                    *matHeaderRowDef="columns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: columns;"
+                    class="record-list-item"></tr>
+            </table>
+        </div>
+    </mat-card-content>
+</mat-card>

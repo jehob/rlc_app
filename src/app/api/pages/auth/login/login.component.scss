@@ -1,0 +1,78 @@
+/*!
+ * rlcapp - record and organization management software for refugee law clinics
+ * Copyright (C) 2018  Dominik Walser
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>
+ ******************************************************************************/
+
+@import "../../../../../styles/basic";
+
+.login__login-container {
+    max-width: 550px;
+    height: 275px;
+    margin: 20% auto auto;
+    padding: 0;
+    border-radius: 10px;
+}
+
+.login__holder {
+    height: 80%;
+    width: 40%;
+    padding: 5%;
+    float: left;
+}
+
+.login__content-container {
+    height: 80%;
+    width: 100%;
+}
+.login__content-container mat-form-field {
+    width: 100%;
+}
+
+.login__register {
+    background-color: $c-primary;
+    color: $c-on-primary;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+.login__login {
+    background-color: $c-secondary;
+    color: $c-on-secondary;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.login__login button {
+    background-color: $c-primary;
+    color: $c-on-primary;
+}
+.login__register button {
+    background-color: $c-secondary;
+    color: $c-on-secondary;
+}
+
+.login__holder p {
+    margin: 0;
+    padding: 0;
+}
+
+.login__register p {
+    font-size: 48px;
+    border-bottom: 5px solid $c-on-primary;
+}
+
+.login__login .action-holder {
+    text-align: right;
+}
