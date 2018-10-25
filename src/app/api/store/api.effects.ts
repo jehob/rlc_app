@@ -94,6 +94,7 @@ export class ApiEffects {
             return action.payload;
         }),
         switchMap((user: any) => {
+            console.log('user to backend', user);
             return from(
                 this.http.post(CREATE_PROFILE_URL, user).pipe(
                     catchError(error => {
