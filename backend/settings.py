@@ -38,7 +38,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'srt(vue=+gl&0c_c3pban6a&m2h2iz6mhbx^%^_%9!#-jg0*lz'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if 'ON_HEROKU' in os.environ and 'DEBUG' in os.environ:
+    DEBUG = os.environ['DEBUG']
+else:
+    DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -107,7 +110,6 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
 if 'ON_HEROKU' in os.environ:
   # heroku database
   if 'ON_DEV' in os.environ:
@@ -144,26 +146,32 @@ else:
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
-
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = (
   os.path.join(BASE_DIR, 'static'),
 )
-
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+# heroku and authentication
 django_heroku.settings(locals())
 AUTH_USER_MODEL = 'api.UserProfile'
+
+# email
+if 'ON_HEROKU' in os.environ:
+    EMAIL_HOST = os.environ['EMAIL_HOST']
+    EMAIL_PORT = os.environ['EMAIL_PORT']
+    EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+    EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+    EMAIL_USER_TLS = os.environ['EMAIL_USER_TLS']
+    EMAIL_USE_SSL = os.environ['EMAIL_USE_SSL']
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

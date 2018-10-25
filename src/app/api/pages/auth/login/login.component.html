@@ -1,0 +1,46 @@
+<!--
+  ~ rlcapp - record and organization management software for refugee law clinics
+  ~ Copyright (C) 2018  Dominik Walser
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<div class="login__login-container rlc-box-shadow">
+
+  <div class="login__holder login__register">
+    <div class="login__content-container">
+        <p>rlc<br>app</p>
+    </div>
+    <div class="action-holder">
+      <button mat-button (click)="onRegisterClick()">register</button>
+    </div>
+  </div>
+
+  <div class="login__holder login__login">
+    <div class="login__content-container">
+      <h2>login</h2>
+        <form [formGroup]="loginForm" (ngSubmit)="onLogInClick()">
+            <mat-form-field>
+                <input matInput placeholder="Email" formControlName="email">
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput placeholder="Password" i18n-placeholder="@@login_password" type="password" formControlName="password">
+            </mat-form-field>
+        </form>
+    </div>
+    <div class="action-holder">
+      <button mat-button (click)="onLogInClick()">login</button>
+    </div>
+  </div>
+</div>

@@ -20,10 +20,41 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { ApiRoutingModule } from "./api-routing.module";
 import { CustomMaterialModule } from "../custom-material.module";
-import {ProfileComponent} from './components/profile/profile.component';
+import { ProfileComponent } from "./pages/profile/profile.component";
+import { RegisterComponent } from "./pages/auth/register/register.component";
+import { DashboardComponent } from "./pages/Dashboard/dashboard.component";
+import { LoginComponent } from "./pages/auth/login/login.component";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { StoreModule } from "@ngrx/store";
+import { apiReducer } from "./store/api.reducers";
+import { EffectsModule } from "@ngrx/effects";
+import { ApiEffects } from "./store/api.effects";
+import {SharedModule} from '../shared/shared.module';
+import { ProfilesListComponent } from './pages/profiles-list/profiles-list.component';
+import { ProfilesListItemComponent } from './components/profiles-list-item/profiles-list-item.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
 
 @NgModule({
-    imports: [CommonModule, ApiRoutingModule, CustomMaterialModule],
-    declarations: [ProfileComponent]
+    imports: [
+        CommonModule,
+        ApiRoutingModule,
+        SharedModule,
+        CustomMaterialModule,
+        FormsModule,
+        ReactiveFormsModule,
+        StoreModule.forFeature("api", apiReducer),
+        EffectsModule.forFeature([ApiEffects])
+    ],
+    declarations: [
+        ProfileComponent,
+        RegisterComponent,
+        DashboardComponent,
+        LoginComponent,
+        ProfilesListComponent,
+        ProfilesListItemComponent,
+        SidebarComponent
+    ],
+    providers: [],
+    exports: [SidebarComponent]
 })
 export class ApiModule {}

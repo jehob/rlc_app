@@ -18,12 +18,10 @@
 
 import { Component } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
-import { AppState } from "./store/app.reducers";
-import { Store } from "@ngrx/store";
-import { SetToken } from "./api/store/auth/auth.actions";
 import { AuthState } from "./api/store/auth/auth.reducers";
 import { Observable } from "rxjs";
-import { ApiSandboxService } from "./api/services/api-sandbox.service";
+import LogRocket from "logrocket";
+import { AppSandboxService } from "./api/services/app-sandbox.service";
 
 @Component({
     selector: "app-root",
@@ -37,24 +35,9 @@ export class AppComponent {
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private apiSB: ApiSandboxService
+        private appSB: AppSandboxService
     ) {
-        this.authState = this.apiSB.startApp();
-    }
-
-    showProfile() {
-        this.router.navigate(["profile"], { relativeTo: this.route });
-    }
-
-    showRecords() {
-        this.router.navigate(["records"], { relativeTo: this.route });
-    }
-
-    showSettings() {
-        this.router.navigate(["login"]);
-    }
-
-    logout() {
-        this.apiSB.logout();
+        this.authState = this.appSB.startApp();
+        LogRocket.init("mndnnu/rlc_app");
     }
 }

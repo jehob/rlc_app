@@ -21,11 +21,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from django.forms.models import model_to_dict
+from rest_framework import status
 
-from ..models import UserProfile, Permission
+from ..models import UserProfile, Permission, Rlc
 from ..serializers import UserProfileSerializer, UserProfileCreatorSerializer, UserProfileNameSerializer
 from ..permissions import UpdateOwnProfile
-from backend.recordmanagement import models, serializers
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
@@ -38,11 +38,41 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name', 'email',)
 
+    def list(self, request, *args, **kwargs):
+        if request.user.is_superuser:
+            queryset = UserProfile.objects.all()
+            page = self.paginate_queryset(queryset)
+            if page is not None:
+                serializer = self.get_serializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(serializer.data)
+        else:
+            queryset = UserProfile.objects.filter(rlc_members__in=[request.user.rlc_members.first().id])
+            page = self.paginate_queryset(queryset)
+            if page is not None:
+                serializer = UserProfileNameSerializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+            serializer = UserProfileNameSerializer(queryset, many=True)
+            return Response(serializer.data)
+
 
 class UserProfileCreatorViewSet(viewsets.ModelViewSet):
     """Handles creating profiles"""
     serializer_class = UserProfileCreatorSerializer
     queryset = UserProfile.objects.none()
+
+    def create(self, request):  # TODO: password repeat
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+
+        user = UserProfile.objects.get(email=request.data['email'])
+        user.rlc_members.add(Rlc.objects.get(pk=request.data['rlc']))
+        user.save()
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class LoginViewSet(viewsets.ViewSet):
@@ -66,17 +96,19 @@ class LoginViewSet(viewsets.ViewSet):
         except Exception as ex:
             if ex.detail['non_field_errors'][0] == 'Unable to log in with provided credentials.':
                 if UserProfile.objects.filter(email=request.data['username']).count() == 1:
-                    return Response({'error': 'wrong password'}, status=400)
+                    return Response({'error': 'wrong password', 'error_token': 'api.login.wrong_password'},
+                                    status=status.HTTP_400_BAD_REQUEST)
                 else:
-                    return Response({'error': 'there is no account with this email'}, status=400)
-        return Response(LoginViewSet.getLoginData(token.data['token']))
+                    return Response({'error': 'there is no account with this email'},
+                                    status=status.HTTP_400_BAD_REQUEST)
+        return Response(LoginViewSet.get_login_data(token.data['token']))
 
     def get(self, request):
         token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
-        return Response(LoginViewSet.getLoginData(token))
+        return Response(LoginViewSet.get_login_data(token))
 
     @staticmethod
-    def getLoginData(token):
+    def get_login_data(token):
         user = Token.objects.get(key=token).user
         serialized_user = UserProfileSerializer(user).data
 
@@ -91,27 +123,9 @@ class LoginViewSet(viewsets.ViewSet):
     @staticmethod
     def get_statics(user):
         user_permissions = [model_to_dict(perm) for perm in user.get_overall_permissions()]
-
-        states_for_records = models.Record.record_states_possible
-        states_for_countries = models.OriginCountry.origin_country_states_possible
-
         overall_permissions = [model_to_dict(permission) for permission in Permission.objects.all()]
-        if user.rlc_members.count() == 0:
-            consultants = []
-        else:
-            consultants = UserProfileNameSerializer(user.rlc_members.first().get_consultants(),
-                                                                many=True).data
-        countries = serializers.OriginCountryNameStateSerializer(models.OriginCountry.objects.all(), many=True).data
-        clients = serializers.ClientNameSerializer(models.Client.objects.all(), many=True).data
 
-        tags = serializers.RecordTagNameSerializer(models.RecordTag.objects.all(), many=True).data
         return {
-            'tags': tags,
             'permissions': user_permissions,
-            'consultants': consultants,
-            'clients': clients,
-            'countries': countries,
-            'all_permissions': overall_permissions,
-            'record_states': states_for_records,
-            'country_states': states_for_countries
+            'all_permissions': overall_permissions
         }

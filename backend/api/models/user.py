@@ -98,7 +98,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     # address
     street = models.CharField(max_length=255, default=None, null=True)  # TODO: number?, but 13a
     city = models.CharField(max_length=255, default=None, null=True)
-    zip_code = models.CharField(max_length=255, default=None, null=True)
+    postal_code = models.CharField(max_length=255, default=None, null=True)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

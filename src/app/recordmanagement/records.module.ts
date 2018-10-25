@@ -19,18 +19,50 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RecordsRoutingModule } from "./records-routing.module";
-import { RecordsComponent } from "./components/records/records.component";
+import { RecordsListComponent } from "./pages/record-list/records-list.component";
 import { CustomMaterialModule } from "../custom-material.module";
 import { StoreModule } from "@ngrx/store";
 import { recordsReducer } from "./store/records.reducers";
+import { EffectsModule } from "@ngrx/effects";
+import { RecordsEffects } from "./store/records.effects";
+import { RecordsListItemComponent } from "./components/records/records-list-item/records-list-item.component";
+import { CreateRecordComponent } from "./pages/create-record/create-record.component";
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { SelectClientDialogComponent } from "./components/select-client-dialog/select-client-dialog.component";
+import {RecordsSandboxService} from './services/records-sandbox.service';
+import {ChipAutocompleteComponent} from '../shared/components/chip-autocomplete/chip-autocomplete.component';
+import {SharedModule} from '../shared/shared.module';
+import { RecordComponent } from './pages/record/record.component';
+import { FullRecordDetailComponent } from './components/records/full-record-detail/full-record-detail.component';
+import { RestrictedRecordDetailComponent } from './components/records/restricted-record-detail/restricted-record-detail.component';
+import { ConsultantsFieldComponent } from './components/consultants-field/consultants-field.component';
 
 @NgModule({
     imports: [
         CommonModule,
         RecordsRoutingModule,
         CustomMaterialModule,
+        SharedModule,
+        FormsModule,
+        ReactiveFormsModule,
         StoreModule.forFeature("records", recordsReducer),
+        EffectsModule.forFeature([RecordsEffects])
     ],
-    declarations: [RecordsComponent]
+    declarations: [
+        RecordsListComponent,
+        RecordsListItemComponent,
+        CreateRecordComponent,
+        SelectClientDialogComponent,
+        RecordComponent,
+        FullRecordDetailComponent,
+        RestrictedRecordDetailComponent,
+        ConsultantsFieldComponent
+    ],
+    entryComponents: [SelectClientDialogComponent]
 })
-export class RecordsModule {}
+
+export class RecordsModule {
+    constructor(private recordSB: RecordsSandboxService) {
+        this.recordSB.startLoadingRecordStatics();
+    }
+}

@@ -50,7 +50,6 @@ class HasPermission(models.Model):
     permission_for_rlc = models.ForeignKey('Rlc', related_name="permission_for_rlc",
                                            blank=True, on_delete=models.CASCADE, null=True)
 
-    # objects = HasPermissionQuerySet.as_manager()
     objects = HasPermissionManager
 
     def __str__(self):

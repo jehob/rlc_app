@@ -17,22 +17,24 @@
  ******************************************************************************/
 
 import { NgModule } from "@angular/core";
-import {Routes, RouterModule, PreloadAllModules} from '@angular/router';
+import { Routes, RouterModule, PreloadAllModules } from "@angular/router";
 
 import { AuthGuardService } from "./api/services/auth-guard.service";
-import { DashboardComponent } from "./api/components/Dashboard/dashboard.component";
-import { LoginComponent } from "./api/components/auth/login/login.component";
-
 
 const appRoutes: Routes = [
-    { path: "records", loadChildren: './recordmanagement/records.module#RecordsModule', canActivate: [AuthGuardService]},
-    { path: "", pathMatch: "full" , component: DashboardComponent, canActivate: [AuthGuardService]},
-    { path: "login", component: LoginComponent},
-
+    {
+        path: "records",
+        loadChildren: "./recordmanagement/records.module#RecordsModule",
+        canActivate: [AuthGuardService]
+    }
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(appRoutes,  {preloadingStrategy: PreloadAllModules})],
+    imports: [
+        RouterModule.forRoot(appRoutes, {
+            preloadingStrategy: PreloadAllModules
+        })
+    ],
     exports: [RouterModule]
 })
 export class AppRoutingModule {}

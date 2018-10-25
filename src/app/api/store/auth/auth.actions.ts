@@ -16,26 +16,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import {Action} from '@ngrx/store';
+import { Action } from "@ngrx/store";
 
-export const TRY_SIGNIN = 'TRY_SIGNIN';
-export const SET_TOKEN = 'SET_TOKEN';
-export const LOGOUT = 'LOGOUT';
+export const TRY_LOGIN = "TRY_LOGIN";
+export const TRY_RELOAD_STATIC_INFORMATION = "TRY_RELOAD_STATIC_INFORMATION";
+export const SET_TOKEN = "SET_TOKEN";
+export const LOGOUT = "LOGOUT";
 
-export class TrySignin implements Action {
-    readonly type = TRY_SIGNIN;
+export class TryLogin implements Action {
+    readonly type = TRY_LOGIN;
 
-    constructor(public payload: {username: string, password: string}){}
+    constructor(public payload: { username: string; password: string }) {}
+}
+
+export class ReloadStaticInformation implements Action {
+    readonly type = TRY_RELOAD_STATIC_INFORMATION;
 }
 
 export class SetToken implements Action {
     readonly type = SET_TOKEN;
 
-    constructor(public payload: string){}
+    constructor(public payload: string) {}
 }
 
 export class Logout implements Action {
     readonly type = LOGOUT;
 }
 
-export type AuthActions = TrySignin | SetToken | Logout;
+export type AuthActions = TryLogin | ReloadStaticInformation | SetToken | Logout;

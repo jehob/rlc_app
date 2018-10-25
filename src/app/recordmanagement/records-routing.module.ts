@@ -18,13 +18,24 @@
 
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { RecordsComponent } from "./components/records/records.component";
+import { RecordsListComponent } from "./pages/record-list/records-list.component";
 import { AuthGuardService } from "../api/services/auth-guard.service";
+import {CreateRecordComponent} from './pages/create-record/create-record.component';
+import {RecordComponent} from './pages/record/record.component';
 
 const recordsRoutes: Routes = [
     {
         path: "",
-        component: RecordsComponent
+        pathMatch: "full",
+        component: RecordsListComponent
+    },
+    {
+        path: "add",
+        component: CreateRecordComponent
+    },
+    {
+        path: ":id",
+        component: RecordComponent
     }
 ];
 

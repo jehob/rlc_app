@@ -1,0 +1,27 @@
+<form [formGroup]="valuesForm">
+    <mat-form-field>
+        <mat-chip-list #chipList>
+            <mat-chip
+                *ngFor="let value of selectedValues"
+                (removed)="removeValue(value)"
+            >
+                {{ value.getFilterableProperty() }}
+                <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+
+            <input [placeholder]="placeholder"
+                   #valueInput
+                   [matChipInputFor]="chipList"
+                   (matChipInputTokenEnd)="addValue($event)"
+                   [matAutocomplete]="auto"
+                   formControlName="filterValue">
+            <ng-content></ng-content>
+        </mat-chip-list>
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="selected($event)">
+            <mat-option *ngFor="let value of (filteredValues | async)" [value]="value">
+                {{ value.getFilterableProperty() }}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+</form>
+

@@ -26,7 +26,6 @@ class UserFactory(factory.django.DjangoModelFactory):
     email = factory.Faker('email')
     name = factory.Faker('name')
     phone_number = factory.Faker('phone_number')
-    # rlc_members = factory.Iterator(Rlc.objects.all())
     is_active = True
     is_staff = False
 

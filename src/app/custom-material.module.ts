@@ -19,7 +19,15 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 
-import { MatButtonModule, MatCheckboxModule } from "@angular/material";
+import {
+    MAT_DATE_LOCALE,
+    MAT_SNACK_BAR_DEFAULT_OPTIONS,
+    MatButtonModule,
+    MatSnackBarModule,
+    MatCheckboxModule,
+    MatTreeModule,
+    MatChipsModule, MatDialogModule, MatRadioModule, MatRadioGroup, MatAutocompleteModule, MatGridListModule, MatTableModule, MatSortModule
+} from '@angular/material';
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatCardModule } from "@angular/material/card";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -46,7 +54,15 @@ import { MatIconModule } from "@angular/material/icon";
         MatNativeDateModule,
         MatExpansionModule,
         MatListModule,
-        MatIconModule
+        MatSnackBarModule,
+        MatTreeModule,
+        MatChipsModule,
+        MatDialogModule,
+        MatRadioModule,
+        MatAutocompleteModule,
+        MatGridListModule,
+        MatTableModule,
+        MatSortModule
     ],
     exports: [
         MatButtonModule,
@@ -61,8 +77,23 @@ import { MatIconModule } from "@angular/material/icon";
         MatNativeDateModule,
         MatExpansionModule,
         MatListModule,
-        MatIconModule
+        MatSnackBarModule,
+        MatTreeModule,
+        MatChipsModule,
+        MatDialogModule,
+        MatRadioModule,
+        MatAutocompleteModule,
+        MatGridListModule,
+        MatTableModule,
+        MatSortModule
     ],
-    declarations: []
+    declarations: [],
+    providers: [
+        { provide: MAT_DATE_LOCALE, useValue: "de-DE" },
+        {
+            provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
+            useValue: { duration: 2500, verticalPosition: "top" }
+        }
+    ]
 })
 export class CustomMaterialModule {}

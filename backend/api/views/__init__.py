@@ -30,9 +30,10 @@ class ModelViewSet(mixins.CreateModelMixin,
 """
 
 from backend.recordmanagement.views.client import ClientsViewSet
-from .user import UserProfileCreatorViewSet, UserProfileViewSet, LoginViewSet
-from .group import GroupViewSet, GroupTestViewSet
-from .permission import PermissionViewSet
-from .has_permission import HasPermissionViewSet
-from .rlc import RlcViewSet
-from .statics import GetStaticsViewSet
+from .user import *
+from .group import *
+from .permission import *
+from .has_permission import *
+from .rlc import *
+from .statics import *
+from .other import *

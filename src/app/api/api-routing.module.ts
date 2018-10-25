@@ -16,21 +16,38 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import {RouterModule, Routes} from '@angular/router';
-import {AuthGuardService} from './services/auth-guard.service';
-import {NgModule} from '@angular/core';
-import {ProfileComponent} from './components/profile/profile.component';
+import { RouterModule, Routes } from "@angular/router";
+import { AuthGuardService } from "./services/auth-guard.service";
+import { NgModule } from "@angular/core";
+import { ProfileComponent } from "./pages/profile/profile.component";
+import { DashboardComponent } from "./pages/Dashboard/dashboard.component";
+import { LoginComponent } from "./pages/auth/login/login.component";
+import {RegisterComponent} from './pages/auth/register/register.component';
+import {ProfilesListComponent} from './pages/profiles-list/profiles-list.component';
 
-const recordsRoutes: Routes = [
+const apiRoutes: Routes = [
     {
         path: "profile",
         component: ProfileComponent,
         canActivate: [AuthGuardService]
-    }
+    },
+    {
+        path: "profiles",
+        component: ProfilesListComponent,
+        canActivate: [AuthGuardService]
+    },
+    {
+        path: "",
+        pathMatch: "full",
+        component: DashboardComponent,
+        canActivate: [AuthGuardService]
+    },
+    { path: "login", component: LoginComponent },
+    { path: "register", component: RegisterComponent}
 ];
 
 @NgModule({
-    imports: [RouterModule.forChild(recordsRoutes)],
+    imports: [RouterModule.forChild(apiRoutes)],
     exports: [RouterModule],
     providers: [AuthGuardService]
 })

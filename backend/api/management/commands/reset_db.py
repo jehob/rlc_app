@@ -27,7 +27,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # UserProfile.objects.exclude(is_superuser=True).delete()
-        # UserProfile.objects.all().delete()
+        UserProfile.objects.all().delete()
         Client.objects.all().delete()
         OriginCountry.objects.all().delete()
         RecordTag.objects.all().delete()

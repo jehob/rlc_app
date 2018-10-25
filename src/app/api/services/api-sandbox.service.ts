@@ -19,26 +19,85 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { AppState } from "../../store/app.reducers";
-import { Store } from "@ngrx/store";
-import {Logout, SetToken} from '../store/auth/auth.actions';
+import { select, Store } from "@ngrx/store";
+import { ApiState } from "../store/api.reducers";
+import { FullUser } from "../models/user.model";
+import { take } from "rxjs/operators";
+import {
+    StartCreateUser,
+    StartLoadingOtherUsers,
+    StartPatchUser
+} from "../store/api.actions";
+import { MatSnackBar, MatSnackBarConfig } from "@angular/material";
+import moment from "moment";
+import { HttpClient } from "@angular/common/http";
+import { RLCS_URL } from "../../statics/api_urls.statics";
 
 @Injectable()
 export class ApiSandboxService {
-    constructor(private router: Router, private store: Store<AppState>) {}
+    constructor(
+        public router: Router,
+        private snackBar: MatSnackBar,
+        private appStateStore: Store<AppState>,
+        private apiStateStore: Store<ApiState>,
+        private http: HttpClient
+    ) {}
 
-    logout() {
-        localStorage.clear();
-        this.store.dispatch(new Logout());
-        this.router.navigate(["login"]);
+    static transformDate(date: Date) {
+        return moment(date).format("YYYY-MM-DD");
     }
 
-    startApp(){
-        const token = localStorage.getItem("token");
-        if (token !== null) {
-            //this.auth.reload(token);
-            this.store.dispatch(new SetToken(token));
-        }
+    getUser() {
+        return this.apiStateStore.pipe(select((state: any) => state.api.user));
+    }
 
-        return this.store.select("auth");
+    patchUser(user: FullUser) {
+        let userFromStore: FullUser = null;
+        this.apiStateStore
+            .pipe(select((state: any) => state.api.user))
+            .pipe(take(1))
+            .subscribe((loadedUser: FullUser) => {
+                userFromStore = loadedUser;
+            });
+        const id = userFromStore.id;
+        this.apiStateStore.dispatch(
+            new StartPatchUser({
+                id,
+                userUpdates: userFromStore.getUpdates(user)
+            })
+        );
+    }
+
+    registerUser(user: any) {
+        this.apiStateStore.dispatch(new StartCreateUser(user));
+    }
+
+    getAllRlcs() {
+        return this.http.get(RLCS_URL);
+    }
+
+    startLoadingOtherUsers() {
+        this.apiStateStore.dispatch(new StartLoadingOtherUsers());
+    }
+    getOtherUsers() {
+        return this.apiStateStore.pipe(
+            select((state: any) => state.api.other_users)
+        );
+    }
+
+    showSuccessSnackBar(message: string) {
+        const config = new MatSnackBarConfig();
+        config.panelClass = ["snackbar__success"];
+        config.duration = 2500;
+        config.verticalPosition = "top";
+        this.snackBar.open(message, "", config);
+    }
+
+    showErrorSnackBar(message: string) {
+        const config = new MatSnackBarConfig();
+        config.panelClass = ["snackbar__error"];
+        config.duration = 2500;
+        config.verticalPosition = "top";
+        this.snackBar.open(message, "", config);
     }
 }

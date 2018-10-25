@@ -1,0 +1,52 @@
+<div class="register__register-container rlc-box-shadow">
+    <h1>Register</h1>
+    <form [formGroup]="userForm" class="register__form-container" (ngSubmit)="onRegisterClick()">
+        <mat-form-field>
+            <mat-select placeholder="rlc*" formControlName="rlc">
+                <mat-option *ngFor="let rlc of allRlcs" [value]="rlc.id">
+                    {{rlc.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="register__input-item">
+            <input matInput placeholder="email*" formControlName="email">
+            <mat-error *ngIf="userForm.controls['email'].errors">invalid email address</mat-error>
+        </mat-form-field>
+        <mat-form-field class="register__input-item">
+            <input matInput placeholder="name*" formControlName="name">
+        </mat-form-field>
+        <mat-form-field class="register__input-item">
+            <input matInput placeholder="password*" type="password" formControlName="password">
+            <mat-error *ngIf="userForm.controls['password'].errors && userForm.controls['password'].errors.weak">password must contain at least 1 special,
+                1 upper case, 1 lower case and a digit character
+            </mat-error>
+            <mat-error *ngIf="userForm.controls['password'].errors && userForm.controls['password'].errors.short">password too short
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field class="register__input-item">
+            <input matInput placeholder="confirm password*" type="password" formControlName="password_confirm">
+            <mat-error *ngIf="userForm.errors && userForm.errors.mismatch">
+                passwords must be the same
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field class="register__input-item">
+            <input matInput placeholder="phone number" formControlName="phone_number">
+        </mat-form-field>
+        <mat-form-field class="register__input-item">
+            <input matInput placeholder="street" formControlName="street">
+        </mat-form-field>
+        <mat-form-field class="register__input-item">
+            <input matInput placeholder="postal code" formControlName="postal_code">
+        </mat-form-field>
+        <mat-form-field class="register__input-item">
+            <input matInput placeholder="city" formControlName="city">
+        </mat-form-field>
+        <mat-form-field class="register__input-item">
+            <input matInput [matDatepicker]="picker" placeholder="Birth Date" formControlName="birthday">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <button class="register__btn-register" type="submit"  mat-flat-button [disabled]="!userForm.valid">Register</button>
+    </form>
+</div>

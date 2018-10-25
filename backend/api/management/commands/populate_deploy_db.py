@@ -28,4 +28,4 @@ class Command(BaseCommand):
         Fixtures.create_example_origin_countries()
         Fixtures.create_real_permissions()
         rlcs = Fixtures.create_real_starting_rlcs()
-        groups = Fixtures.create_real_groups(rlcs)
+        Fixtures.create_real_groups(rlcs)

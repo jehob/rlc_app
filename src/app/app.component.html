@@ -17,18 +17,9 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 <mat-drawer-container class="root-container">
-    <mat-drawer class="f-white" mode="side" opened  *ngIf="(authState | async).authenticated">
-        <div class="drawer-header">
-            <img src="../../../static/images/rlc_intranet_logo.png" alt="rfc app" class="">
-        </div>
-        <nav class="drawer-navigation-container">
-            <ul class="drawer-navigation">
-                <li><a (click)='showProfile()' i18n="sidebar navigation for routing@@sidebar_profile">Profile</a></li>
-                <li><a (click)='showRecords()' i18n="sidebar navigation for routing@@sidebar_records">Records</a></li>
-                <li><a (click)='showSettings()' i18n="sidebar navigation for routing@@sidebar_settings">Settings</a> </li>
-                <li><a (click)="logout()">Logout</a></li>
-            </ul>
-        </nav>
+    <mat-drawer class="f-white" mode="side" opened *ngIf="(authState | async).authenticated">
+
+    <app-sidebar></app-sidebar>
     </mat-drawer>
     <mat-drawer-content>
         <router-outlet></router-outlet>

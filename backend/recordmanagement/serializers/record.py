@@ -15,11 +15,13 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/> """
 from rest_framework import serializers
 from backend.recordmanagement.models import Record
+from backend.api.serializers.user import UserProfileNameSerializer
 from .record_tag import RecordTagNameSerializer
 
 
 class RecordFullDetailSerializer(serializers.ModelSerializer):
     tagged = RecordTagNameSerializer(many=True, read_only=True)
+    working_on_record = UserProfileNameSerializer(many=True, read_only=True)
 
     class Meta:
         model = Record
@@ -34,6 +36,7 @@ class RecordFullDetailSerializer(serializers.ModelSerializer):
 
 class RecordNoDetailSerializer(serializers.ModelSerializer):
     tagged = RecordTagNameSerializer(many=True, read_only=True)
+    working_on_record = UserProfileNameSerializer(many=True, read_only=True)
     state = serializers.CharField()
 
     class Meta:

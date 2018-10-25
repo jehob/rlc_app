@@ -18,47 +18,62 @@
 
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
-import { FormsModule } from "@angular/forms";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { StoreModule } from "@ngrx/store";
+import { ActionReducer, StoreModule } from "@ngrx/store";
 import { EffectsModule } from "@ngrx/effects";
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { StoreDevtoolsModule } from "@ngrx/store-devtools";
+import LogRocket from "logrocket";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
-import { AuthService } from "./api/services/auth.service";
 import { AuthGuardService } from "./api/services/auth-guard.service";
 import { CustomMaterialModule } from "./custom-material.module";
-import { DashboardComponent } from "./api/components/Dashboard/dashboard.component";
-import { LoginComponent } from "./api/components/auth/login/login.component";
 import { reducers } from "./store/app.reducers";
 import { AuthEffects } from "./api/store/auth/auth.effects";
 import { ApiSandboxService } from "./api/services/api-sandbox.service";
 import { ApiModule } from "./api/api.module";
 import { RecordsSandboxService } from "./recordmanagement/services/records-sandbox.service";
-import {AuthInterceptor} from './api/services/auth.interceptor';
+import { AuthInterceptor } from "./api/services/auth.interceptor";
+import { environment } from "../environments/environment";
+import {AppSandboxService} from './api/services/app-sandbox.service';
+
+
+const reduxMiddleware = LogRocket.reduxMiddleware();
+
+export function logrocketMiddleware(reducer): ActionReducer<any, any> {
+    let currentState;
+    const fakeDispatch = reduxMiddleware({
+        getState: () => currentState
+    })(() => {});
+
+    return function(state, action) {
+        const newState = reducer(state, action);
+        currentState = state;
+        fakeDispatch(action);
+        return newState;
+    };
+}
 
 @NgModule({
-    declarations: [AppComponent, DashboardComponent, LoginComponent],
+    declarations: [AppComponent],
     imports: [
         BrowserModule,
-        FormsModule,
         HttpClientModule,
         CustomMaterialModule,
         BrowserAnimationsModule,
         ApiModule,
-        StoreModule.forRoot(reducers),
+        AppRoutingModule,
+        StoreModule.forRoot(reducers, { metaReducers: [logrocketMiddleware] }),
         EffectsModule.forRoot([AuthEffects]),
-        StoreDevtoolsModule.instrument(),
-        AppRoutingModule
+        !environment.production ? StoreDevtoolsModule.instrument() : []
     ],
     providers: [
-        AuthService,
         AuthGuardService,
+        AppSandboxService,
         ApiSandboxService,
         RecordsSandboxService,
-        {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
     ],
     bootstrap: [AppComponent]
 })
