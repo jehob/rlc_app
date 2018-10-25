@@ -125,7 +125,7 @@ export class ApiEffects {
                         return of({ error: "error" });
                     }),
                     mergeMap((response: any) => {
-                        console.log(response);
+                        //console.log(response);
                         const users = RestrictedUser.getRestrictedUsersFromJsonArray(
                             response
                         );

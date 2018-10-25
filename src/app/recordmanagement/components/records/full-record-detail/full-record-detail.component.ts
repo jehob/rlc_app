@@ -52,7 +52,7 @@ export class FullRecordDetailComponent implements OnInit {
                     this.record = special_record.record;
                     this.client = special_record.client;
                     this.origin_country = special_record.origin_country;
-                    console.log(this.origin_country.name);
+                    //console.log(this.origin_country.name);
 
                     this.recordEditForm.controls['note'].setValue(this.record.note);
                 }
@@ -60,7 +60,7 @@ export class FullRecordDetailComponent implements OnInit {
     }
 
     onSaveClick(){
-        console.log(this.recordEditForm.value['note']);
+        //console.log(this.recordEditForm.value['note']);
         this.record.note = this.recordEditForm.value['note'];
         this.recordSB.saveRecord(this.record, this.client);
     }

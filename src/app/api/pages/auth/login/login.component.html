@@ -30,7 +30,7 @@
   <div class="login__holder login__login">
     <div class="login__content-container">
       <h2>login</h2>
-        <form [formGroup]="loginForm">
+        <form [formGroup]="loginForm" (ngSubmit)="onLogInClick()">
             <mat-form-field>
                 <input matInput placeholder="Email" formControlName="email">
             </mat-form-field>

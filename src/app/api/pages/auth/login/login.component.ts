@@ -50,6 +50,7 @@ export class LoginComponent implements OnInit {
     ngOnInit() {}
 
     onLogInClick() {
+        console.log('login clicked');
         if (this.loginForm.valid)
             this.appSB.login(this.loginForm.value.email, this.loginForm.value.password);
     }
