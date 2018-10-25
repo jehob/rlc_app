@@ -56,9 +56,12 @@ class RecordsListViewSet(viewsets.ViewSet):
 
         rlcs = list(user.rlc_members.all())
         search = request.query_params.get('search', '')
-        search_query = Q(tagged__name__contains=search)
-        search_query.add(Q(note__contains=search), Q.OR)
-        search_query.add(Q(working_on_record__name__contains=search), Q.OR)
+        parts = search.split(' ')
+        search_query = Q()
+        for part in parts:
+            search_query.add(
+                Q(tagged__name__contains=part) | Q(note__contains=part) | Q(working_on_record__name__contains=part),
+                Q.AND)
 
         if user.is_superuser:
             queryset = models.Record.objects.filter(search_query)
@@ -147,7 +150,7 @@ class RecordViewSet(APIView):
             else:
                 url = 'no url, please contact the administrator'
 
-            EmailSender.send_email_notification((actual_consultant.email, ), "New Record",
+            EmailSender.send_email_notification((actual_consultant.email,), "New Record",
                                                 "RLC Intranet Notification - Your were assigned as a consultant for a new record. Look here:" +
                                                 url)
 

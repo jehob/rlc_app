@@ -58,4 +58,8 @@ export class AppSandboxService{
 
         return this.store.select("auth");
     }
+
+    getAuthState(){
+        return this.store.select("auth");
+    }
 }

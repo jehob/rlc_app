@@ -35,6 +35,7 @@ import {SharedModule} from '../shared/shared.module';
 import { RecordComponent } from './pages/record/record.component';
 import { FullRecordDetailComponent } from './components/records/full-record-detail/full-record-detail.component';
 import { RestrictedRecordDetailComponent } from './components/records/restricted-record-detail/restricted-record-detail.component';
+import { ConsultantsFieldComponent } from './components/consultants-field/consultants-field.component';
 
 @NgModule({
     imports: [
@@ -54,7 +55,8 @@ import { RestrictedRecordDetailComponent } from './components/records/restricted
         SelectClientDialogComponent,
         RecordComponent,
         FullRecordDetailComponent,
-        RestrictedRecordDetailComponent
+        RestrictedRecordDetailComponent,
+        ConsultantsFieldComponent
     ],
     entryComponents: [SelectClientDialogComponent]
 })

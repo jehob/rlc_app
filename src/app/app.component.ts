@@ -40,28 +40,4 @@ export class AppComponent {
         this.authState = this.appSB.startApp();
         LogRocket.init("mndnnu/rlc_app");
     }
-
-    showProfile() {
-        this.router.navigate(["profile"], { relativeTo: this.route });
-    }
-
-    showRecords() {
-        this.router.navigate(["records"], { relativeTo: this.route });
-    }
-
-    showAddRecord() {
-        this.router.navigate(["records/add"]);
-    }
-
-    logout() {
-        this.appSB.logout();
-    }
-
-    showProfiles(){
-        this.router.navigate(["profiles"]);
-    }
-
-    showLandingPage() {
-        this.router.navigate([""]);
-    }
 }

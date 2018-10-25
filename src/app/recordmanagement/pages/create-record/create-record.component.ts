@@ -87,7 +87,7 @@ export class CreateRecordComponent implements OnInit {
 
     selectedConsultantsChanged(selectedConsultants) {
         this.selectedConsultants = selectedConsultants;
-        if (selectedConsultants.length === 0) {
+        if (selectedConsultants.length <= 1) {
             this.consultantErrors = { null: "true" };
         } else {
             this.consultantErrors = null;

@@ -1,0 +1,5 @@
+<div>
+    <a *ngFor="let consultant of consultants" mat-button
+       class="consultants-field__link-button"
+       (click)="this.onConsultantClick(consultant)">@{{ consultant.name }}</a>
+</div>

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-@import "../../../../styles/basic";
+@import "~src/styles/basic";
 
 .records-container {
     max-width: 1500px;
@@ -43,7 +43,9 @@ table {
     width: 100%;
 }
 
-
+.records-list__access-container {
+    max-width: 40px;
+}
 .mat-column-consultants{
     width: auto;
     padding: 2px;

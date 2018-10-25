@@ -1,15 +1,30 @@
-<mat-card>
+<mat-card class="restricted-record-detail__mat-card">
     <mat-card-header>
         <h1>Restricted record</h1>
     </mat-card-header>
-    <mat-card-content>
+    <mat-card-content *ngIf="record" class="restricted-record-detail__mat-content">
 
-        <mat-form-field>
+        <mat-form-field matLine >
             <input matInput placeholder="record token" value="{{ record.token }}" disabled>
         </mat-form-field>
         <mat-form-field>
             <input matInput placeholder="record state" value="{{ record.state }}" disabled>
         </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="last contact date" value="{{ record.last_contact_date }}" disabled>
+        </mat-form-field>
+        <div>
+            <mat-label>Consultants</mat-label>
+            <app-consultants-field [consultants]="record.working_on_record"></app-consultants-field>
+        </div>
+        <div>
+            <mat-label>Tags</mat-label>
+            <div>
+            <p *ngFor="let tag of record.tags">{{ tag.name }}</p>
+
+            </div>
+        </div>
+
 
     </mat-card-content>
 </mat-card>

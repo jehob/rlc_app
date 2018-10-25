@@ -17,10 +17,8 @@
  ******************************************************************************/
 
 import { Component, OnInit } from "@angular/core";
-import {FullRecord, RestrictedRecord} from '../../../models/record.model';
-import {RecordsSandboxService} from '../../../services/records-sandbox.service';
-import {FullClient} from '../../../models/client.model';
-import {OriginCountry} from '../../../models/country.model';
+import { RestrictedRecord } from "../../../models/record.model";
+import { RecordsSandboxService } from "../../../services/records-sandbox.service";
 
 @Component({
     selector: "app-restricted-record-detail",
@@ -35,12 +33,8 @@ export class RestrictedRecordDetailComponent implements OnInit {
     ngOnInit() {
         this.recordSB
             .getSpecialRecord()
-            .subscribe(
-                (special_record: {
-                    record: RestrictedRecord;
-                }) => {
-                    this.record = special_record.record;
-                }
-            );
+            .subscribe((special_record: { record: RestrictedRecord }) => {
+                if (special_record.record) this.record = special_record.record;
+            });
     }
 }

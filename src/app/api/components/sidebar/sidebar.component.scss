@@ -1,0 +1,48 @@
+@import "../../../../styles/basic.scss";
+
+.root-container {
+    width: 100%;
+
+    position: relative;
+    margin: 0 auto;
+    height: auto !important;
+    height: 100%;
+    min-height: 100%;
+}
+
+mat-drawer {
+    width: 200px;
+    padding: 16px;
+    background-color: $c-primary;
+}
+.drawer-header {
+    border-bottom: 5px solid $c-on-primary;
+    margin-bottom: 15px;
+}
+.drawer-header img {
+    width: 125px;
+    height: auto;
+    margin-bottom: 15px;
+}
+.drawer-navigation {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+}
+.drawer-navigation li {
+    margin-bottom: 10px;
+}
+a {
+    cursor: pointer;
+    color: $c-on-primary;
+    text-decoration: none;
+}
+.drawer-navigation li {
+    margin-bottom: 10px;
+}
+
+mat-drawer-content {
+    //background-color: #E4EAEE;
+    padding: 15px; /*TODO: Look up MG*/
+    height: 100%;
+}

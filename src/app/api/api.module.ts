@@ -32,6 +32,7 @@ import { ApiEffects } from "./store/api.effects";
 import {SharedModule} from '../shared/shared.module';
 import { ProfilesListComponent } from './pages/profiles-list/profiles-list.component';
 import { ProfilesListItemComponent } from './components/profiles-list-item/profiles-list-item.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
 
 @NgModule({
     imports: [
@@ -50,9 +51,10 @@ import { ProfilesListItemComponent } from './components/profiles-list-item/profi
         DashboardComponent,
         LoginComponent,
         ProfilesListComponent,
-        ProfilesListItemComponent
+        ProfilesListItemComponent,
+        SidebarComponent
     ],
     providers: [],
-    exports: []
+    exports: [SidebarComponent]
 })
 export class ApiModule {}

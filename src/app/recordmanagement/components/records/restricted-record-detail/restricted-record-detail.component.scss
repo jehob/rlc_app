@@ -16,3 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
+.restricted-record-detail__mat-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.restricted-record-detail__mat-card{
+    max-width: 800px;
+}

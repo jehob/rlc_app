@@ -62,7 +62,7 @@
                                        (selectedValuesChanged)="selectedConsultantsChanged($event)"
                                        [errors]="consultantErrors" class="create-record__item">
                     <mat-error *ngIf="consultantErrors && consultantErrors.null">
-                        at least one consultant for case
+                        at least two consultants for case
                     </mat-error>
                 </app-chip-autocomplete>
 

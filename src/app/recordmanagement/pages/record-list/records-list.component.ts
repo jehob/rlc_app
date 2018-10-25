@@ -23,6 +23,7 @@ import { RestrictedRecord} from '../../models/record.model';
 import { ActivatedRoute, Router } from "@angular/router";
 import {RestrictedUser} from '../../../api/models/user.model';
 import {RecordTag} from '../../models/record_tags.model';
+import {GetRecordsSearchURL} from '../../../statics/api_urls.statics';
 
 @Component({
     selector: "app-records",
@@ -54,9 +55,6 @@ export class RecordsListComponent implements OnInit {
         this.records = this.recordsSandbox.getRecords();
     }
 
-
-
-
     onSearchClick() {
         if (this.value && this.value !== "") {
             this.router.navigateByUrl(`records?search=${this.value}`);
@@ -65,10 +63,6 @@ export class RecordsListComponent implements OnInit {
 
     onRecordSelect(record: RestrictedRecord){
         this.router.navigateByUrl(`records/${record.id}`);
-    }
-
-    onConsultantClick(consultant: RestrictedUser){
-        this.router.navigateByUrl(`records?search=${consultant.name}`);
     }
 
     onTagClick(tag: RecordTag){
