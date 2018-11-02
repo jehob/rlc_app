@@ -14,7 +14,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/> """
 from rest_framework import permissions
-from .statics import StaticPermissionNames as static
+from backend.static.permissions import PERMISSION_CAN_ADD_ORIGIN_COUNTRY
 
 
 # TODO: what to do with this?? custom permissions? 
@@ -60,6 +60,13 @@ class OriginCountry(permissions.BasePermission):
         if request.method == 'GET':
             return True
         elif request.method == 'POST':
-            return request.user.has_permission(static.CAN_ADD_ORIGIN_COUNTRY)
+            return request.user.has_permission(PERMISSION_CAN_ADD_ORIGIN_COUNTRY)
         else:
             return False
+
+
+class GetOrSuperuser(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.user.is_superuser or request.method == 'GET':
+            return True
+        return False

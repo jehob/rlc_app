@@ -22,29 +22,9 @@ from django.db.models import Q
 import os
 
 from backend.recordmanagement import models, serializers
-from backend.api import permissions
 from backend.api.models import UserProfile
-from backend.api.statics.staticNames import StaticPermissionNames as Static
 from backend.api.other_functions.emails import EmailSender
-
-
-class RecordsFullDetailViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
-                               mixins.DestroyModelMixin, viewsets.GenericViewSet):
-    authentication_classes = (TokenAuthentication,)
-    serializer_class = serializers.RecordFullDetailSerializer
-    permission_classes = (permissions.EditRecord, IsAuthenticated)
-
-    def perform_create(self, serializer):
-        creator = models.UserProfile.objects.get(id=self.request.user.id)
-        client = models.Client.objects.get(id=self.request.data['client'])
-        user_rlcs = [str(rlc.id) for rlc in list(self.request.user.rlc_members.all())]
-        if self.request.data['from_rlc'] not in user_rlcs:
-            raise AttributeError
-        from_rlc = models.Rlc.objects.get(id=self.request.data['from_rlc'])
-        serializer.save(creator=creator, client=client, from_rlc=from_rlc)
-
-    def get_queryset(self):
-        return models.Record.objects.all()
+from backend.static.permissions import PERMISSION_VIEW_RECORDS_FULL_DETAIL
 
 
 class RecordsListViewSet(viewsets.ViewSet):
@@ -53,15 +33,37 @@ class RecordsListViewSet(viewsets.ViewSet):
 
     def list(self, request):
         user = request.user
-
         rlcs = list(user.rlc_members.all())
         search = request.query_params.get('search', '')
         parts = search.split(' ')
         search_query = Q()
+
+        #         inner_qs = Blog.objects.filter(name__contains='Cheddar')
+        # entries = Entry.objects.filter(blog__in=inner_qs)
+
         for part in parts:
+            consultants = UserProfile.objects.filter(name__icontains=part)
             search_query.add(
-                Q(tagged__name__contains=part) | Q(note__contains=part) | Q(working_on_record__name__contains=part),
+                Q(tagged__name__icontains=part) | Q(note__icontains=part) | Q(working_on_record__in=consultants),
                 Q.AND)
+
+        entries = UserProfile.objects.all()
+        for part in parts:
+            entries = entries.filter(
+                Q(tagged__name__icontains=part) | Q(note__icontains=part) | Q(working_on_record__in=consultants))
+
+        q2 = Q()
+        c1 = UserProfile.objects.filter(name__icontains='max')
+        q2.add(Q(working_on_record__in=c1), Q.AND)
+        set1 = list(models.Record.objects.filter(working_on_record__in=c1))
+
+        c2 = UserProfile.objects.filter(name__icontains='pippi')
+        q2.add(Q(working_on_record__in=c2), Q.AND)
+        set2 = list(models.Record.objects.filter(working_on_record__in=c2))
+
+        set3 = list(models.Record.objects.filter(q2))
+        set4 = list(models.Record.objects.filter(working_on_record__in=c1).filter(working_on_record__in=c2))
+        a = 10
 
         if user.is_superuser:
             queryset = models.Record.objects.filter(search_query)
@@ -70,7 +72,7 @@ class RecordsListViewSet(viewsets.ViewSet):
 
         records = []
         for rlc in rlcs:
-            if user.has_permission(Static.VIEW_RECORDS_FULL_DETAIL, for_rlc=rlc.id):
+            if user.has_permission(PERMISSION_VIEW_RECORDS_FULL_DETAIL, for_rlc=rlc.id):
                 queryset = models.Record.objects.filter(search_query, from_rlc_id=rlc.id)
                 serializer = serializers.RecordFullDetailSerializer(queryset, many=True)
                 records += serializer.data
@@ -108,7 +110,7 @@ class RecordsListViewSet(viewsets.ViewSet):
         queryset = models.Record.objects.get(pk=pk)
         if request.user.rlc_members.first() != queryset.from_rlc:
             return Response({'error': 'wrong rlc', 'error_token': 'api.retrieve_record.wrong_rlc'}, status=400)
-        if request.user.has_permission(Static.VIEW_RECORDS_FULL_DETAIL) or request.user.working_on_record.filter(
+        if request.user.has_permission(PERMISSION_VIEW_RECORDS_FULL_DETAIL) or request.user.working_on_record.filter(
             id=pk).count() == 1:
             serializer = serializers.RecordFullDetailSerializer(queryset)
         else:
@@ -193,7 +195,7 @@ class RecordViewSet(APIView):
                 else:
                     url = 'no url, please contact the administrator'
 
-                EmailSender.send_email_notification((user.email, ), "Patched Record",
+                EmailSender.send_email_notification((user.email,), "Patched Record",
                                                     "RLC Intranet Notification - A record of yours was changed. Look here:" +
                                                     url)
 

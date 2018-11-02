@@ -89,6 +89,9 @@ export class RecordsEffects {
                 : RECORDS_URL;
             return from(
                 this.http.get(url).pipe(
+                    catchError(error => {
+                        return of({ error: "error at loading records" });
+                    }),
                     mergeMap(response => {
                         //console.log("recordsFromBackend", response);
                         const loadedRecords: Array<RestrictedRecord> = [];
@@ -106,9 +109,6 @@ export class RecordsEffects {
                             }
                         });
                         return [{ type: SET_RECORDS, payload: loadedRecords }];
-                    }),
-                    catchError(error => {
-                        return of({ error: "error at loading records" });
                     })
                 )
             );

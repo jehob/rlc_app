@@ -16,17 +16,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import {Injectable} from '@angular/core';
-import {AppState} from '../../store/app.reducers';
-import {select, Store} from '@ngrx/store';
-import {take} from 'rxjs/operators';
-import {Logout, ReloadStaticInformation, SetToken, TryLogin} from '../store/auth/auth.actions';
-import {Router} from '@angular/router';
-import {RecordsSandboxService} from '../../recordmanagement/services/records-sandbox.service';
+import { Injectable } from "@angular/core";
+import { AppState } from "../../store/app.reducers";
+import { select, Store } from "@ngrx/store";
+import { take } from "rxjs/operators";
+import {
+    Logout,
+    ReloadStaticInformation,
+    SetToken,
+    TryLogin
+} from "../store/auth/auth.actions";
+import { Router } from "@angular/router";
+import { RecordsSandboxService } from "../../recordmanagement/services/records-sandbox.service";
 
 @Injectable()
-export class AppSandboxService{
-    constructor(private store: Store<AppState>, private router: Router, private recordSB: RecordsSandboxService){}
+export class AppSandboxService {
+    constructor(
+        private store: Store<AppState>,
+        private router: Router,
+        private recordSB: RecordsSandboxService
+    ) {}
 
     isAuthenticated(): boolean {
         let isAuthenticated = false;
@@ -45,8 +54,8 @@ export class AppSandboxService{
         this.router.navigate(["login"]);
     }
 
-    login(username: string, password: string){
-        this.store.dispatch(new TryLogin({username, password}));
+    login(username: string, password: string) {
+        this.store.dispatch(new TryLogin({ username, password }));
     }
 
     startApp() {
@@ -56,10 +65,10 @@ export class AppSandboxService{
             this.store.dispatch(new ReloadStaticInformation());
         }
 
-        return this.store.select("auth");
+        return this.store.select("auth"); // TODO deprectaed
     }
 
-    getAuthState(){
+    getAuthState() {
         return this.store.select("auth");
     }
 }

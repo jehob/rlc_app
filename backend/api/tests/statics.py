@@ -20,8 +20,24 @@ from rest_framework.test import APIClient
 class StaticTestMethods:
     @staticmethod
     def force_authentication():
+        """
+        creates a superuser with a static email and returns the forced authenticated apiClient
+        :return: the forced APIClient
+        """
         UserProfile.objects.create_superuser(email='test123@test.com', name='XX', password='test123')
         client = APIClient()
         user = UserProfile.objects.get(email='test123@test.com')
+        client.force_authenticate(user=user)
+        return client
+
+    @staticmethod
+    def force_authentication_with_user(user):
+        """
+        authenticates a given user and returns the corresponding APIClient
+        :param user: string, email address of the user which should be authenticated
+        :return: corresponding apiClient
+        """
+        client = APIClient()
+        user = UserProfile.objects.get(email=user)
         client.force_authenticate(user=user)
         return client

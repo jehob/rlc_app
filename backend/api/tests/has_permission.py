@@ -117,25 +117,25 @@ class HasPermissionTests(TransactionTestCase):
         self.assertTrue(before + 1 == after)
         self.assertTrue(response.status_code == 409)
 
-    def test_tttt(self):
-        perms = CreateFixtures.create_sample_has_permissions()
-
-        user = list(UserProfile.objects.filter(email='test123@test.com'))[0]
-        perms = user.get_as_user_permissions()
-        p2 = user.get_as_group_member_permissions()
-        x = user.get_overall_permissions()
-
-        pp = user.get_overall_special_permissions('delete_records')
-        # add and delete
-        rwer = user.has_as_user_permission(1, for_user=2)
-        qweq = user.has_as_group_member_permission(3, for_group=2)
-        qwe = user.has_permission(1, for_user=2)
-        a = 10
-
-    def test_ttttttt(self):
-        perms = CreateFixtures.create_sample_has_permissions()
-
-        perm = Permission.objects.first()
-        UserProfile.objects.get_users_with_special_permission(1, for_user=2)
-
-        self.assertTrue(True)
+    # def test_tttt(self):
+    #     perms = CreateFixtures.create_sample_has_permissions()
+    #
+    #     user = list(UserProfile.objects.filter(email='test123@test.com'))[0]
+    #     perms = user.get_as_user_permissions()
+    #     p2 = user.get_as_group_member_permissions()
+    #     x = user.get_overall_permissions()
+    #
+    #     pp = user.get_overall_special_permissions('delete_records')
+    #     # add and delete
+    #     rwer = user.has_as_user_permission(1, for_user=2)
+    #     qweq = user.has_as_group_member_permission(3, for_group=2)
+    #     qwe = user.has_permission(1, for_user=2)
+    #     a = 10
+    #
+    # def test_ttttttt(self):
+    #     perms = CreateFixtures.create_sample_has_permissions()
+    #
+    #     perm = Permission.objects.first()
+    #     UserProfile.objects.get_users_with_special_permission(1, for_user=2)
+    #
+    #     self.assertTrue(True)

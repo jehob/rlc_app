@@ -22,6 +22,7 @@ router = DefaultRouter()
 router.register('records', RecordsListViewSet, base_name='records')
 router.register('origin_countries', OriginCountriesViewSet)
 router.register('record_tags', RecordTagViewSet)
+router.register('clients', ClientsViewSet)
 
 urlpatterns = [
     url(r'', include(router.urls)),
