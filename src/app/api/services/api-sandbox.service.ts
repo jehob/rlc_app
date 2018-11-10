@@ -140,27 +140,7 @@ export class ApiSandboxService {
         const url = `api/storage_down/`;
         this.http.get(url).subscribe((response: any) => {
             console.log("response from download", response);
-            this.downloadFile(response.data, componentRef);
+            window.location.href = response.data;
         });
     }
-
-    async downloadFile(url: string, componentRef) {
-        console.log("download file got: ", url);
-        // const b = url.replace("us-east-1", "eu-central-1");
-        // console.log(b);
-        const blob = await this.http
-            .get<Blob>(url, { responseType: "blob" as "json" })
-            .toPromise();
-
-        const a = componentRef.window.URL.createObjectURL(blob);
-        componentRef.window.open(a);
-
-        //'us-east-1' is wrong; expecting 'eu-central-1'
-    }
-
-    // downloadFile2(data: Response){
-    //     const blob = new Blob([data], { type: 'text/csv' });
-    //     const url = window.URL.createObjectURL(blob);
-    //     window.open(url);
-    // }
 }

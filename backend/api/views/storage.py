@@ -56,11 +56,12 @@ class StorageDownloadViewSet(APIView):
     def get(self, request):
         S3_BUCKET = os.environ.get('S3_BUCKET')
         filekey = 'uploads/WorkshopTeilnehmer.txt'
-
+        a = os.environ.get('AWS_S3_REGION_NAME')
         session = boto3.session.Session(region_name=os.environ.get('AWS_S3_REGION_NAME'))
         s3 = session.client('s3', aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
                             aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'),
                             config=Config(signature_version='s3v4'))
+        s3 = session.client('s3', config=Config(signature_version='s3v4'))
 
         # s3Client.generate_presigned_url('get_object', Params = {'Bucket': 'www.mybucket.com', 'Key': 'hello.txt'}, ExpiresIn = 100)
 
