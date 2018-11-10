@@ -35,12 +35,6 @@ class EditRecord(permissions.BasePermission):
         return True
 
 
-class TestIt(permissions.BasePermission):
-    def has_permission(self, request, view):
-        # TODO: remove this class
-        return True
-
-
 class OnlySuperuser(permissions.BasePermission):
     def has_permission(self, request, view):
         return request.user.is_superuser

@@ -13,9 +13,11 @@ GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/> """
-from .permission import *
-from .has_permission import *
-from .user import *
-from .group import *
-from .rlc import *
-from .language import *
+from django.db import models
+
+
+class Language(models.Model):
+    name = models.CharField(max_length=200, null=False)
+
+    def __str__(self):
+        return 'language: ' + str(self.id) + ':' + self.name

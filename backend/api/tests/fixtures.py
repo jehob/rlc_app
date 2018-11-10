@@ -196,8 +196,15 @@ class CreateFixtures:
 
     @staticmethod
     def add_permission(id, name):
+        """
+        creates a permission in the database
+        :param id: int, id of the permission
+        :param name: string, name of the permission, string-identifier
+        :return: the permission, which was created
+        """
         permission = Permission(id=id, name=name)
         permission.save()
+        return permission
 
     @staticmethod
     def add_permissions(permissions):
@@ -206,20 +213,36 @@ class CreateFixtures:
         Args:
             permissions: list of permissions to add, each a tuple (id, name)
 
-        Returns:
+        Returns: the created permissions
 
         """
+        created = []
         for permission in permissions:
-            CreateFixtures.add_permission(permission[0], permission[1])
+            created.append(CreateFixtures.add_permission(permission[0], permission[1]))
+        return created
 
     @staticmethod
     def add_has_permission(id, permission, user_has=None, group_has=None, rlc_has=None, for_user=None, for_group=None,
                            for_rlc=None):
+        """
+        add a has_permission to the database
+        :param id: int, id of add_permission
+        :param permission: int, id of the permission which is referenced
+        :param user_has: int (has), id of the user which has the permission
+        :param group_has: int (has), id of the group which hast the permission
+        :param rlc_has: int (has), id of the rlc which has the permission
+        -> just one (has) id, others none
+        :param for_user: int (for)
+        :param for_group: int (for)
+        :param for_rlc: int (for)
+        :return: the has_permission which was created
+        """
         has_perm = HasPermission(id=id, permission_id=permission, user_has_permission_id=user_has,
                                  group_has_permission_id=group_has, rlc_has_permission_id=rlc_has,
                                  permission_for_user_id=for_user,
                                  permission_for_group_id=for_group, permission_for_rlc_id=for_rlc)
         has_perm.save()
+        return has_perm
 
     @staticmethod
     def add_has_permissions(has_permissions):

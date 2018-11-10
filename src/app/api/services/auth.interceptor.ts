@@ -45,6 +45,11 @@ export class AuthInterceptor implements HttpInterceptor {
                         "Token " + authState.token
                     )
                 });
+                //console.log('req', req);
+                if (req.url.startsWith("http")){
+                    console.log('unchanged req', req);
+                    return next.handle(req);
+                }
                 return next.handle(copiedReq);
             })
         );

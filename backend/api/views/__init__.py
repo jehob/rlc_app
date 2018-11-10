@@ -34,3 +34,5 @@ from .permission import *
 from .has_permission import *
 from .rlc import *
 from .other import *
+from .storage import *
+

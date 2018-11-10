@@ -18,20 +18,22 @@
 
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import { AppState } from "../../store/app.reducers";
+import { catchError, mergeMap, take } from "rxjs/operators";
+import { MatSnackBar, MatSnackBarConfig } from "@angular/material";
+import moment from "moment";
+import { HttpClient } from "@angular/common/http";
+import { of } from "rxjs";
 import { select, Store } from "@ngrx/store";
+import { AppState } from "../../store/app.reducers";
 import { ApiState } from "../store/api.reducers";
 import { FullUser } from "../models/user.model";
-import { take } from "rxjs/operators";
 import {
     StartCreateUser,
     StartLoadingOtherUsers,
     StartPatchUser
 } from "../store/api.actions";
-import { MatSnackBar, MatSnackBarConfig } from "@angular/material";
-import moment from "moment";
-import { HttpClient } from "@angular/common/http";
 import { RLCS_URL } from "../../statics/api_urls.statics";
+import { ResponseContentType } from "@angular/http";
 
 @Injectable()
 export class ApiSandboxService {
@@ -100,4 +102,65 @@ export class ApiSandboxService {
         config.verticalPosition = "top";
         this.snackBar.open(message, "", config);
     }
+
+    uploadProfilePicture(file: File) {
+        console.log("started", file);
+        const url = `api/storage_up/?file_name=${file.name}&file_type=${
+            file.type
+        }`;
+        console.log(url);
+        this.http.get(url).subscribe((response: any) => {
+            console.log("response", response);
+            this.uploadFile(file, response.data, response.url);
+        });
+    }
+
+    uploadFile(file: File, s3Data: { url: string; fields: any }, url: string) {
+        console.log("s3Data44", s3Data.fields);
+        console.log("url", s3Data.url);
+
+        const v4form = new FormData();
+        // v4form.append('SignedHeader', 'host;range;x-amz-date');
+        v4form.append("x-amz-credential", s3Data.fields["x-amz-credential"]);
+        v4form.append("x-amz-algorithm", s3Data.fields["x-amz-algorithm"]);
+        v4form.append("key", s3Data.fields["key"]);
+        v4form.append("x-amz-signature", s3Data.fields["x-amz-signature"]);
+        v4form.append("policy", s3Data.fields["policy"]);
+        v4form.append("x-amz-date", s3Data.fields["x-amz-date"]);
+        v4form.append("file", file);
+
+        //console.log('form', form);
+        console.log("form", v4form);
+        this.http.post(s3Data.url, v4form).subscribe(response => {
+            console.log("posting response:", response);
+        });
+    }
+
+    downloadSingleFile(componentRef) {
+        const url = `api/storage_down/`;
+        this.http.get(url).subscribe((response: any) => {
+            console.log("response from download", response);
+            this.downloadFile(response.data, componentRef);
+        });
+    }
+
+    async downloadFile(url: string, componentRef) {
+        console.log("download file got: ", url);
+        // const b = url.replace("us-east-1", "eu-central-1");
+        // console.log(b);
+        const blob = await this.http
+            .get<Blob>(url, { responseType: "blob" as "json" })
+            .toPromise();
+
+        const a = componentRef.window.URL.createObjectURL(blob);
+        componentRef.window.open(a);
+
+        //'us-east-1' is wrong; expecting 'eu-central-1'
+    }
+
+    // downloadFile2(data: Response){
+    //     const blob = new Blob([data], { type: 'text/csv' });
+    //     const url = window.URL.createObjectURL(blob);
+    //     window.open(url);
+    // }
 }

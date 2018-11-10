@@ -28,6 +28,8 @@ import {
 } from "../store/auth/auth.actions";
 import { Router } from "@angular/router";
 import { RecordsSandboxService } from "../../recordmanagement/services/records-sandbox.service";
+import {Observable} from 'rxjs';
+import {AuthState} from '../store/auth/auth.reducers';
 
 @Injectable()
 export class AppSandboxService {
@@ -58,17 +60,16 @@ export class AppSandboxService {
         this.store.dispatch(new TryLogin({ username, password }));
     }
 
-    startApp() {
+    startApp(): Observable<AuthState> {
         const token = localStorage.getItem("token");
         if (token !== null) {
             this.store.dispatch(new SetToken(token));
             this.store.dispatch(new ReloadStaticInformation());
         }
-
-        return this.store.select("auth"); // TODO deprectaed
+        return this.store.pipe(select("auth"));
     }
 
-    getAuthState() {
-        return this.store.select("auth");
+    getAuthState(): Observable<AuthState> {
+        return this.store.pipe(select("auth"));
     }
 }

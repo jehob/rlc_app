@@ -13,7 +13,7 @@ GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/> """
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -32,60 +32,37 @@ class RecordsListViewSet(viewsets.ViewSet):
     permission_classes = (IsAuthenticated,)
 
     def list(self, request):
-        user = request.user
-        rlcs = list(user.rlc_members.all())
-        search = request.query_params.get('search', '')
-        parts = search.split(' ')
-        search_query = Q()
 
-        #         inner_qs = Blog.objects.filter(name__contains='Cheddar')
-        # entries = Entry.objects.filter(blog__in=inner_qs)
+        parts = request.query_params.get('search', '').split(' ')
 
+        entries = models.Record.objects.all()
         for part in parts:
             consultants = UserProfile.objects.filter(name__icontains=part)
-            search_query.add(
-                Q(tagged__name__icontains=part) | Q(note__icontains=part) | Q(working_on_record__in=consultants),
-                Q.AND)
-
-        entries = UserProfile.objects.all()
-        for part in parts:
             entries = entries.filter(
-                Q(tagged__name__icontains=part) | Q(note__icontains=part) | Q(working_on_record__in=consultants))
+                Q(tagged__name__icontains=part) | Q(note__icontains=part) | Q(working_on_record__in=consultants)).distinct()
 
-        q2 = Q()
-        c1 = UserProfile.objects.filter(name__icontains='max')
-        q2.add(Q(working_on_record__in=c1), Q.AND)
-        set1 = list(models.Record.objects.filter(working_on_record__in=c1))
-
-        c2 = UserProfile.objects.filter(name__icontains='pippi')
-        q2.add(Q(working_on_record__in=c2), Q.AND)
-        set2 = list(models.Record.objects.filter(working_on_record__in=c2))
-
-        set3 = list(models.Record.objects.filter(q2))
-        set4 = list(models.Record.objects.filter(working_on_record__in=c1).filter(working_on_record__in=c2))
-        a = 10
-
+        user = request.user
         if user.is_superuser:
-            queryset = models.Record.objects.filter(search_query)
+            queryset = entries
             serializer = serializers.RecordFullDetailSerializer(queryset, many=True)
             return Response(serializer.data)
 
+        rlcs = list(user.rlc_members.all())
         records = []
         for rlc in rlcs:
             if user.has_permission(PERMISSION_VIEW_RECORDS_FULL_DETAIL, for_rlc=rlc.id):
-                queryset = models.Record.objects.filter(search_query, from_rlc_id=rlc.id)
+                queryset = entries.filter(from_rlc_id=rlc.id)
                 serializer = serializers.RecordFullDetailSerializer(queryset, many=True)
                 records += serializer.data
             else:
-                queryset = models.Record.objects.filter(search_query,
-                                                        id__in=user.working_on_record.values_list('id', flat=True),
-                                                        from_rlc_id=rlc.id).distinct()
+                queryset = entries.filter(
+                    id__in=user.working_on_record.values_list('id', flat=True),
+                    from_rlc_id=rlc.id).distinct()
                 serializer = serializers.RecordFullDetailSerializer(queryset, many=True)
                 records += serializer.data
 
-                queryset = models.Record.objects.exclude(
-                    id__in=user.working_on_record.values_list('id', flat=True)).filter(
-                    search_query, from_rlc_id=rlc.id).distinct()
+                queryset = entries.exclude(
+                    id__in=user.working_on_record.values_list('id', flat=True)).filter(from_rlc_id=rlc.id).distinct()
                 serializer = serializers.RecordNoDetailSerializer(queryset, many=True)
                 records += serializer.data
         return Response(records)

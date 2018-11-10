@@ -62,7 +62,7 @@ class UserProfileCreatorViewSet(viewsets.ModelViewSet):
     serializer_class = UserProfileCreatorSerializer
     queryset = UserProfile.objects.none()
 
-    def create(self, request):  # TODO: password repeat
+    def create(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)

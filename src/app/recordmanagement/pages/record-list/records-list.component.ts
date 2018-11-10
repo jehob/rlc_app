@@ -31,9 +31,11 @@ import {GetRecordsSearchURL} from '../../../statics/api_urls.statics';
     styleUrls: ["./records-list.component.scss"]
 })
 export class RecordsListComponent implements OnInit {
+    timeout = 400;
     records: Observable<RestrictedRecord[]>;
     columns = ['access', 'token', 'state', 'consultants', 'tags'];
     value = "";
+    timer = null;
 
     constructor(
         private recordsSandbox: RecordsSandboxService,
@@ -59,6 +61,15 @@ export class RecordsListComponent implements OnInit {
         if (this.value && this.value !== "") {
             this.router.navigateByUrl(`records?search=${this.value}`);
         } else this.router.navigateByUrl(`records`);
+    }
+
+    onSearchChange(searchValue: string){
+        clearTimeout(this.timer);
+        this.timer = setTimeout(this.fireSearch.bind(this), this.timeout);
+    }
+
+    fireSearch(): void{
+        this.onSearchClick();
     }
 
     onRecordSelect(record: RestrictedRecord){

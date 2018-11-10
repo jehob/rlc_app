@@ -63,4 +63,8 @@ export class FullRecordDetailComponent implements OnInit {
         this.record.note = this.recordEditForm.value['note'];
         this.recordSB.saveRecord(this.record, this.client);
     }
+
+    onBackClick(){
+        this.recordSB.goBack();
+    }
 }
