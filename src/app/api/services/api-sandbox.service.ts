@@ -18,12 +18,12 @@
 
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import { catchError, mergeMap, take } from "rxjs/operators";
+import { take } from "rxjs/operators";
 import { MatSnackBar, MatSnackBarConfig } from "@angular/material";
 import moment from "moment";
 import { HttpClient } from "@angular/common/http";
-import { of } from "rxjs";
 import { select, Store } from "@ngrx/store";
+
 import { AppState } from "../../store/app.reducers";
 import { ApiState } from "../store/api.reducers";
 import { FullUser } from "../models/user.model";
@@ -32,16 +32,22 @@ import {
     StartLoadingOtherUsers,
     StartPatchUser
 } from "../store/api.actions";
-import { RLCS_URL } from "../../statics/api_urls.statics";
-import { ResponseContentType } from "@angular/http";
+import {
+    GetDownloadUrl,
+    GetUploadUrl,
+    RLCS_URL
+} from "../../statics/api_urls.statics";
+import { StorageService } from "./storage.service";
+import {SnackbarService} from '../../shared/services/snackbar.service';
 
 @Injectable()
 export class ApiSandboxService {
     constructor(
         public router: Router,
-        private snackBar: MatSnackBar,
+        private snackbarService: SnackbarService,
         private appStateStore: Store<AppState>,
         private apiStateStore: Store<ApiState>,
+        private storageService: StorageService,
         private http: HttpClient
     ) {}
 
@@ -88,59 +94,18 @@ export class ApiSandboxService {
     }
 
     showSuccessSnackBar(message: string) {
-        const config = new MatSnackBarConfig();
-        config.panelClass = ["snackbar__success"];
-        config.duration = 2500;
-        config.verticalPosition = "top";
-        this.snackBar.open(message, "", config);
+        this.snackbarService.showSuccessSnackBar(message);
     }
 
     showErrorSnackBar(message: string) {
-        const config = new MatSnackBarConfig();
-        config.panelClass = ["snackbar__error"];
-        config.duration = 2500;
-        config.verticalPosition = "top";
-        this.snackBar.open(message, "", config);
+        this.snackbarService.showErrorSnackBar(message);
     }
 
     uploadProfilePicture(file: File) {
-        console.log("started", file);
-        const url = `api/storage_up/?file_name=${file.name}&file_type=${
-            file.type
-        }`;
-        console.log(url);
-        this.http.get(url).subscribe((response: any) => {
-            console.log("response", response);
-            this.uploadFile(file, response.data, response.url);
-        });
+        this.storageService.uploadFile(file, "profile_pictures");
     }
 
-    uploadFile(file: File, s3Data: { url: string; fields: any }, url: string) {
-        console.log("s3Data44", s3Data.fields);
-        console.log("url", s3Data.url);
-
-        const v4form = new FormData();
-        // v4form.append('SignedHeader', 'host;range;x-amz-date');
-        v4form.append("x-amz-credential", s3Data.fields["x-amz-credential"]);
-        v4form.append("x-amz-algorithm", s3Data.fields["x-amz-algorithm"]);
-        v4form.append("key", s3Data.fields["key"]);
-        v4form.append("x-amz-signature", s3Data.fields["x-amz-signature"]);
-        v4form.append("policy", s3Data.fields["policy"]);
-        v4form.append("x-amz-date", s3Data.fields["x-amz-date"]);
-        v4form.append("file", file);
-
-        //console.log('form', form);
-        console.log("form", v4form);
-        this.http.post(s3Data.url, v4form).subscribe(response => {
-            console.log("posting response:", response);
-        });
-    }
-
-    downloadSingleFile(componentRef) {
-        const url = `api/storage_down/`;
-        this.http.get(url).subscribe((response: any) => {
-            console.log("response from download", response);
-            window.location.href = response.data;
-        });
+    downloadSingleFile(filekey: string) {
+        this.storageService.downloadFile(filekey);
     }
 }

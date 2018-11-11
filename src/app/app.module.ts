@@ -38,6 +38,7 @@ import { AuthInterceptor } from "./api/services/auth.interceptor";
 import { environment } from "../environments/environment";
 import {AppSandboxService} from './api/services/app-sandbox.service';
 import {StorageService} from './api/services/storage.service';
+import {SnackbarService} from './shared/services/snackbar.service';
 
 
 const reduxMiddleware = LogRocket.reduxMiddleware();
@@ -75,6 +76,7 @@ export function logrocketMiddleware(reducer): ActionReducer<any, any> {
         ApiSandboxService,
         RecordsSandboxService,
         StorageService,
+        SnackbarService,
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
     ],
     bootstrap: [AppComponent]

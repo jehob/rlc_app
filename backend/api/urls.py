@@ -35,6 +35,6 @@ urlpatterns = [
     url(r'^records/', include(urls)),
     url(r'send_email/', views.SendEmailViewSet.as_view()),
     url(r'get_rlcs/', views.GetRlcsViewSet.as_view()),
-    url(r'storage_up/', views.StorageViewSet.as_view()),
+    url(r'storage_up/', views.StorageUploadViewSet.as_view()),
     url(r'storage_down/', views.StorageDownloadViewSet.as_view()),
 ]

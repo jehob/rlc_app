@@ -13,10 +13,12 @@ GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/> """
+from django.db import models
 
-from .origin_country import *
-from .client import *
-from .record_tag import *
-from .record import *
-from .record_document import *
-from .record_document_tag import *
+
+class RecordDocument(models.Model):
+    name = models.CharField(max_length=200, unique=True)
+    
+
+    def __str__(self):
+        return 'recor_document: ' + str(self.id) + ':' + self.name
