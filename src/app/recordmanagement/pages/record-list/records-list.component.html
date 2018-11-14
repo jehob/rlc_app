@@ -27,9 +27,9 @@
             </button>
         </mat-form-field>
     </mat-card-header>
-
+    
     <mat-card-content>
-        <div class="records-list__table-container mat-elevation-z8">
+        <div class="records-list__table-container">
             <table mat-table [dataSource]="(records | async)">
                 <ng-container matColumnDef="access" class="records-list__access-container">
                     <th mat-header-cell *matHeaderCellDef>access</th>

@@ -1,28 +1,21 @@
 @import "../../../../styles/basic.scss";
 
-.root-container {
-    width: 100%;
-
-    position: relative;
-    margin: 0 auto;
-    height: auto !important;
-    height: 100%;
-    min-height: 100%;
-}
-
-mat-drawer {
-    width: 200px;
+.drawer-header{
     padding: 16px;
     background-color: $c-primary;
-}
-.drawer-header {
-    border-bottom: 5px solid $c-on-primary;
-    margin-bottom: 15px;
+    color: $c-on-primary;
 }
 .drawer-header img {
-    width: 125px;
+    width: 50px;
+    border-radius: 50%;
     height: auto;
-    margin-bottom: 15px;
+    padding-bottom: 5px;
+}
+.drawer-header span{
+    display: block;
+}
+.drawer-header span a{
+    color: $c-on-primary;
 }
 .drawer-navigation {
     list-style-type: none;
@@ -30,19 +23,29 @@ mat-drawer {
     margin: 0;
 }
 .drawer-navigation li {
-    margin-bottom: 10px;
+    margin: 5px;
+    height: 48px;
+    line-height: 48px;
+    border-radius: 5px
 }
-a {
+.drawer-navigation li a {
     cursor: pointer;
-    color: $c-on-primary;
+    color: $c-on-secondary;
     text-decoration: none;
-}
-.drawer-navigation li {
-    margin-bottom: 10px;
 }
 
 mat-drawer-content {
-    //background-color: #E4EAEE;
-    padding: 15px; /*TODO: Look up MG*/
     height: 100%;
+}
+mat-icon{
+    vertical-align: middle;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.active{
+    background-color: $c-primary-variant;
+}
+.not-active{
+    background-color: none;
 }

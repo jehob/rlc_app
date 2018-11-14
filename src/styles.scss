@@ -27,6 +27,7 @@ body {
     padding: 0;
     height: 100%; /* braucht es für die min-height des Containers */
     background-color: $c-background;
+    overflow: hidden;
 }
 
 * {
@@ -41,3 +42,5 @@ button {
     background-color: $c-primary;
     border-radius: 28px !important;
 }
+
+
