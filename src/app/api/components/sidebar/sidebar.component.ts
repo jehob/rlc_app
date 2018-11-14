@@ -12,27 +12,36 @@ export class SidebarComponent implements OnInit {
 
     ngOnInit() {}
 
-    showProfile() {
-        this.router.navigate(["profile"]);
-    }
-
-    showRecords() {
-        this.router.navigate(["records"]);
-    }
-
-    showAddRecord() {
-        this.router.navigate(["records/add"]);
-    }
+    active: boolean = false;
 
     logout() {
         this.appSB.logout();
     }
 
+    /*
+    showProfile() {
+        this.router.navigate(["profile"]);
+    }
+
+    showRecords() {
+        this.active = !this.active;
+        this.router.navigate(["records"]);
+    }
+
+    showAddRecord() {
+        this.active = !this.active;
+        this.router.navigate(["records/add"]);
+    }
+
+    
+
     showProfiles() {
+        this.active = !this.active;
         this.router.navigate(["profiles"]);
     }
 
     showLandingPage() {
         this.router.navigate([""]);
     }
+    */
 }
