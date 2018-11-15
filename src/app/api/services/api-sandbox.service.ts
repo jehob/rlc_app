@@ -33,11 +33,9 @@ import {
     StartPatchUser
 } from "../store/api.actions";
 import {
-    GetDownloadUrl,
-    GetUploadUrl,
     RLCS_URL
 } from "../../statics/api_urls.statics";
-import { StorageService } from "./storage.service";
+import { StorageService } from "../../shared/services/storage.service";
 import {SnackbarService} from '../../shared/services/snackbar.service';
 
 @Injectable()

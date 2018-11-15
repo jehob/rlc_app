@@ -14,11 +14,24 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/> """
 from django.db import models
+from backend.api.models import UserProfile
 
 
 class RecordDocument(models.Model):
     name = models.CharField(max_length=200, unique=True)
-    
+    creator = models.ForeignKey(
+        UserProfile, related_name="record_documents_created", on_delete=models.SET_NULL, null=True)
+
+    record = models.ForeignKey('Record', related_name="record_documents", on_delete=models.SET_NULL,
+                               null=True, default=None)
+
+    created_on = models.DateField(auto_now_add=True)
+    last_edited = models.DateTimeField(auto_now_add=True)
+
+    file_size = models.BigIntegerField()
 
     def __str__(self):
-        return 'recor_document: ' + str(self.id) + ':' + self.name
+        return 'record_document: ' + str(self.id) + ':' + self.name
+
+    def get_filekey(self):
+        return 'rlcs/' + str(self.record.from_rlc_id) + '/records/' + str(self.record.id) + '/' + self.name

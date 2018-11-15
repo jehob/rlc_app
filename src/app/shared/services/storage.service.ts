@@ -18,17 +18,22 @@
 
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { GetDownloadUrl, GetUploadUrl } from "../../statics/api_urls.statics";
-import { ApiSandboxService } from "./api-sandbox.service";
-import {SnackbarService} from '../../shared/services/snackbar.service';
+import {
+    GetDownloadUrl,
+    GetUploadUrl,
+    UPLOAD_SIGNING_BASE_URL
+} from "../../statics/api_urls.statics";
+import { SnackbarService } from "./snackbar.service";
 
 @Injectable()
 export class StorageService {
-    constructor(private http: HttpClient,
-                private snackbarService: SnackbarService
+    constructor(
+        private http: HttpClient,
+        private snackbarService: SnackbarService
     ) {}
 
     uploadFile(file: File, fileDir: string) {
+        console.log('file', file);
         this.http
             .get(GetUploadUrl(file, fileDir))
             .subscribe((response: any) => {
@@ -36,10 +41,47 @@ export class StorageService {
             });
     }
 
+    uploadFile(file: File, fileDir: string, callbackFn) {
+        console.log('file', file);
+        this.http
+            .get(GetUploadUrl(file, fileDir))
+            .subscribe((response: any) => {
+                this.uploadFileDirect(file, response.data, response.url);
+            });
+    }
+
+    uploadFiles(files: File[], file_dir: string) {
+        console.log('files', files);
+        const file_names = [];
+        const file_types = [];
+        for (const file of files) {
+            file_names.push(file.name);
+            file_types.push(file.type);
+        }
+        console.log('names', file_names);
+
+        this.http
+            .post(UPLOAD_SIGNING_BASE_URL, {
+                file_names,
+                file_types,
+                file_dir
+            })
+            .subscribe((response: any) => {
+                const posts = response.presigned_posts;
+                console.log(posts);
+                for (const post of posts){
+                    const file = Array.from(files).filter((filterFile: File) => {
+                        return post.data.fields.key === `${file_dir}/${filterFile.name}`
+                    })[0];
+                    this.uploadFileDirect(file, post.data, post.url);
+                }
+            });
+    }
+
     private uploadFileDirect(
         file: File,
         s3Data: { url: string; fields: any },
-        url: string
+        url: string,
     ) {
         const v4form = new FormData();
         v4form.append("x-amz-credential", s3Data.fields["x-amz-credential"]);
@@ -53,16 +95,21 @@ export class StorageService {
         this.http.post(s3Data.url, v4form).subscribe((response: any) => {
             //console.log("posting response:", response);
             if (!response) {
-                this.snackbarService.showSuccessSnackBar("file successfully uploaded");
+                this.snackbarService.showSuccessSnackBar(
+                    "file successfully uploaded"
+                );
             }
         });
     }
 
     downloadFile(filekey: string) {
+        console.log("trying to download file: ", filekey);
         this.http.get(GetDownloadUrl(filekey)).subscribe((response: any) => {
             if (!response.error) window.location.href = response.data;
             else {
-                this.snackbarService.showErrorSnackBar("file not found, can't download");
+                this.snackbarService.showErrorSnackBar(
+                    "file not found, can't download"
+                );
             }
         });
     }

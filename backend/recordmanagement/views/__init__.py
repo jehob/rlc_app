@@ -18,3 +18,5 @@ from .origin_country import *
 from .record import *
 from .record_tag import *
 from .statics import *
+from .record_document import *
+from .record_document_tag import *

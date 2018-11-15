@@ -36,10 +36,9 @@ import { ApiModule } from "./api/api.module";
 import { RecordsSandboxService } from "./recordmanagement/services/records-sandbox.service";
 import { AuthInterceptor } from "./api/services/auth.interceptor";
 import { environment } from "../environments/environment";
-import {AppSandboxService} from './api/services/app-sandbox.service';
-import {StorageService} from './api/services/storage.service';
-import {SnackbarService} from './shared/services/snackbar.service';
-
+import { AppSandboxService } from "./api/services/app-sandbox.service";
+import { StorageService } from "./shared/services/storage.service";
+import { SnackbarService } from "./shared/services/snackbar.service";
 
 const reduxMiddleware = LogRocket.reduxMiddleware();
 

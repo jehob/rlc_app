@@ -24,10 +24,10 @@ export const PROFILES_URL = "api/profiles/";
 export const CREATE_PROFILE_URL = "api/create_profile/";
 export const CREATE_RECORD_URL = "api/records/create_record/";
 export const RLCS_URL = "api/get_rlcs/";
+export const UPLOAD_SIGNING_BASE_URL = "api/storage_up/";
 
 const RECORD_SPECIAL_URL = "api/records/record/";
 const DOWNLOAD_SIGNING_BASE_URL = "api/storage_down/";
-const UPLOAD_SIGNING_BASE_URL = "api/storage_up/";
 
 export function GetSpecialProfileURL(id: string | number) {
     return `${PROFILES_URL}${id}/`;

@@ -23,11 +23,10 @@ class Client(models.Model):
 
     name = models.CharField(max_length=200)
     note = models.TextField(max_length=4096, null=True)
-    phone_number = models.CharField(validators=[phone_regex], max_length=17, null=True, default=None)
+    phone_number = models.CharField(validators=[phone_regex], max_length=100, null=True, default=None)
 
     birthday = models.DateField(null=True, blank=True)
     origin_country = models.ForeignKey('OriginCountry', related_name='clients', on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return 'client: ' + str(self.id) + ':' + self.name
-

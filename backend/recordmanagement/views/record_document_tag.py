@@ -13,23 +13,15 @@ GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/> """
+from rest_framework import viewsets
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
-from django.conf.urls import url, include
-from rest_framework.routers import DefaultRouter
-from .views import *
+from backend.recordmanagement import models, serializers
 
-router = DefaultRouter()
-router.register('records', RecordsListViewSet, base_name='records')
-router.register('origin_countries', OriginCountriesViewSet)
-router.register('record_tags', RecordTagViewSet)
-router.register('clients', ClientsViewSet)
-router.register('record_documents', RecordDocumentViewSet)
-router.register('record_document_tags', RecordDocumentTagViewSet)
 
-urlpatterns = [
-    url(r'', include(router.urls)),
-    url(r'statics', StaticViewSet.as_view()),
-    url(r'clients_by_birthday', GetClientsFromBirthday.as_view()),
-    url(r'record/(?P<id>.+)/$', RecordViewSet.as_view()),
-    url(r'record', RecordViewSet.as_view()),
-]
+class RecordDocumentTagViewSet(viewsets.ModelViewSet):
+    authentication_classes = (TokenAuthentication,)
+    queryset = models.RecordDocumentTag.objects.all()
+    serializer_class = serializers.RecordDocumentTagSerializer
+    permission_classes = (IsAuthenticated, )

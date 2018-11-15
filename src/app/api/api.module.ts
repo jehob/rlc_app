@@ -36,10 +36,8 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 
 @NgModule({
     imports: [
-        CommonModule,
         ApiRoutingModule,
         SharedModule,
-        CustomMaterialModule,
         FormsModule,
         ReactiveFormsModule,
         StoreModule.forFeature("api", apiReducer),

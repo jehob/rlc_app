@@ -18,6 +18,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import status
 from django.db.models import Q
 import os
 
@@ -25,6 +26,7 @@ from backend.recordmanagement import models, serializers
 from backend.api.models import UserProfile
 from backend.api.other_functions.emails import EmailSender
 from backend.static.permissions import PERMISSION_VIEW_RECORDS_FULL_DETAIL
+from backend.static.error_codes import ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC
 
 
 class RecordsListViewSet(viewsets.ViewSet):
@@ -86,7 +88,7 @@ class RecordsListViewSet(viewsets.ViewSet):
     def retrieve(self, request, pk=None):
         queryset = models.Record.objects.get(pk=pk)
         if request.user.rlc_members.first() != queryset.from_rlc:
-            return Response({'error': 'wrong rlc', 'error_token': 'api.retrieve_record.wrong_rlc'}, status=400)
+            return Response(ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC, status=status.HTTP_400_BAD_REQUEST)
         if request.user.has_permission(PERMISSION_VIEW_RECORDS_FULL_DETAIL) or request.user.working_on_record.filter(
             id=pk).count() == 1:
             serializer = serializers.RecordFullDetailSerializer(queryset)
@@ -139,7 +141,7 @@ class RecordViewSet(APIView):
         record = models.Record.objects.get(pk=id)
         user = request.user
         if user.rlc_members.first() != record.from_rlc and not user.is_superuser:
-            return Response({'error': 'wrong rlc', 'error_token': 'api.retrieve_record.wrong_rlc'}, status=400)
+            return Response(ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC, status=status.HTTP_400_BAD_REQUEST)
 
         if user.working_on_record.filter(id=id).count() == 1:
             record_serializer = serializers.RecordFullDetailSerializer(record)
@@ -159,7 +161,7 @@ class RecordViewSet(APIView):
         record = models.Record.objects.get(pk=id)
         user = request.user
         if user.rlc_members.first() != record.from_rlc and not user.is_superuser:
-            return Response({'error': 'wrong rlc', 'error_token': 'api.retrieve_record.wrong_rlc'}, status=400)
+            return Response(ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC, status=status.HTTP_400_BAD_REQUEST)
 
         if user.working_on_record.filter(id=id).count() == 1:
             if request.data['record_note']:

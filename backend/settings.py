@@ -182,15 +182,11 @@ else:
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = os.environ.get('S3_BUCKET')
-AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
-# AWS_S3_OBJECT_PARAMETERS = {
-#     'CacheControl': 'max-age=86400',
-# }
+AWS_S3_REGION_NAME = os.environ.get('AWS_S3_REGION_NAME')
+AWS_S3_BUCKET_NAME = os.environ.get('AWS_S3_BUCKET_NAME')
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_S3_BUCKET_NAME
 AWS_LOCATION = 'static'
 AWS_DEFAULT_ACL = 'private'
-AWS_S3_REGION_NAME = 'eu-central-1'
-# S3_USE_SIGV4 = True
 AWS_S3_SIGV4 = True
 AWS_S3_SIGNATURE_VERSION = 's3v4'
 AWS_S3_HOST = 's3.eu-central-1.amazonaws.com'

@@ -19,7 +19,6 @@ from backend.recordmanagement import models
 
 class ClientSerializer(serializers.ModelSerializer):
     records = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-    # clients = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = models.Client

@@ -38,6 +38,7 @@ import { RecordTag } from "../models/record_tags.model";
 import { ApiSandboxService } from "../../api/services/api-sandbox.service";
 import { FullRecord } from "../models/record.model";
 import {Location} from '@angular/common'
+import {StorageService} from '../../shared/services/storage.service';
 @Injectable({
     providedIn: "root"
 })
@@ -46,6 +47,7 @@ export class RecordsSandboxService {
         private router: Router,
         private store: Store<RecordsState>,
         private apiSB: ApiSandboxService,
+        private storageService: StorageService,
         private location: Location
     ) {}
 
@@ -191,5 +193,9 @@ export class RecordsSandboxService {
 
     goBack() {
         this.location.back();
+    }
+
+    uploadRecordDocuments(files: File[]){
+        this.storageService.uploadFiles(files, 'a');
     }
 }

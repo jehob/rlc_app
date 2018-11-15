@@ -89,7 +89,7 @@ export class RecordsEffects {
                 : RECORDS_URL;
             return from(
                 this.http.get(url).pipe(
-                    catchError(error => {
+                    catchError((error) => {
                         return of({ error: "error at loading records" });
                     }),
                     mergeMap(response => {

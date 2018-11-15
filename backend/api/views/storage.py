@@ -1,56 +1,61 @@
+""" rlcapp - record and organization management software for refugee law clinics
+Copyright (C) 2018  Dominik Walser
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/> """
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-import os
-import boto3
-from botocore.client import Config
 from rest_framework.parsers import MultiPartParser
+from rest_framework import status
+from backend.static.error_codes import *
+from backend.shared.storage_generator import generate_presigned_post, generate_presigned_url
 
 
 class StorageUploadViewSet(APIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
-    parser_classes = (MultiPartParser,)
+    # parser_classes = (MultiPartParser,)
 
     def get(self, request):
-        S3_BUCKET = os.environ.get('S3_BUCKET')
+        """
+        used for generating one presigned post, which can then be used to upload ONE file to amazon S3
+        :param request: in the params should be defined: file_name, file_type and file_dir
+        :return: the presigend post data
+        """
         file_name = request.query_params.get('file_name')
         file_type = request.query_params.get('file_type')
-
         file_dir = request.query_params.get('file_dir', '')
-        if file_dir != '' and not file_dir.endswith('/'):
-            file_dir = file_dir + "/"
-
-        session = boto3.session.Session(region_name=os.environ.get('AWS_S3_REGION_NAME'))
-        s3 = session.client('s3', aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
-                            aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'))
-
-        b = s3.list_objects_v2(Bucket=S3_BUCKET, Prefix='uploads')
-
-        presigned_post = s3.generate_presigned_post(
-            Bucket=S3_BUCKET,
-            Key=file_dir + file_name,
-            Fields={"acl": "private", "Content-Type": file_type},
-            ExpiresIn=3600
-        )
-        return Response({
-            'data': presigned_post,
-            'url': 'https://%s.s3.amazonaws.com/%s' % (S3_BUCKET, file_name)
-        })
+        return generate_presigned_post(file_name, file_type, file_dir)
 
     def post(self, request):
-        if 'file' not in request.data:
-            return Response({
-                'error': 'no file to upload',
-                'error_code': 'api.upload.no_file'
-            })
-        file_obj = request.data['file']
+        """
+        used for generating multiple presigned posts and returning them as one object
+        can used for uploading multiple files at once
+        :param request:
+        :return:
+        """
         file_dir = request.data['file_dir']
-        if file_dir != '' and not file_dir.endswith('/'):
-            file_dir = file_dir + "/"
-        # TODO: check if profile picture, when yes, compress with pillow and upload one bigger picture and one small icon like
-        pass
+        file_names = request.data['file_names']
+        file_types = request.data['file_types']
+        posts = []
+        if file_names.__len__() != file_types.__len__():
+            return Response(ERROR__RECORD__UPLOAD__NAMES_TYPES_LENGTH_MISMATCH)
+        for i in range(file_names.__len__()):
+            new_post = generate_presigned_post(file_names[i], file_types[i], file_dir)
+            posts.append(new_post)
+        return Response({'presigned_posts': posts})
 
 
 class StorageDownloadViewSet(APIView):
@@ -58,24 +63,26 @@ class StorageDownloadViewSet(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
-        s3_bucket = os.environ.get('S3_BUCKET')
         filekey = request.query_params.get('file', '')
-        if filekey == '':
-            return Response({
-                'error': 'no file specified',
-                'error_code': 'api.download.no_file_specified'
-            })
 
-        session = boto3.session.Session(region_name=os.environ.get('AWS_S3_REGION_NAME'))
-        s3 = session.client('s3', config=Config(signature_version='s3v4'))
-        try:
-            s3.get_object(Bucket=s3_bucket, Key=filekey)
-        except Exception as ex:
-            return Response({'error': "no such key", 'error_code': "api.download.no_such_key"})
+        return Response(generate_presigned_url(filekey))
 
-        presigned_url = s3.generate_presigned_url(ClientMethod='get_object',
-                                                  Params={'Bucket': s3_bucket, 'Key': filekey},
-                                                  ExpiresIn=100)
-        return Response({
-            'data': presigned_url
-        })
+    # def get(self, request):
+    #     s3_bucket = settings.AWS_S3_BUCKET_NAME
+    #     filekey = request.query_params.get('file', '')
+    #     if filekey == '':
+    #         return Response(ERROR__API__DOWNLOAD__NO_FILE_SPECIFIED, status=status.HTTP_400_BAD_REQUEST)
+    #
+    #     session = boto3.session.Session(region_name=settings.AWS_S3_REGION_NAME)
+    #     s3 = session.client('s3', config=Config(signature_version='s3v4'))
+    #     try:
+    #         s3.get_object(Bucket=s3_bucket, Key=filekey)
+    #     except Exception as ex:
+    #         return Response(ERROR__API__DOWNLOAD__NO_SUCH_KEY, status=status.HTTP_400_BAD_REQUEST)
+    #
+    #     presigned_url = s3.generate_presigned_url(ClientMethod='get_object',
+    #                                               Params={'Bucket': s3_bucket, 'Key': filekey},
+    #                                               ExpiresIn=100)
+    #     return Response({
+    #         'data': presigned_url
+    #     })

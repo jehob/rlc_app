@@ -21,16 +21,21 @@ import { CommonModule } from "@angular/common";
 import { ChipAutocompleteComponent } from "./components/chip-autocomplete/chip-autocomplete.component";
 import { CustomMaterialModule } from "../custom-material.module";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
+import { AutocompleteComponent } from "./components/autocomplete/autocomplete.component";
 
 @NgModule({
     imports: [
         CommonModule,
         CustomMaterialModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
     ],
     declarations: [ChipAutocompleteComponent, AutocompleteComponent],
-    exports: [ChipAutocompleteComponent, AutocompleteComponent]
+    exports: [
+        CommonModule,
+        CustomMaterialModule,
+        ChipAutocompleteComponent,
+        AutocompleteComponent,
+    ]
 })
 export class SharedModule {}

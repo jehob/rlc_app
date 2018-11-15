@@ -36,12 +36,11 @@ import { RecordComponent } from './pages/record/record.component';
 import { FullRecordDetailComponent } from './components/records/full-record-detail/full-record-detail.component';
 import { RestrictedRecordDetailComponent } from './components/records/restricted-record-detail/restricted-record-detail.component';
 import { ConsultantsFieldComponent } from './components/consultants-field/consultants-field.component';
+import { RecordDocumentsListComponent } from './components/records/record-documents-list/record-documents-list.component';
 
 @NgModule({
     imports: [
-        CommonModule,
         RecordsRoutingModule,
-        CustomMaterialModule,
         SharedModule,
         FormsModule,
         ReactiveFormsModule,
@@ -56,7 +55,8 @@ import { ConsultantsFieldComponent } from './components/consultants-field/consul
         RecordComponent,
         FullRecordDetailComponent,
         RestrictedRecordDetailComponent,
-        ConsultantsFieldComponent
+        ConsultantsFieldComponent,
+        RecordDocumentsListComponent
     ],
     entryComponents: [SelectClientDialogComponent]
 })
