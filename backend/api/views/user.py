@@ -26,6 +26,7 @@ from rest_framework import status
 from ..models import UserProfile, Permission, Rlc
 from ..serializers import UserProfileSerializer, UserProfileCreatorSerializer, UserProfileNameSerializer
 from ..permissions import UpdateOwnProfile
+from backend.static.error_codes import *
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
@@ -99,10 +100,10 @@ class LoginViewSet(viewsets.ViewSet):
         except Exception as ex:
             if ex.detail['non_field_errors'][0] == 'Unable to log in with provided credentials.':
                 if UserProfile.objects.filter(email=request.data['username']).count() == 1:
-                    return Response({'error': 'wrong password', 'error_token': 'api.login.wrong_password'},
+                    return Response(ERROR__API__LOGIN__WRONG_PASSWORD,
                                     status=status.HTTP_400_BAD_REQUEST)
                 else:
-                    return Response({'error': 'there is no account with this email'},
+                    return Response(ERROR__API__LOGIN__NO_ACCOUNT,
                                     status=status.HTTP_400_BAD_REQUEST)
         return Response(LoginViewSet.get_login_data(token.data['token']))
 

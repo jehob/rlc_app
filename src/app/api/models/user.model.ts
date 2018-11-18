@@ -64,6 +64,7 @@ export class FullUser extends RestrictedUser {
     }
 
     static getFullUserFromJson(json) {
+        console.log('full user', json);
         return new FullUser(
             json.id,
             json.email,

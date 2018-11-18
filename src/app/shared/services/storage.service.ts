@@ -27,31 +27,30 @@ import { SnackbarService } from "./snackbar.service";
 
 @Injectable()
 export class StorageService {
+    filesToUpload: number;
+    filesUploaded: number;
+    filesUploadFinished;
+
     constructor(
         private http: HttpClient,
         private snackbarService: SnackbarService
     ) {}
 
-    uploadFile(file: File, fileDir: string) {
+    uploadFile(file: File, fileDir: string, finished?) {
         console.log('file', file);
         this.http
             .get(GetUploadUrl(file, fileDir))
             .subscribe((response: any) => {
-                this.uploadFileDirect(file, response.data, response.url);
+                this.uploadFileDirect(file, response.data, response.url, finished);
             });
     }
 
-    uploadFile(file: File, fileDir: string, callbackFn) {
-        console.log('file', file);
-        this.http
-            .get(GetUploadUrl(file, fileDir))
-            .subscribe((response: any) => {
-                this.uploadFileDirect(file, response.data, response.url);
-            });
-    }
+    uploadFiles(files: File[], file_dir: string, finished?) {
+        // console.log('files', files);
+        this.filesToUpload = files.length;
+        this.filesUploaded = 0;
+        this.filesUploadFinished = finished;
 
-    uploadFiles(files: File[], file_dir: string) {
-        console.log('files', files);
         const file_names = [];
         const file_types = [];
         for (const file of files) {
@@ -73,7 +72,11 @@ export class StorageService {
                     const file = Array.from(files).filter((filterFile: File) => {
                         return post.data.fields.key === `${file_dir}/${filterFile.name}`
                     })[0];
-                    this.uploadFileDirect(file, post.data, post.url);
+                    this.uploadFileDirect(file, post.data, post.url, () => {
+                        this.filesUploaded++;
+                        if (this.filesUploaded === this.filesToUpload)
+                            this.filesUploadFinished();
+                    });
                 }
             });
     }
@@ -82,6 +85,7 @@ export class StorageService {
         file: File,
         s3Data: { url: string; fields: any },
         url: string,
+        callbackFn?
     ) {
         const v4form = new FormData();
         v4form.append("x-amz-credential", s3Data.fields["x-amz-credential"]);
@@ -95,9 +99,11 @@ export class StorageService {
         this.http.post(s3Data.url, v4form).subscribe((response: any) => {
             //console.log("posting response:", response);
             if (!response) {
-                this.snackbarService.showSuccessSnackBar(
-                    "file successfully uploaded"
-                );
+                callbackFn();
+                console.log('callback from direct fileupload');
+                // this.snackbarService.showSuccessSnackBar(
+                //     "file successfully uploaded"
+                // );
             }
         });
     }

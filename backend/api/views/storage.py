@@ -17,8 +17,6 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.parsers import MultiPartParser
-from rest_framework import status
 from backend.static.error_codes import *
 from backend.shared.storage_generator import generate_presigned_post, generate_presigned_url
 
@@ -26,7 +24,6 @@ from backend.shared.storage_generator import generate_presigned_post, generate_p
 class StorageUploadViewSet(APIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
-    # parser_classes = (MultiPartParser,)
 
     def get(self, request):
         """
@@ -49,9 +46,9 @@ class StorageUploadViewSet(APIView):
         file_dir = request.data['file_dir']
         file_names = request.data['file_names']
         file_types = request.data['file_types']
-        posts = []
         if file_names.__len__() != file_types.__len__():
             return Response(ERROR__RECORD__UPLOAD__NAMES_TYPES_LENGTH_MISMATCH)
+        posts = []
         for i in range(file_names.__len__()):
             new_post = generate_presigned_post(file_names[i], file_types[i], file_dir)
             posts.append(new_post)

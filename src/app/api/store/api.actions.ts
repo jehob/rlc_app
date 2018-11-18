@@ -18,17 +18,33 @@
 
 import { Action } from "@ngrx/store";
 import {FullUser, RestrictedUser} from '../models/user.model';
+import {HasPermission, Permission} from '../models/permission.model';
 
 export const SET_USER = "SET_USER";
+export const SET_OTHER_USERS = "SET_OTHER_USERS";
+export const SET_ALL_PERMISSIONS = "SET_ALL_PERMISSIONS";
+export const SET_USER_PERMISSIONS = "SET_USER_PERMISSIONS";
+
 export const START_PATCH_USER = "START_PATCH_USER";
 export const START_CREATE_USER = "START_CREATE_USER";
 export const START_LOADING_OTHER_USERS = "START_LOADING_OTHER_USERS";
-export const SET_OTHER_USERS = "SET_OTHER_USERS";
 
 export class SetUser implements Action {
     readonly type = SET_USER;
 
     constructor(public payload: FullUser) {}
+}
+
+export class SetAllPermissions implements Action{
+    readonly type = SET_ALL_PERMISSIONS;
+
+    constructor(public payload: Permission[]){}
+}
+
+export class SetUserPermissions implements Action {
+    readonly type = SET_USER_PERMISSIONS;
+
+    constructor(public payload: HasPermission[]){}
 }
 
 export class SetOtherUsers implements Action {
@@ -55,6 +71,8 @@ export class StartLoadingOtherUsers implements Action {
 
 export type ApiActions =
     | SetUser
+    | SetAllPermissions
+    | SetUserPermissions
     | SetOtherUsers
     | StartPatchUser
     | StartCreateUser

@@ -19,26 +19,28 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { select, Store } from "@ngrx/store";
+import {Location} from '@angular/common'
+import { take } from "rxjs/operators";
+import { Observable } from "rxjs";
 import { RecordsState } from "../store/records.reducers";
 import {
-    ResetPossibleClients,
-    StartAddingNewRecord,
-    StartLoadingClientPossibilities,
-    StartLoadingRecords,
-    StartLoadingRecordStatics,
-    StartLoadingSpecialRecord,
-    StartSavingRecord
+ResetPossibleClients,
+StartAddingNewRecord,
+StartLoadingClientPossibilities,
+StartLoadingRecords,
+StartLoadingRecordStatics,
+StartLoadingSpecialRecord,
+StartSavingRecord
 } from "../store/records.actions";
-import { take } from "rxjs/operators";
 import { FullClient } from "../models/client.model";
-import { Observable } from "rxjs";
 import { OriginCountry } from "../models/country.model";
 import { RestrictedUser } from "../../api/models/user.model";
 import { RecordTag } from "../models/record_tags.model";
 import { ApiSandboxService } from "../../api/services/api-sandbox.service";
 import { FullRecord } from "../models/record.model";
-import {Location} from '@angular/common'
 import {StorageService} from '../../shared/services/storage.service';
+import {SnackbarService} from '../../shared/services/snackbar.service';
+
 @Injectable({
     providedIn: "root"
 })
@@ -47,6 +49,7 @@ export class RecordsSandboxService {
         private router: Router,
         private store: Store<RecordsState>,
         private apiSB: ApiSandboxService,
+        private snackbarService: SnackbarService,
         private storageService: StorageService,
         private location: Location
     ) {}
@@ -196,6 +199,8 @@ export class RecordsSandboxService {
     }
 
     uploadRecordDocuments(files: File[]){
-        this.storageService.uploadFiles(files, 'a');
+        this.storageService.uploadFiles(files, 'a', () => {
+            this.snackbarService.showSuccessSnackBar("upload finished");
+        });
     }
 }

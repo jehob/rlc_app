@@ -17,16 +17,21 @@
  ******************************************************************************/
 
 import {FullUser, RestrictedUser} from '../models/user.model';
-import {ApiActions, SET_OTHER_USERS, SET_USER} from './api.actions';
+import {ApiActions, SET_ALL_PERMISSIONS, SET_OTHER_USERS, SET_USER, SET_USER_PERMISSIONS} from './api.actions';
+import {HasPermission, Permission} from '../models/permission.model';
 
 export interface ApiState {
     user: FullUser;
-    other_users: RestrictedUser[]
+    other_users: RestrictedUser[],
+    all_permissions: Permission[],
+    user_permissions: HasPermission[]
 }
 
 const initialState: ApiState = {
     user: null,
-    other_users: []
+    other_users: [],
+    all_permissions: [],
+    user_permissions: []
 };
 
 export function apiReducer(state = initialState, action: ApiActions) {
@@ -40,6 +45,16 @@ export function apiReducer(state = initialState, action: ApiActions) {
             return {
                 ...state,
                 other_users: action.payload
+            };
+        case SET_ALL_PERMISSIONS:
+            return {
+                ...state,
+                all_permissions: action.payload
+            };
+        case SET_USER_PERMISSIONS:
+            return {
+                ...state,
+                user_permissions: action.payload
             };
         default:
             return state;
