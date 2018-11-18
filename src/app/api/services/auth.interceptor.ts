@@ -39,6 +39,10 @@ export class AuthInterceptor implements HttpInterceptor {
         return this.store.select("auth").pipe(
             take(1),
             switchMap((authState: AuthState) => {
+                if (req.url.startsWith("http")){
+                    return next.handle(req);
+                }
+
                 const copiedReq = req.clone({
                     headers: req.headers.set(
                         "Authorization",

@@ -45,29 +45,28 @@ class UserProfileSerializer(serializers.ModelSerializer):
             }
         }
 
-    # TODO: do we need this anymore?, creating in UserProfileCreatorSerializer
-    def create(self, validated_data):
-        """create and return a new user"""
-
-        user = models.UserProfile(
-            email=validated_data['email'],
-            name=validated_data['name']
-        )
-
-        user.set_password(validated_data['password'])
-
-        if 'phone_number' in validated_data:
-            user.phone_number = validated_data['phone_number']
-        if 'street' in validated_data:
-            user.street = validated_data['street']
-        if 'city' in validated_data:
-            user.city = validated_data['city']
-        if 'postal_code' in validated_data:
-            user.postal_code = validated_data['postal_code']
-        # TODO: if name is member of rlc, is_active=True, real name is important (or same email)
-
-        user.save()
-        return user
+    # def create(self, validated_data):
+    #     """create and return a new user"""
+    #
+    #     user = models.UserProfile(
+    #         email=validated_data['email'],
+    #         name=validated_data['name']
+    #     )
+    #
+    #     user.set_password(validated_data['password'])
+    #
+    #     if 'phone_number' in validated_data:
+    #         user.phone_number = validated_data['phone_number']
+    #     if 'street' in validated_data:
+    #         user.street = validated_data['street']
+    #     if 'city' in validated_data:
+    #         user.city = validated_data['city']
+    #     if 'postal_code' in validated_data:
+    #         user.postal_code = validated_data['postal_code']
+    #
+    #
+    #     user.save()
+    #     return user
 
 
 class UserProfileNameSerializer(serializers.ModelSerializer):

@@ -13,8 +13,9 @@ GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/> """
-from .permission import Permission
-from .has_permission import HasPermission, HasPermissionManager, HasPermissionQuerySet
-from .user import UserProfile, UserProfileManager
-from .group import Group
-from .rlc import Rlc
+from .permission import *
+from .has_permission import *
+from .user import *
+from .group import *
+from .rlc import *
+from .language import *

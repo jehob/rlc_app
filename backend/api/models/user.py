@@ -18,12 +18,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from django.core.validators import RegexValidator
 
 from . import HasPermission, Permission
-
-# TODO: extra member model?? for managing member (member ressort)
-# TODO: correct Validator, make sure to edit corresponding tests
-phone_regex = RegexValidator(regex=r'^\+{0,2}\d{9,15}$',
-                             message="Phone number must be entered "
-                                     "in the format: Up to 15 digits allowed.")
+from backend.static.regex_validators import phone_regex
 
 
 class UserProfileManager(BaseUserManager):
@@ -89,14 +84,13 @@ class UserProfileManager(BaseUserManager):
 
 class UserProfile(AbstractBaseUser, PermissionsMixin):
     """ profile of users """
-    # TODO: regex for all?
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     birthday = models.DateField(null=True)
     phone_number = models.CharField(validators=[phone_regex], max_length=17, null=True, default=None)
 
     # address
-    street = models.CharField(max_length=255, default=None, null=True)  # TODO: number?, but 13a
+    street = models.CharField(max_length=255, default=None, null=True)
     city = models.CharField(max_length=255, default=None, null=True)
     postal_code = models.CharField(max_length=255, default=None, null=True)
 
@@ -109,7 +103,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         ('ac', 'active'),
         ('ex', 'exam'),
         ('ab', 'abroad')
-    )  # TODO: implement
+    )
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']  # email already in there, other are default
@@ -169,7 +163,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         return list(HasPermission.objects.filter(rlc_has_permission_id__in=rlcs, permission_id=permission))
 
     def get_overall_special_permissions(self, permission):
-        if isinstance(permission, str):  # TODO new test
+        if isinstance(permission, str):
             permission = Permission.objects.get(name=permission).id
         return self.get_as_user_special_permissions(permission) + self.get_as_group_member_special_permissions(
             permission) + self.get_as_rlc_member_special_permissions(permission)

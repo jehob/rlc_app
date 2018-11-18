@@ -18,7 +18,6 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from ..permissions import TestIt
 from .. import models, serializers
 
 
@@ -38,7 +37,7 @@ class GroupViewSet(viewsets.ModelViewSet):
 
 class GroupTestViewSet(viewsets.ViewSet):
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated, TestIt, )
+    permission_classes = (IsAuthenticated,)
 
     def list(self, request):
         queryset = models.Group.objects.all()

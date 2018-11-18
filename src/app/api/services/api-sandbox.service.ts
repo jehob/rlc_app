@@ -18,28 +18,34 @@
 
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import { AppState } from "../../store/app.reducers";
+import { take } from "rxjs/operators";
+import { MatSnackBar, MatSnackBarConfig } from "@angular/material";
+import moment from "moment";
+import { HttpClient } from "@angular/common/http";
 import { select, Store } from "@ngrx/store";
+
+import { AppState } from "../../store/app.reducers";
 import { ApiState } from "../store/api.reducers";
 import { FullUser } from "../models/user.model";
-import { take } from "rxjs/operators";
 import {
     StartCreateUser,
     StartLoadingOtherUsers,
     StartPatchUser
 } from "../store/api.actions";
-import { MatSnackBar, MatSnackBarConfig } from "@angular/material";
-import moment from "moment";
-import { HttpClient } from "@angular/common/http";
-import { RLCS_URL } from "../../statics/api_urls.statics";
+import {
+    RLCS_URL
+} from "../../statics/api_urls.statics";
+import { StorageService } from "../../shared/services/storage.service";
+import {SnackbarService} from '../../shared/services/snackbar.service';
 
 @Injectable()
 export class ApiSandboxService {
     constructor(
         public router: Router,
-        private snackBar: MatSnackBar,
+        private snackbarService: SnackbarService,
         private appStateStore: Store<AppState>,
         private apiStateStore: Store<ApiState>,
+        private storageService: StorageService,
         private http: HttpClient
     ) {}
 
@@ -86,18 +92,18 @@ export class ApiSandboxService {
     }
 
     showSuccessSnackBar(message: string) {
-        const config = new MatSnackBarConfig();
-        config.panelClass = ["snackbar__success"];
-        config.duration = 2500;
-        config.verticalPosition = "top";
-        this.snackBar.open(message, "", config);
+        this.snackbarService.showSuccessSnackBar(message);
     }
 
     showErrorSnackBar(message: string) {
-        const config = new MatSnackBarConfig();
-        config.panelClass = ["snackbar__error"];
-        config.duration = 2500;
-        config.verticalPosition = "top";
-        this.snackBar.open(message, "", config);
+        this.snackbarService.showErrorSnackBar(message);
+    }
+
+    uploadProfilePicture(file: File) {
+        this.storageService.uploadFile(file, "profile_pictures");
+    }
+
+    downloadSingleFile(filekey: string) {
+        this.storageService.downloadFile(filekey);
     }
 }

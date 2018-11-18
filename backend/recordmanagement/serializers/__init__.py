@@ -17,3 +17,5 @@ from .client import *
 from .origin_country import *
 from .record_tag import *
 from .record import *
+from .record_document_tag import *
+from .record_document import *

@@ -24,7 +24,7 @@ from backend.api.tests.statics import StaticTestMethods
 class ClientsTests(TransactionTestCase):
     def setUp(self):
         self.client = StaticTestMethods.force_authentication()
-        self.base_url = '/api/clients/'
+        self.base_url = '/api/records/clients/'
         CreateFixtures.create_sample_countries()
 
     def test_create_client_success(self):

@@ -18,7 +18,7 @@ from backend.recordmanagement.models import RecordTag, Record, OriginCountry, Cl
 from backend.api.tests import *
 from backend.api.models import Rlc
 from datetime import date, datetime
-from ...statics.staticNames import StaticPermissionNames
+from backend.static.permissions import get_all_permissions
 
 
 class Fixtures:
@@ -50,7 +50,7 @@ class Fixtures:
     def create_example_permissions():
         permissions = [('add_records',), ('edit_records',), ('remove_records',), ('view_records',), ('view_users',),
                        ('view_records_full_detail',), ('can_consult',)]
-        real_perms = [getattr(StaticPermissionNames, x) for x in dir(StaticPermissionNames) if not x.startswith("__")]
+        real_perms = get_all_permissions()
         for rperm in real_perms:
             if (rperm,) not in permissions:
                 permissions.append((rperm,))

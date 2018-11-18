@@ -14,7 +14,9 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/> """
 
-from .originCountry import OriginCountry
-from .client import Client
-from .record_tag import RecordTag
-from .record import Record
+from .origin_country import *
+from .client import *
+from .record_tag import *
+from .record import *
+from .record_document import *
+from .record_document_tag import *

@@ -30,11 +30,16 @@ import {
 } from "./auth.actions";
 import LogRocket from "logrocket";
 import { LOGIN_URL } from "../../../statics/api_urls.statics";
-import { SET_USER } from "../api.actions";
+import {
+    SET_ALL_PERMISSIONS,
+    SET_USER,
+    SET_USER_PERMISSIONS
+} from "../api.actions";
 import { AuthGuardService } from "../../services/auth-guard.service";
 import { FullUser } from "../../models/user.model";
-import {RecordsSandboxService} from '../../../recordmanagement/services/records-sandbox.service';
-import {ApiSandboxService} from '../../services/api-sandbox.service';
+import { RecordsSandboxService } from "../../../recordmanagement/services/records-sandbox.service";
+import { ApiSandboxService } from "../../services/api-sandbox.service";
+import {HasPermission, Permission} from '../../models/permission.model';
 
 @Injectable()
 export class AuthEffects {
@@ -57,7 +62,7 @@ export class AuthEffects {
             return from(
                 this.http.post(LOGIN_URL, authData).pipe(
                     catchError(error => {
-                        console.log('error', error)
+                        console.log("error", error);
                         this.apiSB.showErrorSnackBar("Login not successfull");
                         return [];
                     }),
@@ -67,6 +72,8 @@ export class AuthEffects {
                             user: any;
                             consultants: any;
                             countries: any;
+                            all_permissions: any;
+                            permissions: any;
                         }) => {
                             localStorage.setItem("token", response.token);
 
@@ -87,7 +94,7 @@ export class AuthEffects {
                     )
                 )
             );
-        }),
+        })
     );
 
     @Effect()
@@ -110,16 +117,32 @@ export class AuthEffects {
         })
     );
 
-    static getStaticInformation(response: { user: any; }) {
+    static getStaticInformation(response: {
+        user: any;
+        all_permissions: any;
+        permissions: any;
+    }) {
         // for logging
         LogRocket.identify(response.user.id);
         // keep this console.log
         console.log("identified: ", response.user.id);
 
-        return  [
+        return [
             {
                 type: SET_USER,
                 payload: FullUser.getFullUserFromJson(response.user)
+            },
+            {
+                type: SET_ALL_PERMISSIONS,
+                payload: Permission.getPermissionsFromJsonArray(
+                    response.all_permissions
+                )
+            },
+            {
+                type: SET_USER_PERMISSIONS,
+                payload: HasPermission.getPermissionsFromJsonArray(
+                    response.permissions
+                )
             }
         ];
     }

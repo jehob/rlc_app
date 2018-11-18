@@ -52,7 +52,8 @@
 
         </div>
     </mat-card-content>
-
+    <input #fileInput type="file" id="file_input"/>
+    <button mat-flat-button (click)="onUploadClick()">Save Pic</button>
     <mat-card-actions>
         <button class="profile__btn-save-changes" mat-flat-button [disabled]="!userForm.valid" (click)="onSaveClick()">Save</button>
     </mat-card-actions>

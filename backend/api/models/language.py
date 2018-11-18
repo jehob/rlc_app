@@ -13,10 +13,11 @@ GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/> """
+from django.db import models
 
 
-class StaticPermissionNames:
-    CAN_ADD_ORIGIN_COUNTRY = 'can_add_origin_country'           # 1
-    CAN_CONSULT = 'can_consult'                                 # 2
-    CAN_VIEW_RECORDS = 'can_view_records'                       # 3
-    VIEW_RECORDS_FULL_DETAIL = 'view_records_full_detail'       # 4
+class Language(models.Model):
+    name = models.CharField(max_length=200, null=False)
+
+    def __str__(self):
+        return 'language: ' + str(self.id) + ':' + self.name

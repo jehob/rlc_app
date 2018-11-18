@@ -18,29 +18,30 @@
 
 <div class="login__login-container rlc-box-shadow">
 
-  <div class="login__holder login__register">
-    <div class="login__content-container">
-        <p>rlc<br>app</p>
+    <div class="login__holder login__register">
+        <div class="login__content-container">
+            <img src="../../../../../../static/images/logo.svg" alt="rfc app" class="login__content-image">
+        </div>
+        <div class="action-holder">
+            <button mat-button (click)="onRegisterClick()">register</button>
+        </div>
     </div>
-    <div class="action-holder">
-      <button mat-button (click)="onRegisterClick()">register</button>
-    </div>
-  </div>
 
-  <div class="login__holder login__login">
-    <div class="login__content-container">
-      <h2>login</h2>
-        <form [formGroup]="loginForm" (ngSubmit)="onLogInClick()">
-            <mat-form-field>
-                <input matInput placeholder="Email" formControlName="email">
-            </mat-form-field>
-            <mat-form-field>
-                <input matInput placeholder="Password" i18n-placeholder="@@login_password" type="password" formControlName="password">
-            </mat-form-field>
-        </form>
+    <div class="login__holder login__login">
+        <div class="login__content-container">
+            <h2>login</h2>
+            <form [formGroup]="loginForm" (ngSubmit)="onLogInClick()">
+                <mat-form-field>
+                    <input matInput placeholder="Email" formControlName="email">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="Password" i18n-placeholder="@@login_password" type="password"
+                           formControlName="password" (keyup.enter)="onLogInClick()">
+                </mat-form-field>
+            </form>
+        </div>
+        <div class="action-holder">
+            <button mat-button (click)="onLogInClick()">login</button>
+        </div>
     </div>
-    <div class="action-holder">
-      <button mat-button (click)="onLogInClick()">login</button>
-    </div>
-  </div>
 </div>

@@ -29,11 +29,14 @@
                     <textarea matInput type="text" placeholder="note" formControlName="note"></textarea>
                 </mat-form-field>
 
-
+                <button mat-button aria-label="Back" (click)="onBackClick()" type="button">
+                    Back
+                </button>
                 <button mat-button matSuffix aria-label="Search" type="submit">
                     Save
                 </button>
             </form>
         </div>
+        <app-record-documents-list></app-record-documents-list>
     </mat-card-content>
 </mat-card>

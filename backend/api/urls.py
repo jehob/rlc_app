@@ -22,7 +22,6 @@ from ..recordmanagement import urls
 router = DefaultRouter()
 router.register('profiles', views.user.UserProfileViewSet)
 router.register('login', views.LoginViewSet, base_name='login')
-router.register('clients', views.ClientsViewSet)
 router.register('create_profile', views.UserProfileCreatorViewSet,
                 base_name='create_profile')
 router.register('groups', views.GroupViewSet, base_name='groups')
@@ -30,11 +29,12 @@ router.register('groups_test', views.GroupTestViewSet, base_name='groups_test')
 router.register('permissions', views.PermissionViewSet, base_name='permissions')
 router.register('has_permission', views.HasPermissionViewSet, base_name="has_permission")
 router.register('rlcs', views.RlcViewSet, base_name='rlcs')
-router.register('get_statics', views.GetStaticsViewSet, base_name='get_statics')
 
 urlpatterns = [
     url(r'', include(router.urls)),
     url(r'^records/', include(urls)),
     url(r'send_email/', views.SendEmailViewSet.as_view()),
     url(r'get_rlcs/', views.GetRlcsViewSet.as_view()),
+    url(r'storage_up/', views.StorageUploadViewSet.as_view()),
+    url(r'storage_down/', views.StorageDownloadViewSet.as_view()),
 ]

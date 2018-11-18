@@ -13,17 +13,11 @@ GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/> """
-from rest_framework import viewsets
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-
-from .user import LoginViewSet
+from django.db import models
 
 
-class GetStaticsViewSet(viewsets.ViewSet):
-    authentication_classes = (TokenAuthentication, )
-    permission_classes = (IsAuthenticated,)
+class RecordDocumentTag(models.Model):
+    name = models.CharField(max_length=200, unique=True)
 
-    def list(self, request):
-        return Response(LoginViewSet.get_statics(request.user))
+    def __str__(self):
+        return 'recorddocumenttag: ' + str(self.id) + ':' + self.name

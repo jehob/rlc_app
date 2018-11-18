@@ -17,6 +17,7 @@ from datetime import date, datetime
 from backend.api.models import UserProfile, HasPermission, Permission, Group, Rlc
 from backend.recordmanagement.models import OriginCountry, Client, Record, RecordTag
 
+
 class CreateFixtures:
     @staticmethod
     def create_sample_countries():
@@ -93,34 +94,65 @@ class CreateFixtures:
         CreateFixtures.add_rlc(2, 'RlC B')
         CreateFixtures.add_rlc(3, 'RlC C')
 
-
     # Helper Methods
 
     @staticmethod
     def add_group(id, name, visible, members):
+        """
+        creates a group with the given information and saves it to the database
+        :param id: int, id of the group
+        :param name: string, name of the group
+        :param visible: bool, if the group is visible
+        :param members: [int], all ids of the members of the group
+        :return: the created group
+        """
         group = Group(id=id, name=name, visible=visible)
         group.save()
         for member in members:
             group.group_members.add(member)
+        return group
 
     @staticmethod
     def add_groups(groups):
+        """
+        creates multiple groups
+        :param groups: (int/id, string/name, bool/visible, [int]/member ids)
+        :return: the created groups
+        """
+        created = []
         for group in groups:
-            CreateFixtures.add_group(group[0], group[1], group[2], group[3])
+            created.append(CreateFixtures.add_group(group[0], group[1], group[2], group[3]))
+        return created
 
     @staticmethod
     def add_record(id, first, last, token, note, state, client, working):
+        """
+        creates a record with the given information and saves it to the database
+        :param id: int, id of the record
+        :param first: date, first contact date
+        :param last: date, last contact date
+        :param token: string, record token
+        :param note: string, note of the record
+        :param state: string, state of the record
+        :param client: int, id of the client which the record is of
+        :param working: [int], list of ids of the users which are working on the record
+        :return: the record which was created
+        """
         record = Record(id=id, first_contact_date=first, last_contact_date=last, record_token=token,
                         note=note, state=state, client_id=client)
         record.save()
         for user in working:
             record.working_on_record.add(user)
+        return record
 
     @staticmethod
     def add_records(records):
+        created = []
         for record in records:
-            CreateFixtures.add_record(record[0], record[1], record[2], record[3], record[4], record[5], record[6],
-                                      record[7])
+            r = CreateFixtures.add_record(record[0], record[1], record[2], record[3], record[4], record[5], record[6],
+                                          record[7])
+            created.append(r)
+        return created
 
     @staticmethod
     def add_client(id, name, note, phone_number, birthday, origin):
@@ -135,8 +167,17 @@ class CreateFixtures:
 
     @staticmethod
     def add_user(id, email, name, password):
+        """
+        creates a user with the given information and saves it to the database
+        :param id: int, id of the user
+        :param email: string, email of the user
+        :param name: string, name of the user
+        :param password: string, password of the user
+        :return: user which was created
+        """
         user = UserProfile(id=id, email=email, name=name, password=password)
         user.save()
+        return user
 
     @staticmethod
     def add_users(users):
@@ -155,8 +196,15 @@ class CreateFixtures:
 
     @staticmethod
     def add_permission(id, name):
+        """
+        creates a permission in the database
+        :param id: int, id of the permission
+        :param name: string, name of the permission, string-identifier
+        :return: the permission, which was created
+        """
         permission = Permission(id=id, name=name)
         permission.save()
+        return permission
 
     @staticmethod
     def add_permissions(permissions):
@@ -165,20 +213,36 @@ class CreateFixtures:
         Args:
             permissions: list of permissions to add, each a tuple (id, name)
 
-        Returns:
+        Returns: the created permissions
 
         """
+        created = []
         for permission in permissions:
-            CreateFixtures.add_permission(permission[0], permission[1])
+            created.append(CreateFixtures.add_permission(permission[0], permission[1]))
+        return created
 
     @staticmethod
     def add_has_permission(id, permission, user_has=None, group_has=None, rlc_has=None, for_user=None, for_group=None,
                            for_rlc=None):
+        """
+        add a has_permission to the database
+        :param id: int, id of add_permission
+        :param permission: int, id of the permission which is referenced
+        :param user_has: int (has), id of the user which has the permission
+        :param group_has: int (has), id of the group which hast the permission
+        :param rlc_has: int (has), id of the rlc which has the permission
+        -> just one (has) id, others none
+        :param for_user: int (for)
+        :param for_group: int (for)
+        :param for_rlc: int (for)
+        :return: the has_permission which was created
+        """
         has_perm = HasPermission(id=id, permission_id=permission, user_has_permission_id=user_has,
                                  group_has_permission_id=group_has, rlc_has_permission_id=rlc_has,
                                  permission_for_user_id=for_user,
                                  permission_for_group_id=for_group, permission_for_rlc_id=for_rlc)
         has_perm.save()
+        return has_perm
 
     @staticmethod
     def add_has_permissions(has_permissions):
@@ -189,11 +253,22 @@ class CreateFixtures:
 
     @staticmethod
     def add_rlc(id, name, members=None, uni=True, umbrella=True, notes=""):
-        rlc = Rlc(id=id, name=name, uni_tied=uni, part_of_umbrella=umbrella, notes=notes)
+        """
+        create a rlc with the given information
+        :param id: int, id of the rlc
+        :param name: string, name of the rlc
+        :param members: [int], list with ids of all the members
+        :param uni: bool, if the rlc is tied to a university
+        :param umbrella: bool, if the rlc is part of the umbrella association
+        :param notes: string, notes of the rlc
+        :return:the rlc which was saved
+        """
+        rlc = Rlc(id=id, name=name, uni_tied=uni, part_of_umbrella=umbrella, note=notes)
         rlc.save()
         if members is not None:
             for member in members:
                 rlc.rlc_members.add(member)
+        return rlc
 
     @staticmethod
     def add_rlcs(rlcs):
@@ -202,9 +277,39 @@ class CreateFixtures:
 
     @staticmethod
     def add_group_to_rlc(group, rlc):
+        """
+        add a group to a rlc
+        :param group: int, id of the group
+        :param rlc: int, if of the rlc
+        :return: null
+        """
         Group.objects.get(id=group).from_rlc = Rlc.objects.get(id=rlc)
 
     @staticmethod
     def add_groups_to_rlcs(pairs):
         for pair in pairs:
             CreateFixtures.add_group_to_rlc(pair[0], pair[1])
+
+    @staticmethod
+    def add_tag(id, name):
+        """
+        add a tag to the database
+        :param id: int, id of the tag
+        :param name: string, name of the tag
+        :return: the tag which was created
+        """
+        tag = RecordTag(id=id, name=name)
+        tag.save()
+        return tag
+
+    @staticmethod
+    def add_tags(tags):
+        """
+        creates multiple tags in the database
+        :param tags: (int, string), tags which will be created
+        :return: all tags which were created
+        """
+        created_tags = []
+        for tag in tags:
+            created_tags.append(CreateFixtures.add_tag(tag[0], tag[1]))
+        return created_tags

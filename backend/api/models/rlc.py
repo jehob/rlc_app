@@ -15,6 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/> """
 from django.db import models
 from . import UserProfile
+from backend.static.permissions import PERMISSION_CAN_CONSULT
 
 
 class Rlc(models.Model):
@@ -24,10 +25,9 @@ class Rlc(models.Model):
     uni_tied = models.BooleanField(default=False)
     part_of_umbrella = models.BooleanField(default=True)
     note = models.CharField(max_length=4000, null=True, default="")
-    # TODO: abbreviation for rlc??
 
     def __str__(self):
         return 'rlc: ' + str(self.id) + ':' + self.name
 
     def get_consultants(self):
-        return UserProfile.objects.get_users_with_special_permission('can_consult', for_rlc=self.id)
+        return UserProfile.objects.get_users_with_special_permission(PERMISSION_CAN_CONSULT, for_rlc=self.id)

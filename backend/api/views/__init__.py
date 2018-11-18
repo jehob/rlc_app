@@ -28,12 +28,11 @@ class ModelViewSet(mixins.CreateModelMixin,
                    mixins.ListModelMixin,
                    GenericViewSet)
 """
-
-from backend.recordmanagement.views.client import ClientsViewSet
 from .user import *
 from .group import *
 from .permission import *
 from .has_permission import *
 from .rlc import *
-from .statics import *
 from .other import *
+from .storage import *
+

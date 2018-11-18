@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { Component, OnInit } from "@angular/core";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { FullUser } from "../../models/user.model";
 import { ApiSandboxService } from "../../services/api-sandbox.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
@@ -30,6 +30,8 @@ import { take } from "rxjs/operators";
 export class ProfileComponent implements OnInit {
     userForm: FormGroup;
     name = "";
+    @ViewChild("fileInput")
+    fileInput: ElementRef<HTMLInputElement>;
 
     constructor(private apiSB: ApiSandboxService) {
         this.userForm = new FormGroup({
@@ -65,7 +67,6 @@ export class ProfileComponent implements OnInit {
     }
 
     onSaveClick() {
-        
         this.apiSB.patchUser(
             new FullUser(
                 undefined,
@@ -78,5 +79,12 @@ export class ProfileComponent implements OnInit {
                 this.userForm.value.postal_code
             )
         );
+    }
+
+    onUploadClick() {
+        console.log(this.fileInput.nativeElement.files);
+        const file = this.fileInput.nativeElement.files[0];
+        this.apiSB.uploadProfilePicture(file);
+        //this.apiSB.downloadSingleFile('aaa');
     }
 }
