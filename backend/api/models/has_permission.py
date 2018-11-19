@@ -53,7 +53,7 @@ class HasPermission(models.Model):
     objects = HasPermissionManager
 
     def __str__(self):
-        return 'hasPermission: ' + str(self.id)
+        return 'hasPermissionFromString: ' + str(self.id)
 
     """
     
