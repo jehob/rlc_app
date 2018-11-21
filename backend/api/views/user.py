@@ -49,7 +49,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(queryset, many=True)
             return Response(serializer.data)
         else:
-            queryset = UserProfile.objects.filter(rlc_members__in=[request.user.rlc_members.first().id])
+            queryset = UserProfile.objects.filter(rlc=request.user.rlc)
             page = self.paginate_queryset(queryset)
             if page is not None:
                 serializer = UserProfileNameSerializer(page, many=True)
@@ -64,13 +64,14 @@ class UserProfileCreatorViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.none()
 
     def create(self, request):
-        serializer = self.get_serializer(data=request.data)
+        data = dict(request.data)
+        del data['rlc']
+        serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
 
         user = UserProfile.objects.get(email=request.data['email'])
-        if 'rlc' in request.data:
-            user.rlc_members.add(Rlc.objects.get(pk=request.data['rlc']))
+        user.rlc = Rlc.objects.get(pk=request.data['rlc'])
         if 'birthday' in request.data:
             user.birthday = request.data['birthday']
         user.save()
@@ -115,7 +116,7 @@ class LoginViewSet(viewsets.ViewSet):
     def get_login_data(token):
         user = Token.objects.get(key=token).user
         serialized_user = UserProfileSerializer(user).data
-        
+
         statics = LoginViewSet.get_statics(user)
         return_object = {
             'token': token,

@@ -68,7 +68,8 @@ class Fixtures:
 
     @staticmethod
     def create_real_permissions():
-        permissions = [getattr(StaticPermissionNames, x) for x in dir(StaticPermissionNames) if not x.startswith("__")]
+        # permissions = [getattr(StaticPermissionNames, x) for x in dir(StaticPermissionNames) if not x.startswith("__")]
+        permissions = get_all_permissions()
         for permission in permissions:
             AddMethods.add_permission(permission)
 
@@ -180,7 +181,7 @@ class Fixtures:
                 'Maximilianstrasse 12',
                 'München',
                 '80539',
-                [3003]  # rlc_member
+                3003  # rlc_member
             ),
             (
                 4002,
@@ -191,7 +192,7 @@ class Fixtures:
                 'Blumengasse 23',
                 'Hamburg',
                 '83452',
-                [3001]
+                3001
             ),
             (
                 4003,
@@ -202,7 +203,7 @@ class Fixtures:
                 'Jungfernstieg 2',
                 'Hamburg',
                 '34264',
-                [3001]
+                3001
             ),
             (
                 4004,
@@ -213,7 +214,7 @@ class Fixtures:
                 'Schlossallee 100',
                 'Grünwald',
                 '82031',
-                [3003]
+                3003
             ),
             (
                 4005,
@@ -224,7 +225,7 @@ class Fixtures:
                 'Leopoldstrasse 31',
                 'Muenchen',
                 '80238',
-                [3003]
+                3003
             ),
             (
                 4006,
@@ -235,7 +236,7 @@ class Fixtures:
                 'Kartoffelweg 12',
                 'Muenchen',
                 '80238',
-                [3002]
+                3002
             ),
             (
                 4007,
@@ -246,7 +247,7 @@ class Fixtures:
                 'Barerstrasse 3',
                 'Muenchen',
                 '80238',
-                [3002]
+                3002
             ),
             (
                 4008,
@@ -257,7 +258,7 @@ class Fixtures:
                 'Argentinische Allee 34',
                 'Hamburg',
                 '34264',
-                [3003]
+                3003
             ),
             (
                 4009,
@@ -268,7 +269,7 @@ class Fixtures:
                 'Ordensmeisterstrasse 56',
                 'Hamburg',
                 '34264',
-                [3001]
+                3001
             ),
             (
                 4010,
@@ -279,7 +280,7 @@ class Fixtures:
                 'Grunewaldstrasse 45',
                 'Hamburg',
                 '34264',
-                [3001]
+                3001
             ),
             (
                 4011,
@@ -290,7 +291,7 @@ class Fixtures:
                 'Muehlenstraße 12',
                 'Muenchen',
                 '80238',
-                [3002]
+                3002
             ),
             (
                 4012,
@@ -301,7 +302,7 @@ class Fixtures:
                 'Bernauerstrasse 34',
                 'Muenchen',
                 '80238',
-                [3002]
+                3002
             ),
             (
                 4013,
@@ -312,7 +313,7 @@ class Fixtures:
                 'Herzbergstrasse 25',
                 'Hamburg',
                 '34264',
-                [3003]
+                3003
             ),
             (
                 4014,
@@ -323,7 +324,7 @@ class Fixtures:
                 'Schönhauser Allee 45',
                 'Hamburg',
                 '34264',
-                [3003]
+                3003
             ),
             (
                 4015,
@@ -334,7 +335,7 @@ class Fixtures:
                 'Holzhauser Strasse 56',
                 'Hamburg',
                 '34264',
-                [3003]
+                3003
             ),
             (
                 4016,
@@ -345,7 +346,7 @@ class Fixtures:
                 'Nollendorfstrasse 37',
                 'Muenchen',
                 '80238',
-                [3002]
+                3002
             ),
             (
                 4017,
@@ -356,7 +357,7 @@ class Fixtures:
                 'Winterfeldstrasse 3',
                 'Muenchen',
                 '80238',
-                [3002]
+                3002
             ),
             (
                 4018,
@@ -367,7 +368,7 @@ class Fixtures:
                 'Goethestrasse 52',
                 'Muenchen',
                 '80238',
-                [3002]
+                3002
             ),
             (
                 4019,
@@ -378,7 +379,7 @@ class Fixtures:
                 'Pestalozzistrasse 72',
                 'Muenchen',
                 '80238',
-                [3002]
+                3002
             ),
             (
                 4020,
@@ -389,7 +390,7 @@ class Fixtures:
                 'Röntgenstrasse 75',
                 'Muenchen',
                 '80238',
-                [3002]
+                3002
             ),
             (
                 4021,
@@ -400,7 +401,7 @@ class Fixtures:
                 'Schlüterstrasse 45',
                 'Hamburg',
                 '34264',
-                [3001]
+                3001
             ),
             (
                 4022,
@@ -411,7 +412,7 @@ class Fixtures:
                 'Fraunhoferstrasse 62',
                 'Hamburg',
                 '34264',
-                [3001]
+                3001
             ),
             (
                 4023,
@@ -422,7 +423,7 @@ class Fixtures:
                 'EInsteinstrasse 49',
                 'Hamburg',
                 '34264',
-                [3001]
+                3001
             ),
             (
                 4024,
@@ -433,7 +434,7 @@ class Fixtures:
                 'Arcostrasse 63',
                 'Hamburg',
                 '34264',
-                [3001]
+                3001
             ),
             (
                 4025,
@@ -444,7 +445,7 @@ class Fixtures:
                 'Minnewitstrasse 66',
                 'Hamburg',
                 '34264',
-                [3001]
+                3001
             ),
             (
                 4026,
@@ -455,7 +456,7 @@ class Fixtures:
                 'Pariser Strasse 37',
                 'Muenchen',
                 '80238',
-                [3002]
+                3002
             ),
             (
                 4027,
@@ -466,7 +467,7 @@ class Fixtures:
                 'Güntzelstrasse 34',
                 'Muenchen',
                 '80238',
-                [3002]
+                3002
             ),
             (
                 4028,
@@ -477,7 +478,7 @@ class Fixtures:
                 'Haberlstrasse 78',
                 'Muenchen',
                 '80238',
-                [3002]
+                3002
             ),
             (
                 4029,
@@ -488,7 +489,7 @@ class Fixtures:
                 'Grainauer Strasse 56',
                 'Muenchen',
                 '80238',
-                [3002]
+                3002
             ),
             (
                 4030,
@@ -499,7 +500,7 @@ class Fixtures:
                 'Eisenacher Strasse 98',
                 'Muenchen',
                 '80238',
-                [3002]
+                3002
             )
         ]
         for user in users:
@@ -1486,14 +1487,11 @@ class AddMethods:
             us.set_password(user[4])
         elif user.__len__() == 9:
             us = UserProfile(id=user[0], email=user[1], name=user[2], birthday=user[3], phone_number=user[4],
-                             street=user[5], city=user[6], postal_code=user[7])
+                             street=user[5], city=user[6], postal_code=user[7], rlc_id=user[8])
             us.set_password('qwe123')
             us.save()
-            for rlc_id in user[8]:
-                us.rlc_members.add(Rlc.objects.get(pk=rlc_id))
         else:
             raise AttributeError
-        us.save()
 
     @staticmethod
     def add_rlc(rlc):
@@ -1587,7 +1585,8 @@ class AddMethods:
 		"""
         rlc = Rlc.objects.get(pk=rlc_id)
         user = UserProfile.objects.get(pk=user_id)
-        user.rlc_members.add(rlc)
+        user.rlc = rlc
+        user.save()
 
     @staticmethod
     def add_group(group, rlc_id=None):

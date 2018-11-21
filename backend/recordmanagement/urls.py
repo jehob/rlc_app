@@ -31,6 +31,6 @@ urlpatterns = [
     url(r'statics', StaticViewSet.as_view()),
     url(r'clients_by_birthday', GetClientsFromBirthday.as_view()),
     url(r'record/(?P<id>.+)/$', RecordViewSet.as_view()),
-    url(r'record$', RecordViewSet.as_view()),
+    url(r'record/$', RecordViewSet.as_view()),
     url(r'record/(?P<id>.+)/documents', RecordDocumentByRecordViewSet.as_view())
 ]

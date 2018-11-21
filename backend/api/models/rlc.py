@@ -21,7 +21,7 @@ from backend.static.permissions import PERMISSION_CAN_CONSULT
 class Rlc(models.Model):
     creator = models.ForeignKey(UserProfile, related_name='rlc_created', on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=200, null=False)
-    rlc_members = models.ManyToManyField(UserProfile, related_name="rlc_members")
+    # rlc_members = models.ManyToManyField(UserProfile, related_name="rlc_members")
     uni_tied = models.BooleanField(default=False)
     part_of_umbrella = models.BooleanField(default=True)
     note = models.CharField(max_length=4000, null=True, default="")

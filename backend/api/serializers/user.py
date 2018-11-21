@@ -26,8 +26,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
         many=True, read_only=True)
     group_members = serializers.PrimaryKeyRelatedField(
         many=True, read_only=True)
-    rlc_members = RlcOnlyNameSerializer(
-        many=True, read_only=True)
+    # rlc_members = RlcOnlyNameSerializer(
+    #     many=True, read_only=True)
 
     user_has_permission = serializers.PrimaryKeyRelatedField(
         many=True, read_only=True

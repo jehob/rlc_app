@@ -77,7 +77,7 @@ class UserProfileManager(BaseUserManager):
                                             permission_for_group=for_group,
                                             permission_for_rlc=for_rlc).values('rlc_has_permission')
         rlc_ids = [has_permission['rlc_has_permission'] for has_permission in rlcs]
-        result = result | UserProfile.objects.filter(rlc_members__in=rlc_ids).distinct()
+        result = result | UserProfile.objects.filter(rlc__in=rlc_ids).distinct()
 
         return result
 
@@ -97,12 +97,19 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
+    rlc = models.ForeignKey('Rlc', related_name='rlc_members', on_delete=models.SET_NULL, null=True)
+
     objects = UserProfileManager()
 
     user_states_possible = (
         ('ac', 'active'),
         ('ex', 'exam'),
         ('ab', 'abroad')
+    )
+
+    user_record_states_possible = (
+        ('ac', 'accepting'),
+        ""
     )
 
     USERNAME_FIELD = 'email'
@@ -134,14 +141,15 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         """
         Returns: all HasPermissions the groups in which the user is member of have as list
         """
-        rlcs = [rlc['id'] for rlc in list(self.rlc_members.values('id'))]
-        return list(HasPermission.objects.filter(rlc_has_permission_id__in=rlcs))
+        return list(HasPermission.objects.filter(rlc_has_permission_id=self.rlc.id))
 
     def get_overall_permissions(self):
         """
         Returns: all HasPermissions which the user has direct and
                     indirect (through membership in a group or rlc) as list
         """
+        if self.is_superuser:
+            return HasPermission.objects.all()
         return self.get_as_user_permissions() + self.get_as_group_member_permissions() + \
                self.get_as_rlc_member_permissions()
 
@@ -159,8 +167,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         return list(HasPermission.objects.filter(group_has_permission_id__in=groups, permission_id=permission))
 
     def get_as_rlc_member_special_permissions(self, permission):
-        rlcs = [rlc['id'] for rlc in list(self.rlc_members.values('id'))]
-        return list(HasPermission.objects.filter(rlc_has_permission_id__in=rlcs, permission_id=permission))
+        return list(HasPermission.objects.filter(rlc_has_permission_id=self.rlc.id, permission_id=permission))
 
     def get_overall_special_permissions(self, permission):
         if isinstance(permission, str):
@@ -182,8 +189,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
                                             permission_for_rlc_id=for_rlc).count() >= 1
 
     def has_as_rlc_member_permission(self, permission, for_user=None, for_group=None, for_rlc=None):
-        rlcs = [rlc['id'] for rlc in list(self.rlc_members.values('id'))]
-        return HasPermission.objects.filter(rlc_has_permission_id__in=rlcs, permission_id=permission,
+        return HasPermission.objects.filter(rlc_has_permission_id=self.rlc.id, permission_id=permission,
                                             permission_for_user_id=for_user,
                                             permission_for_group_id=for_group,
                                             permission_for_rlc_id=for_rlc).count() >= 1

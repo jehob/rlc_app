@@ -14,10 +14,10 @@ class StaticViewSet(APIView):
     def get(self, request):
         user = request.user
 
-        if user.rlc_members.count() == 0:
+        if user.rlc is None:
             consultants = []
         else:
-            consultants = UserProfileNameSerializer(user.rlc_members.first().get_consultants(), many=True).data
+            consultants = UserProfileNameSerializer(user.rlc.get_consultants(), many=True).data
 
         record_tags = RecordTagNameSerializer(RecordTag.objects.all(), many=True).data
         countries = OriginCountryNameStateSerializer(OriginCountry.objects.all(), many=True).data
