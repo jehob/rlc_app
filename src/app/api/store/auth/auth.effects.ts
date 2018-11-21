@@ -126,7 +126,7 @@ export class AuthEffects {
         LogRocket.identify(response.user.id);
         // keep this console.log
         console.log("identified: ", response.user.id);
-
+        console.log('response from auth', response);
         return [
             {
                 type: SET_USER,

@@ -24,14 +24,14 @@ import { take } from "rxjs/operators";
 import { Observable } from "rxjs";
 import { RecordsState } from "../store/records.reducers";
 import {
-ResetPossibleClients,
-StartAddingNewRecord,
-StartLoadingClientPossibilities,
-StartLoadingRecords,
-StartLoadingRecordStatics,
-StartLoadingSpecialRecord,
-StartSavingRecord
-} from "../store/records.actions";
+    ResetPossibleClients,
+    StartAddingNewRecord, StartAddingNewRecordDocument,
+    StartLoadingClientPossibilities,
+    StartLoadingRecords,
+    StartLoadingRecordStatics,
+    StartLoadingSpecialRecord,
+    StartSavingRecord
+} from '../store/records.actions';
 import { FullClient } from "../models/client.model";
 import { OriginCountry } from "../models/country.model";
 import { RestrictedUser } from "../../api/models/user.model";
@@ -40,6 +40,8 @@ import { ApiSandboxService } from "../../api/services/api-sandbox.service";
 import { FullRecord } from "../models/record.model";
 import {StorageService} from '../../shared/services/storage.service';
 import {SnackbarService} from '../../shared/services/snackbar.service';
+import {GetCreateRecordDocumentUrl} from '../../statics/api_urls.statics';
+import {getRecordFolder} from '../../statics/storage_folders.statics';
 
 @Injectable({
     providedIn: "root"
@@ -199,8 +201,27 @@ export class RecordsSandboxService {
     }
 
     uploadRecordDocuments(files: File[]){
-        this.storageService.uploadFiles(files, 'a', () => {
+        let record_id = null;
+        this.store.pipe(
+            select((state: any) => state.records.special_record.record)
+        ).subscribe((record) => {
+            record_id = record.id;
+        }).unsubscribe();
+
+        console.log('i should have it', record_id);
+        this.storageService.uploadFiles(files, 'rlcs/3001/records/7170', () => {
             this.snackbarService.showSuccessSnackBar("upload finished");
+            for (const file of files){
+                const information = {
+                    record_id,
+                    filename: file.name
+                };
+                this.store.dispatch(new StartAddingNewRecordDocument(information));
+            }
         });
+    }
+
+    downloadRecordDocument(file_nanme: string){
+
     }
 }

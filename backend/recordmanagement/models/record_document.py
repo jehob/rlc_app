@@ -25,7 +25,7 @@ class RecordDocument(models.Model):
     record = models.ForeignKey('Record', related_name="record_documents", on_delete=models.SET_NULL,
                                null=True, default=None)
 
-    created_on = models.DateField(auto_now_add=True)
+    created_on = models.DateTimeField(auto_now_add=True)
     last_edited = models.DateTimeField(auto_now_add=True)
 
     file_size = models.BigIntegerField()

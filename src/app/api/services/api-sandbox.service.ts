@@ -63,6 +63,9 @@ export class ApiSandboxService {
     }
 
     hasPermissionFromString(permission: string, subscriberCallback): void {
+        /*
+        checks if the user has permission and returns to subscriberCallback true or false
+         */
         this.apiStateStore
             .pipe(select((state: any) => state.api.all_permissions))
             .subscribe((all_permissions: Permission[]) => {
@@ -79,6 +82,9 @@ export class ApiSandboxService {
     }
 
     hasPermissionFromId(permission: number, subscriberCallback): void {
+        /*
+        checks if the user has permission and returns to subscriberCallback true or false
+         */
         this.apiStateStore
             .pipe(select((state: any) => state.api.user_permissions))
             .subscribe((user_permissions: HasPermission[]) => {
@@ -86,7 +92,6 @@ export class ApiSandboxService {
                     (hasPermission: HasPermission) =>
                         Number(hasPermission.permission_id) === permission
                 );
-                console.log(result);
                 if (result.length === 0) {
                     subscriberCallback(false);
                 } else {

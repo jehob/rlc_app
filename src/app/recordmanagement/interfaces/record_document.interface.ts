@@ -1,4 +1,4 @@
-/*!
+/*
  * rlcapp - record and organization management software for refugee law clinics
  * Copyright (C) 2018  Dominik Walser
  *
@@ -16,52 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-@import "../styles/basic.scss";
-
-mat-sidenav-content {
-    //background-color: #E4EAEE;
-    padding: 15px; /*TODO: Look up MG*/
-    //height: 100%;
-}
-
-mat-sidenav{
-    width: 256px;
-}
-
-.root-toolbar{
-    background-color: $c-primary !important;
-    color: $c-on-primary;
-    border-bottom: 0px solid $c-secondary;
-}
-
-.root-toolbar img{
-   width: 35px;
-   height: auto; 
-   margin-right: 5px;
-}
-.root-container {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-}
-
-.is-mobile .root-toolbar {
-    position: fixed;
-    z-index: 2;
-}
-
-.sidenav-container {
-    flex: 1;
-    margin: 0 !important;
-}
-
-.is-mobile .sidenav-container {
-    flex: 1 0 auto;
-}
-mat-nav-list{
-    padding: 0;
+interface RecordDocumentInterface{
+    record_id: number;
+    name: string;
 }

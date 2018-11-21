@@ -17,11 +17,12 @@
  ******************************************************************************/
 
 import { Action } from "@ngrx/store";
-import {FullRecord, RestrictedRecord} from '../models/record.model';
+import { FullRecord, RestrictedRecord } from "../models/record.model";
 import { RestrictedUser } from "../../api/models/user.model";
 import { OriginCountry } from "../models/country.model";
 import { RecordTag } from "../models/record_tags.model";
 import { FullClient } from "../models/client.model";
+import {RecordDocument} from '../models/record_documents.model';
 
 export const START_LOADING_RECORDS = "START_LOADING_RECORDS";
 export const START_LOADING_RECORD_STATICS = "START_LOADING_RECORD_STATICS";
@@ -30,28 +31,43 @@ export const START_LOADING_CLIENT_POSSIBILITIES =
 export const START_LOADING_SPECIAL_RECORD = "START_LOADING_SPECIAL_RECORD";
 
 export const START_ADDING_NEW_RECORD = "START_ADDING_NEW_RECORD";
+export const START_ADDING_NEW_RECORD_DOCUMENT =
+    "START_ADDING_NEW_RECORD_DOCUMENT";
 
 export const START_SAVING_RECORD = "START_SAVING_RECORD";
 
 export const SET_SPECIAL_RECORD = "SET_SPECIAL_RECORD";
 export const SET_SPECIAL_CLIENT = "SET_SPECIAL_CLIENT";
 export const SET_SPECIAL_ORIGIN_COUNTRY = "SET_SPECIAL_ORIGIN_COUNTRY";
-
 export const SET_RECORDS = "SET_RECORDS";
 export const SET_CONSULTANTS = "SET_CONSULTANTS";
 export const SET_RECORD_STATES = "SET_RECORD_STATES";
 export const SET_COUNTRY_STATES = "SET_COUNTRY_STATES";
-
 export const SET_ORIGIN_COUNTRIES = "SET_ORIGIN_COUNTRIES";
 export const SET_RECORD_TAGS = "SET_RECORD_TAGS";
 export const SET_POSSIBLE_CLIENTS = "SET_POSSIBLE_CLIENTS";
+export const SET_SPECIAL_RECORD_DOCUMENTS = "SET_SPECIAL_RECORD_DOCUMENTS";
 
 export const RESET_POSSIBLE_CLIENTS = "RESET_POSSIBLE_CLIENTS";
+
+export const ADD_RECORD_DOCUMENT = "ADD_RECORD_DOCUMENT";
 
 export class SetRecords implements Action {
     readonly type = SET_RECORDS;
 
     constructor(public payload: Array<RestrictedRecord>) {}
+}
+
+export class SetSpecialRecordDocuments implements Action {
+    readonly type = SET_SPECIAL_RECORD_DOCUMENTS;
+
+    constructor(public payload: RecordDocument[]) {}
+}
+
+export class AddRecordDocument implements Action{
+    readonly type = ADD_RECORD_DOCUMENT;
+
+    constructor(public payload: RecordDocument) {}
 }
 
 export class StartLoadingRecords implements Action {
@@ -76,10 +92,10 @@ export class StartLoadingSpecialRecord implements Action {
     constructor(public payload: string) {}
 }
 
-export class StartSavingRecord implements Action{
+export class StartSavingRecord implements Action {
     readonly type = START_SAVING_RECORD;
 
-    constructor(public payload: {record: FullRecord, client: FullClient}) {}
+    constructor(public payload: { record: FullRecord; client: FullClient }) {}
 }
 
 export class SetConsultants implements Action {
@@ -146,6 +162,12 @@ export class StartAddingNewRecord implements Action {
     constructor(public payload: any) {}
 }
 
+export class StartAddingNewRecordDocument implements Action {
+    readonly type = START_ADDING_NEW_RECORD_DOCUMENT;
+
+    constructor(public payload: any) {}
+}
+
 export type RecordsActions =
     | SetRecords
     | StartLoadingRecords
@@ -163,4 +185,7 @@ export type RecordsActions =
     | SetPossibleClients
     | SetSpecialRecord
     | ResetPossibleClients
-    | StartAddingNewRecord;
+    | StartAddingNewRecord
+    | StartAddingNewRecordDocument
+    | SetSpecialRecordDocuments
+    | AddRecordDocument;

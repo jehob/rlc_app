@@ -20,6 +20,7 @@ import { Injectable } from "@angular/core";
 import { Actions, Effect, ofType } from "@ngrx/effects";
 import { HttpClient } from "@angular/common/http";
 import {
+    ADD_RECORD_DOCUMENT,
     RecordsActions,
     SET_CONSULTANTS,
     SET_COUNTRY_STATES,
@@ -31,13 +32,16 @@ import {
     SET_SPECIAL_CLIENT,
     SET_SPECIAL_ORIGIN_COUNTRY,
     SET_SPECIAL_RECORD,
+    SET_SPECIAL_RECORD_DOCUMENTS,
     START_ADDING_NEW_RECORD,
+    START_ADDING_NEW_RECORD_DOCUMENT,
     START_LOADING_CLIENT_POSSIBILITIES,
     START_LOADING_RECORD_STATICS,
     START_LOADING_RECORDS,
     START_LOADING_SPECIAL_RECORD,
     START_SAVING_RECORD,
     StartAddingNewRecord,
+    StartAddingNewRecordDocument,
     StartLoadingClientPossibilities,
     StartLoadingRecords,
     StartLoadingSpecialRecord,
@@ -45,6 +49,7 @@ import {
 } from "./records.actions";
 import {
     catchError,
+    concatMap,
     map,
     mergeMap,
     switchMap,
@@ -54,6 +59,7 @@ import { from, merge, of } from "rxjs";
 import {
     CLIENTS_BY_BIRTHDAY_URL,
     CREATE_RECORD_URL,
+    GetCreateRecordDocumentUrl,
     GetRecordsSearchURL,
     GetSpecialRecordURL,
     RECORDS_STATICS_URL,
@@ -67,6 +73,7 @@ import { ApiSandboxService } from "../../api/services/api-sandbox.service";
 import { FullClient } from "../models/client.model";
 import { AppSandboxService } from "../../api/services/app-sandbox.service";
 import { RecordsSandboxService } from "../services/records-sandbox.service";
+import { RecordDocument } from "../models/record_documents.model";
 
 @Injectable()
 export class RecordsEffects {
@@ -89,7 +96,7 @@ export class RecordsEffects {
                 : RECORDS_URL;
             return from(
                 this.http.get(url).pipe(
-                    catchError((error) => {
+                    catchError(error => {
                         return of({ error: "error at loading records" });
                     }),
                     mergeMap(response => {
@@ -238,29 +245,39 @@ export class RecordsEffects {
                     }),
                     mergeMap((response: any) => {
                         if (response.record) {
+                            const arr = [];
                             const record: FullRecord = FullRecord.getFullRecordFromJson(
                                 response.record
                             );
-                            const client: FullClient = FullClient.getFullClientFromJson(
-                                response.client
-                            );
-                            const originCountry: OriginCountry = OriginCountry.getOriginCountryFromJson(
-                                response.origin_country
-                            );
-
-                            const arr = [];
                             arr.push({
                                 type: SET_SPECIAL_RECORD,
                                 payload: record
                             });
+
+                            const client: FullClient = FullClient.getFullClientFromJson(
+                                response.client
+                            );
                             arr.push({
                                 type: SET_SPECIAL_CLIENT,
                                 payload: client
                             });
+
+                            const originCountry: OriginCountry = OriginCountry.getOriginCountryFromJson(
+                                response.origin_country
+                            );
                             arr.push({
                                 type: SET_SPECIAL_ORIGIN_COUNTRY,
                                 payload: originCountry
                             });
+
+                            const record_documents = RecordDocument.getRecordDocumentsFromJsonArray(
+                                response.record_documents
+                            );
+                            arr.push({
+                                type: SET_SPECIAL_RECORD_DOCUMENTS,
+                                payload: record_documents
+                            });
+
                             return arr;
                         } else {
                             const record = RestrictedRecord.getRestrictedRecordFromJson(
@@ -297,6 +314,45 @@ export class RecordsEffects {
                         mergeMap((response: any) => {
                             this.recordSB.successfullySavedRecord(response);
                             return [];
+                        })
+                    )
+            );
+        })
+    );
+
+    @Effect()
+    addingNewRecordDocument = this.actions.pipe(
+        ofType(START_ADDING_NEW_RECORD_DOCUMENT),
+        map((action: StartAddingNewRecordDocument) => {
+            return action.payload;
+        }),
+        mergeMap((newDocument: any) => {
+            console.log("addingnewrecord");
+            return from(
+                this.http
+                    .post(
+                        GetCreateRecordDocumentUrl(newDocument.record_id),
+                        newDocument
+                    )
+                    .pipe(
+                        catchError(error => {
+                            console.log("error");
+                            return of({
+                                'error': "error at creating a record document"
+                            });
+                        }),
+                        mergeMap(response => {
+                            console.log("got something");
+                            console.log("addingNewRecordDocument", response);
+                            const document = RecordDocument.getRecordDocumentFromJson(
+                                response
+                            );
+                            return [
+                                {
+                                    type: ADD_RECORD_DOCUMENT,
+                                    payload: document
+                                }
+                            ];
                         })
                     )
             );

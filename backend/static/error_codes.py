@@ -56,3 +56,13 @@ ERROR__API__LOGIN__NO_ACCOUNT = {
     'error': 'there is no account with this email address',
     'error_token': 'api.login.no_account'
 }
+
+ERROR__API__STORAGE__CHECK_FILE_NOT_FOUND = {
+    'error': 'no such file found, checking error',
+    'error_token': 'api.storage.check_file_not_found'
+}
+
+ERROR__API__STORAGE__DIR_NOT_FOUND = {
+    'error': 'the directory doesnt exist',
+    'error_token': 'api.storage.dir_not_found'
+}

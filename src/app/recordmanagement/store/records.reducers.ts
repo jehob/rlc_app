@@ -18,6 +18,7 @@
 
 import { RestrictedRecord } from "../models/record.model";
 import {
+    ADD_RECORD_DOCUMENT,
     RecordsActions, RESET_POSSIBLE_CLIENTS,
     SET_CONSULTANTS,
     SET_COUNTRY_STATES,
@@ -25,17 +26,19 @@ import {
     SET_POSSIBLE_CLIENTS,
     SET_RECORD_STATES,
     SET_RECORD_TAGS,
-    SET_RECORDS, SET_SPECIAL_CLIENT, SET_SPECIAL_ORIGIN_COUNTRY, SET_SPECIAL_RECORD
+    SET_RECORDS, SET_SPECIAL_CLIENT, SET_SPECIAL_ORIGIN_COUNTRY, SET_SPECIAL_RECORD, SET_SPECIAL_RECORD_DOCUMENTS
 } from './records.actions';
 import { OriginCountry } from "../models/country.model";
 import { RecordTag } from "../models/record_tags.model";
 import { FullClient } from "../models/client.model";
+import {RecordDocument} from '../models/record_documents.model';
 
 export interface RecordsState {
     special_record: {
         record: RestrictedRecord,
         client: FullClient,
-        origin_country: OriginCountry
+        origin_country: OriginCountry,
+        record_documents: RecordDocument[]
     },
     records: RestrictedRecord[];
     consultants: RestrictedRecord[];
@@ -50,7 +53,8 @@ const initialState: RecordsState = {
     special_record: {
         record: null,
         client: null,
-        origin_country: null
+        origin_country: null,
+        record_documents: []
     },
     records: [],
     consultants: [],
@@ -126,6 +130,25 @@ export function recordsReducer(state = initialState, action: RecordsActions) {
             return {
                 ...state,
                 possible_clients: []
+            };
+        case SET_SPECIAL_RECORD_DOCUMENTS:
+            return {
+                ...state,
+                special_record: {
+                    ...state.special_record,
+                    record_documents: action.payload
+                }
+            };
+        case ADD_RECORD_DOCUMENT:
+            return {
+                ...state,
+                special_record: {
+                    ...state.special_record,
+                    record_documents: [
+                        ...state.special_record.record_documents,
+                        action.payload
+                    ]
+                }
             };
         default:
             return state;

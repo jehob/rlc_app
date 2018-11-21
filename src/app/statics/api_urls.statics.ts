@@ -47,3 +47,7 @@ export function GetDownloadUrl(file: string) {
 export function GetUploadUrl(file: File, fileDirectory: string = '') {
     return `${UPLOAD_SIGNING_BASE_URL}?file_name=${file.name}&file_type=${file.type}&file_dir=${fileDirectory}`;
 }
+
+export function GetCreateRecordDocumentUrl(record_id: string) {
+    return `${RECORD_SPECIAL_URL}${record_id}/documents`;
+}

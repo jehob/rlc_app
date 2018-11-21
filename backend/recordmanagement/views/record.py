@@ -147,11 +147,13 @@ class RecordViewSet(APIView):
             record_serializer = serializers.RecordFullDetailSerializer(record)
             client_serializer = serializers.ClientSerializer(record.client)
             origin_country = serializers.OriginCountrySerializer(record.client.origin_country)
+            documents = serializers.RecordDocumentSerializer(record.record_documents, many=True)
 
             return Response({
                 'record': record_serializer.data,
                 'client': client_serializer.data,
-                'origin_country': origin_country.data
+                'origin_country': origin_country.data,
+                'record_documents': documents.data
             })
         else:
             serializer = serializers.RecordNoDetailSerializer(record)

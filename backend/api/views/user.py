@@ -115,7 +115,7 @@ class LoginViewSet(viewsets.ViewSet):
     def get_login_data(token):
         user = Token.objects.get(key=token).user
         serialized_user = UserProfileSerializer(user).data
-
+        
         statics = LoginViewSet.get_statics(user)
         return_object = {
             'token': token,

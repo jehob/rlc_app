@@ -1,5 +1,6 @@
-import { Component, OnInit } from "@angular/core";
+import {Component, Input, OnInit} from '@angular/core';
 import {RecordsSandboxService} from '../../../services/records-sandbox.service';
+import {RecordDocument} from '../../../models/record_documents.model';
 
 
 
@@ -9,6 +10,8 @@ import {RecordsSandboxService} from '../../../services/records-sandbox.service';
     styleUrls: ["./record-documents-list.component.scss"]
 })
 export class RecordDocumentsListComponent implements OnInit {
+    @Input()
+    documents: RecordDocument;
 
     constructor(private recordSB: RecordsSandboxService) {}
 
@@ -25,5 +28,9 @@ export class RecordDocumentsListComponent implements OnInit {
     selected($event){
         event.preventDefault();
         console.log($event);
+    }
+
+    onDocumentClick(document: RecordDocument){
+        this.recordSB.downloadRecordDocument(document.name);
     }
 }
