@@ -244,6 +244,7 @@ export class RecordsEffects {
                         return of({ error: "error at loading special record" });
                     }),
                     mergeMap((response: any) => {
+                        console.log(response);
                         if (response.record) {
                             const arr = [];
                             const record: FullRecord = FullRecord.getFullRecordFromJson(
@@ -336,7 +337,7 @@ export class RecordsEffects {
                     )
                     .pipe(
                         catchError(error => {
-                            console.log("error");
+                            console.log(error);
                             return of({
                                 'error': "error at creating a record document"
                             });

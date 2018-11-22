@@ -11,7 +11,7 @@
             <input matInput placeholder="record state" value="{{ record.state }}" disabled>
         </mat-form-field>
         <mat-form-field>
-            <input matInput placeholder="last contact date" value="{{ record.last_contact_date }}" disabled>
+            <input matInput placeholder="last contact date" value="{{ record.last_contact_date | date }}" disabled>
         </mat-form-field>
         <div>
             <mat-label>Consultants</mat-label>
@@ -21,7 +21,6 @@
             <mat-label>Tags</mat-label>
             <mat-chip-list>
                 <mat-chip *ngFor="let tag of record.tags" (click)="this.onTagClick(tag)">{{ tag.name }}</mat-chip>
-
             </mat-chip-list>
         </div>
 

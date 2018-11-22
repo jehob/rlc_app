@@ -15,9 +15,12 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/> """
 from rest_framework import serializers
 from backend.recordmanagement.models import RecordDocument
+from backend.recordmanagement.serializers import RecordDocumentTagSerializer
 
 
 class RecordDocumentSerializer(serializers.ModelSerializer):
+    tagged = RecordDocumentTagSerializer(many=True, read_only=True)
+
     class Meta:
         model = RecordDocument
         fields = '__all__'

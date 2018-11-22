@@ -103,15 +103,18 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 
     user_states_possible = (
         ('ac', 'active'),
+        ('ia', 'inactive'),
         ('ex', 'exam'),
         ('ab', 'abroad')
     )
 
     user_record_states_possible = (
         ('ac', 'accepting'),
-        ""
+        ('na', 'not accepting'),
+        ('de', 'depends')
     )
 
+    # in bearbeitung, abgeschlossen,
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']  # email already in there, other are default
 

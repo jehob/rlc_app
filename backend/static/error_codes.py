@@ -66,3 +66,8 @@ ERROR__API__STORAGE__DIR_NOT_FOUND = {
     'error': 'the directory doesnt exist',
     'error_token': 'api.storage.dir_not_found'
 }
+
+ERROR__API__STORAGE__DIR_EMPTY = {
+    'error': 'there are no files in the specified dir',
+    'error_token': 'api.storage.dir_empty'
+}

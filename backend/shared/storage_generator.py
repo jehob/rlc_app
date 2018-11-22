@@ -99,6 +99,9 @@ def check_file_and_get_information(file_dir, filekey):
     except Exception as ex:
         return ERROR__API__STORAGE__DIR_NOT_FOUND
 
+    if 'Contents' not in objects:
+        return ERROR__API__STORAGE__DIR_EMPTY
+
     for object in objects['Contents']:
         if object['Key'] == file_dir+filekey:
             a = 20

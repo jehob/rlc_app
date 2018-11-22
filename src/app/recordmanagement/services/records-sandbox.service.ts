@@ -40,7 +40,7 @@ import { ApiSandboxService } from "../../api/services/api-sandbox.service";
 import { FullRecord } from "../models/record.model";
 import {StorageService} from '../../shared/services/storage.service';
 import {SnackbarService} from '../../shared/services/snackbar.service';
-import {GetCreateRecordDocumentUrl} from '../../statics/api_urls.statics';
+import {ApiState} from '../../api/store/api.reducers';
 import {getRecordFolder} from '../../statics/storage_folders.statics';
 
 @Injectable({
@@ -49,7 +49,8 @@ import {getRecordFolder} from '../../statics/storage_folders.statics';
 export class RecordsSandboxService {
     constructor(
         private router: Router,
-        private store: Store<RecordsState>,
+        private recordStore: Store<RecordsState>,
+        private apiStore: Store<ApiState>,
         private apiSB: ApiSandboxService,
         private snackbarService: SnackbarService,
         private storageService: StorageService,
@@ -57,34 +58,34 @@ export class RecordsSandboxService {
     ) {}
 
     loadRecords(searchString?: string) {
-        this.store.dispatch(new StartLoadingRecords(searchString));
+        this.recordStore.dispatch(new StartLoadingRecords(searchString));
     }
 
     getRecords() {
-        return this.store.pipe(select((state: any) => state.records.records));
+        return this.recordStore.pipe(select((state: any) => state.records.records));
     }
 
     getPossibleClients(): Observable<FullClient[]> {
-        return this.store.pipe(
+        return this.recordStore.pipe(
             select((state: any) => state.records.possible_clients)
         );
     }
 
     getConsultants(): Observable<RestrictedUser[]> {
-        return this.store.pipe(
+        return this.recordStore.pipe(
             select((state: any) => state.records.consultants)
         );
     }
 
     getRecordTags() {
-        return this.store.pipe(
+        return this.recordStore.pipe(
             select((state: any) => state.records.record_tags)
         );
     }
 
     getSpecialPossibleClient(id: string): FullClient {
         let returnClient: FullClient = null;
-        this.store
+        this.recordStore
             .pipe(
                 take(1),
                 select((state: any) =>
@@ -98,21 +99,21 @@ export class RecordsSandboxService {
     }
 
     loadAndGetSpecialRecord(id: string): Observable<any> {
-        this.store.dispatch(new StartLoadingSpecialRecord(id));
-        return this.store.pipe(
+        this.recordStore.dispatch(new StartLoadingSpecialRecord(id));
+        return this.recordStore.pipe(
             select((state: any) => state.records.special_record)
         );
     }
 
     getSpecialRecord(): Observable<any> {
-        return this.store.pipe(
+        return this.recordStore.pipe(
             select((state: any) => state.records.special_record)
         );
     }
 
     getOriginCountryById(id: string): OriginCountry {
         let originCountry: OriginCountry = null;
-        this.store
+        this.recordStore
             .pipe(
                 take(1),
                 select((state: any) =>
@@ -126,19 +127,19 @@ export class RecordsSandboxService {
     }
 
     loadClientPossibilities(birthday: Date) {
-        this.store.dispatch(new StartLoadingClientPossibilities(birthday));
+        this.recordStore.dispatch(new StartLoadingClientPossibilities(birthday));
     }
 
     startLoadingRecordStatics() {
-        this.store.dispatch(new StartLoadingRecordStatics());
+        this.recordStore.dispatch(new StartLoadingRecordStatics());
     }
 
     resetPossibleClients() {
-        this.store.dispatch(new ResetPossibleClients());
+        this.recordStore.dispatch(new ResetPossibleClients());
     }
 
     getOriginCountries(): Observable<OriginCountry[]> {
-        return this.store.pipe(
+        return this.recordStore.pipe(
             select((state: any) => state.records.origin_countries)
         );
     }
@@ -178,7 +179,7 @@ export class RecordsSandboxService {
         };
 
         //console.log('new record which will be send to the backend', newRecord);
-        this.store.dispatch(new StartAddingNewRecord(newRecord));
+        this.recordStore.dispatch(new StartAddingNewRecord(newRecord));
     }
 
     successfullyCreatedRecord(response: any) {
@@ -193,7 +194,7 @@ export class RecordsSandboxService {
     }
 
     saveRecord(record: FullRecord, client: FullClient) {
-        this.store.dispatch(new StartSavingRecord({ record, client }));
+        this.recordStore.dispatch(new StartSavingRecord({ record, client }));
     }
 
     goBack() {
@@ -202,26 +203,48 @@ export class RecordsSandboxService {
 
     uploadRecordDocuments(files: File[]){
         let record_id = null;
-        this.store.pipe(
+        this.recordStore.pipe(
             select((state: any) => state.records.special_record.record)
         ).subscribe((record) => {
             record_id = record.id;
-        }).unsubscribe();
+        });
+        let rlc_id = null;
+        this.apiStore.pipe(
+            select((state: any) => state.api.rlc)
+        ).subscribe((rlc) => {
+            rlc_id = rlc.id;
+        });
+
 
         console.log('i should have it', record_id);
-        this.storageService.uploadFiles(files, 'rlcs/3001/records/7170', () => {
+        console.log('i should have it', rlc_id);
+        console.log('the url', getRecordFolder(rlc_id, record_id));
+        this.storageService.uploadFiles(files, getRecordFolder(rlc_id, record_id), () => {
             this.snackbarService.showSuccessSnackBar("upload finished");
             for (const file of files){
                 const information = {
                     record_id,
                     filename: file.name
                 };
-                this.store.dispatch(new StartAddingNewRecordDocument(information));
+                this.recordStore.dispatch(new StartAddingNewRecordDocument(information));
             }
         });
     }
 
-    downloadRecordDocument(file_nanme: string){
-
+    downloadRecordDocument(file_name: string){
+        let record_id = null;
+        this.recordStore.pipe(
+            select((state: any) => state.records.special_record.record)
+        ).subscribe((record) => {
+            record_id = record.id;
+        });
+        let rlc_id = null;
+        this.apiStore.pipe(
+            select((state: any) => state.api.rlc)
+        ).subscribe((rlc) => {
+            rlc_id = rlc.id;
+        });
+        console.log('filename', file_name);
+        this.storageService.downloadFile(getRecordFolder(rlc_id, record_id) + '/' + file_name);
     }
 }

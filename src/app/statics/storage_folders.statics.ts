@@ -16,6 +16,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-export function getRecordFolder(record_id: number, rlc_id: number): string {
+export function getRecordFolder(rlc_id: number, record_id: number): string {
     return `rlcs/${rlc_id}/records/${record_id}`;
 }

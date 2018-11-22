@@ -30,6 +30,8 @@ class RecordDocument(models.Model):
 
     file_size = models.BigIntegerField()
 
+    tagged = models.ManyToManyField('RecordDocumentTag', related_name="tagged", blank=True)
+
     def __str__(self):
         return 'record_document: ' + str(self.id) + ':' + self.name
 

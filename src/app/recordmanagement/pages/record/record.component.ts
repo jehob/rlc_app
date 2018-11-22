@@ -36,6 +36,7 @@ export class RecordComponent implements OnInit {
     ) {}
 
     ngOnInit() {
+        console.log('record here');
         this.route.params.subscribe((params: Params) => {
             this.id = params["id"];
             this.recordSB.loadAndGetSpecialRecord(this.id).subscribe((special_record) => {

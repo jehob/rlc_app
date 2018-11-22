@@ -24,7 +24,7 @@ from django.forms.models import model_to_dict
 from rest_framework import status
 
 from ..models import UserProfile, Permission, Rlc
-from ..serializers import UserProfileSerializer, UserProfileCreatorSerializer, UserProfileNameSerializer
+from ..serializers import UserProfileSerializer, UserProfileCreatorSerializer, UserProfileNameSerializer, RlcSerializer
 from ..permissions import UpdateOwnProfile
 from backend.static.error_codes import *
 
@@ -116,11 +116,13 @@ class LoginViewSet(viewsets.ViewSet):
     def get_login_data(token):
         user = Token.objects.get(key=token).user
         serialized_user = UserProfileSerializer(user).data
+        serialized_rlc = RlcSerializer(user.rlc).data
 
         statics = LoginViewSet.get_statics(user)
         return_object = {
             'token': token,
-            'user': serialized_user
+            'user': serialized_user,
+            'rlc': serialized_rlc
         }
         return_object.update(statics)
         return return_object
