@@ -1,11 +1,3 @@
-""" Definition of ModelViewSet
-class ModelViewSet(mixins.CreateModelMixin,
-                   mixins.RetrieveModelMixin,
-                   mixins.UpdateModelMixin,
-                   mixins.DestroyModelMixin,
-                   mixins.ListModelMixin,
-                   GenericViewSet)
-"""
 #  rlcapp - record and organization management software for refugee law clinics
 #  Copyright (C) 2018  Dominik Walser
 #
@@ -22,11 +14,12 @@ class ModelViewSet(mixins.CreateModelMixin,
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-from .user import *
-from .group import *
-from .permission import *
-from .has_permission import *
-from .rlc import *
-from .other import *
-from .storage import *
+from rest_framework import serializers
+from backend.recordmanagement import models
+
+
+class RecordMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Client
+        fields = '__all__'
 
