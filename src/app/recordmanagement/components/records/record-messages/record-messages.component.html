@@ -1,7 +1,12 @@
 
 <div class="record-messages__container">
-    <p>
-        record-messages works!
-    </p>
+    <p *ngFor="let message of messages">{{message.message}}</p>
 
+    <form [formGroup]="messageForm" class="" (ngSubmit)="onSendClick()">
+
+        <mat-form-field class="">
+            <input matInput placeholder="message..." formControlName="message">
+        </mat-form-field>
+        <button type="submit">send</button>
+    </form>
 </div>

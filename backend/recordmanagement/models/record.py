@@ -64,3 +64,12 @@ class Record(models.Model):
 
     def __str__(self):
         return 'record: ' + str(self.id) + ':' + self.record_token
+
+    def user_has_permission(self, user):
+        """
+        return if the user has permission edit and view the record in full detail
+        :param user: the user to check
+        :return: boolean, true if the user has permission
+        """
+
+        pass

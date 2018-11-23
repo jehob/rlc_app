@@ -25,7 +25,7 @@ import { Observable } from "rxjs";
 import { RecordsState } from "../store/records.reducers";
 import {
     ResetPossibleClients,
-    StartAddingNewRecord, StartAddingNewRecordDocument,
+    StartAddingNewRecord, StartAddingNewRecordDocument, StartAddingNewRecordMessage,
     StartLoadingClientPossibilities,
     StartLoadingRecords,
     StartLoadingRecordStatics,
@@ -246,5 +246,9 @@ export class RecordsSandboxService {
         });
         console.log('filename', file_name);
         this.storageService.downloadFile(getRecordFolder(rlc_id, record_id) + '/' + file_name);
+    }
+
+    startAddingNewRecordMessage(message: string){
+        this.recordStore.dispatch(new StartAddingNewRecordMessage(message));
     }
 }

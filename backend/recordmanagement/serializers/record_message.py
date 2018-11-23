@@ -20,6 +20,6 @@ from backend.recordmanagement import models
 
 class RecordMessageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Client
+        model = models.RecordMessage
         fields = '__all__'
 

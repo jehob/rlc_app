@@ -141,7 +141,7 @@ class RecordViewSet(APIView):
     def get(self, request, id):
         record = models.Record.objects.get(pk=id)
         user = request.user
-        if user.rlc!= record.from_rlc and not user.is_superuser:
+        if user.rlc != record.from_rlc and not user.is_superuser:
             return Response(ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC, status=status.HTTP_400_BAD_REQUEST)
 
         if user.working_on_record.filter(id=id).count() == 1:
@@ -149,12 +149,14 @@ class RecordViewSet(APIView):
             client_serializer = serializers.ClientSerializer(record.client)
             origin_country = serializers.OriginCountrySerializer(record.client.origin_country)
             documents = serializers.RecordDocumentSerializer(record.record_documents, many=True)
+            messages = serializers.RecordMessageSerializer(record.record_messages, many=True)
 
             return Response({
                 'record': record_serializer.data,
                 'client': client_serializer.data,
                 'origin_country': origin_country.data,
-                'record_documents': documents.data
+                'record_documents': documents.data,
+                'record_messages': messages.data
             })
         else:
             serializer = serializers.RecordNoDetailSerializer(record)

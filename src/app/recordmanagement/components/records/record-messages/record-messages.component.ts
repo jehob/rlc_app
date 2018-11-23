@@ -1,15 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {RecordsSandboxService} from '../../../services/records-sandbox.service';
+import {RecordMessage} from '../../../models/record_message.model';
 
 @Component({
-  selector: 'app-record-messages',
-  templateUrl: './record-messages.component.html',
-  styleUrls: ['./record-messages.component.scss']
+    selector: "app-record-messages",
+    templateUrl: "./record-messages.component.html",
+    styleUrls: ["./record-messages.component.scss"]
 })
 export class RecordMessagesComponent implements OnInit {
+    messageForm: FormGroup;
 
-  constructor() { }
+    @Input()
+    messages: RecordMessage[];
 
-  ngOnInit() {
-  }
+    constructor(private recordSB: RecordsSandboxService) {
+        this.messageForm = new FormGroup({
+            message: new FormControl("", Validators.required)
+        });
+    }
 
+    ngOnInit() {}
+
+    onSendClick() {
+        console.log(this.messageForm.value.message);
+        this.recordSB.startAddingNewRecordMessage(this.messageForm.value.message);
+        this.messageForm.controls['message'].reset();
+    }
 }

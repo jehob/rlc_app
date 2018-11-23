@@ -13,3 +13,42 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
+
+from rest_framework import viewsets
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from datetime import datetime
+
+from backend.recordmanagement import models, serializers
+from backend.shared import storage_generator
+from backend.static import error_codes, storage_folders
+
+
+class RecordMessageViewSet(viewsets.ModelViewSet):
+    authentication_classes = (TokenAuthentication,)
+    queryset = models.RecordMessage.objects.all()
+    serializer_class = serializers.RecordMessageSerializer
+    permission_classes = (IsAuthenticated,)
+
+
+class RecordMessageByRecordViewSet(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, id):
+        if 'message' not in request.data:
+            return Response(error_codes.ERROR__RECORD__MESSAGE__NO_MESSAGE_PROVIDED)
+        message = request.data['message']
+
+        try:
+            record = models.Record.objects.get(pk=id)
+        except Exception as e:
+            return Response(error_codes.ERROR__RECORD__RECORD__NOT_EXISTING)
+        record_message = models.RecordMessage(sender=request.user, message=message, record=record)
+        record_message.save()
+        return Response(serializers.RecordMessageSerializer(record_message).data)
+
+    def get(self, request, id):
+        pass

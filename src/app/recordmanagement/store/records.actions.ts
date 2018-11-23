@@ -22,7 +22,8 @@ import { RestrictedUser } from "../../api/models/user.model";
 import { OriginCountry } from "../models/country.model";
 import { RecordTag } from "../models/record_tags.model";
 import { FullClient } from "../models/client.model";
-import {RecordDocument} from '../models/record_documents.model';
+import { RecordDocument } from "../models/record_documents.model";
+import {RecordMessage} from '../models/record_message.model';
 
 export const START_LOADING_RECORDS = "START_LOADING_RECORDS";
 export const START_LOADING_RECORD_STATICS = "START_LOADING_RECORD_STATICS";
@@ -33,12 +34,16 @@ export const START_LOADING_SPECIAL_RECORD = "START_LOADING_SPECIAL_RECORD";
 export const START_ADDING_NEW_RECORD = "START_ADDING_NEW_RECORD";
 export const START_ADDING_NEW_RECORD_DOCUMENT =
     "START_ADDING_NEW_RECORD_DOCUMENT";
+export const START_ADDING_NEW_RECORD_MESSAGE =
+    "START_ADDING_NEW_RECORD_MESSAGE";
 
 export const START_SAVING_RECORD = "START_SAVING_RECORD";
 
 export const SET_SPECIAL_RECORD = "SET_SPECIAL_RECORD";
 export const SET_SPECIAL_CLIENT = "SET_SPECIAL_CLIENT";
 export const SET_SPECIAL_ORIGIN_COUNTRY = "SET_SPECIAL_ORIGIN_COUNTRY";
+export const SET_SPECIAL_RECORD_DOCUMENTS = "SET_SPECIAL_RECORD_DOCUMENTS";
+export const SET_SPECIAL_RECORD_MESSAGES = "SET_SPECIAL_RECORD_MESSAGES";
 export const SET_RECORDS = "SET_RECORDS";
 export const SET_CONSULTANTS = "SET_CONSULTANTS";
 export const SET_RECORD_STATES = "SET_RECORD_STATES";
@@ -46,11 +51,11 @@ export const SET_COUNTRY_STATES = "SET_COUNTRY_STATES";
 export const SET_ORIGIN_COUNTRIES = "SET_ORIGIN_COUNTRIES";
 export const SET_RECORD_TAGS = "SET_RECORD_TAGS";
 export const SET_POSSIBLE_CLIENTS = "SET_POSSIBLE_CLIENTS";
-export const SET_SPECIAL_RECORD_DOCUMENTS = "SET_SPECIAL_RECORD_DOCUMENTS";
 
 export const RESET_POSSIBLE_CLIENTS = "RESET_POSSIBLE_CLIENTS";
 
 export const ADD_RECORD_DOCUMENT = "ADD_RECORD_DOCUMENT";
+export const ADD_RECORD_MESSAGE = "ADD_RECORD_MESSAGE";
 
 export class SetRecords implements Action {
     readonly type = SET_RECORDS;
@@ -64,7 +69,7 @@ export class SetSpecialRecordDocuments implements Action {
     constructor(public payload: RecordDocument[]) {}
 }
 
-export class AddRecordDocument implements Action{
+export class AddRecordDocument implements Action {
     readonly type = ADD_RECORD_DOCUMENT;
 
     constructor(public payload: RecordDocument) {}
@@ -168,6 +173,24 @@ export class StartAddingNewRecordDocument implements Action {
     constructor(public payload: any) {}
 }
 
+export class StartAddingNewRecordMessage implements Action {
+    readonly type = START_ADDING_NEW_RECORD_MESSAGE;
+
+    constructor(public payload: any) {}
+}
+
+export class AddRecordMessage implements Action {
+    readonly type = ADD_RECORD_MESSAGE;
+
+    constructor(public payload: RecordMessage) {}
+}
+
+export class SetRecordMessages implements Action {
+    readonly type = SET_SPECIAL_RECORD_MESSAGES;
+
+    constructor(public payload: RecordMessage[]){}
+}
+
 export type RecordsActions =
     | SetRecords
     | StartLoadingRecords
@@ -188,4 +211,7 @@ export type RecordsActions =
     | StartAddingNewRecord
     | StartAddingNewRecordDocument
     | SetSpecialRecordDocuments
-    | AddRecordDocument;
+    | AddRecordDocument
+    | StartAddingNewRecordMessage
+    | AddRecordMessage
+    | SetRecordMessages;

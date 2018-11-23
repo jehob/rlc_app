@@ -71,9 +71,10 @@ class RecordDocumentByRecordViewSet(APIView):
     def post(self, request, id):
 
         filename = request.data['filename']
-        record = models.Record.objects.filter(pk=id).first()  # TODO: try catch?
-        if not record:
-            return Response(error_codes.ERROR__RECORD__RECORD__NOT_EXISTING, status=400)
+        try:
+            record = models.Record.objects.get(pk=id)
+        except Exception as e:
+            return Response(error_codes.ERROR__RECORD__RECORD__NOT_EXISTING)
 
         directory = storage_folders.get_storage_folder_record_document(record.from_rlc_id, record.id)
         information = storage_generator.check_file_and_get_information(directory, filename)

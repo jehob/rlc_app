@@ -23,6 +23,7 @@ import { FullClient } from "../../../models/client.model";
 import { OriginCountry } from "../../../models/country.model";
 import {FormControl, FormGroup} from '@angular/forms';
 import {RecordDocument} from '../../../models/record_documents.model';
+import {RecordMessage} from '../../../models/record_message.model';
 
 @Component({
     selector: "app-full-record-detail",
@@ -34,6 +35,7 @@ export class FullRecordDetailComponent implements OnInit {
     client: FullClient;
     origin_country: OriginCountry;
     record_documents: RecordDocument[];
+    record_messages: RecordMessage[];
     recordEditForm: FormGroup;
 
     constructor(private recordSB: RecordsSandboxService) {
@@ -50,12 +52,14 @@ export class FullRecordDetailComponent implements OnInit {
                     record: FullRecord;
                     client: FullClient;
                     origin_country: OriginCountry;
-                    record_documents: RecordDocument[]
+                    record_documents: RecordDocument[];
+                    record_messages: RecordMessage[]
                 }) => {
                     this.record = special_record.record;
                     this.client = special_record.client;
                     this.origin_country = special_record.origin_country;
                     this.record_documents = special_record.record_documents;
+                    this.record_messages = special_record.record_messages;
 
                     this.recordEditForm.controls['note'].setValue(this.record.note);
                 }

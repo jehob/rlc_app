@@ -19,26 +19,35 @@
 import { RestrictedRecord } from "../models/record.model";
 import {
     ADD_RECORD_DOCUMENT,
-    RecordsActions, RESET_POSSIBLE_CLIENTS,
+    ADD_RECORD_MESSAGE,
+    RecordsActions,
+    RESET_POSSIBLE_CLIENTS,
     SET_CONSULTANTS,
     SET_COUNTRY_STATES,
     SET_ORIGIN_COUNTRIES,
     SET_POSSIBLE_CLIENTS,
     SET_RECORD_STATES,
     SET_RECORD_TAGS,
-    SET_RECORDS, SET_SPECIAL_CLIENT, SET_SPECIAL_ORIGIN_COUNTRY, SET_SPECIAL_RECORD, SET_SPECIAL_RECORD_DOCUMENTS
+    SET_RECORDS,
+    SET_SPECIAL_CLIENT,
+    SET_SPECIAL_ORIGIN_COUNTRY,
+    SET_SPECIAL_RECORD,
+    SET_SPECIAL_RECORD_DOCUMENTS,
+    SET_SPECIAL_RECORD_MESSAGES
 } from './records.actions';
 import { OriginCountry } from "../models/country.model";
 import { RecordTag } from "../models/record_tags.model";
 import { FullClient } from "../models/client.model";
 import {RecordDocument} from '../models/record_documents.model';
+import {RecordMessage} from '../models/record_message.model';
 
 export interface RecordsState {
     special_record: {
         record: RestrictedRecord,
         client: FullClient,
         origin_country: OriginCountry,
-        record_documents: RecordDocument[]
+        record_documents: RecordDocument[],
+        record_messages: RecordMessage[]
     },
     records: RestrictedRecord[];
     consultants: RestrictedRecord[];
@@ -54,7 +63,8 @@ const initialState: RecordsState = {
         record: null,
         client: null,
         origin_country: null,
-        record_documents: []
+        record_documents: [],
+        record_messages: []
     },
     records: [],
     consultants: [],
@@ -148,6 +158,25 @@ export function recordsReducer(state = initialState, action: RecordsActions) {
                         ...state.special_record.record_documents,
                         action.payload
                     ]
+                }
+            };
+        case ADD_RECORD_MESSAGE:
+            return {
+                ...state,
+                special_record: {
+                    ...state.special_record,
+                    record_messages: [
+                        ...state.special_record.record_messages,
+                        action.payload
+                    ]
+                }
+            };
+        case SET_SPECIAL_RECORD_MESSAGES:
+            return {
+                ...state,
+                special_record: {
+                    ...state.special_record,
+                    record_messages: action.payload
                 }
             };
         default:

@@ -51,3 +51,7 @@ export function GetUploadUrl(file: File, fileDirectory: string = '') {
 export function GetCreateRecordDocumentUrl(record_id: string) {
     return `${RECORD_SPECIAL_URL}${record_id}/documents`;
 }
+
+export function GetAddRecordMessageUrl(record_id: string) {
+    return `${RECORD_SPECIAL_URL}${record_id}/messages`;
+}

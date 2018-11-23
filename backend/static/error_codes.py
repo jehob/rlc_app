@@ -16,7 +16,7 @@
 
 ERROR__API__DOWNLOAD__NO_SUCH_KEY = {
     "error_code": "api.download.no_such_key",
-    "error": "no such key to download"
+    "error": "no such filekey to download"
 }
 ERROR__API__DOWNLOAD__NO_FILE_SPECIFIED = {
     'error': 'no file specified',
@@ -70,4 +70,9 @@ ERROR__API__STORAGE__DIR_NOT_FOUND = {
 ERROR__API__STORAGE__DIR_EMPTY = {
     'error': 'there are no files in the specified dir',
     'error_token': 'api.storage.dir_empty'
+}
+
+ERROR__RECORD__MESSAGE__NO_MESSAGE_PROVIDED = {
+    'error': 'there was no message provided in the request',
+    'error_token': 'record.message.no_message'
 }
