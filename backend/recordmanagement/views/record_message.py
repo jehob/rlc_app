@@ -38,7 +38,7 @@ class RecordMessageByRecordViewSet(APIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request, id):
-        if 'message' not in request.data:
+        if 'message' not in request.data or request.data['message'] == '':
             return Response(error_codes.ERROR__RECORD__MESSAGE__NO_MESSAGE_PROVIDED)
         message = request.data['message']
 
@@ -46,6 +46,9 @@ class RecordMessageByRecordViewSet(APIView):
             record = models.Record.objects.get(pk=id)
         except Exception as e:
             return Response(error_codes.ERROR__RECORD__RECORD__NOT_EXISTING)
+        if not record.user_has_permission(request.user):
+            return Response(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
+
         record_message = models.RecordMessage(sender=request.user, message=message, record=record)
         record_message.save()
         return Response(serializers.RecordMessageSerializer(record_message).data)

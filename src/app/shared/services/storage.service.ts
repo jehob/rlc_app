@@ -104,7 +104,6 @@ export class StorageService {
     }
 
     downloadFile(filekey: string) {
-        console.log("trying to download file: ", filekey);
         this.http.get(GetDownloadUrl(filekey)).subscribe((response: any) => {
             if (!response.error) window.location.href = response.data;
             else {

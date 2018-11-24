@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {RecordsSandboxService} from '../../../services/records-sandbox.service';
-import {RecordDocument} from '../../../models/record_documents.model';
+import {RecordDocument} from '../../../models/record_document.model';
 
 
 

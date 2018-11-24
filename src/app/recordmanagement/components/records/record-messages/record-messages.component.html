@@ -1,6 +1,8 @@
 
 <div class="record-messages__container">
-    <p *ngFor="let message of messages">{{message.message}}</p>
+    <div *ngFor="let message of messages">
+        <app-record-message-item [message]="message"></app-record-message-item>
+    </div>
 
     <form [formGroup]="messageForm" class="" (ngSubmit)="onSendClick()">
 

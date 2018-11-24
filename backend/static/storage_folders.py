@@ -14,9 +14,34 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
+import re
+from backend.static.regex_validators import RECORD_STORAGE_REGEX
+from backend.recordmanagement.models import Record
+from backend.static.error_codes import ERROR__RECORD__RECORD__NOT_EXISTING, ERROR__API__PERMISSION__INSUFFICIENT
+
 STORAGE_FOLDER_PROFILE_PICTURES = "profile_pictures/"
 
 
 def get_storage_folder_record_document(rlc_id, record_id):
     return 'rlcs/' + str(rlc_id) + '/records/' + str(record_id) + '/'
 
+
+def is_storage_folder_of_record(dir):
+    return bool(re.match(RECORD_STORAGE_REGEX, dir))
+
+
+def user_has_permission(file_dir, user):
+    """
+    checks if the user has permission for the given file_dir
+    :param file_dir: string, file_dir for which it is to check if the user has permission
+    :param user: UserProfile, the user which is to check
+    :return: bool, true if the user has the permissions
+    """
+    if is_storage_folder_of_record(file_dir):
+        id = file_dir.strip('/').split('/')[-1]
+        try:
+            record = Record.objects.get(pk=id)
+        except Exception as e:
+            return False
+        return record.user_has_permission(user)
+    return False

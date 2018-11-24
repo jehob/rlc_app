@@ -22,7 +22,7 @@ import { HttpClient } from "@angular/common/http";
 import {
     ADD_RECORD_DOCUMENT,
     ADD_RECORD_MESSAGE,
-    RecordsActions,
+    RecordsActions, RESET_FULL_CLIENT_INFORMATION,
     SET_CONSULTANTS,
     SET_COUNTRY_STATES,
     SET_ORIGIN_COUNTRIES,
@@ -77,7 +77,7 @@ import { ApiSandboxService } from "../../api/services/api-sandbox.service";
 import { FullClient } from "../models/client.model";
 import { AppSandboxService } from "../../api/services/app-sandbox.service";
 import { RecordsSandboxService } from "../services/records-sandbox.service";
-import { RecordDocument } from "../models/record_documents.model";
+import { RecordDocument } from "../models/record_document.model";
 import { select, Store } from "@ngrx/store";
 import { RecordState } from "../models/states.model";
 import { RecordMessage } from "../models/record_message.model";
@@ -252,7 +252,6 @@ export class RecordsEffects {
                         return of({ error: "error at loading special record" });
                     }),
                     mergeMap((response: any) => {
-                        console.log(response);
                         if (response.record) {
                             const arr = [];
                             const record: FullRecord = FullRecord.getFullRecordFromJson(
@@ -299,8 +298,9 @@ export class RecordsEffects {
                                 response
                             );
                             return [
-                                { type: SET_SPECIAL_RECORD, payload: record }
-                            ]; // TODO: reset others
+                                { type: SET_SPECIAL_RECORD, payload: record },
+                                { type: RESET_FULL_CLIENT_INFORMATION}
+                            ];
                         }
                     })
                 )
@@ -390,8 +390,6 @@ export class RecordsEffects {
                     record_id = record.id;
                 })
                 .unsubscribe();
-            console.log("adding new message to record with id, ", record_id);
-            console.log('the message is: ', newMessage);
             return from(
                 this.http
                     .post(GetAddRecordMessageUrl(record_id), {message: newMessage})
@@ -402,9 +400,11 @@ export class RecordsEffects {
                                 error: "error at adding a record message"
                             });
                         }),
-                        mergeMap(response => {
-                            console.log("got something");
-                            console.log("adding new record message", response);
+                        mergeMap((response: {error}) => {
+                            if (response.error){
+                                this.recordSB.showError("sending error");
+                                return[];
+                            }
 
                             const new_message = RecordMessage.getRecordMessageFromJson(
                                 response

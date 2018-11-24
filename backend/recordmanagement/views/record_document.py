@@ -51,6 +51,8 @@ class RecordDocumentUploadViewSet(APIView):
         if record is None:
             return Response(error_codes.ERROR__RECORD__RECORD__NOT_EXISTING)
 
+        a = record.user_has_permission(request.user)
+
         file_dir = storage_folders.get_storage_folder_record_document(record.from_rlc_id, record.id)
         file_name = request.query_params.get('file_name', '')
         file_type = request.query_params.get('file_type', '')

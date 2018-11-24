@@ -16,9 +16,12 @@
 
 from rest_framework import serializers
 from backend.recordmanagement import models
+from backend.api.serializers.user import UserProfileNameSerializer
 
 
 class RecordMessageSerializer(serializers.ModelSerializer):
+    sender = UserProfileNameSerializer(many=False, read_only=True)
+
     class Meta:
         model = models.RecordMessage
         fields = '__all__'

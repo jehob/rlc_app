@@ -43,7 +43,7 @@ class RecordNoDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Record
-        fields = ('id', 'created_on', 'state',
+        fields = ('id', 'last_contact_date', 'state',
                   'record_token', 'working_on_record', 'tagged')
 
 

@@ -40,10 +40,11 @@ export class RecordMessage {
     }
 
     static getRecordMessageFromJson(json) {
+        const sender = RestrictedUser.getRestrictedUserFromJson(json.sender);
         return new RecordMessage(
             json.id,
             json.message,
-            json.sender,
+            sender,
             json.created_on
         );
     }

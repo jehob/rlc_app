@@ -18,8 +18,11 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from backend.recordmanagement.models import Record
 from backend.static.error_codes import *
 from backend.shared.storage_generator import generate_presigned_post, generate_presigned_url
+from backend.static.storage_folders import is_storage_folder_of_record, user_has_permission
 
 
 class StorageUploadViewSet(APIView):
@@ -49,6 +52,10 @@ class StorageUploadViewSet(APIView):
         file_types = request.data['file_types']
         if file_names.__len__() != file_types.__len__():
             return Response(ERROR__RECORD__UPLOAD__NAMES_TYPES_LENGTH_MISMATCH)
+
+        if not user_has_permission(file_dir, request.user):
+            return Response(ERROR__API__PERMISSION__INSUFFICIENT)
+
         posts = []
         for i in range(file_names.__len__()):
             new_post = generate_presigned_post(file_names[i], file_types[i], file_dir)
@@ -61,9 +68,12 @@ class StorageDownloadViewSet(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
-        filekey = request.query_params.get('file', '')
+        file_key = request.query_params.get('file', '')
+        file_dir = file_key[:file_key.rfind('/')]
+        if not user_has_permission(file_dir, request.user):
+            return Response(ERROR__API__PERMISSION__INSUFFICIENT)
 
-        return Response(generate_presigned_url(filekey))
+        return Response(generate_presigned_url(file_key))
 
     # def get(self, request):
     #     s3_bucket = settings.AWS_S3_BUCKET_NAME

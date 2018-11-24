@@ -38,6 +38,7 @@ import { RestrictedRecordDetailComponent } from './components/records/restricted
 import { ConsultantsFieldComponent } from './components/consultants-field/consultants-field.component';
 import { RecordDocumentsListComponent } from './components/records/record-documents-list/record-documents-list.component';
 import { RecordMessagesComponent } from './components/records/record-messages/record-messages.component';
+import { RecordMessageItemComponent } from './components/records/record-message-item/record-message-item.component';
 
 @NgModule({
     imports: [
@@ -58,7 +59,8 @@ import { RecordMessagesComponent } from './components/records/record-messages/re
         RestrictedRecordDetailComponent,
         ConsultantsFieldComponent,
         RecordDocumentsListComponent,
-        RecordMessagesComponent
+        RecordMessagesComponent,
+        RecordMessageItemComponent
     ],
     entryComponents: [SelectClientDialogComponent]
 })

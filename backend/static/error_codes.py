@@ -76,3 +76,8 @@ ERROR__RECORD__MESSAGE__NO_MESSAGE_PROVIDED = {
     'error': 'there was no message provided in the request',
     'error_token': 'record.message.no_message'
 }
+
+ERROR__API__PERMISSION__INSUFFICIENT = {
+    'error': 'insufficient permission to perform action',
+    'error_token': 'api.permissions.insufficient'
+}

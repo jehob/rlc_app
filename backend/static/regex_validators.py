@@ -16,7 +16,9 @@
 
 from django.core.validators import RegexValidator
 
+PHONE_REGEX = '^\+{0,2}\d{9,15}$'
+RECORD_STORAGE_REGEX = '^rlcs\/\d+\/records\/\d+\/?$'
 
-phone_regex = RegexValidator(regex=r'^\+{0,2}\d{9,15}$',
+phone_regex = RegexValidator(regex=r'{}'.format(PHONE_REGEX),
                              message="Phone number must be entered "
                                      "in the format: Up to 15 digits allowed.")

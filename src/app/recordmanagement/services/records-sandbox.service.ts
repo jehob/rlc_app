@@ -105,6 +105,8 @@ export class RecordsSandboxService {
         );
     }
 
+
+
     getSpecialRecord(): Observable<any> {
         return this.recordStore.pipe(
             select((state: any) => state.records.special_record)
@@ -244,11 +246,14 @@ export class RecordsSandboxService {
         ).subscribe((rlc) => {
             rlc_id = rlc.id;
         });
-        console.log('filename', file_name);
         this.storageService.downloadFile(getRecordFolder(rlc_id, record_id) + '/' + file_name);
     }
 
     startAddingNewRecordMessage(message: string){
         this.recordStore.dispatch(new StartAddingNewRecordMessage(message));
+    }
+
+    showError(error_message: string){
+        this.apiSB.showErrorSnackBar(error_message);
     }
 }

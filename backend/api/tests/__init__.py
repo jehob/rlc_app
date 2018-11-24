@@ -19,3 +19,4 @@ from .groups_test import *
 from .permissions_test import *
 from .has_permission import *
 from .rlcs_test import *
+from .storage_test import *

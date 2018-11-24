@@ -22,7 +22,7 @@ import { RecordsSandboxService } from "../../../services/records-sandbox.service
 import { FullClient } from "../../../models/client.model";
 import { OriginCountry } from "../../../models/country.model";
 import {FormControl, FormGroup} from '@angular/forms';
-import {RecordDocument} from '../../../models/record_documents.model';
+import {RecordDocument} from '../../../models/record_document.model';
 import {RecordMessage} from '../../../models/record_message.model';
 
 @Component({

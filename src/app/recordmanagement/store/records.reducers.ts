@@ -20,7 +20,7 @@ import { RestrictedRecord } from "../models/record.model";
 import {
     ADD_RECORD_DOCUMENT,
     ADD_RECORD_MESSAGE,
-    RecordsActions,
+    RecordsActions, RESET_FULL_CLIENT_INFORMATION,
     RESET_POSSIBLE_CLIENTS,
     SET_CONSULTANTS,
     SET_COUNTRY_STATES,
@@ -38,7 +38,7 @@ import {
 import { OriginCountry } from "../models/country.model";
 import { RecordTag } from "../models/record_tags.model";
 import { FullClient } from "../models/client.model";
-import {RecordDocument} from '../models/record_documents.model';
+import {RecordDocument} from '../models/record_document.model';
 import {RecordMessage} from '../models/record_message.model';
 
 export interface RecordsState {
@@ -177,6 +177,17 @@ export function recordsReducer(state = initialState, action: RecordsActions) {
                 special_record: {
                     ...state.special_record,
                     record_messages: action.payload
+                }
+            };
+        case RESET_FULL_CLIENT_INFORMATION:
+            return {
+                ...state,
+                special_record: {
+                    ...state.special_record,
+                    client: null,
+                    origin_country: null,
+                    record_documents: [],
+                    record_messages: []
                 }
             };
         default:

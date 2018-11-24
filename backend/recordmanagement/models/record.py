@@ -71,5 +71,4 @@ class Record(models.Model):
         :param user: the user to check
         :return: boolean, true if the user has permission
         """
-
-        pass
+        return self.working_on_record.filter(id=user.id).count() == 1

@@ -23,7 +23,6 @@ export class RecordMessagesComponent implements OnInit {
     ngOnInit() {}
 
     onSendClick() {
-        console.log(this.messageForm.value.message);
         this.recordSB.startAddingNewRecordMessage(this.messageForm.value.message);
         this.messageForm.controls['message'].reset();
     }

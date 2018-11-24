@@ -21,4 +21,4 @@ from .record_tag import *
 from .statics import *
 from .record_document import *
 from .record_document_tag import *
-from .record_messages import *
+from .record_message import *

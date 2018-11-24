@@ -22,7 +22,7 @@ import { RestrictedUser } from "../../api/models/user.model";
 import { OriginCountry } from "../models/country.model";
 import { RecordTag } from "../models/record_tags.model";
 import { FullClient } from "../models/client.model";
-import { RecordDocument } from "../models/record_documents.model";
+import { RecordDocument } from "../models/record_document.model";
 import {RecordMessage} from '../models/record_message.model';
 
 export const START_LOADING_RECORDS = "START_LOADING_RECORDS";
@@ -52,6 +52,7 @@ export const SET_ORIGIN_COUNTRIES = "SET_ORIGIN_COUNTRIES";
 export const SET_RECORD_TAGS = "SET_RECORD_TAGS";
 export const SET_POSSIBLE_CLIENTS = "SET_POSSIBLE_CLIENTS";
 
+export const RESET_FULL_CLIENT_INFORMATION = "RESET_FULL_CLIENT_INFORMATION";
 export const RESET_POSSIBLE_CLIENTS = "RESET_POSSIBLE_CLIENTS";
 
 export const ADD_RECORD_DOCUMENT = "ADD_RECORD_DOCUMENT";
@@ -191,6 +192,10 @@ export class SetRecordMessages implements Action {
     constructor(public payload: RecordMessage[]){}
 }
 
+export class ResetFullClientInformation implements Action{
+    readonly type = RESET_FULL_CLIENT_INFORMATION;
+}
+
 export type RecordsActions =
     | SetRecords
     | StartLoadingRecords
@@ -214,4 +219,5 @@ export type RecordsActions =
     | AddRecordDocument
     | StartAddingNewRecordMessage
     | AddRecordMessage
-    | SetRecordMessages;
+    | SetRecordMessages
+    | ResetFullClientInformation;

@@ -23,7 +23,7 @@ class RecordDocument(models.Model):
     creator = models.ForeignKey(
         UserProfile, related_name="record_documents_created", on_delete=models.SET_NULL, null=True)
 
-    record = models.ForeignKey('Record', related_name="record_documents", on_delete=models.SET_NULL,
+    record = models.ForeignKey('Record', related_name="record_documents", on_delete=models.CASCADE,
                                null=True, default=None)
 
     created_on = models.DateTimeField(auto_now_add=True)
