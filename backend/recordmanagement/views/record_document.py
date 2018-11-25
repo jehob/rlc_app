@@ -71,12 +71,14 @@ class RecordDocumentByRecordViewSet(APIView):
         pass
 
     def post(self, request, id):
-
         filename = request.data['filename']
         try:
             record = models.Record.objects.get(pk=id)
         except Exception as e:
             return Response(error_codes.ERROR__RECORD__RECORD__NOT_EXISTING)
+
+        if not record.user_has_permission(request.user):
+            return Response(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
 
         directory = storage_folders.get_storage_folder_record_document(record.from_rlc_id, record.id)
         information = storage_generator.check_file_and_get_information(directory, filename)
