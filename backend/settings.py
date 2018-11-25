@@ -28,7 +28,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 import django_heroku
-from datetime import timedelta
+from datetime import timedelta, timezone
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -92,7 +92,8 @@ if 'ON_HEROKU' in os.environ:
 else:
     TIMEOUT_TIMEDELTA = timedelta(weeks=10)
 
-
+# # Timezone
+# TIME_ZONE_USED = timezone.
 
 # Templates
 if 'ON_HEROKU' in os.environ:
@@ -167,7 +168,7 @@ else:
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Berlin'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True

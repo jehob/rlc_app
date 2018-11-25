@@ -22,6 +22,7 @@ from rest_framework.response import Response
 from django.forms.models import model_to_dict
 from rest_framework import status
 from datetime import datetime
+import pytz
 
 from ..models import UserProfile, Permission, Rlc
 from ..serializers import UserProfileSerializer, UserProfileCreatorSerializer, UserProfileNameSerializer, RlcSerializer
@@ -105,7 +106,7 @@ class LoginViewSet(viewsets.ViewSet):
             Token.objects.filter(user=token.user).exclude(key=token.key).delete()
             if not created:
                 # update the created time of the token to keep it valid
-                token.created = datetime.utcnow()
+                token.created = datetime.utcnow().replace(tzinfo=pytz.utc)
                 token.save()
             return Response(LoginViewSet.get_login_data(token.key))
         return Response(ERROR__API__LOGIN__INVALID_CREDENTIALS)

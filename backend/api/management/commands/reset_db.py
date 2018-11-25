@@ -42,8 +42,8 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        # UserProfile.objects.exclude(is_superuser=True).delete()
-        UserProfile.objects.all().delete()
+        UserProfile.objects.exclude(is_superuser=True).delete()
+        # UserProfile.objects.all().delete()
         Client.objects.all().delete()
         OriginCountry.objects.all().delete()
         RecordTag.objects.all().delete()
@@ -52,3 +52,6 @@ class Command(BaseCommand):
         HasPermission.objects.all().delete()
         Permission.objects.all().delete()
         Rlc.objects.all().delete()
+        RecordMessage.objects.all().delete()
+        RecordDocument.objects.all().delete()
+        RecordDocumentTag.objects.all().delete()

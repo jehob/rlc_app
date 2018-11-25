@@ -19,13 +19,13 @@ class ExpiringTokenAuthentication(TokenAuthentication):
             raise AuthenticationFailed('User inactive or deleted')
 
         utc_now = datetime.utcnow()
-        utc_now = utc_now.replace(tzinfo=pytz.utc)
+        utc_now = utc_now.replace(tzinfo=pytz.timezone(settings.TIME_ZONE))
 
         if token.created < utc_now - settings.TIMEOUT_TIMEDELTA:
             token.delete()
             raise AuthenticationFailed('Token has expired')
 
-        token.created = datetime.utcnow()
+        token.created = datetime.utcnow().replace(tzinfo=pytz.timezone(settings.TIME_ZONE))
         token.save()
         return token.user, token
 
