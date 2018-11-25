@@ -149,4 +149,9 @@ export class ApiSandboxService {
     downloadSingleFile(filekey: string) {
         this.storageService.downloadFile(filekey);
     }
+
+    relogUser(){
+        console.log('relog user');
+        this.router.navigate(['login']);
+    }
 }

@@ -15,16 +15,13 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 from rest_framework import viewsets
-from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-
 from .. import models, serializers
 from ..permissions import EditPermissions
 
 
 class PermissionViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
     queryset = models.Permission.objects.all()
     serializer_class = serializers.PermissionNameSerializer
-    permission_classes = (IsAuthenticated, EditPermissions, )
+    permission_classes = (EditPermissions, IsAuthenticated, )
 

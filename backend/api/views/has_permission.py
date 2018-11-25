@@ -15,7 +15,6 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 from rest_framework import viewsets
-from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 from ..models.has_permission import HasPermission
@@ -25,10 +24,9 @@ from ..permissions import OnlySuperuser
 
 
 class HasPermissionViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
     queryset = HasPermission.objects.all()
     serializer_class = HasPermissionSerializer
-    permission_classes = (IsAuthenticated, OnlySuperuser, )
+    permission_classes = (OnlySuperuser, IsAuthenticated, )
 
     def update(self, request, *args, **kwargs):
         pass

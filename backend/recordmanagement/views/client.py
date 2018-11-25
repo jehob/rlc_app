@@ -15,8 +15,6 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 from rest_framework import viewsets
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -24,10 +22,8 @@ from backend.recordmanagement import models, serializers
 
 
 class ClientsViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
     queryset = models.Client.objects.all()
     serializer_class = serializers.ClientSerializer
-    permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
         country = models.OriginCountry.objects.get(id=self.request.data['origin_country'])
@@ -35,9 +31,6 @@ class ClientsViewSet(viewsets.ModelViewSet):
 
 
 class GetClientsFromBirthday(APIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
-
     def post(self, request):
         clients = models.Client.objects.filter(birthday=request.data['birthday'])
         return Response(serializers.ClientSerializer(clients, many=True).data)

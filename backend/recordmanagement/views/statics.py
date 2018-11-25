@@ -13,19 +13,15 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
-
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
+
 from backend.api.serializers import UserProfileNameSerializer
 from ..serializers import RecordTagNameSerializer, OriginCountryNameStateSerializer
 from ..models import RecordTag, OriginCountry, Record
 
 
 class StaticViewSet(APIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
 
     def get(self, request):
         user = request.user

@@ -15,14 +15,13 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 from rest_framework import viewsets, filters
-from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.serializers import AuthTokenSerializer
-from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from django.forms.models import model_to_dict
 from rest_framework import status
+from datetime import datetime
 
 from ..models import UserProfile, Permission, Rlc
 from ..serializers import UserProfileSerializer, UserProfileCreatorSerializer, UserProfileNameSerializer, RlcSerializer
@@ -35,7 +34,6 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 
     serializer_class = UserProfileSerializer
     queryset = UserProfile.objects.all()
-    authentication_classes = (TokenAuthentication,)
     permission_classes = (UpdateOwnProfile, IsAuthenticated)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name', 'email',)
@@ -63,6 +61,8 @@ class UserProfileCreatorViewSet(viewsets.ModelViewSet):
     """Handles creating profiles"""
     serializer_class = UserProfileCreatorSerializer
     queryset = UserProfile.objects.none()
+    authentication_classes = ()
+    permission_classes = ()
 
     def create(self, request):
         data = dict(request.data)
@@ -84,6 +84,8 @@ class UserProfileCreatorViewSet(viewsets.ModelViewSet):
 class LoginViewSet(viewsets.ViewSet):
     """checks email and password and returns auth token"""
     serializer_class = AuthTokenSerializer
+    authentication_classes = ()
+    permission_classes = ()
 
     def create(self, request):
         """
@@ -97,17 +99,28 @@ class LoginViewSet(viewsets.ViewSet):
         token, information and permissions of user
         all possible permissions, country states, countries, clients, record states, consultants
         """
-        try:
-            token = ObtainAuthToken().post(request)
-        except Exception as ex:
-            if ex.detail['non_field_errors'][0] == 'Unable to log in with provided credentials.':
-                if UserProfile.objects.filter(email=request.data['username']).count() == 1:
-                    return Response(ERROR__API__LOGIN__WRONG_PASSWORD,
-                                    status=status.HTTP_400_BAD_REQUEST)
-                else:
-                    return Response(ERROR__API__LOGIN__NO_ACCOUNT,
-                                    status=status.HTTP_400_BAD_REQUEST)
-        return Response(LoginViewSet.get_login_data(token.data['token']))
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            token, created = Token.objects.get_or_create(user=serializer.validated_data['user'])
+            Token.objects.filter(user=token.user).exclude(key=token.key).delete()
+            if not created:
+                # update the created time of the token to keep it valid
+                token.created = datetime.utcnow()
+                token.save()
+            return Response(LoginViewSet.get_login_data(token.key))
+        return Response(ERROR__API__LOGIN__INVALID_CREDENTIALS)
+
+        # try:
+        #     token = ObtainAuthToken().post(request)
+        # except Exception as ex:
+        #     if ex.detail['non_field_errors'][0] == 'Unable to log in with provided credentials.':
+        #         if UserProfile.objects.filter(email=request.data['username']).count() == 1:
+        #             return Response(ERROR__API__LOGIN__WRONG_PASSWORD,
+        #                             status=status.HTTP_400_BAD_REQUEST)
+        #         else:
+        #             return Response(ERROR__API__LOGIN__NO_ACCOUNT,
+        #                             status=status.HTTP_400_BAD_REQUEST)
+        # return Response(LoginViewSet.get_login_data(token.data['token']))
 
     def get(self, request):
         token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]

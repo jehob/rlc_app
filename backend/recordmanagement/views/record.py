@@ -15,8 +15,6 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 from rest_framework import viewsets
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
@@ -31,9 +29,6 @@ from backend.static.error_codes import ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC
 
 
 class RecordsListViewSet(viewsets.ViewSet):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
-
     def list(self, request):
 
         parts = request.query_params.get('search', '').split(' ')
@@ -99,9 +94,6 @@ class RecordsListViewSet(viewsets.ViewSet):
 
 
 class RecordViewSet(APIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
-
     def post(self, request):
         data = request.data
         rlc = request.user.rlc

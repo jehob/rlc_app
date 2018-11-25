@@ -47,14 +47,19 @@ ERROR__RECORD__UPLOAD__NAMES_TYPES_LENGTH_MISMATCH = {
     'error_token': 'record.upload.names_types_length_mismatch'
 }
 
-ERROR__API__LOGIN__WRONG_PASSWORD = {
-    'error': 'wrong password',
-    'error_token': 'api.login.wrong_password'
-}
+# ERROR__API__LOGIN__WRONG_PASSWORD = {
+#     'error': 'wrong password',
+#     'error_token': 'api.login.wrong_password'
+# }
+#
+# ERROR__API__LOGIN__NO_ACCOUNT = {
+#     'error': 'there is no account with this email address',
+#     'error_token': 'api.login.no_account'
+# }
 
-ERROR__API__LOGIN__NO_ACCOUNT = {
-    'error': 'there is no account with this email address',
-    'error_token': 'api.login.no_account'
+ERROR__API__LOGIN__INVALID_CREDENTIALS = {
+    'error': 'wrong password or no account with this email',
+    'error_token': 'api.login.invalid_credentials'
 }
 
 ERROR__API__STORAGE__CHECK_FILE_NOT_FOUND = {

@@ -15,14 +15,10 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 from rest_framework import viewsets
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
 
 from backend.recordmanagement import models, serializers
 
 
 class RecordTagViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
     queryset = models.RecordTag.objects.all()
     serializer_class = serializers.RecordTagSerializer
-    permission_classes = (IsAuthenticated,)

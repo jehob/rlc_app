@@ -15,18 +15,14 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 from rest_framework import viewsets
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .. import models, serializers
 
 
 class GroupViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
     queryset = models.Group.objects.all()
     serializer_class = serializers.GroupSerializer
-    permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
         creator = models.UserProfile.objects.get(id=self.request.user.id)
@@ -37,9 +33,6 @@ class GroupViewSet(viewsets.ModelViewSet):
 
 
 class GroupTestViewSet(viewsets.ViewSet):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
-
     def list(self, request):
         queryset = models.Group.objects.all()
         serializer = serializers.GroupSerializer(queryset, many=True)

@@ -15,28 +15,19 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 from rest_framework import viewsets
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from datetime import datetime
 
 from backend.recordmanagement import models, serializers
-from backend.shared import storage_generator
-from backend.static import error_codes, storage_folders
+from backend.static import error_codes
 
 
 class RecordMessageViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
     queryset = models.RecordMessage.objects.all()
     serializer_class = serializers.RecordMessageSerializer
-    permission_classes = (IsAuthenticated,)
 
 
 class RecordMessageByRecordViewSet(APIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
-
     def post(self, request, id):
         if 'message' not in request.data or request.data['message'] == '':
             return Response(error_codes.ERROR__RECORD__MESSAGE__NO_MESSAGE_PROVIDED)

@@ -15,8 +15,6 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 from rest_framework import viewsets
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
 
 from ..models.rlc import Rlc
 from ..models.user import UserProfile
@@ -24,10 +22,8 @@ from ..serializers.rlc import RlcSerializer
 
 
 class RlcViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
     queryset = Rlc.objects.all()
     serializer_class = RlcSerializer
-    permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
         creator = UserProfile.objects.get(id=self.request.user.id)

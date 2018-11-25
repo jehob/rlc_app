@@ -15,7 +15,6 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 from rest_framework import viewsets
-from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 from backend.recordmanagement import models, serializers
@@ -23,7 +22,6 @@ from backend.api.permissions import OriginCountry
 
 
 class OriginCountriesViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
     queryset = models.OriginCountry.objects.all()
     serializer_class = serializers.OriginCountrySerializer
     permission_classes = (IsAuthenticated, OriginCountry, )

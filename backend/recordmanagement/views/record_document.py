@@ -15,8 +15,6 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 from rest_framework import viewsets
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from datetime import datetime
@@ -27,19 +25,14 @@ from backend.static import error_codes, storage_folders
 
 
 class RecordDocumentViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
     queryset = models.RecordDocument.objects.all()
     serializer_class = serializers.RecordDocumentSerializer
-    permission_classes = (IsAuthenticated,)
 
     def post(self, request):
         pass
 
 
 class RecordDocumentUploadViewSet(APIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
-
     def get(self, request, id):
         """
         used to generate a presigned post, with that you can successfully upload a file to storage
@@ -64,9 +57,6 @@ class RecordDocumentUploadViewSet(APIView):
 
 
 class RecordDocumentByRecordViewSet(APIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
-
     def get(self, request, id):
         pass
 
