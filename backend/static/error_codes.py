@@ -47,16 +47,6 @@ ERROR__RECORD__UPLOAD__NAMES_TYPES_LENGTH_MISMATCH = {
     'error_token': 'record.upload.names_types_length_mismatch'
 }
 
-# ERROR__API__LOGIN__WRONG_PASSWORD = {
-#     'error': 'wrong password',
-#     'error_token': 'api.login.wrong_password'
-# }
-#
-# ERROR__API__LOGIN__NO_ACCOUNT = {
-#     'error': 'there is no account with this email address',
-#     'error_token': 'api.login.no_account'
-# }
-
 ERROR__API__LOGIN__INVALID_CREDENTIALS = {
     'error': 'wrong password or no account with this email',
     'error_token': 'api.login.invalid_credentials'
@@ -85,4 +75,24 @@ ERROR__RECORD__MESSAGE__NO_MESSAGE_PROVIDED = {
 ERROR__API__PERMISSION__INSUFFICIENT = {
     'error': 'insufficient permission to perform action',
     'error_token': 'api.permissions.insufficient'
+}
+
+ERROR__RECORD__DOCUMENT__NOT_FOUND = {
+    'error': 'document not found',
+    'error_token': 'record.document.not_found'
+}
+
+ERROR__RECORD__DOCUMENT__NO_LINKED_RECORD = {
+    'error': 'no linked record to the document',
+    'error_token': 'record.document.no_linked_record'
+}
+
+ERROR__RECORD__DOCUMENT__NO_TAG_PROVIDED = {
+    'error': 'no tag provided',
+    'error_token': 'record.document.no_tag_provided'
+}
+
+ERROR__RECORD__DOCUMENT__TAG_NOT_EXISTING = {
+    'error': 'provided tag does not exist',
+    'error_token': 'record.document.tag_not_existing'
 }

@@ -51,6 +51,7 @@ export const SET_COUNTRY_STATES = "SET_COUNTRY_STATES";
 export const SET_ORIGIN_COUNTRIES = "SET_ORIGIN_COUNTRIES";
 export const SET_RECORD_TAGS = "SET_RECORD_TAGS";
 export const SET_POSSIBLE_CLIENTS = "SET_POSSIBLE_CLIENTS";
+export const SET_RECORD_DOCUMENT_TAGS = "SET_RECORD_DOCUMENT_TAGS";
 
 export const RESET_FULL_CLIENT_INFORMATION = "RESET_FULL_CLIENT_INFORMATION";
 export const RESET_POSSIBLE_CLIENTS = "RESET_POSSIBLE_CLIENTS";
@@ -194,6 +195,12 @@ export class SetRecordMessages implements Action {
 
 export class ResetFullClientInformation implements Action{
     readonly type = RESET_FULL_CLIENT_INFORMATION;
+}
+
+export class SetRecordDocumentTags implements Action {
+    readonly type = SET_RECORD_DOCUMENT_TAGS;
+
+    constructor(public payload: RecordMessage[]){}
 }
 
 export type RecordsActions =

@@ -15,10 +15,37 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 from rest_framework import viewsets
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 from backend.recordmanagement import models, serializers
+from backend.static import error_codes
 
 
 class RecordDocumentTagViewSet(viewsets.ModelViewSet):
     queryset = models.RecordDocumentTag.objects.all()
     serializer_class = serializers.RecordDocumentTagSerializer
+
+
+class RecordDocumentTagByDocumentViewSet(APIView):
+    def post(self, request, id):
+        try:
+            document = models.RecordDocument.objects.get(pk=id)
+        except Exception as e:
+            return Response(error_codes.ERROR__RECORD__DOCUMENT__NOT_FOUND)
+        if not document.record:
+            return Response(error_codes.ERROR__RECORD__DOCUMENT__NO_LINKED_RECORD)
+        if not document.record.user_has_permission(request.user):
+            return Response(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
+
+        if 'tag_id' not in request.data:
+            return Response(error_codes.ERROR__RECORD__DOCUMENT__NO_TAG_PROVIDED)
+        try:
+            tag = models.RecordDocumentTag.objects.get(pk=request.data['tag_id'])
+        except Exception as e:
+            return Response(error_codes.ERROR__RECORD__DOCUMENT__TAG_NOT_EXISTING)
+
+        document.tagged.add(tag)
+        document.save()
+        serializer = serializers.RecordDocumentSerializer(document)
+        return Response(serializer.data)

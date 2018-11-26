@@ -17,8 +17,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from backend.api.serializers import UserProfileNameSerializer
-from ..serializers import RecordTagNameSerializer, OriginCountryNameStateSerializer
-from ..models import RecordTag, OriginCountry, Record
+from ..serializers import RecordTagNameSerializer, OriginCountryNameStateSerializer, RecordDocumentTagSerializer
+from ..models import RecordTag, OriginCountry, Record, RecordDocumentTag
 
 
 class StaticViewSet(APIView):
@@ -33,6 +33,7 @@ class StaticViewSet(APIView):
 
         record_tags = RecordTagNameSerializer(RecordTag.objects.all(), many=True).data
         countries = OriginCountryNameStateSerializer(OriginCountry.objects.all(), many=True).data
+        document_tags = RecordDocumentTagSerializer(RecordDocumentTag.objects.all(), many=True).data
 
         states_for_records = Record.record_states_possible
         states_for_countries = OriginCountry.origin_country_states_possible
@@ -42,5 +43,6 @@ class StaticViewSet(APIView):
             'consultants': consultants,
             'countries': countries,
             'record_states': states_for_records,
-            'country_states': states_for_countries
+            'country_states': states_for_countries,
+            'record_document_tags': document_tags
         })
