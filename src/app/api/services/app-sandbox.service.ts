@@ -33,10 +33,11 @@ import {AuthState} from '../store/auth/auth.reducers';
 
 @Injectable()
 export class AppSandboxService {
+    savedLocation = '';
+
     constructor(
         private store: Store<AppState>,
-        private router: Router,
-        private recordSB: RecordsSandboxService
+        private router: Router
     ) {}
 
     isAuthenticated(): boolean {
@@ -58,6 +59,7 @@ export class AppSandboxService {
 
     login(username: string, password: string) {
         this.store.dispatch(new TryLogin({ username, password }));
+
     }
 
     startApp(): Observable<AuthState> {
@@ -72,4 +74,8 @@ export class AppSandboxService {
     getAuthState(): Observable<AuthState> {
         return this.store.pipe(select("auth"));
     }
+    saveLocation(){
+        this.savedLocation = this.router.url;
+    }
+
 }

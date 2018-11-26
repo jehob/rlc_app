@@ -22,7 +22,7 @@ import { Observable } from "rxjs";
 import { RestrictedRecord} from '../../models/record.model';
 import { ActivatedRoute, Router } from "@angular/router";
 import {RestrictedUser} from '../../../api/models/user.model';
-import {RecordTag} from '../../models/record_tags.model';
+import {Tag} from '../../models/record_tags.model';
 import {GetRecordsSearchURL} from '../../../statics/api_urls.statics';
 
 @Component({
@@ -76,7 +76,7 @@ export class RecordsListComponent implements OnInit {
         this.router.navigateByUrl(`records/${record.id}`);
     }
 
-    onTagClick(tag: RecordTag){
+    onTagClick(tag: Tag){
         this.router.navigateByUrl(`records?search=${tag.name}`);
     }
 

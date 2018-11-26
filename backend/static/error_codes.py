@@ -1,22 +1,22 @@
-""" rlcapp - record and organization management software for refugee law clinics
-Copyright (C) 2018  Dominik Walser
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/> """
+#  rlcapp - record and organization management software for refugee law clinics
+#  Copyright (C) 2018  Dominik Walser
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as
+#  published by the Free Software Foundation, either version 3 of the
+#  License, or (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 ERROR__API__DOWNLOAD__NO_SUCH_KEY = {
     "error_code": "api.download.no_such_key",
-    "error": "no such key to download"
+    "error": "no such filekey to download"
 }
 ERROR__API__DOWNLOAD__NO_FILE_SPECIFIED = {
     'error': 'no file specified',
@@ -47,12 +47,52 @@ ERROR__RECORD__UPLOAD__NAMES_TYPES_LENGTH_MISMATCH = {
     'error_token': 'record.upload.names_types_length_mismatch'
 }
 
-ERROR__API__LOGIN__WRONG_PASSWORD = {
-    'error': 'wrong password',
-    'error_token': 'api.login.wrong_password'
+ERROR__API__LOGIN__INVALID_CREDENTIALS = {
+    'error': 'wrong password or no account with this email',
+    'error_token': 'api.login.invalid_credentials'
 }
 
-ERROR__API__LOGIN__NO_ACCOUNT = {
-    'error': 'there is no account with this email address',
-    'error_token': 'api.login.no_account'
+ERROR__API__STORAGE__CHECK_FILE_NOT_FOUND = {
+    'error': 'no such file found, checking error',
+    'error_token': 'api.storage.check_file_not_found'
+}
+
+ERROR__API__STORAGE__DIR_NOT_FOUND = {
+    'error': 'the directory doesnt exist',
+    'error_token': 'api.storage.dir_not_found'
+}
+
+ERROR__API__STORAGE__DIR_EMPTY = {
+    'error': 'there are no files in the specified dir',
+    'error_token': 'api.storage.dir_empty'
+}
+
+ERROR__RECORD__MESSAGE__NO_MESSAGE_PROVIDED = {
+    'error': 'there was no message provided in the request',
+    'error_token': 'record.message.no_message'
+}
+
+ERROR__API__PERMISSION__INSUFFICIENT = {
+    'error': 'insufficient permission to perform action',
+    'error_token': 'api.permissions.insufficient'
+}
+
+ERROR__RECORD__DOCUMENT__NOT_FOUND = {
+    'error': 'document not found',
+    'error_token': 'record.document.not_found'
+}
+
+ERROR__RECORD__DOCUMENT__NO_LINKED_RECORD = {
+    'error': 'no linked record to the document',
+    'error_token': 'record.document.no_linked_record'
+}
+
+ERROR__RECORD__DOCUMENT__NO_TAG_PROVIDED = {
+    'error': 'no tag provided',
+    'error_token': 'record.document.no_tag_provided'
+}
+
+ERROR__RECORD__DOCUMENT__TAG_NOT_EXISTING = {
+    'error': 'provided tag does not exist',
+    'error_token': 'record.document.tag_not_existing'
 }

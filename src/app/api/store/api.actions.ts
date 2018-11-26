@@ -19,11 +19,13 @@
 import { Action } from "@ngrx/store";
 import {FullUser, RestrictedUser} from '../models/user.model';
 import {HasPermission, Permission} from '../models/permission.model';
+import {RestrictedRlc} from '../models/rlc.model';
 
 export const SET_USER = "SET_USER";
 export const SET_OTHER_USERS = "SET_OTHER_USERS";
 export const SET_ALL_PERMISSIONS = "SET_ALL_PERMISSIONS";
 export const SET_USER_PERMISSIONS = "SET_USER_PERMISSIONS";
+export const SET_RLC = "SET_RLC";
 
 export const START_PATCH_USER = "START_PATCH_USER";
 export const START_CREATE_USER = "START_CREATE_USER";
@@ -69,6 +71,13 @@ export class StartLoadingOtherUsers implements Action {
     readonly type = START_LOADING_OTHER_USERS;
 }
 
+export class SetRlc implements Action {
+    readonly type = SET_RLC;
+
+    constructor(public payload: RestrictedRlc) {}
+}
+
+
 export type ApiActions =
     | SetUser
     | SetAllPermissions
@@ -76,4 +85,5 @@ export type ApiActions =
     | SetOtherUsers
     | StartPatchUser
     | StartCreateUser
-    | StartLoadingOtherUsers;
+    | StartLoadingOtherUsers
+    | SetRlc;

@@ -1,18 +1,19 @@
-""" rlcapp - record and organization management software for refugee law clinics
-Copyright (C) 2018  Dominik Walser
+#  rlcapp - record and organization management software for refugee law clinics
+#  Copyright (C) 2018  Dominik Walser
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as
+#  published by the Free Software Foundation, either version 3 of the
+#  License, or (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/> """
 from rest_framework.test import APIClient
 from django.test import TransactionTestCase
 from backend.api.models import UserProfile, Rlc
@@ -126,3 +127,19 @@ class RecordTests(TransactionTestCase):
         response = client.post(self.base_create_record_url, to_post)
         new_record = response.data
         return users, rlcs, new_record
+
+    def test_user_has_permission(self):
+        user1 = UserProfile(email='abc1@web.de', name="abc1")
+        user1.save()
+        user2 = UserProfile(email='abc2@web.de', name="abc2")
+        user2.save()
+        user3 = UserProfile(email='abc3@web.de', name="abc3")
+        user3.save()
+        record = Record(record_token='asd123')
+        record.save()
+        record.working_on_record.add(user1)
+        record.working_on_record.add(user2)
+
+        self.assertTrue(record.user_has_permission(user1))
+        self.assertTrue(record.user_has_permission(user2))
+        self.assertTrue(not record.user_has_permission(user3))

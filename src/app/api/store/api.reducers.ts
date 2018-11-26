@@ -17,21 +17,24 @@
  ******************************************************************************/
 
 import {FullUser, RestrictedUser} from '../models/user.model';
-import {ApiActions, SET_ALL_PERMISSIONS, SET_OTHER_USERS, SET_USER, SET_USER_PERMISSIONS} from './api.actions';
+import {ApiActions, SET_ALL_PERMISSIONS, SET_OTHER_USERS, SET_RLC, SET_USER, SET_USER_PERMISSIONS} from './api.actions';
 import {HasPermission, Permission} from '../models/permission.model';
+import {RestrictedRlc} from '../models/rlc.model';
 
 export interface ApiState {
     user: FullUser;
     other_users: RestrictedUser[],
     all_permissions: Permission[],
-    user_permissions: HasPermission[]
+    user_permissions: HasPermission [],
+    rlc: RestrictedRlc
 }
 
 const initialState: ApiState = {
     user: null,
     other_users: [],
     all_permissions: [],
-    user_permissions: []
+    user_permissions: [],
+    rlc: null
 };
 
 export function apiReducer(state = initialState, action: ApiActions) {
@@ -55,6 +58,11 @@ export function apiReducer(state = initialState, action: ApiActions) {
             return {
                 ...state,
                 user_permissions: action.payload
+            };
+        case SET_RLC:
+            return {
+                ...state,
+                rlc: action.payload
             };
         default:
             return state;

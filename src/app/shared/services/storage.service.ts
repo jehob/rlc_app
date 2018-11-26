@@ -49,7 +49,7 @@ export class StorageService {
         // console.log('files', files);
         this.filesToUpload = files.length;
         this.filesUploaded = 0;
-        this.filesUploadFinished = finished;
+        this.filesUploadFinished = finished ? finished : null;
 
         const file_names = [];
         const file_types = [];
@@ -66,15 +66,14 @@ export class StorageService {
                 file_dir
             })
             .subscribe((response: any) => {
-                const posts = response.presigned_posts;
-                console.log(posts);
-                for (const post of posts){
+                const presigned_posts = response.presigned_posts;
+                for (const post of presigned_posts){
                     const file = Array.from(files).filter((filterFile: File) => {
                         return post.data.fields.key === `${file_dir}/${filterFile.name}`
                     })[0];
                     this.uploadFileDirect(file, post.data, post.url, () => {
                         this.filesUploaded++;
-                        if (this.filesUploaded === this.filesToUpload)
+                        if (this.filesUploaded === this.filesToUpload && this.filesUploadFinished)
                             this.filesUploadFinished();
                     });
                 }
@@ -100,16 +99,11 @@ export class StorageService {
             //console.log("posting response:", response);
             if (!response) {
                 callbackFn();
-                console.log('callback from direct fileupload');
-                // this.snackbarService.showSuccessSnackBar(
-                //     "file successfully uploaded"
-                // );
             }
         });
     }
 
     downloadFile(filekey: string) {
-        console.log("trying to download file: ", filekey);
         this.http.get(GetDownloadUrl(filekey)).subscribe((response: any) => {
             if (!response.error) window.location.href = response.data;
             else {

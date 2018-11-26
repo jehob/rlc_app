@@ -18,29 +18,43 @@
 
 import { RestrictedRecord } from "../models/record.model";
 import {
-    RecordsActions, RESET_POSSIBLE_CLIENTS,
+    ADD_RECORD_DOCUMENT,
+    ADD_RECORD_MESSAGE,
+    RecordsActions,
+    RESET_FULL_CLIENT_INFORMATION,
+    RESET_POSSIBLE_CLIENTS,
     SET_CONSULTANTS,
     SET_COUNTRY_STATES,
     SET_ORIGIN_COUNTRIES,
-    SET_POSSIBLE_CLIENTS,
+    SET_POSSIBLE_CLIENTS, SET_RECORD_DOCUMENT_TAGS,
     SET_RECORD_STATES,
     SET_RECORD_TAGS,
-    SET_RECORDS, SET_SPECIAL_CLIENT, SET_SPECIAL_ORIGIN_COUNTRY, SET_SPECIAL_RECORD
+    SET_RECORDS,
+    SET_SPECIAL_CLIENT,
+    SET_SPECIAL_ORIGIN_COUNTRY,
+    SET_SPECIAL_RECORD,
+    SET_SPECIAL_RECORD_DOCUMENTS,
+    SET_SPECIAL_RECORD_MESSAGES
 } from './records.actions';
 import { OriginCountry } from "../models/country.model";
-import { RecordTag } from "../models/record_tags.model";
+import { Tag } from "../models/record_tags.model";
 import { FullClient } from "../models/client.model";
+import { RecordDocument } from "../models/record_document.model";
+import { RecordMessage } from "../models/record_message.model";
 
 export interface RecordsState {
     special_record: {
-        record: RestrictedRecord,
-        client: FullClient,
-        origin_country: OriginCountry
-    },
+        record: RestrictedRecord;
+        client: FullClient;
+        origin_country: OriginCountry;
+        record_documents: RecordDocument[];
+        record_messages: RecordMessage[];
+    };
     records: RestrictedRecord[];
     consultants: RestrictedRecord[];
     origin_countries: OriginCountry[];
-    record_tags: RecordTag[];
+    record_tags: Tag[];
+    record_document_tags: Tag[];
     record_states: any;
     country_states: any;
     possible_clients: FullClient[];
@@ -50,12 +64,15 @@ const initialState: RecordsState = {
     special_record: {
         record: null,
         client: null,
-        origin_country: null
+        origin_country: null,
+        record_documents: [],
+        record_messages: []
     },
     records: [],
     consultants: [],
     origin_countries: [],
     record_tags: [],
+    record_document_tags: [],
     record_states: [],
     country_states: [],
     possible_clients: []
@@ -126,6 +143,60 @@ export function recordsReducer(state = initialState, action: RecordsActions) {
             return {
                 ...state,
                 possible_clients: []
+            };
+        case SET_SPECIAL_RECORD_DOCUMENTS:
+            return {
+                ...state,
+                special_record: {
+                    ...state.special_record,
+                    record_documents: action.payload
+                }
+            };
+        case ADD_RECORD_DOCUMENT:
+            return {
+                ...state,
+                special_record: {
+                    ...state.special_record,
+                    record_documents: [
+                        ...state.special_record.record_documents,
+                        action.payload
+                    ]
+                }
+            };
+        case ADD_RECORD_MESSAGE:
+            return {
+                ...state,
+                special_record: {
+                    ...state.special_record,
+                    record_messages: [
+                        ...state.special_record.record_messages,
+                        action.payload
+                    ]
+                }
+            };
+        case SET_SPECIAL_RECORD_MESSAGES:
+            return {
+                ...state,
+                special_record: {
+                    ...state.special_record,
+                    record_messages: action.payload
+                }
+            };
+        case RESET_FULL_CLIENT_INFORMATION:
+            return {
+                ...state,
+                special_record: {
+                    ...state.special_record,
+                    client: null,
+                    origin_country: null,
+                    record_documents: [],
+                    record_messages: []
+                }
+            };
+        case SET_RECORD_DOCUMENT_TAGS:
+            return {
+                ...state,
+                record_document_tags: action.payload
             };
         default:
             return state;

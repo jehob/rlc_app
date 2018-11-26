@@ -1,4 +1,7 @@
-<div>
+<div class="record-documents-list__container">
+    <div>
+        <p *ngFor="let document of documents" (click)="onDocumentClick(document)">{{ document.name }} {{ document.id }}</p>
+    </div>
     <div>
         <input type="file" id="your-files" multiple (drop)="dropped($event)" (change)="selected($event)">
     </div>

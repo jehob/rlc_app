@@ -1,18 +1,19 @@
-""" rlcapp - record and organization management software for refugee law clinics
-Copyright (C) 2018  Dominik Walser
+#  rlcapp - record and organization management software for refugee law clinics
+#  Copyright (C) 2018  Dominik Walser
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as
+#  published by the Free Software Foundation, either version 3 of the
+#  License, or (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/> """
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.core.validators import RegexValidator
@@ -77,7 +78,7 @@ class UserProfileManager(BaseUserManager):
                                             permission_for_group=for_group,
                                             permission_for_rlc=for_rlc).values('rlc_has_permission')
         rlc_ids = [has_permission['rlc_has_permission'] for has_permission in rlcs]
-        result = result | UserProfile.objects.filter(rlc_members__in=rlc_ids).distinct()
+        result = result | UserProfile.objects.filter(rlc__in=rlc_ids).distinct()
 
         return result
 
@@ -97,14 +98,24 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
+    rlc = models.ForeignKey('Rlc', related_name='rlc_members', on_delete=models.SET_NULL, null=True)
+
     objects = UserProfileManager()
 
     user_states_possible = (
         ('ac', 'active'),
+        ('ia', 'inactive'),
         ('ex', 'exam'),
         ('ab', 'abroad')
     )
 
+    user_record_states_possible = (
+        ('ac', 'accepting'),
+        ('na', 'not accepting'),
+        ('de', 'depends')
+    )
+
+    # in bearbeitung, abgeschlossen,
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']  # email already in there, other are default
 
@@ -134,14 +145,15 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         """
         Returns: all HasPermissions the groups in which the user is member of have as list
         """
-        rlcs = [rlc['id'] for rlc in list(self.rlc_members.values('id'))]
-        return list(HasPermission.objects.filter(rlc_has_permission_id__in=rlcs))
+        return list(HasPermission.objects.filter(rlc_has_permission_id=self.rlc.id))
 
     def get_overall_permissions(self):
         """
         Returns: all HasPermissions which the user has direct and
                     indirect (through membership in a group or rlc) as list
         """
+        if self.is_superuser:
+            return HasPermission.objects.all()
         return self.get_as_user_permissions() + self.get_as_group_member_permissions() + \
                self.get_as_rlc_member_permissions()
 
@@ -159,8 +171,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         return list(HasPermission.objects.filter(group_has_permission_id__in=groups, permission_id=permission))
 
     def get_as_rlc_member_special_permissions(self, permission):
-        rlcs = [rlc['id'] for rlc in list(self.rlc_members.values('id'))]
-        return list(HasPermission.objects.filter(rlc_has_permission_id__in=rlcs, permission_id=permission))
+        return list(HasPermission.objects.filter(rlc_has_permission_id=self.rlc.id, permission_id=permission))
 
     def get_overall_special_permissions(self, permission):
         if isinstance(permission, str):
@@ -182,8 +193,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
                                             permission_for_rlc_id=for_rlc).count() >= 1
 
     def has_as_rlc_member_permission(self, permission, for_user=None, for_group=None, for_rlc=None):
-        rlcs = [rlc['id'] for rlc in list(self.rlc_members.values('id'))]
-        return HasPermission.objects.filter(rlc_has_permission_id__in=rlcs, permission_id=permission,
+        return HasPermission.objects.filter(rlc_has_permission_id=self.rlc.id, permission_id=permission,
                                             permission_for_user_id=for_user,
                                             permission_for_group_id=for_group,
                                             permission_for_rlc_id=for_rlc).count() >= 1

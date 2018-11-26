@@ -61,7 +61,8 @@ export class AppComponent implements OnDestroy{
     }
 
     toggleNav() {
-        this.snav.toggle();   
+        if (this.snav)
+            this.snav.toggle();
     }
 
     

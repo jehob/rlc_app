@@ -31,15 +31,17 @@ import {
 import LogRocket from "logrocket";
 import { LOGIN_URL } from "../../../statics/api_urls.statics";
 import {
-    SET_ALL_PERMISSIONS,
+    SET_ALL_PERMISSIONS, SET_RLC,
     SET_USER,
     SET_USER_PERMISSIONS
-} from "../api.actions";
+} from '../api.actions';
 import { AuthGuardService } from "../../services/auth-guard.service";
 import { FullUser } from "../../models/user.model";
 import { RecordsSandboxService } from "../../../recordmanagement/services/records-sandbox.service";
 import { ApiSandboxService } from "../../services/api-sandbox.service";
 import {HasPermission, Permission} from '../../models/permission.model';
+import {RestrictedRlc} from '../../models/rlc.model';
+import {AppSandboxService} from '../../services/app-sandbox.service';
 
 @Injectable()
 export class AuthEffects {
@@ -49,7 +51,8 @@ export class AuthEffects {
         private router: Router,
         private guard: AuthGuardService,
         private recordSB: RecordsSandboxService,
-        private apiSB: ApiSandboxService
+        private apiSB: ApiSandboxService,
+        private appSB: AppSandboxService
     ) {}
 
     @Effect()
@@ -74,15 +77,22 @@ export class AuthEffects {
                             countries: any;
                             all_permissions: any;
                             permissions: any;
+                            rlc: any;
+                            error: string;
+                            error_message: string;
                         }) => {
+                            if (response.error){
+                                this.apiSB.showErrorSnackBar(response.error);
+                                return [];
+                            }
+
                             localStorage.setItem("token", response.token);
 
                             if (this.guard.lastVisitedUrl)
                                 this.router.navigate([
                                     this.guard.getLastVisitedUrl()
                                 ]);
-                            else this.router.navigate([""]);
-
+                            else this.router.navigate([this.appSB.savedLocation]);
                             return [
                                 {
                                     type: SET_TOKEN,
@@ -121,12 +131,12 @@ export class AuthEffects {
         user: any;
         all_permissions: any;
         permissions: any;
+        rlc: any;
     }) {
         // for logging
         LogRocket.identify(response.user.id);
         // keep this console.log
         console.log("identified: ", response.user.id);
-
         return [
             {
                 type: SET_USER,
@@ -143,6 +153,10 @@ export class AuthEffects {
                 payload: HasPermission.getPermissionsFromJsonArray(
                     response.permissions
                 )
+            },
+            {
+                type: SET_RLC,
+                payload: RestrictedRlc.getRestrictedRlcFromJson(response.rlc)
             }
         ];
     }

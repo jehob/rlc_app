@@ -18,23 +18,23 @@
 
 import {Filterable} from '../../shared/models/filterable.model';
 
-export class RecordTag implements Filterable{
+export class Tag implements Filterable{
     constructor(public id: string, public name: string){
         this.id = id;
         this.name = name;
     }
 
-    static getRecordTagsFromJsonArray(jsonArray){
-        const tags: RecordTag[] = [];
+    static getTagsFromJsonArray(jsonArray){
+        const tags: Tag[] = [];
 
         Object.values(jsonArray).map(jsonTag => {
-            tags.push(RecordTag.getRecordTagFromJson(jsonTag));
+            tags.push(Tag.getTagFromJson(jsonTag));
         });
         return tags;
     }
 
-    static getRecordTagFromJson(json){
-        return new RecordTag(json.id, json.name);
+    static getTagFromJson(json){
+        return new Tag(json.id, json.name);
     }
 
     getFilterableProperty(){
