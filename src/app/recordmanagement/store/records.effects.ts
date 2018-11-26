@@ -26,7 +26,7 @@ import {
     SET_CONSULTANTS,
     SET_COUNTRY_STATES,
     SET_ORIGIN_COUNTRIES,
-    SET_POSSIBLE_CLIENTS,
+    SET_POSSIBLE_CLIENTS, SET_RECORD_DOCUMENT_TAGS,
     SET_RECORD_STATES,
     SET_RECORD_TAGS,
     SET_RECORDS,
@@ -72,7 +72,7 @@ import {
 import { FullRecord, RestrictedRecord } from "../models/record.model";
 import { RestrictedUser } from "../../api/models/user.model";
 import { OriginCountry } from "../models/country.model";
-import { RecordTag } from "../models/record_tags.model";
+import { Tag } from "../models/record_tags.model";
 import { ApiSandboxService } from "../../api/services/api-sandbox.service";
 import { FullClient } from "../models/client.model";
 import { AppSandboxService } from "../../api/services/app-sandbox.service";
@@ -149,6 +149,7 @@ export class RecordsEffects {
                                 record_tags: any;
                                 record_states: any;
                                 country_states: any;
+                                record_document_tags: any;
                             }) => {
                                 return [
                                     {
@@ -165,8 +166,14 @@ export class RecordsEffects {
                                     },
                                     {
                                         type: SET_RECORD_TAGS,
-                                        payload: RecordTag.getRecordTagsFromJsonArray(
+                                        payload: Tag.getTagsFromJsonArray(
                                             response.record_tags
+                                        )
+                                    },
+                                    {
+                                        type: SET_RECORD_DOCUMENT_TAGS,
+                                        payload: Tag.getTagsFromJsonArray(
+                                            response.record_document_tags
                                         )
                                     },
                                     {

@@ -20,7 +20,7 @@ import { Action } from "@ngrx/store";
 import { FullRecord, RestrictedRecord } from "../models/record.model";
 import { RestrictedUser } from "../../api/models/user.model";
 import { OriginCountry } from "../models/country.model";
-import { RecordTag } from "../models/record_tags.model";
+import { Tag } from "../models/record_tags.model";
 import { FullClient } from "../models/client.model";
 import { RecordDocument } from "../models/record_document.model";
 import {RecordMessage} from '../models/record_message.model';
@@ -138,7 +138,7 @@ export class SetSpecialRecord implements Action {
 export class SetRecordTags implements Action {
     readonly type = SET_RECORD_TAGS;
 
-    constructor(public payload: RecordTag[]) {}
+    constructor(public payload: Tag[]) {}
 }
 
 export class SetRecordStates implements Action {
@@ -200,7 +200,7 @@ export class ResetFullClientInformation implements Action{
 export class SetRecordDocumentTags implements Action {
     readonly type = SET_RECORD_DOCUMENT_TAGS;
 
-    constructor(public payload: RecordMessage[]){}
+    constructor(public payload: Tag[]){}
 }
 
 export type RecordsActions =
@@ -227,4 +227,5 @@ export type RecordsActions =
     | StartAddingNewRecordMessage
     | AddRecordMessage
     | SetRecordMessages
-    | ResetFullClientInformation;
+    | ResetFullClientInformation
+    | SetRecordDocumentTags;

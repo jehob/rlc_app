@@ -35,7 +35,7 @@ import {
 import { FullClient } from "../models/client.model";
 import { OriginCountry } from "../models/country.model";
 import { RestrictedUser } from "../../api/models/user.model";
-import { RecordTag } from "../models/record_tags.model";
+import { Tag } from "../models/record_tags.model";
 import { ApiSandboxService } from "../../api/services/api-sandbox.service";
 import { FullRecord } from "../models/record.model";
 import {StorageService} from '../../shared/services/storage.service';
@@ -150,7 +150,7 @@ export class RecordsSandboxService {
         createFormValues: any,
         client: FullClient,
         consultants: RestrictedUser[],
-        tags: RecordTag[]
+        tags: Tag[]
     ) {
         let newRecord = {};
         if (client) {

@@ -20,12 +20,13 @@ import { RestrictedRecord } from "../models/record.model";
 import {
     ADD_RECORD_DOCUMENT,
     ADD_RECORD_MESSAGE,
-    RecordsActions, RESET_FULL_CLIENT_INFORMATION,
+    RecordsActions,
+    RESET_FULL_CLIENT_INFORMATION,
     RESET_POSSIBLE_CLIENTS,
     SET_CONSULTANTS,
     SET_COUNTRY_STATES,
     SET_ORIGIN_COUNTRIES,
-    SET_POSSIBLE_CLIENTS,
+    SET_POSSIBLE_CLIENTS, SET_RECORD_DOCUMENT_TAGS,
     SET_RECORD_STATES,
     SET_RECORD_TAGS,
     SET_RECORDS,
@@ -36,23 +37,24 @@ import {
     SET_SPECIAL_RECORD_MESSAGES
 } from './records.actions';
 import { OriginCountry } from "../models/country.model";
-import { RecordTag } from "../models/record_tags.model";
+import { Tag } from "../models/record_tags.model";
 import { FullClient } from "../models/client.model";
-import {RecordDocument} from '../models/record_document.model';
-import {RecordMessage} from '../models/record_message.model';
+import { RecordDocument } from "../models/record_document.model";
+import { RecordMessage } from "../models/record_message.model";
 
 export interface RecordsState {
     special_record: {
-        record: RestrictedRecord,
-        client: FullClient,
-        origin_country: OriginCountry,
-        record_documents: RecordDocument[],
-        record_messages: RecordMessage[]
-    },
+        record: RestrictedRecord;
+        client: FullClient;
+        origin_country: OriginCountry;
+        record_documents: RecordDocument[];
+        record_messages: RecordMessage[];
+    };
     records: RestrictedRecord[];
     consultants: RestrictedRecord[];
     origin_countries: OriginCountry[];
-    record_tags: RecordTag[];
+    record_tags: Tag[];
+    record_document_tags: Tag[];
     record_states: any;
     country_states: any;
     possible_clients: FullClient[];
@@ -70,6 +72,7 @@ const initialState: RecordsState = {
     consultants: [],
     origin_countries: [],
     record_tags: [],
+    record_document_tags: [],
     record_states: [],
     country_states: [],
     possible_clients: []
@@ -189,6 +192,11 @@ export function recordsReducer(state = initialState, action: RecordsActions) {
                     record_documents: [],
                     record_messages: []
                 }
+            };
+        case SET_RECORD_DOCUMENT_TAGS:
+            return {
+                ...state,
+                record_document_tags: action.payload
             };
         default:
             return state;
