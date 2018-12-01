@@ -18,21 +18,21 @@
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RecordDocumentsListComponent } from './record-documents-list.component';
+import { RecordDocumentItemComponent } from './record-document-item.component';
 
-describe('RecordDocumentsListComponent', () => {
-  let component: RecordDocumentsListComponent;
-  let fixture: ComponentFixture<RecordDocumentsListComponent>;
+describe('RecordDocumentItemComponent', () => {
+  let component: RecordDocumentItemComponent;
+  let fixture: ComponentFixture<RecordDocumentItemComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RecordDocumentsListComponent ]
+      declarations: [ RecordDocumentItemComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RecordDocumentsListComponent);
+    fixture = TestBed.createComponent(RecordDocumentItemComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

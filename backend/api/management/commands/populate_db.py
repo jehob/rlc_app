@@ -62,7 +62,7 @@ class Command(BaseCommand):
                             )
 
     def handle(self, *args, **options):
-        Fixtures.create_example_tags()
+        Fixtures.create_example_record_tags()
         Fixtures.create_example_permissions()
         Fixtures.create_example_static_users()
         Fixtures.create_example_origin_countries()

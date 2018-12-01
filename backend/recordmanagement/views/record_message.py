@@ -29,6 +29,7 @@ class RecordMessageViewSet(viewsets.ModelViewSet):
 
 class RecordMessageByRecordViewSet(APIView):
     def post(self, request, id):
+        # request = self.request
         if 'message' not in request.data or request.data['message'] == '':
             return Response(error_codes.ERROR__RECORD__MESSAGE__NO_MESSAGE_PROVIDED)
         message = request.data['message']

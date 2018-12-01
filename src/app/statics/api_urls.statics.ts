@@ -28,6 +28,7 @@ export const UPLOAD_SIGNING_BASE_URL = "api/storage_up/";
 
 const RECORD_SPECIAL_URL = "api/records/record/";
 const DOWNLOAD_SIGNING_BASE_URL = "api/storage_down/";
+const RECORD_DOCUMENT_BASE_URL = "api/records/documents/";
 
 export function GetSpecialProfileURL(id: string | number) {
     return `${PROFILES_URL}${id}/`;
@@ -55,3 +56,11 @@ export function GetCreateRecordDocumentUrl(record_id: string) {
 export function GetAddRecordMessageUrl(record_id: string) {
     return `${RECORD_SPECIAL_URL}${record_id}/messages`;
 }
+
+export function GetRecordDocumentUrl(document_id: string){
+    return `${RECORD_DOCUMENT_BASE_URL}${document_id}/`;
+}
+
+export const GetL = () => {
+
+};

@@ -24,7 +24,7 @@ import { SelectClientDialogComponent } from "../../components/select-client-dial
 import { FullClient } from "../../models/client.model";
 import { OriginCountry } from "../../models/country.model";
 import { RestrictedUser } from "../../../api/models/user.model";
-import { Tag } from "../../models/record_tags.model";
+import { Tag } from "../../models/tag.model";
 import { Observable } from "rxjs";
 
 @Component({

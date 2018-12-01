@@ -20,7 +20,7 @@ import { Action } from "@ngrx/store";
 import { FullRecord, RestrictedRecord } from "../models/record.model";
 import { RestrictedUser } from "../../api/models/user.model";
 import { OriginCountry } from "../models/country.model";
-import { Tag } from "../models/record_tags.model";
+import { Tag } from "../models/tag.model";
 import { FullClient } from "../models/client.model";
 import { RecordDocument } from "../models/record_document.model";
 import {RecordMessage} from '../models/record_message.model';
@@ -36,6 +36,8 @@ export const START_ADDING_NEW_RECORD_DOCUMENT =
     "START_ADDING_NEW_RECORD_DOCUMENT";
 export const START_ADDING_NEW_RECORD_MESSAGE =
     "START_ADDING_NEW_RECORD_MESSAGE";
+
+export const START_SETTING_RECORD_DOCUMENT_TAGS = "START_SETTING_RECORD_DOCUMENT_TAGS";
 
 export const START_SAVING_RECORD = "START_SAVING_RECORD";
 
@@ -203,6 +205,12 @@ export class SetRecordDocumentTags implements Action {
     constructor(public payload: Tag[]){}
 }
 
+export class StartSettingRecordDocumentTags implements Action {
+    readonly type = START_SETTING_RECORD_DOCUMENT_TAGS;
+
+    constructor(public payload: {tags: Tag[]; document_id: string}){}
+}
+
 export type RecordsActions =
     | SetRecords
     | StartLoadingRecords
@@ -228,4 +236,5 @@ export type RecordsActions =
     | AddRecordMessage
     | SetRecordMessages
     | ResetFullClientInformation
-    | SetRecordDocumentTags;
+    | SetRecordDocumentTags
+    | StartSettingRecordDocumentTags;

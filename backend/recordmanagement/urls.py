@@ -32,7 +32,7 @@ urlpatterns = [
     url(r'clients_by_birthday', GetClientsFromBirthday.as_view()),
     url(r'record/(?P<id>.+)/$', RecordViewSet.as_view()),
     url(r'record/$', RecordViewSet.as_view()),
-    url(r'record/(?P<id>.+)/documents/$', RecordDocumentByRecordViewSet.as_view()),
-    url(r'record/(?P<id>.+)/messages/$', RecordMessageByRecordViewSet.as_view()),
+    url(r'record/(?P<id>.+)/documents$', RecordDocumentByRecordViewSet.as_view()),
+    url(r'record/(?P<id>.+)/messages$', RecordMessageByRecordViewSet.as_view()),
     url(r'documents/(?P<id>.+)/$', RecordDocumentTagByDocumentViewSet.as_view()),
 ]

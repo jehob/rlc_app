@@ -19,29 +19,31 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { select, Store } from "@ngrx/store";
-import {Location} from '@angular/common'
+import { Location } from "@angular/common";
 import { take } from "rxjs/operators";
 import { Observable } from "rxjs";
 import { RecordsState } from "../store/records.reducers";
 import {
     ResetPossibleClients,
-    StartAddingNewRecord, StartAddingNewRecordDocument, StartAddingNewRecordMessage,
+    StartAddingNewRecord,
+    StartAddingNewRecordDocument,
+    StartAddingNewRecordMessage,
     StartLoadingClientPossibilities,
     StartLoadingRecords,
     StartLoadingRecordStatics,
     StartLoadingSpecialRecord,
-    StartSavingRecord
+    StartSavingRecord, StartSettingRecordDocumentTags
 } from '../store/records.actions';
 import { FullClient } from "../models/client.model";
 import { OriginCountry } from "../models/country.model";
 import { RestrictedUser } from "../../api/models/user.model";
-import { Tag } from "../models/record_tags.model";
+import { Tag } from "../models/tag.model";
 import { ApiSandboxService } from "../../api/services/api-sandbox.service";
 import { FullRecord } from "../models/record.model";
-import {StorageService} from '../../shared/services/storage.service';
-import {SnackbarService} from '../../shared/services/snackbar.service';
-import {ApiState} from '../../api/store/api.reducers';
-import {getRecordFolder} from '../../statics/storage_folders.statics';
+import { StorageService } from "../../shared/services/storage.service";
+import { SnackbarService } from "../../shared/services/snackbar.service";
+import { ApiState } from "../../api/store/api.reducers";
+import { getRecordFolder } from "../../statics/storage_folders.statics";
 
 @Injectable({
     providedIn: "root"
@@ -62,7 +64,9 @@ export class RecordsSandboxService {
     }
 
     getRecords() {
-        return this.recordStore.pipe(select((state: any) => state.records.records));
+        return this.recordStore.pipe(
+            select((state: any) => state.records.records)
+        );
     }
 
     getPossibleClients(): Observable<FullClient[]> {
@@ -80,6 +84,12 @@ export class RecordsSandboxService {
     getRecordTags() {
         return this.recordStore.pipe(
             select((state: any) => state.records.record_tags)
+        );
+    }
+
+    getRecordDocumentTags() {
+        return this.recordStore.pipe(
+            select((state: any) => state.records.record_document_tags)
         );
     }
 
@@ -105,8 +115,6 @@ export class RecordsSandboxService {
         );
     }
 
-
-
     getSpecialRecord(): Observable<any> {
         return this.recordStore.pipe(
             select((state: any) => state.records.special_record)
@@ -129,7 +137,9 @@ export class RecordsSandboxService {
     }
 
     loadClientPossibilities(birthday: Date) {
-        this.recordStore.dispatch(new StartLoadingClientPossibilities(birthday));
+        this.recordStore.dispatch(
+            new StartLoadingClientPossibilities(birthday)
+        );
     }
 
     startLoadingRecordStatics() {
@@ -203,57 +213,68 @@ export class RecordsSandboxService {
         this.location.back();
     }
 
-    uploadRecordDocuments(files: File[]){
+    uploadRecordDocuments(files: File[]) {
         let record_id = null;
-        this.recordStore.pipe(
-            select((state: any) => state.records.special_record.record)
-        ).subscribe((record) => {
-            record_id = record.id;
-        });
+        this.recordStore
+            .pipe(select((state: any) => state.records.special_record.record))
+            .subscribe(record => {
+                record_id = record.id;
+            });
         let rlc_id = null;
-        this.apiStore.pipe(
-            select((state: any) => state.api.rlc)
-        ).subscribe((rlc) => {
-            rlc_id = rlc.id;
-        });
+        this.apiStore
+            .pipe(select((state: any) => state.api.rlc))
+            .subscribe(rlc => {
+                rlc_id = rlc.id;
+            });
 
-
-        console.log('i should have it', record_id);
-        console.log('i should have it', rlc_id);
-        console.log('the url', getRecordFolder(rlc_id, record_id));
-        this.storageService.uploadFiles(files, getRecordFolder(rlc_id, record_id), () => {
-            this.snackbarService.showSuccessSnackBar("upload finished");
-            for (const file of files){
-                const information = {
-                    record_id,
-                    filename: file.name
-                };
-                this.recordStore.dispatch(new StartAddingNewRecordDocument(information));
+        console.log("i should have it", record_id);
+        console.log("i should have it", rlc_id);
+        console.log("the url", getRecordFolder(rlc_id, record_id));
+        this.storageService.uploadFiles(
+            files,
+            getRecordFolder(rlc_id, record_id),
+            () => {
+                this.snackbarService.showSuccessSnackBar("upload finished");
+                for (const file of files) {
+                    const information = {
+                        record_id,
+                        filename: file.name
+                    };
+                    this.recordStore.dispatch(
+                        new StartAddingNewRecordDocument(information)
+                    );
+                }
             }
-        });
+        );
     }
 
-    downloadRecordDocument(file_name: string){
+    downloadRecordDocument(file_name: string) {
         let record_id = null;
-        this.recordStore.pipe(
-            select((state: any) => state.records.special_record.record)
-        ).subscribe((record) => {
-            record_id = record.id;
-        });
+        this.recordStore
+            .pipe(select((state: any) => state.records.special_record.record))
+            .subscribe(record => {
+                record_id = record.id;
+            });
         let rlc_id = null;
-        this.apiStore.pipe(
-            select((state: any) => state.api.rlc)
-        ).subscribe((rlc) => {
-            rlc_id = rlc.id;
-        });
-        this.storageService.downloadFile(getRecordFolder(rlc_id, record_id) + '/' + file_name);
+        this.apiStore
+            .pipe(select((state: any) => state.api.rlc))
+            .subscribe(rlc => {
+                rlc_id = rlc.id;
+            });
+        this.storageService.downloadFile(
+            getRecordFolder(rlc_id, record_id) + "/" + file_name
+        );
     }
 
-    startAddingNewRecordMessage(message: string){
+    startAddingNewRecordMessage(message: string) {
         this.recordStore.dispatch(new StartAddingNewRecordMessage(message));
     }
 
-    showError(error_message: string){
+    showError(error_message: string) {
         this.apiSB.showErrorSnackBar(error_message);
+    }
+
+    startSettingDocumentTags(tags: Tag[], document_id: string){
+        this.recordStore.dispatch(new StartSettingRecordDocumentTags({tags, document_id}))
     }
 }

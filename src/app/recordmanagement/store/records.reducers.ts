@@ -37,7 +37,7 @@ import {
     SET_SPECIAL_RECORD_MESSAGES
 } from './records.actions';
 import { OriginCountry } from "../models/country.model";
-import { Tag } from "../models/record_tags.model";
+import { Tag } from "../models/tag.model";
 import { FullClient } from "../models/client.model";
 import { RecordDocument } from "../models/record_document.model";
 import { RecordMessage } from "../models/record_message.model";
