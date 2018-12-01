@@ -25,12 +25,11 @@ from backend.recordmanagement import models, serializers
 from backend.api.models import UserProfile
 from backend.api.other_functions.emails import EmailSender
 from backend.static.permissions import PERMISSION_VIEW_RECORDS_FULL_DETAIL
-from backend.static.error_codes import ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC
+from backend.static.error_codes import *
 
 
 class RecordsListViewSet(viewsets.ViewSet):
     def list(self, request):
-
         parts = request.query_params.get('search', '').split(' ')
 
         entries = models.Record.objects.all()
@@ -82,14 +81,17 @@ class RecordsListViewSet(viewsets.ViewSet):
         return Response(serializers.RecordFullDetailSerializer(record).data)
 
     def retrieve(self, request, pk=None):
-        queryset = models.Record.objects.get(pk=pk)
-        if request.user.rlc != queryset.from_rlc:
+        try:
+            record = models.Record.objects.get(pk=id)
+        except Exception as e:
+            return Response(ERROR__RECORD__DOCUMENT__NOT_FOUND)
+
+        if request.user.rlc != record.from_rlc:
             return Response(ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC, status=status.HTTP_400_BAD_REQUEST)
-        if request.user.has_permission(PERMISSION_VIEW_RECORDS_FULL_DETAIL) or request.user.working_on_record.filter(
-            id=pk).count() == 1:
-            serializer = serializers.RecordFullDetailSerializer(queryset)
+        if record.user_has_permission(request.user):
+            serializer = serializers.RecordFullDetailSerializer(record)
         else:
-            serializer = serializers.RecordNoDetailSerializer(queryset)
+            serializer = serializers.RecordNoDetailSerializer(record)
         return Response(serializer.data)
 
 
@@ -98,7 +100,10 @@ class RecordViewSet(APIView):
         data = request.data
         rlc = request.user.rlc
         if 'client_id' in data:
-            client = models.Client.objects.get(pk=data['client_id'])
+            try:
+                client = models.Client.objects.get(pk=data['client_id'])
+            except:
+                return Response(ERROR__RECORD__CLIENT__NOT_EXISTING)
             client.note = data['client_note']
             client.phone_number = data['client_phone_number']
             client.save()

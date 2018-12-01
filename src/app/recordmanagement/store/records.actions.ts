@@ -23,7 +23,7 @@ import { OriginCountry } from "../models/country.model";
 import { Tag } from "../models/tag.model";
 import { FullClient } from "../models/client.model";
 import { RecordDocument } from "../models/record_document.model";
-import {RecordMessage} from '../models/record_message.model';
+import { RecordMessage } from "../models/record_message.model";
 
 export const START_LOADING_RECORDS = "START_LOADING_RECORDS";
 export const START_LOADING_RECORD_STATICS = "START_LOADING_RECORD_STATICS";
@@ -37,7 +37,11 @@ export const START_ADDING_NEW_RECORD_DOCUMENT =
 export const START_ADDING_NEW_RECORD_MESSAGE =
     "START_ADDING_NEW_RECORD_MESSAGE";
 
-export const START_SETTING_RECORD_DOCUMENT_TAGS = "START_SETTING_RECORD_DOCUMENT_TAGS";
+export const START_SETTING_RECORD_DOCUMENT_TAGS =
+    "START_SETTING_RECORD_DOCUMENT_TAGS";
+
+export const START_REQUESTING_READ_PERMISSION =
+    "START_REQUESTING_READ_PERMISSION";
 
 export const START_SAVING_RECORD = "START_SAVING_RECORD";
 
@@ -192,23 +196,29 @@ export class AddRecordMessage implements Action {
 export class SetRecordMessages implements Action {
     readonly type = SET_SPECIAL_RECORD_MESSAGES;
 
-    constructor(public payload: RecordMessage[]){}
+    constructor(public payload: RecordMessage[]) {}
 }
 
-export class ResetFullClientInformation implements Action{
+export class ResetFullClientInformation implements Action {
     readonly type = RESET_FULL_CLIENT_INFORMATION;
 }
 
 export class SetRecordDocumentTags implements Action {
     readonly type = SET_RECORD_DOCUMENT_TAGS;
 
-    constructor(public payload: Tag[]){}
+    constructor(public payload: Tag[]) {}
 }
 
 export class StartSettingRecordDocumentTags implements Action {
     readonly type = START_SETTING_RECORD_DOCUMENT_TAGS;
 
-    constructor(public payload: {tags: Tag[]; document_id: string}){}
+    constructor(public payload: { tags: Tag[]; document_id: string }) {}
+}
+
+export class StartRequestingReadPermission implements Action {
+    readonly type = START_REQUESTING_READ_PERMISSION;
+
+    constructor(public payload: RestrictedRecord) {}
 }
 
 export type RecordsActions =
@@ -237,4 +247,5 @@ export type RecordsActions =
     | SetRecordMessages
     | ResetFullClientInformation
     | SetRecordDocumentTags
-    | StartSettingRecordDocumentTags;
+    | StartSettingRecordDocumentTags
+    | StartRequestingReadPermission;
