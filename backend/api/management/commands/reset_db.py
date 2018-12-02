@@ -55,3 +55,5 @@ class Command(BaseCommand):
         RecordMessage.objects.all().delete()
         RecordDocument.objects.all().delete()
         RecordDocumentTag.objects.all().delete()
+        RecordPermission.objects.all().delete()
+

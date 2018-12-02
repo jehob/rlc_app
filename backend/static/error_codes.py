@@ -101,3 +101,8 @@ ERROR__RECORD__CLIENT__NOT_EXISTING = {
     'error': 'provided tag does not exist',
     'error_token': 'record.document.tag_not_existing'
 }
+
+ERROR__RECORD__PERMISSION__ALREADY_WORKING_ON = {
+    'error': 'the user is already working on the client',
+    'error_token': 'record.permission.already_working_on'
+}

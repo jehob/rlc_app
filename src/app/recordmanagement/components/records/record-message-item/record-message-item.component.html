@@ -17,11 +17,12 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 <div>
-    <p>
-        {{message.message}} from {{message.sender.name}}
-    </p>
-    <div class="temp" *ngIf="ownMessage">
-        aa
-
+    <div class="record-message-item__from-container">
+        <img src="../../../../../../static/images/empty-profile.png" alt="picture" class="record-message-item__picture">
+        <p>{{message.sender.name}}</p>
+    </div>
+    <div class="record-message-item__message-container">
+        <p [ngClass]="{'record-message-item__message': true, 'record-message-item__message__own': ownMessage}">{{message.message}}</p>
+        <p class="record-message-item__message-date">{{message.created_on | date}}</p>
     </div>
 </div>

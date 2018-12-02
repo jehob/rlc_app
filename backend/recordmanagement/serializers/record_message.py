@@ -25,4 +25,3 @@ class RecordMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.RecordMessage
         fields = '__all__'
-

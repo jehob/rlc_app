@@ -18,15 +18,16 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 <div class="record-messages__container">
+    <h1>Messages</h1>
     <div *ngFor="let message of messages">
         <app-record-message-item [message]="message"></app-record-message-item>
     </div>
 
     <form [formGroup]="messageForm" class="" (ngSubmit)="onSendClick()">
 
-        <mat-form-field class="">
+        <mat-form-field class="record-messages__sending-container">
             <input matInput placeholder="message..." formControlName="message">
         </mat-form-field>
-        <button type="submit">send</button>
+        <button class="record-messages__send-button" mat-flat-button [disabled]="!messageForm.valid" type="submit">send</button>
     </form>
 </div>

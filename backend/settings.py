@@ -84,7 +84,8 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-    )
+    ),
+
 }
 # Authentication Timeout
 if 'ON_HEROKU' in os.environ:
@@ -92,8 +93,6 @@ if 'ON_HEROKU' in os.environ:
 else:
     TIMEOUT_TIMEDELTA = timedelta(weeks=10)
 
-# # Timezone
-# TIME_ZONE_USED = timezone.
 
 # Templates
 if 'ON_HEROKU' in os.environ:

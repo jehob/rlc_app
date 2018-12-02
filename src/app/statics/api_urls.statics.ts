@@ -26,9 +26,10 @@ export const CREATE_RECORD_URL = "api/records/create_record/";
 export const RLCS_URL = "api/get_rlcs/";
 export const UPLOAD_SIGNING_BASE_URL = "api/storage_up/";
 
-const RECORD_SPECIAL_URL = "api/records/record/";
+const SPECIAL_RECORD_BASE_URL = "api/records/record/";
 const DOWNLOAD_SIGNING_BASE_URL = "api/storage_down/";
 const RECORD_DOCUMENT_BASE_URL = "api/records/documents/";
+
 
 export const GetSpecialProfileURL = (id: string | number) => {
     return `${PROFILES_URL}${id}/`;
@@ -39,7 +40,7 @@ export const GetRecordsSearchURL = (toSearch: string) => {
 };
 
 export const GetSpecialRecordURL = (id: string | number) => {
-    return `${RECORD_SPECIAL_URL}${id}/`;
+    return `${SPECIAL_RECORD_BASE_URL}${id}/`;
 };
 
 export const GetDownloadUrl = (file: string) => {
@@ -51,17 +52,17 @@ export const GetUploadUrl = (file: File, fileDirectory: string = '') => {
 };
 
 export const GetCreateRecordDocumentUrl = (record_id: string) => {
-    return `${RECORD_SPECIAL_URL}${record_id}/documents`;
+    return `${SPECIAL_RECORD_BASE_URL}${record_id}/documents`;
 };
 
 export const GetAddRecordMessageUrl = (record_id: string) => {
-    return `${RECORD_SPECIAL_URL}${record_id}/messages`;
+    return `${SPECIAL_RECORD_BASE_URL}${record_id}/messages`;
 };
 
 export const GetRecordDocumentUrl = (document_id: string) => {
     return `${RECORD_DOCUMENT_BASE_URL}${document_id}/`;
 };
 
-export const GetL = () => {
-
+export const GetRecordpermissionRequestUrl = (record_id: string) => {
+    return `${SPECIAL_RECORD_BASE_URL}${record_id}/request_permission`;
 };

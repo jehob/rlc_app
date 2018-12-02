@@ -19,7 +19,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {RecordDocument} from '../../../models/record_document.model';
 import {RecordsSandboxService} from '../../../services/records-sandbox.service';
-import {SetRecordDocumentTags} from '../../../store/records.actions';
+import {SetRecordDocumentTags} from '../../../store/actions/records.actions';
 import {Tag} from '../../../models/tag.model';
 import {Observable} from 'rxjs';
 

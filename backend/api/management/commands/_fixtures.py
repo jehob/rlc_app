@@ -40,8 +40,6 @@ class Fixtures:
         for single_tag in tags:
             AddMethods.add_record_tag(single_tag)
 
-
-
     @staticmethod
     def create_example_origin_countries():
         countries = [('Botswana', 'st'), ('Ghana', 'ot'), ('Nigeria', 'so'),
@@ -72,7 +70,6 @@ class Fixtures:
 
     @staticmethod
     def create_real_permissions():
-        # permissions = [getattr(StaticPermissionNames, x) for x in dir(StaticPermissionNames) if not x.startswith("__")]
         permissions = get_all_permissions()
         for permission in permissions:
             AddMethods.add_permission(permission)
@@ -81,18 +78,15 @@ class Fixtures:
     def create_real_tags():
         tags = [('Familiennachzug',), ('Dublin III',), ('Arbeitserlaubnis',), ('Flüchtlingseigenschaft',),
                 ('subsidiärer Schutz',), ('Eheschließung',), ('Verlobung',),
-                ('illegale Ausreise aus dem Bundesgebiet',),
-                ('Untertauchen',), ('Kinder anerkennen',), ('Ausbildung',), ('Geburt ',),
-                ('Eines Kindes im Asylverfahren',),
-                ('Duldung',), ('Ausbildungsduldung',), ('Visum',), ('Anhörung',), ('Wechsel der Unterkunft',),
-                ('Wohnsitzauflage',),
-                ('Folgeantrag',), ('Zweitantrag',), ('Unterbringung im Asylverfahren',),
-                ('Widerruf und Rücknahme der Asylberechtigung',), ('Passbeschaffung',), ('Mitwirkungspflichten',),
-                ('Nichtbetreiben des Verfahrens',), ('Krankheit im Asylverfahren',), ('Familienasyl',), ('UmF',),
+                ('illegale Ausreise aus dem Bundesgebiet',), ('Untertauchen',), ('Kinder anerkennen',), ('Ausbildung',),
+                ('Geburt ',), ('Eines Kindes im Asylverfahren',), ('Duldung',), ('Ausbildungsduldung',), ('Visum',),
+                ('Anhörung',), ('Wechsel der Unterkunft',), ('Wohnsitzauflage',), ('Folgeantrag',), ('Zweitantrag',),
+                ('Unterbringung im Asylverfahren',), ('Widerruf und Rücknahme der Asylberechtigung',),
+                ('Passbeschaffung',), ('Mitwirkungspflichten',), ('Nichtbetreiben des Verfahrens',),
+                ('Krankheit im Asylverfahren',), ('Familienasyl',), ('UmF',),
                 ('Familienzusammenführung nach Dublin III',), ('Negativbescheid',), ('Relocation',), ('Resettlement',),
                 ('Asylbewerberleistungsgesetz',), ('Kirchenasyl',), ('Asylantrag',), ('Abschiebung',),
-                ('Untätigkeitsklage',),
-                ('Studium',)]
+                ('Untätigkeitsklage',), ('Studium',)]
         for tag in tags:
             AddMethods.add_record_tag(tag)
 
@@ -127,11 +121,11 @@ class Fixtures:
     @staticmethod
     def create_handmade_examples():
         record_tags = [(1001, 'Familiennachzug'),
-                (1002, 'Ausbildung'),
-                (1003, 'Anhörung'),
-                (1004, 'Abschiebung'),
-                (1005, 'Asylantrag')
-                ]
+                       (1002, 'Ausbildung'),
+                       (1003, 'Anhörung'),
+                       (1004, 'Abschiebung'),
+                       (1005, 'Asylantrag')
+                       ]
         for tag in record_tags:
             AddMethods.add_record_tag(tag)
 

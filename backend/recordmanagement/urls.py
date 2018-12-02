@@ -25,6 +25,7 @@ router.register('record_tags', RecordTagViewSet)
 router.register('clients', ClientsViewSet)
 router.register('record_documents', RecordDocumentViewSet)
 router.register('record_document_tags', RecordDocumentTagViewSet)
+router.register('record_permissions', RecordPermissionViewSet)
 
 urlpatterns = [
     url(r'', include(router.urls)),
@@ -34,5 +35,6 @@ urlpatterns = [
     url(r'record/$', RecordViewSet.as_view()),
     url(r'record/(?P<id>.+)/documents$', RecordDocumentByRecordViewSet.as_view()),
     url(r'record/(?P<id>.+)/messages$', RecordMessageByRecordViewSet.as_view()),
+    url(r'record/(?P<id>.+)/request_permission$', RecordPermissionRequestViewSet.as_view()),
     url(r'documents/(?P<id>.+)/$', RecordDocumentTagByDocumentViewSet.as_view()),
 ]

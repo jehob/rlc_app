@@ -21,3 +21,4 @@ from .record import *
 from .record_document_tag import *
 from .record_document import *
 from .record_message import *
+from .record_permission import *

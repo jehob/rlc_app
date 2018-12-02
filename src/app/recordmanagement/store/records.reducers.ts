@@ -35,7 +35,7 @@ import {
     SET_SPECIAL_RECORD,
     SET_SPECIAL_RECORD_DOCUMENTS,
     SET_SPECIAL_RECORD_MESSAGES
-} from './records.actions';
+} from './actions/records.actions';
 import { OriginCountry } from "../models/country.model";
 import { Tag } from "../models/tag.model";
 import { FullClient } from "../models/client.model";

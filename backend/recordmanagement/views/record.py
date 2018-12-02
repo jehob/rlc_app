@@ -30,6 +30,11 @@ from backend.static.error_codes import *
 
 class RecordsListViewSet(viewsets.ViewSet):
     def list(self, request):
+        """
+
+        :param request:
+        :return:
+        """
         parts = request.query_params.get('search', '').split(' ')
 
         entries = models.Record.objects.all()

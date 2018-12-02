@@ -24,22 +24,24 @@ import { CustomMaterialModule } from "../custom-material.module";
 import { StoreModule } from "@ngrx/store";
 import { recordsReducer } from "./store/records.reducers";
 import { EffectsModule } from "@ngrx/effects";
-import { RecordsEffects } from "./store/records.effects";
+import { RecordsEffects } from "./store/effects/records.effects";
 import { RecordsListItemComponent } from "./components/records/records-list-item/records-list-item.component";
 import { CreateRecordComponent } from "./pages/create-record/create-record.component";
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { SelectClientDialogComponent } from "./components/select-client-dialog/select-client-dialog.component";
-import {RecordsSandboxService} from './services/records-sandbox.service';
-import {ChipAutocompleteComponent} from '../shared/components/chip-autocomplete/chip-autocomplete.component';
-import {SharedModule} from '../shared/shared.module';
-import { RecordComponent } from './pages/record/record.component';
-import { FullRecordDetailComponent } from './components/records/full-record-detail/full-record-detail.component';
-import { RestrictedRecordDetailComponent } from './components/records/restricted-record-detail/restricted-record-detail.component';
-import { ConsultantsFieldComponent } from './components/consultants-field/consultants-field.component';
-import { RecordDocumentsListComponent } from './components/records/record-documents-list/record-documents-list.component';
-import { RecordMessagesComponent } from './components/records/record-messages/record-messages.component';
-import { RecordMessageItemComponent } from './components/records/record-message-item/record-message-item.component';
-import { RecordDocumentItemComponent } from './components/records/record-document-item/record-document-item.component';
+import { RecordsSandboxService } from "./services/records-sandbox.service";
+import { ChipAutocompleteComponent } from "../shared/components/chip-autocomplete/chip-autocomplete.component";
+import { SharedModule } from "../shared/shared.module";
+import { RecordComponent } from "./pages/record/record.component";
+import { FullRecordDetailComponent } from "./components/records/full-record-detail/full-record-detail.component";
+import { RestrictedRecordDetailComponent } from "./components/records/restricted-record-detail/restricted-record-detail.component";
+import { ConsultantsFieldComponent } from "./components/consultants-field/consultants-field.component";
+import { RecordDocumentsListComponent } from "./components/records/record-documents-list/record-documents-list.component";
+import { RecordMessagesComponent } from "./components/records/record-messages/record-messages.component";
+import { RecordMessageItemComponent } from "./components/records/record-message-item/record-message-item.component";
+import { RecordDocumentItemComponent } from "./components/records/record-document-item/record-document-item.component";
+import { RecordsAddEffects } from "./store/effects/records-add.effects";
+import { RecordsLoadingEffects } from "./store/effects/records-loading.effects";
 
 @NgModule({
     imports: [
@@ -48,7 +50,11 @@ import { RecordDocumentItemComponent } from './components/records/record-documen
         FormsModule,
         ReactiveFormsModule,
         StoreModule.forFeature("records", recordsReducer),
-        EffectsModule.forFeature([RecordsEffects])
+        EffectsModule.forFeature([
+            RecordsEffects,
+            RecordsAddEffects,
+            RecordsLoadingEffects
+        ])
     ],
     declarations: [
         RecordsListComponent,
@@ -66,7 +72,6 @@ import { RecordDocumentItemComponent } from './components/records/record-documen
     ],
     entryComponents: [SelectClientDialogComponent]
 })
-
 export class RecordsModule {
     constructor(private recordSB: RecordsSandboxService) {
         this.recordSB.startLoadingRecordStatics();

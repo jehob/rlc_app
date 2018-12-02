@@ -44,6 +44,6 @@ export class RestrictedRecordDetailComponent implements OnInit {
     }
 
     onRequestReadPermission(){
-
+        this.recordSB.startRequestReadPermission(this.record);
     }
 }

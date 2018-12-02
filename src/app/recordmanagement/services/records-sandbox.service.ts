@@ -31,15 +31,15 @@ import {
     StartLoadingClientPossibilities,
     StartLoadingRecords,
     StartLoadingRecordStatics,
-    StartLoadingSpecialRecord,
+    StartLoadingSpecialRecord, StartRequestingReadPermission,
     StartSavingRecord, StartSettingRecordDocumentTags
-} from '../store/records.actions';
+} from '../store/actions/records.actions';
 import { FullClient } from "../models/client.model";
 import { OriginCountry } from "../models/country.model";
 import { RestrictedUser } from "../../api/models/user.model";
 import { Tag } from "../models/tag.model";
 import { ApiSandboxService } from "../../api/services/api-sandbox.service";
-import { FullRecord } from "../models/record.model";
+import {FullRecord, RestrictedRecord} from '../models/record.model';
 import { StorageService } from "../../shared/services/storage.service";
 import { SnackbarService } from "../../shared/services/snackbar.service";
 import { ApiState } from "../../api/store/api.reducers";
@@ -226,10 +226,6 @@ export class RecordsSandboxService {
             .subscribe(rlc => {
                 rlc_id = rlc.id;
             });
-
-        console.log("i should have it", record_id);
-        console.log("i should have it", rlc_id);
-        console.log("the url", getRecordFolder(rlc_id, record_id));
         this.storageService.uploadFiles(
             files,
             getRecordFolder(rlc_id, record_id),
@@ -276,5 +272,9 @@ export class RecordsSandboxService {
 
     startSettingDocumentTags(tags: Tag[], document_id: string){
         this.recordStore.dispatch(new StartSettingRecordDocumentTags({tags, document_id}))
+    }
+
+    startRequestReadPermission(restrictedRecord: RestrictedRecord){
+        this.recordStore.dispatch(new StartRequestingReadPermission(restrictedRecord));
     }
 }

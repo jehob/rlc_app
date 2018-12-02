@@ -19,11 +19,28 @@
 import { Injectable } from "@angular/core";
 import { Actions, Effect, ofType } from "@ngrx/effects";
 import { HttpClient } from "@angular/common/http";
+import { from, of } from "rxjs";
+import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
+
+import { AppSandboxService } from "../../../api/services/app-sandbox.service";
 import {
-    ADD_RECORD_DOCUMENT,
-    ADD_RECORD_MESSAGE,
-    RecordsActions,
-    RESET_FULL_CLIENT_INFORMATION,
+    START_LOADING_CLIENT_POSSIBILITIES,
+    START_LOADING_RECORD_STATICS,
+    START_LOADING_RECORDS,
+    START_LOADING_SPECIAL_RECORD,
+    StartLoadingClientPossibilities,
+    StartLoadingRecords,
+    StartLoadingSpecialRecord
+} from "../actions/records-start.actions";
+import {
+    CLIENTS_BY_BIRTHDAY_URL,
+    GetRecordsSearchURL,
+    GetSpecialRecordURL,
+    RECORDS_STATICS_URL,
+    RECORDS_URL
+} from "../../../statics/api_urls.statics";
+import { FullRecord, RestrictedRecord } from "../../models/record.model";
+import {
     SET_CONSULTANTS,
     SET_COUNTRY_STATES,
     SET_ORIGIN_COUNTRIES,
@@ -36,69 +53,27 @@ import {
     SET_SPECIAL_ORIGIN_COUNTRY,
     SET_SPECIAL_RECORD,
     SET_SPECIAL_RECORD_DOCUMENTS,
-    SET_SPECIAL_RECORD_MESSAGES,
-    START_ADDING_NEW_RECORD,
-    START_ADDING_NEW_RECORD_DOCUMENT,
-    START_ADDING_NEW_RECORD_MESSAGE,
-    START_LOADING_CLIENT_POSSIBILITIES,
-    START_LOADING_RECORD_STATICS,
-    START_LOADING_RECORDS,
-    START_LOADING_SPECIAL_RECORD,
-    START_SAVING_RECORD,
-    START_SETTING_RECORD_DOCUMENT_TAGS,
-    StartAddingNewRecord,
-    StartAddingNewRecordDocument,
-    StartAddingNewRecordMessage,
-    StartLoadingClientPossibilities,
-    StartLoadingRecords,
-    StartLoadingSpecialRecord,
-    StartSavingRecord,
-    StartSettingRecordDocumentTags
-} from "./records.actions";
-import {
-    catchError,
-    concatMap,
-    map,
-    mergeMap,
-    switchMap,
-    switchMapTo
-} from "rxjs/operators";
-import { from, merge, of } from "rxjs";
-import {
-    CLIENTS_BY_BIRTHDAY_URL,
-    CREATE_RECORD_URL,
-    GetAddRecordMessageUrl,
-    GetCreateRecordDocumentUrl, GetRecordDocumentUrl,
-    GetRecordsSearchURL,
-    GetSpecialRecordURL,
-    RECORDS_STATICS_URL,
-    RECORDS_URL
-} from '../../statics/api_urls.statics';
-import { FullRecord, RestrictedRecord } from "../models/record.model";
-import { RestrictedUser } from "../../api/models/user.model";
-import { OriginCountry } from "../models/country.model";
-import { Tag } from "../models/tag.model";
-import { ApiSandboxService } from "../../api/services/api-sandbox.service";
-import { FullClient } from "../models/client.model";
-import { AppSandboxService } from "../../api/services/app-sandbox.service";
-import { RecordsSandboxService } from "../services/records-sandbox.service";
-import { RecordDocument } from "../models/record_document.model";
-import { select, Store } from "@ngrx/store";
-import { RecordState } from "../models/states.model";
-import { RecordMessage } from "../models/record_message.model";
+    SET_SPECIAL_RECORD_MESSAGES
+} from "../actions/records-set.actions";
+import { RestrictedUser } from "../../../api/models/user.model";
+import { OriginCountry } from "../../models/country.model";
+import { Tag } from "../../models/tag.model";
+import { ApiSandboxService } from "../../../api/services/api-sandbox.service";
+import { FullClient } from "../../models/client.model";
+import { RecordDocument } from "../../models/record_document.model";
+import { RecordMessage } from "../../models/record_message.model";
+import { RESET_FULL_CLIENT_INFORMATION } from "../actions/records.actions";
 
 @Injectable()
-export class RecordsEffects {
+export class RecordsLoadingEffects {
     constructor(
         private actions: Actions,
         private http: HttpClient,
-        private appSB: AppSandboxService,
-        private recordSB: RecordsSandboxService,
-        private recordStore: Store<RecordState>
+        private appSB: AppSandboxService
     ) {}
 
     @Effect()
-    recordsLoad = this.actions.pipe(
+    startLoadingRecords = this.actions.pipe(
         ofType(START_LOADING_RECORDS),
         map((action: StartLoadingRecords) => {
             return action.payload;
@@ -136,7 +111,7 @@ export class RecordsEffects {
     );
 
     @Effect()
-    recordStaticsLoad = this.actions.pipe(
+    startLoadingRecordStatics = this.actions.pipe(
         ofType(START_LOADING_RECORD_STATICS),
         switchMap(() => {
             if (this.appSB.isAuthenticated()) {
@@ -200,7 +175,7 @@ export class RecordsEffects {
     );
 
     @Effect()
-    loadingClientPossibilities = this.actions.pipe(
+    startLoadingClientPossibilities = this.actions.pipe(
         ofType(START_LOADING_CLIENT_POSSIBILITIES),
         map((action: StartLoadingClientPossibilities) => {
             return action.payload;
@@ -231,28 +206,7 @@ export class RecordsEffects {
     );
 
     @Effect()
-    addingNewRecord = this.actions.pipe(
-        ofType(START_ADDING_NEW_RECORD),
-        map((action: StartAddingNewRecord) => {
-            return action.payload;
-        }),
-        switchMap((newRecord: any) => {
-            return from(
-                this.http.post(CREATE_RECORD_URL, newRecord).pipe(
-                    catchError(error => {
-                        return of({ error: "error at creating new record" });
-                    }),
-                    mergeMap(response => {
-                        this.recordSB.successfullyCreatedRecord(response);
-                        return [];
-                    })
-                )
-            );
-        })
-    );
-
-    @Effect()
-    loadingSpecialRecord = this.actions.pipe(
+    startLoadingSpecialRecord = this.actions.pipe(
         ofType(START_LOADING_SPECIAL_RECORD),
         map((action: StartLoadingSpecialRecord) => {
             return action.payload;
@@ -318,153 +272,6 @@ export class RecordsEffects {
                         }
                     })
                 )
-            );
-        })
-    );
-
-    @Effect()
-    savingRecord = this.actions.pipe(
-        ofType(START_SAVING_RECORD),
-        map((action: StartSavingRecord) => {
-            return action.payload;
-        }),
-        switchMap((payload: { record: FullRecord; client: FullClient }) => {
-            return from(
-                this.http
-                    .patch(GetSpecialRecordURL(payload.record.id), {
-                        record_note: payload.record.note
-                    })
-                    .pipe(
-                        catchError(error => {
-                            return of({
-                                error: "error at loading special record"
-                            });
-                        }),
-                        mergeMap((response: any) => {
-                            this.recordSB.successfullySavedRecord(response);
-                            return [];
-                        })
-                    )
-            );
-        })
-    );
-
-    @Effect()
-    addingNewRecordDocument = this.actions.pipe(
-        ofType(START_ADDING_NEW_RECORD_DOCUMENT),
-        map((action: StartAddingNewRecordDocument) => {
-            return action.payload;
-        }),
-        mergeMap((newDocument: any) => {
-            console.log("addingnewrecord");
-            return from(
-                this.http
-                    .post(
-                        GetCreateRecordDocumentUrl(newDocument.record_id),
-                        newDocument
-                    )
-                    .pipe(
-                        catchError(error => {
-                            console.log(error);
-                            return of({
-                                error: "error at creating a record document"
-                            });
-                        }),
-                        mergeMap(response => {
-                            console.log("got something");
-                            console.log("addingNewRecordDocument", response);
-                            const document = RecordDocument.getRecordDocumentFromJson(
-                                response
-                            );
-                            return [
-                                {
-                                    type: ADD_RECORD_DOCUMENT,
-                                    payload: document
-                                }
-                            ];
-                        })
-                    )
-            );
-        })
-    );
-
-    @Effect()
-    addingNewRecordMessage = this.actions.pipe(
-        ofType(START_ADDING_NEW_RECORD_MESSAGE),
-        map((action: StartAddingNewRecordMessage) => {
-            return action.payload;
-        }),
-        mergeMap((newMessage: any) => {
-            let record_id = null;
-            this.recordStore
-                .pipe(
-                    select((state: any) => state.records.special_record.record)
-                )
-                .subscribe(record => {
-                    record_id = record.id;
-                })
-                .unsubscribe();
-            return from(
-                this.http
-                    .post(GetAddRecordMessageUrl(record_id), {
-                        message: newMessage
-                    })
-                    .pipe(
-                        catchError(error => {
-                            console.log(error);
-                            return of({
-                                error: "error at adding a record message"
-                            });
-                        }),
-                        mergeMap((response: { error }) => {
-                            if (response.error) {
-                                this.recordSB.showError("sending error");
-                                return [];
-                            }
-
-                            const new_message = RecordMessage.getRecordMessageFromJson(
-                                response
-                            );
-                            return [
-                                {
-                                    type: ADD_RECORD_MESSAGE,
-                                    payload: new_message
-                                }
-                            ];
-                        })
-                    )
-            );
-        })
-    );
-
-    @Effect()
-    settingRecordDocumentTags = this.actions.pipe(
-        ofType(START_SETTING_RECORD_DOCUMENT_TAGS),
-        map((action: StartSettingRecordDocumentTags) => {
-            return action.payload;
-        }),
-        mergeMap((payload: { tags: Tag[]; document_id: string }) => {
-            return from(
-                this.http
-                    .post(GetRecordDocumentUrl(payload.document_id), { tag_ids: payload.tags })
-                    .pipe(
-                        catchError(error => {
-                            console.log(error);
-                            return of({
-                                error: "error at adding a record message"
-                            });
-                        }),
-                        mergeMap((response: { error }) => {
-                            console.log('response', response);
-                            if (response.error) {
-                                this.recordSB.showError("sending error");
-                                return [];
-                            }
-                            return [
-
-                            ];
-                        })
-                    )
             );
         })
     );
