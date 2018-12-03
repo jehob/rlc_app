@@ -114,12 +114,12 @@ export class RecordsEffects {
         map((action: StartRequestingReadPermission) => {
             return action.payload;
         }),
-        mergeMap((payload: RestrictedRecord) => {
+        mergeMap((record: RestrictedRecord) => {
             console.log("effect fired");
             // TODO
             return from(
-                //this.http.post(GetRecordpermissionRequestUrl(payload.id.toString()), {}).pipe(
-                this.http.post(GetRecordpermissionRequestUrl('7172'), {}).pipe(
+                this.http.post(GetRecordpermissionRequestUrl(record.id.toString()), {}).pipe(
+                //this.http.post(GetRecordpermissionRequestUrl('7172'), {}).pipe(
                     catchError(error => {
                         this.recordSB.showError(error.error.detail);
                         return [];

@@ -28,6 +28,7 @@ from ..models import UserProfile, Permission, Rlc
 from ..serializers import UserProfileSerializer, UserProfileCreatorSerializer, UserProfileNameSerializer, RlcSerializer
 from ..permissions import UpdateOwnProfile
 from backend.static.error_codes import *
+from backend.api.errors import CustomError
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
@@ -109,7 +110,7 @@ class LoginViewSet(viewsets.ViewSet):
                 token.created = datetime.utcnow().replace(tzinfo=pytz.utc)
                 token.save()
             return Response(LoginViewSet.get_login_data(token.key))
-        return Response(ERROR__API__LOGIN__INVALID_CREDENTIALS)
+        raise CustomError(ERROR__API__LOGIN__INVALID_CREDENTIALS)
 
         # try:
         #     token = ObtainAuthToken().post(request)

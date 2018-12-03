@@ -26,6 +26,7 @@ from backend.api.models import UserProfile
 from backend.api.other_functions.emails import EmailSender
 from backend.static.permissions import PERMISSION_VIEW_RECORDS_FULL_DETAIL
 from backend.static.error_codes import *
+from backend.api.errors import CustomError
 
 
 class RecordsListViewSet(viewsets.ViewSet):
@@ -91,10 +92,10 @@ class RecordsListViewSet(viewsets.ViewSet):
         try:
             record = models.Record.objects.get(pk=id)
         except Exception as e:
-            return Response(ERROR__RECORD__DOCUMENT__NOT_FOUND)
+            raise CustomError(ERROR__RECORD__DOCUMENT__NOT_FOUND)
 
         if request.user.rlc != record.from_rlc:
-            return Response(ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC, status=status.HTTP_400_BAD_REQUEST)
+            raise CustomError(ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC)
         if record.user_has_permission(request.user):
             serializer = serializers.RecordFullDetailSerializer(record)
         else:
@@ -110,7 +111,7 @@ class RecordViewSet(APIView):
             try:
                 client = models.Client.objects.get(pk=data['client_id'])
             except:
-                return Response(ERROR__RECORD__CLIENT__NOT_EXISTING)
+                raise CustomError(ERROR__RECORD__CLIENT__NOT_EXISTING)
             client.note = data['client_note']
             client.phone_number = data['client_phone_number']
             client.save()
@@ -146,7 +147,7 @@ class RecordViewSet(APIView):
         record = models.Record.objects.get(pk=id)
         user = request.user
         if user.rlc != record.from_rlc and not user.is_superuser:
-            return Response(ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC, status=status.HTTP_400_BAD_REQUEST)
+            raise CustomError(ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC)
 
         if user.working_on_record.filter(id=id).count() == 1:
             record_serializer = serializers.RecordFullDetailSerializer(record)
@@ -170,7 +171,7 @@ class RecordViewSet(APIView):
         record = models.Record.objects.get(pk=id)
         user = request.user
         if user.rlc != record.from_rlc and not user.is_superuser:
-            return Response(ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC, status=status.HTTP_400_BAD_REQUEST)
+            raise CustomError(ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC)
 
         if user.working_on_record.filter(id=id).count() == 1:
             if request.data['record_note']:
@@ -188,5 +189,4 @@ class RecordViewSet(APIView):
                                                     url)
 
             return Response({'success': 'true'})
-
-        return Response({'no permission': 'true'})
+        raise CustomError(ERROR__API__PERMISSION__INSUFFICIENT)

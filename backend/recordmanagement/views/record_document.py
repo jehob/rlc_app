@@ -22,6 +22,7 @@ from datetime import datetime
 from backend.recordmanagement import models, serializers
 from backend.shared import storage_generator
 from backend.static import error_codes, storage_folders
+from backend.api.errors import CustomError
 
 
 class RecordDocumentViewSet(viewsets.ModelViewSet):
@@ -42,10 +43,10 @@ class RecordDocumentUploadViewSet(APIView):
         """
         record = models.Record.objects.get(pk=id)
         if record is None:
-            return Response(error_codes.ERROR__RECORD__RECORD__NOT_EXISTING)
+            raise CustomError(error_codes.ERROR__RECORD__RECORD__NOT_EXISTING)
 
         if not record.user_has_permission(request.user):
-            return Response(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
+            raise CustomError(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
 
         file_dir = storage_folders.get_storage_folder_record_document(record.from_rlc_id, record.id)
         file_name = request.query_params.get('file_name', '')
@@ -66,10 +67,10 @@ class RecordDocumentByRecordViewSet(APIView):
         try:
             record = models.Record.objects.get(pk=id)
         except Exception as e:
-            return Response(error_codes.ERROR__RECORD__RECORD__NOT_EXISTING)
+            raise CustomError(error_codes.ERROR__RECORD__RECORD__NOT_EXISTING)
 
         if not record.user_has_permission(request.user):
-            return Response(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
+            raise CustomError(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
 
         directory = storage_folders.get_storage_folder_record_document(record.from_rlc_id, record.id)
         information = storage_generator.check_file_and_get_information(directory, filename)
