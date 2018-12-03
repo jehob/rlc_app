@@ -65,7 +65,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -180,7 +180,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 # heroku and authentication
 django_heroku.settings(locals())
@@ -211,8 +211,12 @@ AWS_S3_SIGV4 = True
 AWS_S3_SIGNATURE_VERSION = 's3v4'
 AWS_S3_HOST = 's3.eu-central-1.amazonaws.com'
 
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'mysite/static'),
-# ]
-# STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
-# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+if 'ON_HEROKU' in os.environ:
+    # STATICFILES_DIRS = [
+    #     os.path.join(BASE_DIR, 'static'),
+    # ]
+    STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+else:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
