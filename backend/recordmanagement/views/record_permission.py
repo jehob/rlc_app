@@ -5,6 +5,7 @@ from rest_framework.response import Response
 
 from backend.recordmanagement import models, serializers
 from backend.static import error_codes
+from backend.api.errors import CustomError
 
 
 class RecordPermissionViewSet(viewsets.ModelViewSet):
@@ -17,8 +18,13 @@ class RecordPermissionRequestViewSet(APIView):
         try:
             record = models.Record.objects.get(pk=id)
         except Exception as e:
-            return Response(error_codes.ERROR__RECORD__RECORD__NOT_EXISTING)
+            bbbb()
+            # raise RecordNotExistingError
+            # return Response(error_codes.ERROR__RECORD__RECORD__NOT_EXISTING)
         if record.user_has_permission(request.user):
             return Response(error_codes.ERROR__RECORD__PERMISSION__ALREADY_WORKING_ON)
         permission = models.RecordPermission(request_from=request.user, record=record)
 
+
+def bbbb():
+    raise CustomError(error_codes.ERROR__RECORD__RECORD__NOT_EXISTING)

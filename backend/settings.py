@@ -85,7 +85,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
-
+    'EXCEPTION_HANDLER': 'backend.api.exception_handler.custom_exception_handler',
 }
 # Authentication Timeout
 if 'ON_HEROKU' in os.environ:

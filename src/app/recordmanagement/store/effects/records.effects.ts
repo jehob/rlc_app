@@ -118,12 +118,11 @@ export class RecordsEffects {
             console.log("effect fired");
             // TODO
             return from(
-                this.http.post(GetRecordpermissionRequestUrl(payload.id.toString()), {}).pipe(
+                //this.http.post(GetRecordpermissionRequestUrl(payload.id.toString()), {}).pipe(
+                this.http.post(GetRecordpermissionRequestUrl('7172'), {}).pipe(
                     catchError(error => {
-                        console.log(error);
-                        return of({
-                            error: "error at adding a record message"
-                        });
+                        this.recordSB.showError(error.error.detail);
+                        return [];
                     }),
                     mergeMap((response: { error }) => {
                         console.log("response", response);

@@ -36,34 +36,36 @@ class RecordsListViewSet(viewsets.ViewSet):
         :return:
         """
         parts = request.query_params.get('search', '').split(' ')
+        user = request.user
 
-        entries = models.Record.objects.all()
+        if user.is_superuser:
+            entries = models.Record.objects.all()
+            for part in parts:
+                consultants = UserProfile.objects.filter(name__icontains=part)
+                entries = entries.filter(
+                    Q(tagged__name__icontains=part) | Q(note__icontains=part) | Q(working_on_record__in=consultants)).distinct()
+            serializer = serializers.RecordFullDetailSerializer(entries, many=True)
+            return Response(serializer.data)
+
+        entries = models.Record.objects.filter(from_rlc=user.rlc)
         for part in parts:
             consultants = UserProfile.objects.filter(name__icontains=part)
             entries = entries.filter(
                 Q(tagged__name__icontains=part) | Q(note__icontains=part) | Q(working_on_record__in=consultants)).distinct()
 
-        user = request.user
-        if user.is_superuser:
-            queryset = entries
-            serializer = serializers.RecordFullDetailSerializer(queryset, many=True)
-            return Response(serializer.data)
-
-        rlc = user.rlc
         records = []
-        if user.has_permission(PERMISSION_VIEW_RECORDS_FULL_DETAIL, for_rlc=rlc.id):
-            queryset = entries.filter(from_rlc_id=rlc.id)
+        if user.has_permission(PERMISSION_VIEW_RECORDS_FULL_DETAIL, for_rlc=user.rlc):
+            queryset = entries
             serializer = serializers.RecordFullDetailSerializer(queryset, many=True)
             records += serializer.data
         else:
             queryset = entries.filter(
-                id__in=user.working_on_record.values_list('id', flat=True),
-                from_rlc_id=rlc.id).distinct()
+                id__in=user.working_on_record.values_list('id', flat=True)).distinct()
             serializer = serializers.RecordFullDetailSerializer(queryset, many=True)
             records += serializer.data
 
             queryset = entries.exclude(
-                id__in=user.working_on_record.values_list('id', flat=True)).filter(from_rlc_id=rlc.id).distinct()
+                id__in=user.working_on_record.values_list('id', flat=True)).distinct()
             serializer = serializers.RecordNoDetailSerializer(queryset, many=True)
             records += serializer.data
         return Response(records)
