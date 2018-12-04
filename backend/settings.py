@@ -29,6 +29,9 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 import django_heroku
 from datetime import timedelta, timezone
+import boto
+from boto.s3.connection import OrdinaryCallingFormat, Location
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -60,7 +63,8 @@ INSTALLED_APPS = [
     'backend.api',
     'backend.recordmanagement',
     'rest_framework.authtoken',
-    'storages'
+    'storages',
+    #'compressor',
 ]
 
 MIDDLEWARE = [
@@ -115,7 +119,7 @@ else:
     TEMPLATES = [
         {
             'BACKEND': 'django.template.backends.django.DjangoTemplates',
-            'DIRS': ['static/dev'],
+            'DIRS': ['static'],
             'APP_DIRS': True,
             'OPTIONS': {
                 'context_processors': [
@@ -190,22 +194,35 @@ else:
 
 # storage
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# STATICFILES_STORAGE = 'backend.shared.storage_generator.CachedS3BotoStorage'
+
+# COMPRESS_STORAGE = 'backend.shared.storage_generator.CachedS3BotoStorage'
+
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 AWS_S3_REGION_NAME = os.environ.get('AWS_S3_REGION_NAME')
 AWS_S3_BUCKET_NAME = os.environ.get('AWS_S3_BUCKET_NAME')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_S3_BUCKET_NAME')
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_S3_BUCKET_NAME
 AWS_LOCATION = 'static'
 AWS_DEFAULT_ACL = 'private'
 AWS_S3_SIGV4 = True
 AWS_S3_SIGNATURE_VERSION = 's3v4'
 AWS_S3_HOST = 's3.eu-central-1.amazonaws.com'
-
+# AWS_S3_CALLING_FORMAT = 'boto.s3.connection.OrdinaryCallingFormat'
+# GZIP
+# AWS_IS_GZIPPED = True
+# GZIP_CONTENT_TYPES = (
+#     'text/css',
+#     'application/javascript',
+#     'application/x-javascript',
+#     'text/javascript'
+# )
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 # STATIC_URL = '/static/'
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 STATICFILES_LOCATION = 'static'
 # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
@@ -213,7 +230,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
-
+# COMPRESS_URL = STATIC_URL
 # if 'ON_HEROKU' in os.environ:
 #     # STATICFILES_DIRS = [
 #     #     os.path.join(BASE_DIR, 'static'),
@@ -222,3 +239,4 @@ STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
 #     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 # else:
 #     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
