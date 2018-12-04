@@ -119,7 +119,7 @@ else:
     TEMPLATES = [
         {
             'BACKEND': 'django.template.backends.django.DjangoTemplates',
-            'DIRS': ['static'],
+            'DIRS': ['static/dev'],
             'APP_DIRS': True,
             'OPTIONS': {
                 'context_processors': [
@@ -193,11 +193,12 @@ else:
 
 
 # storage
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-# STATICFILES_STORAGE = 'backend.shared.storage_generator.CachedS3BotoStorage'
-
-# COMPRESS_STORAGE = 'backend.shared.storage_generator.CachedS3BotoStorage'
+if 'ON_HEROKU' in os.environ and os.environ['ON_HEROKU']:
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    COMPRESS_STORAGE = 'backend.shared.storage_generator.CachedS3BotoStorage'
+else:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
@@ -212,13 +213,14 @@ AWS_S3_SIGNATURE_VERSION = 's3v4'
 AWS_S3_HOST = 's3.eu-central-1.amazonaws.com'
 # AWS_S3_CALLING_FORMAT = 'boto.s3.connection.OrdinaryCallingFormat'
 # GZIP
-# AWS_IS_GZIPPED = True
-# GZIP_CONTENT_TYPES = (
-#     'text/css',
-#     'application/javascript',
-#     'application/x-javascript',
-#     'text/javascript'
-# )
+if 'ON_HEROKU' in os.environ and os.environ['ON_HEROKU']:
+    AWS_IS_GZIPPED = True
+    GZIP_CONTENT_TYPES = (
+        'text/css',
+        'application/javascript',
+        'application/x-javascript',
+        'text/javascript'
+    )
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
@@ -230,7 +232,9 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
-# COMPRESS_URL = STATIC_URL
+if 'ON_HEROKU' in os.environ and os.environ['ON_HEROKU']:
+    COMPRESS_URL = STATIC_URL
+
 # if 'ON_HEROKU' in os.environ:
 #     # STATICFILES_DIRS = [
 #     #     os.path.join(BASE_DIR, 'static'),
