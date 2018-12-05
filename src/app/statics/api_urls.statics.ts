@@ -25,6 +25,7 @@ export const CREATE_PROFILE_URL = "api/create_profile/";
 export const CREATE_RECORD_URL = "api/records/create_record/";
 export const RLCS_URL = "api/get_rlcs/";
 export const UPLOAD_SIGNING_BASE_URL = "api/storage_up/";
+export const RECORD_PERMISSIONS_LIST_URL = "api/records/record_permission_requests/";
 
 const SPECIAL_RECORD_BASE_URL = "api/records/record/";
 const DOWNLOAD_SIGNING_BASE_URL = "api/storage_down/";

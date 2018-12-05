@@ -112,18 +112,6 @@ class LoginViewSet(viewsets.ViewSet):
             return Response(LoginViewSet.get_login_data(token.key))
         raise CustomError(ERROR__API__LOGIN__INVALID_CREDENTIALS)
 
-        # try:
-        #     token = ObtainAuthToken().post(request)
-        # except Exception as ex:
-        #     if ex.detail['non_field_errors'][0] == 'Unable to log in with provided credentials.':
-        #         if UserProfile.objects.filter(email=request.data['username']).count() == 1:
-        #             return Response(ERROR__API__LOGIN__WRONG_PASSWORD,
-        #                             status=status.HTTP_400_BAD_REQUEST)
-        #         else:
-        #             return Response(ERROR__API__LOGIN__NO_ACCOUNT,
-        #                             status=status.HTTP_400_BAD_REQUEST)
-        # return Response(LoginViewSet.get_login_data(token.data['token']))
-
     def get(self, request):
         token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
         return Response(LoginViewSet.get_login_data(token))

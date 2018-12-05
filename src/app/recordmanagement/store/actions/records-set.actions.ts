@@ -17,14 +17,14 @@
  ******************************************************************************/
 
 import { Action } from "@ngrx/store";
-import {RestrictedRecord} from '../../models/record.model';
-import {RecordDocument} from '../../models/record_document.model';
-import {RestrictedUser} from '../../../api/models/user.model';
-import {OriginCountry} from '../../models/country.model';
-import {FullClient} from '../../models/client.model';
-import {Tag} from '../../models/tag.model';
-import {RecordMessage} from '../../models/record_message.model';
-
+import { RestrictedRecord } from "../../models/record.model";
+import { RecordDocument } from "../../models/record_document.model";
+import { RestrictedUser } from "../../../api/models/user.model";
+import { OriginCountry } from "../../models/country.model";
+import { FullClient } from "../../models/client.model";
+import { Tag } from "../../models/tag.model";
+import { RecordMessage } from "../../models/record_message.model";
+import { RecordPermissionRequest } from "../../models/record_permission.model";
 
 export const SET_SPECIAL_RECORD = "SET_SPECIAL_RECORD";
 export const SET_SPECIAL_CLIENT = "SET_SPECIAL_CLIENT";
@@ -39,8 +39,7 @@ export const SET_ORIGIN_COUNTRIES = "SET_ORIGIN_COUNTRIES";
 export const SET_RECORD_TAGS = "SET_RECORD_TAGS";
 export const SET_POSSIBLE_CLIENTS = "SET_POSSIBLE_CLIENTS";
 export const SET_RECORD_DOCUMENT_TAGS = "SET_RECORD_DOCUMENT_TAGS";
-
-
+export const SET_RECORD_PERMISSION_REQUESTS = "SET_RECORD_PERMISSION_REQUESTS";
 
 export class SetRecords implements Action {
     readonly type = SET_RECORDS;
@@ -53,7 +52,6 @@ export class SetSpecialRecordDocuments implements Action {
 
     constructor(public payload: RecordDocument[]) {}
 }
-
 
 export class SetConsultants implements Action {
     readonly type = SET_CONSULTANTS;
@@ -121,6 +119,12 @@ export class SetRecordMessages implements Action {
     constructor(public payload: RecordMessage[]) {}
 }
 
+export class SetRecordPermissionRequests implements Action {
+    readonly type = SET_RECORD_PERMISSION_REQUESTS;
+
+    constructor(public payload: RecordPermissionRequest[]) {}
+}
+
 export type RecordsSetActions =
     | SetRecords
     | SetConsultants
@@ -134,4 +138,5 @@ export type RecordsSetActions =
     | SetSpecialRecord
     | SetSpecialRecordDocuments
     | SetRecordMessages
-    | SetRecordDocumentTags;
+    | SetRecordDocumentTags
+    | SetRecordPermissionRequests;

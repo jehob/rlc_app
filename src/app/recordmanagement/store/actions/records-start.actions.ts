@@ -29,6 +29,7 @@ export const START_LOADING_RECORD_STATICS = "START_LOADING_RECORD_STATICS";
 export const START_LOADING_CLIENT_POSSIBILITIES =
     "START_LOADING_CLIENT_POSSIBILITIES";
 export const START_LOADING_SPECIAL_RECORD = "START_LOADING_SPECIAL_RECORD";
+export const START_LOADING_RECORD_PERMISSION_REQUESTS = 'START_LOADING_RECORD_PERMISSION_REQUESTS';
 
 export const START_ADDING_NEW_RECORD = "START_ADDING_NEW_RECORD";
 export const START_ADDING_NEW_RECORD_DOCUMENT =
@@ -101,6 +102,10 @@ export class StartSettingRecordDocumentTags implements Action {
     constructor(public payload: { tags: Tag[]; document_id: string }) {}
 }
 
+export class StartLoadingRecordPermissionRequests implements Action {
+    readonly type = START_LOADING_RECORD_PERMISSION_REQUESTS;
+}
+
 export type RecordStartActions =
     | StartRequestingReadPermission
     | StartLoadingRecords
@@ -111,4 +116,5 @@ export type RecordStartActions =
     | StartAddingNewRecord
     | StartAddingNewRecordDocument
     | StartAddingNewRecordMessage
-    | StartSettingRecordDocumentTags;
+    | StartSettingRecordDocumentTags
+    | StartLoadingRecordPermissionRequests;

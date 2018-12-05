@@ -42,6 +42,7 @@ import { RecordMessageItemComponent } from "./components/records/record-message-
 import { RecordDocumentItemComponent } from "./components/records/record-document-item/record-document-item.component";
 import { RecordsAddEffects } from "./store/effects/records-add.effects";
 import { RecordsLoadingEffects } from "./store/effects/records-loading.effects";
+import { RecordsPermitRequestsComponent } from './pages/records-permit-requests/records-permit-requests.component';
 
 @NgModule({
     imports: [
@@ -68,12 +69,14 @@ import { RecordsLoadingEffects } from "./store/effects/records-loading.effects";
         RecordDocumentsListComponent,
         RecordMessagesComponent,
         RecordMessageItemComponent,
-        RecordDocumentItemComponent
+        RecordDocumentItemComponent,
+        RecordsPermitRequestsComponent
     ],
     entryComponents: [SelectClientDialogComponent]
 })
 export class RecordsModule {
     constructor(private recordSB: RecordsSandboxService) {
         this.recordSB.startLoadingRecordStatics();
+
     }
 }

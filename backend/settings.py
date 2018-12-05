@@ -219,21 +219,26 @@ if 'ON_HEROKU' in os.environ and os.environ['ON_HEROKU']:
         'text/css',
         'application/javascript',
         'application/x-javascript',
-        'text/javascript'
+        'text/javascript',
+        'text/jscript',
+        'text/ecmascript',
+        'application/ecmascript'
     )
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
-# STATIC_URL = '/static/'
 STATICFILES_LOCATION = 'static'
 # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
-STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+
 if 'ON_HEROKU' in os.environ and os.environ['ON_HEROKU']:
+    STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
     COMPRESS_URL = STATIC_URL
+else:
+    STATIC_URL = '/static/'
 
 # if 'ON_HEROKU' in os.environ:
 #     # STATICFILES_DIRS = [

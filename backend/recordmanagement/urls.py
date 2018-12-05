@@ -37,4 +37,5 @@ urlpatterns = [
     url(r'record/(?P<id>.+)/messages$', RecordMessageByRecordViewSet.as_view()),
     url(r'record/(?P<id>.+)/request_permission$', RecordPermissionRequestViewSet.as_view()),
     url(r'documents/(?P<id>.+)/$', RecordDocumentTagByDocumentViewSet.as_view()),
+    url(r'record_permission_requests', RecordPermissionAdmitViewSet.as_view())
 ]

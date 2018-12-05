@@ -4,9 +4,9 @@ from backend.api.serializers.user import UserProfileNameSerializer, UserProfileS
 
 
 class RecordPermissionSerializer(serializers.ModelSerializer):
-    request_from = UserProfileSerializer(many=False, read_only=True)
+    request_from = UserProfileNameSerializer(many=False, read_only=True)
     request_granted = UserProfileNameSerializer(many=False, read_only=True)
 
-    class Mega:
+    class Meta:
         model = models.RecordPermission
         fields = '__all__'

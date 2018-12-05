@@ -24,28 +24,28 @@ import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
 
 import { AppSandboxService } from "../../../api/services/app-sandbox.service";
 import {
-    START_LOADING_CLIENT_POSSIBILITIES,
+    START_LOADING_CLIENT_POSSIBILITIES, START_LOADING_RECORD_PERMISSION_REQUESTS,
     START_LOADING_RECORD_STATICS,
     START_LOADING_RECORDS,
     START_LOADING_SPECIAL_RECORD,
-    StartLoadingClientPossibilities,
+    StartLoadingClientPossibilities, StartLoadingRecordPermissionRequests,
     StartLoadingRecords,
     StartLoadingSpecialRecord
-} from "../actions/records-start.actions";
+} from '../actions/records-start.actions';
 import {
     CLIENTS_BY_BIRTHDAY_URL,
     GetRecordsSearchURL,
-    GetSpecialRecordURL,
+    GetSpecialRecordURL, RECORD_PERMISSIONS_LIST_URL,
     RECORDS_STATICS_URL,
     RECORDS_URL
-} from "../../../statics/api_urls.statics";
+} from '../../../statics/api_urls.statics';
 import { FullRecord, RestrictedRecord } from "../../models/record.model";
 import {
     SET_CONSULTANTS,
     SET_COUNTRY_STATES,
     SET_ORIGIN_COUNTRIES,
     SET_POSSIBLE_CLIENTS,
-    SET_RECORD_DOCUMENT_TAGS,
+    SET_RECORD_DOCUMENT_TAGS, SET_RECORD_PERMISSION_REQUESTS,
     SET_RECORD_STATES,
     SET_RECORD_TAGS,
     SET_RECORDS,
@@ -54,7 +54,7 @@ import {
     SET_SPECIAL_RECORD,
     SET_SPECIAL_RECORD_DOCUMENTS,
     SET_SPECIAL_RECORD_MESSAGES
-} from "../actions/records-set.actions";
+} from '../actions/records-set.actions';
 import { RestrictedUser } from "../../../api/models/user.model";
 import { OriginCountry } from "../../models/country.model";
 import { Tag } from "../../models/tag.model";
@@ -63,6 +63,7 @@ import { FullClient } from "../../models/client.model";
 import { RecordDocument } from "../../models/record_document.model";
 import { RecordMessage } from "../../models/record_message.model";
 import { RESET_FULL_CLIENT_INFORMATION } from "../actions/records.actions";
+import {RecordPermissionRequest} from '../../models/record_permission.model';
 
 @Injectable()
 export class RecordsLoadingEffects {
@@ -272,6 +273,33 @@ export class RecordsLoadingEffects {
                         }
                     })
                 )
+            );
+        })
+    );
+
+    @Effect()
+    startLoadingRecordPermissionRequests = this.actions.pipe(
+        ofType(START_LOADING_RECORD_PERMISSION_REQUESTS),
+        switchMap(() => {
+            return from(
+                this.http
+                    .get(RECORD_PERMISSIONS_LIST_URL)
+                    .pipe(
+                        catchError(error => {
+                            return of({
+                                error: "error at loading record permissions list"
+                            });
+                        }),
+                        mergeMap(response => {
+                            console.log('permissions list', response);
+                            return [
+                                {
+                                    type: SET_RECORD_PERMISSION_REQUESTS,
+                                    payload: RecordPermissionRequest.getRecordPermissionRequestsFromJsonArray(response)
+                                }
+                            ];
+                        })
+                    )
             );
         })
     );

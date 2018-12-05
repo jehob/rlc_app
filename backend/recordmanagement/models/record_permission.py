@@ -27,7 +27,8 @@ class RecordPermission(models.Model):
                                null=False)
 
     requested = models.DateTimeField(auto_now_add=True)
-    permitted_on = models.DateTimeField()
+    permitted_on = models.DateTimeField(null=True)
+    can_edit = models.BooleanField(default=False)
 
     record_permission_states_possible = (
         ('re', 'requested'),

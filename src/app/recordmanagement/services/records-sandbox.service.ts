@@ -28,7 +28,7 @@ import {
     StartAddingNewRecord,
     StartAddingNewRecordDocument,
     StartAddingNewRecordMessage,
-    StartLoadingClientPossibilities,
+    StartLoadingClientPossibilities, StartLoadingRecordPermissionRequests,
     StartLoadingRecords,
     StartLoadingRecordStatics,
     StartLoadingSpecialRecord, StartRequestingReadPermission,
@@ -276,5 +276,9 @@ export class RecordsSandboxService {
 
     startRequestReadPermission(restrictedRecord: RestrictedRecord){
         this.recordStore.dispatch(new StartRequestingReadPermission(restrictedRecord));
+    }
+
+    startLoadingRecordPermissionRequests(){
+        this.recordStore.dispatch(new StartLoadingRecordPermissionRequests());
     }
 }

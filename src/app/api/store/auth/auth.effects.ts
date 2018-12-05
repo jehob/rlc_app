@@ -73,21 +73,13 @@ export class AuthEffects {
                         (response: {
                             token: string;
                             user: any;
-                            consultants: any;
-                            countries: any;
                             all_permissions: any;
                             permissions: any;
                             rlc: any;
                             error: string;
                             error_message: string;
                         }) => {
-                            if (response.error){
-                                this.apiSB.showErrorSnackBar(response.error);
-                                return [];
-                            }
-
                             localStorage.setItem("token", response.token);
-
                             if (this.guard.lastVisitedUrl)
                                 this.router.navigate([
                                     this.guard.getLastVisitedUrl()

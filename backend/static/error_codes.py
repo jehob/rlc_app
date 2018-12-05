@@ -106,3 +106,8 @@ ERROR__RECORD__PERMISSION__ALREADY_WORKING_ON = {
     'error_detail': 'the user is already working on the client',
     'error_code': 'record.permission.already_working_on'
 }
+
+ERROR__RECORD__PERMISSION__ALREADY_REQUESTED = {
+    'error_detail': 'already requested a permission for the record',
+    'error_code': 'record.permission.already_requested'
+}
