@@ -36,13 +36,14 @@ import { RecordComponent } from "./pages/record/record.component";
 import { FullRecordDetailComponent } from "./components/records/full-record-detail/full-record-detail.component";
 import { RestrictedRecordDetailComponent } from "./components/records/restricted-record-detail/restricted-record-detail.component";
 import { ConsultantsFieldComponent } from "./components/consultants-field/consultants-field.component";
-import { RecordDocumentsListComponent } from "./components/records/record-documents-list/record-documents-list.component";
-import { RecordMessagesComponent } from "./components/records/record-messages/record-messages.component";
-import { RecordMessageItemComponent } from "./components/records/record-message-item/record-message-item.component";
-import { RecordDocumentItemComponent } from "./components/records/record-document-item/record-document-item.component";
+import { RecordDocumentsListComponent } from "./components/records/documents/record-documents-list/record-documents-list.component";
+import { RecordMessagesComponent } from "./components/records/messages/record-messages/record-messages.component";
+import { RecordMessageItemComponent } from "./components/records/messages/record-message-item/record-message-item.component";
+import { RecordDocumentItemComponent } from "./components/records/documents/record-document-item/record-document-item.component";
 import { RecordsAddEffects } from "./store/effects/records-add.effects";
 import { RecordsLoadingEffects } from "./store/effects/records-loading.effects";
 import { RecordsPermitRequestsComponent } from './pages/records-permit-requests/records-permit-requests.component';
+import { RecordPermissionRequestItemComponent } from './components/admin/record-permission-request-item/record-permission-request-item.component';
 
 @NgModule({
     imports: [
@@ -70,7 +71,8 @@ import { RecordsPermitRequestsComponent } from './pages/records-permit-requests/
         RecordMessagesComponent,
         RecordMessageItemComponent,
         RecordDocumentItemComponent,
-        RecordsPermitRequestsComponent
+        RecordsPermitRequestsComponent,
+        RecordPermissionRequestItemComponent
     ],
     entryComponents: [SelectClientDialogComponent]
 })

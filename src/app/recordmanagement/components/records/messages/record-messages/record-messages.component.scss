@@ -15,38 +15,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
-@import "~src/styles/basic";
+@import "../../../../../../styles/basic";
 
-.record-message-item__from-container {
-    display: flex;
-    height: 35px;
+
+.record-messages__container{
+    margin: 15px;
 }
 
-.record-message-item__picture {
-    max-height: 32px;
-    max-width: 32px;
-}
-
-.record-message-item__message-container{
-    margin-left: 32px;
-    display: flex;
-}
-
-.record-message-item__message{
-    margin: 8px;
-    padding: 10px;
-    background: $c-background;
-    border-radius: 28px;
-    max-width: 300px;
-}
-
-.record-message-item__message__own{
-    background: $c-primary-l;
+.record-messages__send-button {
+    background-color: $c-primary;
     color: $c-on-primary;
+    width: 125px;
+    border-radius: 28px;
 }
 
-.record-message-item__message-date{
-    align-self: flex-end;
-    margin-bottom: 20px;
-    margin-left: 10px;
+.record-messages__sending-container {
+    margin: 15px;
 }

@@ -21,13 +21,14 @@
     <mat-card-header>
         <h2>Records</h2>
         <mat-form-field class="records-list__search-input">
-            <input matInput type="text" placeholder="Search" [(ngModel)]="value" (keyup.enter)="onSearchClick()" (input)="onSearchChange($event.target.value)">
+            <input matInput type="text" placeholder="Search" [(ngModel)]="value" (keyup.enter)="onSearchClick()"
+                   (input)="onSearchChange($event.target.value)">
             <button mat-button matSuffix mat-icon-button aria-label="Search" (click)="onSearchClick()">
                 <mat-icon>search</mat-icon>
             </button>
         </mat-form-field>
     </mat-card-header>
-    
+
     <mat-card-content>
         <div class="records-list__table-container">
             <table mat-table [dataSource]="(records | async)">

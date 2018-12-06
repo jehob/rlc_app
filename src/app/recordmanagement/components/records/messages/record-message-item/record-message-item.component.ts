@@ -17,9 +17,9 @@
  ******************************************************************************/
 
 import { Component, Input, OnInit } from "@angular/core";
-import { RecordMessage } from "../../../models/record_message.model";
-import {ApiSandboxService} from '../../../../api/services/api-sandbox.service';
-import {FullUser} from '../../../../api/models/user.model';
+import { RecordMessage } from "../../../../models/record_message.model";
+import {ApiSandboxService} from '../../../../../api/services/api-sandbox.service';
+import {FullUser} from '../../../../../api/models/user.model';
 
 @Component({
     selector: "app-record-message-item",

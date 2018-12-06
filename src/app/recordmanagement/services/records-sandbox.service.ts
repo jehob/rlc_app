@@ -28,27 +28,39 @@ import {
     StartAddingNewRecord,
     StartAddingNewRecordDocument,
     StartAddingNewRecordMessage,
-    StartLoadingClientPossibilities, StartLoadingRecordPermissionRequests,
+    StartLoadingClientPossibilities,
+    StartLoadingRecordPermissionRequests,
     StartLoadingRecords,
     StartLoadingRecordStatics,
-    StartLoadingSpecialRecord, StartRequestingReadPermission,
-    StartSavingRecord, StartSettingRecordDocumentTags
-} from '../store/actions/records.actions';
+    StartLoadingSpecialRecord,
+    StartRequestingReadPermission,
+    StartSavingRecord,
+    StartSettingRecordDocumentTags
+} from "../store/actions/records.actions";
 import { FullClient } from "../models/client.model";
 import { OriginCountry } from "../models/country.model";
 import { RestrictedUser } from "../../api/models/user.model";
 import { Tag } from "../models/tag.model";
 import { ApiSandboxService } from "../../api/services/api-sandbox.service";
-import {FullRecord, RestrictedRecord} from '../models/record.model';
+import { FullRecord, RestrictedRecord } from "../models/record.model";
 import { StorageService } from "../../shared/services/storage.service";
 import { SnackbarService } from "../../shared/services/snackbar.service";
 import { ApiState } from "../../api/store/api.reducers";
 import { getRecordFolder } from "../../statics/storage_folders.statics";
+import { RecordPermissionRequest } from "../models/record_permission.model";
 
 @Injectable({
     providedIn: "root"
 })
 export class RecordsSandboxService {
+    record_permission_requests: Observable<
+        RecordPermissionRequest[]
+    > = this.recordStore.pipe(
+        select((state: any) => state.records.admin.recod_permission_requests)
+    );
+
+
+
     constructor(
         private router: Router,
         private recordStore: Store<RecordsState>,
@@ -270,15 +282,27 @@ export class RecordsSandboxService {
         this.apiSB.showErrorSnackBar(error_message);
     }
 
-    startSettingDocumentTags(tags: Tag[], document_id: string){
-        this.recordStore.dispatch(new StartSettingRecordDocumentTags({tags, document_id}))
+    startSettingDocumentTags(tags: Tag[], document_id: string) {
+        this.recordStore.dispatch(
+            new StartSettingRecordDocumentTags({ tags, document_id })
+        );
     }
 
-    startRequestReadPermission(restrictedRecord: RestrictedRecord){
-        this.recordStore.dispatch(new StartRequestingReadPermission(restrictedRecord));
+    startRequestReadPermission(restrictedRecord: RestrictedRecord) {
+        this.recordStore.dispatch(
+            new StartRequestingReadPermission(restrictedRecord)
+        );
     }
 
-    startLoadingRecordPermissionRequests(){
+    startLoadingRecordPermissionRequests() {
         this.recordStore.dispatch(new StartLoadingRecordPermissionRequests());
+    }
+
+    getRecordPermissionRequests(): Observable<RecordPermissionRequest[]> {
+        return this.recordStore.pipe(
+            select(
+                (state: any) => state.records.admin.record_permission_requests
+            )
+        );
     }
 }
