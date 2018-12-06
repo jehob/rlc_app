@@ -20,6 +20,7 @@ from rest_framework.response import Response
 
 from backend.recordmanagement import models, serializers
 from backend.static import error_codes
+from backend.api.errors import CustomError
 
 
 class RecordDocumentTagViewSet(viewsets.ModelViewSet):
@@ -32,20 +33,26 @@ class RecordDocumentTagByDocumentViewSet(APIView):
         try:
             document = models.RecordDocument.objects.get(pk=id)
         except Exception as e:
-            return Response(error_codes.ERROR__RECORD__DOCUMENT__NOT_FOUND)
+            raise CustomError(error_codes.ERROR__RECORD__DOCUMENT__NOT_FOUND)
         if not document.record:
-            return Response(error_codes.ERROR__RECORD__DOCUMENT__NO_LINKED_RECORD)
+            raise CustomError(error_codes.ERROR__RECORD__DOCUMENT__NO_LINKED_RECORD)
         if not document.record.user_has_permission(request.user):
-            return Response(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
+            raise CustomError(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
 
-        if 'tag_id' not in request.data:
-            return Response(error_codes.ERROR__RECORD__DOCUMENT__NO_TAG_PROVIDED)
-        try:
-            tag = models.RecordDocumentTag.objects.get(pk=request.data['tag_id'])
-        except Exception as e:
-            return Response(error_codes.ERROR__RECORD__DOCUMENT__TAG_NOT_EXISTING)
+        if 'tag_ids' not in request.data:
+            raise CustomError(error_codes.ERROR__RECORD__DOCUMENT__NO_TAG_PROVIDED)
 
-        document.tagged.add(tag)
+        tags = []
+        for tag in request.data['tag_ids']:
+            try:
+                real_tag = models.RecordDocumentTag.objects.get(pk=tag['id'])  # tag_ids
+            except Exception as e:
+                raise CustomError(error_codes.ERROR__RECORD__DOCUMENT__TAG_NOT_EXISTING)
+            tags.append(real_tag)
+
+        document.tagged.clear()
+        for tag in tags:
+            document.tagged.add(tag)
         document.save()
         serializer = serializers.RecordDocumentSerializer(document)
         return Response(serializer.data)

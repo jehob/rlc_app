@@ -1,0 +1,16 @@
+<div>
+    <h1>Record permission requests</h1>
+    <table>
+        <tr>
+            <th>id</th>
+            <th>request time</th>
+        </tr>
+        <tr *ngFor="let recordPermissionRequest of recordPermissionRequests">
+
+        </tr>
+    </table>
+    <p>asdasdasd</p>
+    <app-record-permission-request-item *ngFor="let recordPermissionRequest of recordPermissionRequests"
+                                        [recordPermissionRequest]="recordPermissionRequest">
+    </app-record-permission-request-item>
+</div>

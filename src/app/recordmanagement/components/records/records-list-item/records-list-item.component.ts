@@ -21,7 +21,7 @@ import {FullRecord, RestrictedRecord} from '../../../models/record.model';
 import {RestrictedUser} from '../../../../api/models/user.model';
 import {Router} from '@angular/router';
 import {GetRecordsSearchURL} from '../../../../statics/api_urls.statics';
-import {Tag} from '../../../models/record_tags.model';
+import {Tag} from '../../../models/tag.model';
 
 @Component({
     selector: "app-records-list-item",

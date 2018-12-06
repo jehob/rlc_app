@@ -4,7 +4,7 @@ import { AppSandboxService } from "../../services/app-sandbox.service";
 import { FullUser } from "../../models/user.model";
 import { ApiSandboxService } from "../../services/api-sandbox.service";
 import { HasPermission } from "../../models/permission.model";
-import { CAN_VIEW_RECORDS } from "../../../statics/permissions.statics";
+import {PERMISSION_CAN_PERMIT_RECORD_PERMISSION_REQUESTS, PERMISSION_CAN_VIEW_RECORDS} from '../../../statics/permissions.statics';
 
 @Component({
     selector: "app-sidebar",
@@ -15,7 +15,9 @@ export class SidebarComponent implements OnInit {
     active = false;
     name = "";
     email = "";
+
     record_enabled = false;
+    can_permit_requests = false;
 
     constructor(
         private router: Router,
@@ -29,8 +31,11 @@ export class SidebarComponent implements OnInit {
             this.email = user ? user.email : "";
         });
 
-        this.apiSB.hasPermissionFromString(CAN_VIEW_RECORDS, has_permission => {
+        this.apiSB.hasPermissionFromString(PERMISSION_CAN_VIEW_RECORDS, has_permission => {
             this.record_enabled = has_permission;
+        });
+        this.apiSB.hasPermissionFromString(PERMISSION_CAN_PERMIT_RECORD_PERMISSION_REQUESTS, has_permission => {
+            this.can_permit_requests = has_permission;
         });
     }
 

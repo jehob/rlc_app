@@ -18,6 +18,7 @@ PERMISSION_CAN_CONSULT = "can_consult"
 PERMISSION_CAN_ADD_ORIGIN_COUNTRY = 'can_add_origin_country'
 PERMISSION_CAN_VIEW_RECORDS = 'can_view_records'
 PERMISSION_VIEW_RECORDS_FULL_DETAIL = 'view_records_full_detail'
+PERMISSION_CAN_PERMIT_RECORD_PERMISSION_REQUESTS = 'can_permit_record_permission_requests'
 
 
 def get_all_permissions():
@@ -25,5 +26,6 @@ def get_all_permissions():
         PERMISSION_CAN_CONSULT,
         PERMISSION_CAN_ADD_ORIGIN_COUNTRY,
         PERMISSION_CAN_VIEW_RECORDS,
-        PERMISSION_VIEW_RECORDS_FULL_DETAIL
+        PERMISSION_VIEW_RECORDS_FULL_DETAIL,
+        PERMISSION_CAN_PERMIT_RECORD_PERMISSION_REQUESTS
     ]

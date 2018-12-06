@@ -16,10 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import {ApiSandboxService} from '../services/api-sandbox.service';
-import {Filterable} from '../../shared/models/filterable.model';
+import { ApiSandboxService } from "../services/api-sandbox.service";
+import { Filterable } from "../../shared/models/filterable.model";
 
-export class RestrictedUser implements Filterable{
+export class RestrictedUser implements Filterable {
     constructor(public id: string, public name: string) {
         this.id = id;
         this.name = name;
@@ -28,22 +28,24 @@ export class RestrictedUser implements Filterable{
     static getRestrictedUsersFromJsonArray(jsonArray) {
         const restrictedUsers: Array<RestrictedUser> = [];
         Object.values(jsonArray).map(restrictedJsonUser => {
-            restrictedUsers.push(RestrictedUser.getRestrictedUserFromJson(restrictedJsonUser));
+            restrictedUsers.push(
+                RestrictedUser.getRestrictedUserFromJson(restrictedJsonUser)
+            );
         });
         return restrictedUsers;
     }
 
-    static getRestrictedUserFromJson(json){
-        return new RestrictedUser(json.id, json.name);
+    static getRestrictedUserFromJson(json) {
+        if (json) return new RestrictedUser(json.id, json.name);
+        return null;
     }
 
-    getFilterableProperty(){
+    getFilterableProperty() {
         return this.name;
     }
 }
 
 export class FullUser extends RestrictedUser {
-
     constructor(
         id: string = "",
         public email: string = "",
@@ -64,16 +66,18 @@ export class FullUser extends RestrictedUser {
     }
 
     static getFullUserFromJson(json) {
-        return new FullUser(
-            json.id,
-            json.email,
-            json.name,
-            new Date(json.birthday),
-            json.phone_number,
-            json.street,
-            json.city,
-            json.postal_code
-        );
+        if (json)
+            return new FullUser(
+                json.id,
+                json.email,
+                json.name,
+                new Date(json.birthday),
+                json.phone_number,
+                json.street,
+                json.city,
+                json.postal_code
+            );
+        return null;
     }
 
     /**
@@ -84,7 +88,9 @@ export class FullUser extends RestrictedUser {
     getUpdates(updates: FullUser) {
         const changes = {};
         if (this.birthday !== updates.birthday)
-            changes["birthday"] = ApiSandboxService.transformDate(updates.birthday);
+            changes["birthday"] = ApiSandboxService.transformDate(
+                updates.birthday
+            );
         if (this.phone_number !== updates.phone_number)
             changes["phone_number"] = updates.phone_number;
         if (this.street !== updates.street) changes["street"] = updates.street;

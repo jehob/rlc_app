@@ -29,6 +29,9 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 import django_heroku
 from datetime import timedelta, timezone
+import boto
+from boto.s3.connection import OrdinaryCallingFormat, Location
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -60,12 +63,13 @@ INSTALLED_APPS = [
     'backend.api',
     'backend.recordmanagement',
     'rest_framework.authtoken',
-    'storages'
+    'storages',
+    #'compressor',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -84,7 +88,8 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-    )
+    ),
+    'EXCEPTION_HANDLER': 'backend.api.exception_handler.custom_exception_handler',
 }
 # Authentication Timeout
 if 'ON_HEROKU' in os.environ:
@@ -92,8 +97,6 @@ if 'ON_HEROKU' in os.environ:
 else:
     TIMEOUT_TIMEDELTA = timedelta(weeks=10)
 
-# # Timezone
-# TIME_ZONE_USED = timezone.
 
 # Templates
 if 'ON_HEROKU' in os.environ:
@@ -173,16 +176,6 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.1/howto/static-files/
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
 # heroku and authentication
 django_heroku.settings(locals())
 AUTH_USER_MODEL = 'api.UserProfile'
@@ -200,20 +193,59 @@ else:
 
 
 # storage
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+if 'ON_HEROKU' in os.environ and os.environ['ON_HEROKU']:
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    COMPRESS_STORAGE = 'backend.shared.storage_generator.CachedS3BotoStorage'
+else:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 AWS_S3_REGION_NAME = os.environ.get('AWS_S3_REGION_NAME')
 AWS_S3_BUCKET_NAME = os.environ.get('AWS_S3_BUCKET_NAME')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_S3_BUCKET_NAME')
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_S3_BUCKET_NAME
 AWS_LOCATION = 'static'
 AWS_DEFAULT_ACL = 'private'
 AWS_S3_SIGV4 = True
 AWS_S3_SIGNATURE_VERSION = 's3v4'
 AWS_S3_HOST = 's3.eu-central-1.amazonaws.com'
+# AWS_S3_CALLING_FORMAT = 'boto.s3.connection.OrdinaryCallingFormat'
+# GZIP
+if 'ON_HEROKU' in os.environ and os.environ['ON_HEROKU']:
+    AWS_IS_GZIPPED = True
+    GZIP_CONTENT_TYPES = (
+        'text/css',
+        'application/javascript',
+        'application/x-javascript',
+        'text/javascript',
+        'text/jscript',
+        'text/ecmascript',
+        'application/ecmascript'
+    )
 
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'mysite/static'),
-# ]
-# STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
-# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/2.1/howto/static-files/
+STATICFILES_LOCATION = 'static'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+
+if 'ON_HEROKU' in os.environ and os.environ['ON_HEROKU']:
+    STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+    COMPRESS_URL = STATIC_URL
+else:
+    STATIC_URL = '/static/'
+
+# if 'ON_HEROKU' in os.environ:
+#     # STATICFILES_DIRS = [
+#     #     os.path.join(BASE_DIR, 'static'),
+#     # ]
+#     STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+#     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# else:
+#     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

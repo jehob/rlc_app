@@ -14,7 +14,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-from backend.recordmanagement.models import RecordTag, Record, OriginCountry, Client
+from backend.recordmanagement.models import RecordTag, Record, OriginCountry, Client, RecordDocumentTag
 from backend.api.tests import *
 from backend.api.models import Rlc
 from datetime import date, datetime
@@ -35,10 +35,10 @@ class Fixtures:
         user.save()
 
     @staticmethod
-    def create_example_tags():
+    def create_example_record_tags():
         tags = [('Dublin III',), ('family reunion',), ('asylum',), ('stay',), ('employment',)]
         for single_tag in tags:
-            AddMethods.add_tag(single_tag)
+            AddMethods.add_record_tag(single_tag)
 
     @staticmethod
     def create_example_origin_countries():
@@ -70,7 +70,6 @@ class Fixtures:
 
     @staticmethod
     def create_real_permissions():
-        # permissions = [getattr(StaticPermissionNames, x) for x in dir(StaticPermissionNames) if not x.startswith("__")]
         permissions = get_all_permissions()
         for permission in permissions:
             AddMethods.add_permission(permission)
@@ -79,20 +78,17 @@ class Fixtures:
     def create_real_tags():
         tags = [('Familiennachzug',), ('Dublin III',), ('Arbeitserlaubnis',), ('Flüchtlingseigenschaft',),
                 ('subsidiärer Schutz',), ('Eheschließung',), ('Verlobung',),
-                ('illegale Ausreise aus dem Bundesgebiet',),
-                ('Untertauchen',), ('Kinder anerkennen',), ('Ausbildung',), ('Geburt ',),
-                ('Eines Kindes im Asylverfahren',),
-                ('Duldung',), ('Ausbildungsduldung',), ('Visum',), ('Anhörung',), ('Wechsel der Unterkunft',),
-                ('Wohnsitzauflage',),
-                ('Folgeantrag',), ('Zweitantrag',), ('Unterbringung im Asylverfahren',),
-                ('Widerruf und Rücknahme der Asylberechtigung',), ('Passbeschaffung',), ('Mitwirkungspflichten',),
-                ('Nichtbetreiben des Verfahrens',), ('Krankheit im Asylverfahren',), ('Familienasyl',), ('UmF',),
+                ('illegale Ausreise aus dem Bundesgebiet',), ('Untertauchen',), ('Kinder anerkennen',), ('Ausbildung',),
+                ('Geburt ',), ('Eines Kindes im Asylverfahren',), ('Duldung',), ('Ausbildungsduldung',), ('Visum',),
+                ('Anhörung',), ('Wechsel der Unterkunft',), ('Wohnsitzauflage',), ('Folgeantrag',), ('Zweitantrag',),
+                ('Unterbringung im Asylverfahren',), ('Widerruf und Rücknahme der Asylberechtigung',),
+                ('Passbeschaffung',), ('Mitwirkungspflichten',), ('Nichtbetreiben des Verfahrens',),
+                ('Krankheit im Asylverfahren',), ('Familienasyl',), ('UmF',),
                 ('Familienzusammenführung nach Dublin III',), ('Negativbescheid',), ('Relocation',), ('Resettlement',),
                 ('Asylbewerberleistungsgesetz',), ('Kirchenasyl',), ('Asylantrag',), ('Abschiebung',),
-                ('Untätigkeitsklage',),
-                ('Studium',)]
+                ('Untätigkeitsklage',), ('Studium',)]
         for tag in tags:
-            AddMethods.add_tag(tag)
+            AddMethods.add_record_tag(tag)
 
     @staticmethod
     def create_real_starting_rlcs():
@@ -124,14 +120,21 @@ class Fixtures:
 
     @staticmethod
     def create_handmade_examples():
-        tags = [(1001, 'Familiennachzug'),
-                (1002, 'Ausbildung'),
-                (1003, 'Anhörung'),
-                (1004, 'Abschiebung'),
-                (1005, 'Asylantrag')
-                ]
-        for tag in tags:
-            AddMethods.add_tag(tag)
+        record_tags = [(1001, 'Familiennachzug'),
+                       (1002, 'Ausbildung'),
+                       (1003, 'Anhörung'),
+                       (1004, 'Abschiebung'),
+                       (1005, 'Asylantrag')
+                       ]
+        for tag in record_tags:
+            AddMethods.add_record_tag(tag)
+
+        record_document_tags = [(120001, 'Official Document'),
+                                (120002, 'Pleading'),
+                                (120004, 'Proof'),
+                                (120003, 'Passport')]
+        for tag in record_document_tags:
+            AddMethods.add_record_document_tag(tag)
 
         countries = [(2001, 'Italien', 'ot'),
                      (2002, 'Syrien', 'so'),
@@ -1539,7 +1542,7 @@ class AddMethods:
         perm.save()
 
     @staticmethod
-    def add_tag(tag):
+    def add_record_tag(tag):
         """
 		creates tag in database
 		Args:
@@ -1553,6 +1556,16 @@ class AddMethods:
             t = RecordTag(name=tag[0])
         elif tag.__len__() == 2:
             t = RecordTag(id=tag[0], name=tag[1])
+        else:
+            raise AttributeError
+        t.save()
+
+    @staticmethod
+    def add_record_document_tag(tag):
+        if tag.__len__() == 1:
+            t = RecordDocumentTag(name=tag[0])
+        elif tag.__len__() == 2:
+            t = RecordDocumentTag(id=tag[0], name=tag[1])
         else:
             raise AttributeError
         t.save()

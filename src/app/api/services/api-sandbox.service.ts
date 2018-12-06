@@ -70,13 +70,18 @@ export class ApiSandboxService {
             .pipe(select((state: any) => state.api.all_permissions))
             .subscribe((all_permissions: Permission[]) => {
                 if (all_permissions.length > 0) {
-                    const id = Number(
-                        all_permissions.filter(
-                            single_permission =>
-                                single_permission.name === permission
-                        )[0].id
-                    );
-                    this.hasPermissionFromId(id, subscriberCallback);
+                    try {
+                        const id = Number(
+                            all_permissions.filter(
+                                single_permission =>
+                                    single_permission.name === permission
+                            )[0].id
+                        );
+                        this.hasPermissionFromId(id, subscriberCallback);
+                    } catch (e) {
+                        subscriberCallback(false);
+                    }
+
                 }
             });
     }

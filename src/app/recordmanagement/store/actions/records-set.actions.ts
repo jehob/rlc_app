@@ -17,27 +17,14 @@
  ******************************************************************************/
 
 import { Action } from "@ngrx/store";
-import { FullRecord, RestrictedRecord } from "../models/record.model";
-import { RestrictedUser } from "../../api/models/user.model";
-import { OriginCountry } from "../models/country.model";
-import { Tag } from "../models/record_tags.model";
-import { FullClient } from "../models/client.model";
-import { RecordDocument } from "../models/record_document.model";
-import {RecordMessage} from '../models/record_message.model';
-
-export const START_LOADING_RECORDS = "START_LOADING_RECORDS";
-export const START_LOADING_RECORD_STATICS = "START_LOADING_RECORD_STATICS";
-export const START_LOADING_CLIENT_POSSIBILITIES =
-    "START_LOADING_CLIENT_POSSIBILITIES";
-export const START_LOADING_SPECIAL_RECORD = "START_LOADING_SPECIAL_RECORD";
-
-export const START_ADDING_NEW_RECORD = "START_ADDING_NEW_RECORD";
-export const START_ADDING_NEW_RECORD_DOCUMENT =
-    "START_ADDING_NEW_RECORD_DOCUMENT";
-export const START_ADDING_NEW_RECORD_MESSAGE =
-    "START_ADDING_NEW_RECORD_MESSAGE";
-
-export const START_SAVING_RECORD = "START_SAVING_RECORD";
+import { RestrictedRecord } from "../../models/record.model";
+import { RecordDocument } from "../../models/record_document.model";
+import { RestrictedUser } from "../../../api/models/user.model";
+import { OriginCountry } from "../../models/country.model";
+import { FullClient } from "../../models/client.model";
+import { Tag } from "../../models/tag.model";
+import { RecordMessage } from "../../models/record_message.model";
+import { RecordPermissionRequest } from "../../models/record_permission.model";
 
 export const SET_SPECIAL_RECORD = "SET_SPECIAL_RECORD";
 export const SET_SPECIAL_CLIENT = "SET_SPECIAL_CLIENT";
@@ -52,12 +39,7 @@ export const SET_ORIGIN_COUNTRIES = "SET_ORIGIN_COUNTRIES";
 export const SET_RECORD_TAGS = "SET_RECORD_TAGS";
 export const SET_POSSIBLE_CLIENTS = "SET_POSSIBLE_CLIENTS";
 export const SET_RECORD_DOCUMENT_TAGS = "SET_RECORD_DOCUMENT_TAGS";
-
-export const RESET_FULL_CLIENT_INFORMATION = "RESET_FULL_CLIENT_INFORMATION";
-export const RESET_POSSIBLE_CLIENTS = "RESET_POSSIBLE_CLIENTS";
-
-export const ADD_RECORD_DOCUMENT = "ADD_RECORD_DOCUMENT";
-export const ADD_RECORD_MESSAGE = "ADD_RECORD_MESSAGE";
+export const SET_RECORD_PERMISSION_REQUESTS = "SET_RECORD_PERMISSION_REQUESTS";
 
 export class SetRecords implements Action {
     readonly type = SET_RECORDS;
@@ -69,40 +51,6 @@ export class SetSpecialRecordDocuments implements Action {
     readonly type = SET_SPECIAL_RECORD_DOCUMENTS;
 
     constructor(public payload: RecordDocument[]) {}
-}
-
-export class AddRecordDocument implements Action {
-    readonly type = ADD_RECORD_DOCUMENT;
-
-    constructor(public payload: RecordDocument) {}
-}
-
-export class StartLoadingRecords implements Action {
-    readonly type = START_LOADING_RECORDS;
-
-    constructor(public payload: string) {}
-}
-
-export class StartLoadingRecordStatics implements Action {
-    readonly type = START_LOADING_RECORD_STATICS;
-}
-
-export class StartLoadingClientPossibilities implements Action {
-    readonly type = START_LOADING_CLIENT_POSSIBILITIES;
-
-    constructor(public payload: Date) {}
-}
-
-export class StartLoadingSpecialRecord implements Action {
-    readonly type = START_LOADING_SPECIAL_RECORD;
-
-    constructor(public payload: string) {}
-}
-
-export class StartSavingRecord implements Action {
-    readonly type = START_SAVING_RECORD;
-
-    constructor(public payload: { record: FullRecord; client: FullClient }) {}
 }
 
 export class SetConsultants implements Action {
@@ -159,57 +107,26 @@ export class SetPossibleClients implements Action {
     constructor(public payload: FullClient[]) {}
 }
 
-export class ResetPossibleClients implements Action {
-    readonly type = RESET_POSSIBLE_CLIENTS;
-}
+export class SetRecordDocumentTags implements Action {
+    readonly type = SET_RECORD_DOCUMENT_TAGS;
 
-export class StartAddingNewRecord implements Action {
-    readonly type = START_ADDING_NEW_RECORD;
-
-    constructor(public payload: any) {}
-}
-
-export class StartAddingNewRecordDocument implements Action {
-    readonly type = START_ADDING_NEW_RECORD_DOCUMENT;
-
-    constructor(public payload: any) {}
-}
-
-export class StartAddingNewRecordMessage implements Action {
-    readonly type = START_ADDING_NEW_RECORD_MESSAGE;
-
-    constructor(public payload: any) {}
-}
-
-export class AddRecordMessage implements Action {
-    readonly type = ADD_RECORD_MESSAGE;
-
-    constructor(public payload: RecordMessage) {}
+    constructor(public payload: Tag[]) {}
 }
 
 export class SetRecordMessages implements Action {
     readonly type = SET_SPECIAL_RECORD_MESSAGES;
 
-    constructor(public payload: RecordMessage[]){}
+    constructor(public payload: RecordMessage[]) {}
 }
 
-export class ResetFullClientInformation implements Action{
-    readonly type = RESET_FULL_CLIENT_INFORMATION;
+export class SetRecordPermissionRequests implements Action {
+    readonly type = SET_RECORD_PERMISSION_REQUESTS;
+
+    constructor(public payload: RecordPermissionRequest[]) {}
 }
 
-export class SetRecordDocumentTags implements Action {
-    readonly type = SET_RECORD_DOCUMENT_TAGS;
-
-    constructor(public payload: Tag[]){}
-}
-
-export type RecordsActions =
+export type RecordsSetActions =
     | SetRecords
-    | StartLoadingRecords
-    | StartLoadingRecordStatics
-    | StartLoadingClientPossibilities
-    | StartLoadingSpecialRecord
-    | StartSavingRecord
     | SetConsultants
     | SetOriginCountries
     | SetRecordTags
@@ -219,13 +136,7 @@ export type RecordsActions =
     | SetCountryStates
     | SetPossibleClients
     | SetSpecialRecord
-    | ResetPossibleClients
-    | StartAddingNewRecord
-    | StartAddingNewRecordDocument
     | SetSpecialRecordDocuments
-    | AddRecordDocument
-    | StartAddingNewRecordMessage
-    | AddRecordMessage
     | SetRecordMessages
-    | ResetFullClientInformation
-    | SetRecordDocumentTags;
+    | SetRecordDocumentTags
+    | SetRecordPermissionRequests;

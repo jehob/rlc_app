@@ -37,17 +37,19 @@ import {
 } from "../../statics/api_urls.statics";
 import { ApiSandboxService } from "../services/api-sandbox.service";
 import { FullUser, RestrictedUser } from "../models/user.model";
+import {SnackbarService} from '../../shared/services/snackbar.service';
 
 @Injectable()
 export class ApiEffects {
     constructor(
         private actions: Actions,
         private http: HttpClient,
-        private apiSB: ApiSandboxService
+        private apiSB: ApiSandboxService,
+        private snackbar: SnackbarService
     ) {}
 
     @Effect()
-    patchUser = this.actions.pipe(
+    startPatchUser = this.actions.pipe(
         ofType(START_PATCH_USER),
         map((action: StartPatchUser) => {
             //console.log("getPayload", action.payload);
@@ -88,20 +90,24 @@ export class ApiEffects {
     );
 
     @Effect()
-    createUser = this.actions.pipe(
+    startCreateUser = this.actions.pipe(
         ofType(START_CREATE_USER),
         map((action: StartCreateUser) => {
             return action.payload;
         }),
         switchMap((user: any) => {
-            console.log('user to backend', user);
+            console.log('user start create');
             return from(
                 this.http.post(CREATE_PROFILE_URL, user).pipe(
                     catchError(error => {
+                        console.log('1');
                         console.log(error);
-                        return of({ error: "error" });
+                        this.snackbar.showErrorSnackBar('error at register');
+                        return [];
                     }),
                     mergeMap((response: any) => {
+                        console.log('2');
+
                         if (!response.error) {
                             this.apiSB.showSuccessSnackBar(
                                 "successfully created account"

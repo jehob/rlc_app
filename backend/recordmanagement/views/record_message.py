@@ -20,6 +20,7 @@ from rest_framework.response import Response
 
 from backend.recordmanagement import models, serializers
 from backend.static import error_codes
+from backend.api.errors import CustomError
 
 
 class RecordMessageViewSet(viewsets.ModelViewSet):
@@ -29,16 +30,17 @@ class RecordMessageViewSet(viewsets.ModelViewSet):
 
 class RecordMessageByRecordViewSet(APIView):
     def post(self, request, id):
+        # request = self.request
         if 'message' not in request.data or request.data['message'] == '':
-            return Response(error_codes.ERROR__RECORD__MESSAGE__NO_MESSAGE_PROVIDED)
+            raise CustomError(error_codes.ERROR__RECORD__MESSAGE__NO_MESSAGE_PROVIDED)
         message = request.data['message']
 
         try:
             record = models.Record.objects.get(pk=id)
         except Exception as e:
-            return Response(error_codes.ERROR__RECORD__RECORD__NOT_EXISTING)
+            raise CustomError(error_codes.ERROR__RECORD__RECORD__NOT_EXISTING)
         if not record.user_has_permission(request.user):
-            return Response(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
+            raise CustomError(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
 
         record_message = models.RecordMessage(sender=request.user, message=message, record=record)
         record_message.save()

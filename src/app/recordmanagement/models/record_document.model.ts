@@ -16,6 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
+import {Tag} from './tag.model';
+
 export class RecordDocument {
     constructor(
         public id: number,
@@ -23,7 +25,8 @@ export class RecordDocument {
         public creator: string,
         public created_on: Date,
         public last_edited: Date,
-        public file_size: number
+        public file_size: number,
+        public tags: Tag[]
     ) {
         this.id = id;
         this.name = name;
@@ -31,6 +34,7 @@ export class RecordDocument {
         this.created_on = created_on;
         this.last_edited = last_edited;
         this.file_size = file_size;
+        this.tags = tags;
     }
 
     static getRecordDocumentsFromJsonArray(jsonArray){
@@ -52,7 +56,8 @@ export class RecordDocument {
             json.creator,
             json.created_on,
             json.last_edited,
-            json.file_size
+            json.file_size,
+            Tag.getTagsFromJsonArray(json.tagged)
         );
     }
 }

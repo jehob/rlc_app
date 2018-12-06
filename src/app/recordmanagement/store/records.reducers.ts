@@ -26,7 +26,7 @@ import {
     SET_CONSULTANTS,
     SET_COUNTRY_STATES,
     SET_ORIGIN_COUNTRIES,
-    SET_POSSIBLE_CLIENTS, SET_RECORD_DOCUMENT_TAGS,
+    SET_POSSIBLE_CLIENTS, SET_RECORD_DOCUMENT_TAGS, SET_RECORD_PERMISSION_REQUESTS,
     SET_RECORD_STATES,
     SET_RECORD_TAGS,
     SET_RECORDS,
@@ -35,12 +35,13 @@ import {
     SET_SPECIAL_RECORD,
     SET_SPECIAL_RECORD_DOCUMENTS,
     SET_SPECIAL_RECORD_MESSAGES
-} from './records.actions';
+} from './actions/records.actions';
 import { OriginCountry } from "../models/country.model";
-import { Tag } from "../models/record_tags.model";
+import { Tag } from "../models/tag.model";
 import { FullClient } from "../models/client.model";
 import { RecordDocument } from "../models/record_document.model";
 import { RecordMessage } from "../models/record_message.model";
+import {RecordPermissionRequest} from '../models/record_permission.model';
 
 export interface RecordsState {
     special_record: {
@@ -49,6 +50,9 @@ export interface RecordsState {
         origin_country: OriginCountry;
         record_documents: RecordDocument[];
         record_messages: RecordMessage[];
+    };
+    admin: {
+        record_permission_requests: RecordPermissionRequest[]
     };
     records: RestrictedRecord[];
     consultants: RestrictedRecord[];
@@ -67,6 +71,9 @@ const initialState: RecordsState = {
         origin_country: null,
         record_documents: [],
         record_messages: []
+    },
+    admin : {
+        record_permission_requests: []
     },
     records: [],
     consultants: [],
@@ -197,6 +204,14 @@ export function recordsReducer(state = initialState, action: RecordsActions) {
             return {
                 ...state,
                 record_document_tags: action.payload
+            };
+        case SET_RECORD_PERMISSION_REQUESTS:
+            return {
+                ...state,
+                admin: {
+                    ...state.admin,
+                    record_permission_requests: action.payload
+                }
             };
         default:
             return state;

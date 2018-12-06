@@ -19,6 +19,7 @@ from rest_framework.views import APIView
 from backend.static.error_codes import *
 from backend.shared.storage_generator import generate_presigned_post, generate_presigned_url
 from backend.static.storage_folders import user_has_permission
+from backend.api.errors import CustomError
 
 
 class StorageUploadViewSet(APIView):
@@ -44,10 +45,10 @@ class StorageUploadViewSet(APIView):
         file_names = request.data['file_names']
         file_types = request.data['file_types']
         if file_names.__len__() != file_types.__len__():
-            return Response(ERROR__RECORD__UPLOAD__NAMES_TYPES_LENGTH_MISMATCH)
+            raise CustomError(ERROR__RECORD__UPLOAD__NAMES_TYPES_LENGTH_MISMATCH)
 
         if not user_has_permission(file_dir, request.user):
-            return Response(ERROR__API__PERMISSION__INSUFFICIENT)
+            raise CustomError(ERROR__API__PERMISSION__INSUFFICIENT)
 
         posts = []
         for i in range(file_names.__len__()):
@@ -61,6 +62,6 @@ class StorageDownloadViewSet(APIView):
         file_key = request.query_params.get('file', '')
         file_dir = file_key[:file_key.rfind('/')]
         if not user_has_permission(file_dir, request.user):
-            return Response(ERROR__API__PERMISSION__INSUFFICIENT)
+            raise CustomError(ERROR__API__PERMISSION__INSUFFICIENT)
 
         return Response(generate_presigned_url(file_key))

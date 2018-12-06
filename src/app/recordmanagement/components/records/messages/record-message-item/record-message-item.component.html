@@ -1,0 +1,28 @@
+<!--
+  ~ rlcapp - record and organization management software for refugee law clinics
+  ~ Copyright (C) 2018  Dominik Walser
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<div>
+    <div class="record-message-item__from-container">
+        <img src="../../../../../../../static/images/empty-profile.png" alt="picture" class="record-message-item__picture">
+        <p>{{message.sender.name}}</p>
+    </div>
+    <div class="record-message-item__message-container">
+        <p [ngClass]="{'record-message-item__message': true, 'record-message-item__message__own': ownMessage}">{{message.message}}</p>
+        <p class="record-message-item__message-date">{{message.created_on | date}}</p>
+    </div>
+</div>

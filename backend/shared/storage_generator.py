@@ -14,16 +14,14 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-import boto3
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.parsers import MultiPartParser
-from rest_framework import status
 from botocore.client import Config
 from django.conf import settings
+import boto3
+from django.core.files.storage import get_storage_class
+from storages.backends.s3boto import S3BotoStorage
+
 from backend.static.error_codes import *
+from backend.api.errors import CustomError
 
 
 def generate_presigned_post(file_name, file_type, file_dir=''):
@@ -35,9 +33,9 @@ def generate_presigned_post(file_name, file_type, file_dir=''):
     :return:
     """
     if file_name == '':
-        return ERROR__RECORD__UPLOAD__NO_FILE_NAME
+        raise CustomError(ERROR__RECORD__UPLOAD__NO_FILE_NAME)
     if file_type == '':
-        return ERROR__RECORD__UPLOAD__NO_FILE_TYPE
+        raise CustomError(ERROR__RECORD__UPLOAD__NO_FILE_TYPE)
 
     s3_bucket = settings.AWS_S3_BUCKET_NAME
 
@@ -68,14 +66,14 @@ def generate_presigned_url(filekey):
     """
     s3_bucket = settings.AWS_S3_BUCKET_NAME
     if filekey == '':
-        return ERROR__API__DOWNLOAD__NO_FILE_SPECIFIED
+        raise CustomError(ERROR__API__DOWNLOAD__NO_FILE_SPECIFIED)
 
     session = boto3.session.Session(region_name=settings.AWS_S3_REGION_NAME)
     s3 = session.client('s3', config=Config(signature_version='s3v4'))
     try:
         s3.get_object(Bucket=s3_bucket, Key=filekey)
     except Exception as ex:
-        return ERROR__API__DOWNLOAD__NO_SUCH_KEY
+        raise CustomError(ERROR__API__DOWNLOAD__NO_SUCH_KEY)
 
     presigned_url = s3.generate_presigned_url(ClientMethod='get_object',
                                               Params={'Bucket': s3_bucket, 'Key': filekey},
@@ -88,7 +86,7 @@ def generate_presigned_url(filekey):
 def check_file_and_get_information(file_dir, filekey):
     s3_bucket = settings.AWS_S3_BUCKET_NAME
     if filekey == '':
-        return ERROR__API__DOWNLOAD__NO_FILE_SPECIFIED
+        raise CustomError(ERROR__API__DOWNLOAD__NO_FILE_SPECIFIED)
     if not file_dir.endswith('/'):
         file_dir = file_dir + "/"
 
@@ -98,16 +96,27 @@ def check_file_and_get_information(file_dir, filekey):
     try:
         objects = s3.list_objects_v2(Bucket=s3_bucket, Prefix=file_dir)
     except Exception as ex:
-        return ERROR__API__STORAGE__DIR_NOT_FOUND
+        raise CustomError(ERROR__API__STORAGE__DIR_NOT_FOUND)
 
     if 'Contents' not in objects:
-        return ERROR__API__STORAGE__DIR_EMPTY
+        raise CustomError(ERROR__API__STORAGE__DIR_EMPTY)
 
     for object in objects['Contents']:
         if object['Key'] == file_dir+filekey:
-            a = 20
             return {
                 "size": object['Size'],
                 "key": object['Key']
             }
-    return ERROR__API__STORAGE__CHECK_FILE_NOT_FOUND
+    raise CustomError(ERROR__API__STORAGE__CHECK_FILE_NOT_FOUND)
+
+
+class CachedS3BotoStorage(S3BotoStorage):
+    def __init__(self, *args, **kwargs):
+        super(CachedS3BotoStorage, self).__init__(*args, **kwargs)
+        self.local_storage = get_storage_class(
+            "compressor.storage.GzipCompressorFileStorage")()
+
+    def save(self, name, content):
+        name = super(CachedS3BotoStorage, self).save(name, content)
+        self.local_storage._save(name, content)
+        return name

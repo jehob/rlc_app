@@ -28,6 +28,7 @@ from ..models import UserProfile, Permission, Rlc
 from ..serializers import UserProfileSerializer, UserProfileCreatorSerializer, UserProfileNameSerializer, RlcSerializer
 from ..permissions import UpdateOwnProfile
 from backend.static.error_codes import *
+from backend.api.errors import CustomError
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
@@ -109,19 +110,7 @@ class LoginViewSet(viewsets.ViewSet):
                 token.created = datetime.utcnow().replace(tzinfo=pytz.utc)
                 token.save()
             return Response(LoginViewSet.get_login_data(token.key))
-        return Response(ERROR__API__LOGIN__INVALID_CREDENTIALS)
-
-        # try:
-        #     token = ObtainAuthToken().post(request)
-        # except Exception as ex:
-        #     if ex.detail['non_field_errors'][0] == 'Unable to log in with provided credentials.':
-        #         if UserProfile.objects.filter(email=request.data['username']).count() == 1:
-        #             return Response(ERROR__API__LOGIN__WRONG_PASSWORD,
-        #                             status=status.HTTP_400_BAD_REQUEST)
-        #         else:
-        #             return Response(ERROR__API__LOGIN__NO_ACCOUNT,
-        #                             status=status.HTTP_400_BAD_REQUEST)
-        # return Response(LoginViewSet.get_login_data(token.data['token']))
+        raise CustomError(ERROR__API__LOGIN__INVALID_CREDENTIALS)
 
     def get(self, request):
         token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]

@@ -24,7 +24,6 @@ https://docs.djangoproject.com/en/2.1/howto/deployment/wsgi/
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 import os
-import sys
 from django.core.wsgi import get_wsgi_application
 from whitenoise.django import DjangoWhiteNoise
 
@@ -32,5 +31,6 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
 os.environ["DJANGO_SETTINGS_MODULE"] = 'backend.settings'
 
 application = get_wsgi_application()
-application = DjangoWhiteNoise(application)
+if 'ON_HEROKU' not in os.environ or not os.environ['ON_HEROKU']:
+    application = DjangoWhiteNoise(application)
 
