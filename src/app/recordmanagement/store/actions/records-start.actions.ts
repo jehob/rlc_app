@@ -21,6 +21,7 @@ import { Action } from "@ngrx/store";
 import {FullRecord, RestrictedRecord} from '../../models/record.model';
 import {FullClient} from '../../models/client.model';
 import {Tag} from '../../models/tag.model';
+import {RecordPermissionRequest} from '../../models/record_permission.model';
 
 export const START_REQUESTING_RECORD_PERMISSION =
     "START_REQUESTING_RECORD_PERMISSION";
@@ -41,6 +42,8 @@ export const START_SETTING_RECORD_DOCUMENT_TAGS =
     "START_SETTING_RECORD_DOCUMENT_TAGS";
 
 export const START_SAVING_RECORD = "START_SAVING_RECORD";
+
+export const START_ADMITTING_RECORD_PERMISSION_REQUEST = "START_ADMITTING_RECORD_PERMISSION_REQUEST";
 
 
 export class StartRequestingReadPermission implements Action {
@@ -106,6 +109,12 @@ export class StartLoadingRecordPermissionRequests implements Action {
     readonly type = START_LOADING_RECORD_PERMISSION_REQUESTS;
 }
 
+export class StartAdmittingRecordPermissionRequest implements Action {
+    readonly type = START_ADMITTING_RECORD_PERMISSION_REQUEST;
+
+    constructor(public payload: RecordPermissionRequest){}
+}
+
 export type RecordStartActions =
     | StartRequestingReadPermission
     | StartLoadingRecords
@@ -117,4 +126,5 @@ export type RecordStartActions =
     | StartAddingNewRecordDocument
     | StartAddingNewRecordMessage
     | StartSettingRecordDocumentTags
-    | StartLoadingRecordPermissionRequests;
+    | StartLoadingRecordPermissionRequests
+    | StartAdmittingRecordPermissionRequest;

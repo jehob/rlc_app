@@ -44,7 +44,7 @@ export class RecordPermissionRequest {
         const recordPermissions: RecordPermissionRequest[] = [];
         Object.values(jsonArray).map(jsonRecordPermission => {
             recordPermissions.push(RecordPermissionRequest.getRecordPermissionRequestFromJson(jsonRecordPermission));
-        })
+        });
         return recordPermissions;
     }
 

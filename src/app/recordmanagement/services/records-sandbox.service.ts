@@ -27,7 +27,7 @@ import {
     ResetPossibleClients,
     StartAddingNewRecord,
     StartAddingNewRecordDocument,
-    StartAddingNewRecordMessage,
+    StartAddingNewRecordMessage, StartAdmittingRecordPermissionRequest,
     StartLoadingClientPossibilities,
     StartLoadingRecordPermissionRequests,
     StartLoadingRecords,
@@ -36,7 +36,7 @@ import {
     StartRequestingReadPermission,
     StartSavingRecord,
     StartSettingRecordDocumentTags
-} from "../store/actions/records.actions";
+} from '../store/actions/records.actions';
 import { FullClient } from "../models/client.model";
 import { OriginCountry } from "../models/country.model";
 import { RestrictedUser } from "../../api/models/user.model";
@@ -304,5 +304,13 @@ export class RecordsSandboxService {
                 (state: any) => state.records.admin.record_permission_requests
             )
         );
+    }
+
+    admitRecordPermissionRequest(request: RecordPermissionRequest){
+        this.recordStore.dispatch(new StartAdmittingRecordPermissionRequest(request));
+    }
+
+    declineRecordPermissionRequest(request: RecordPermissionRequest){
+
     }
 }

@@ -1,0 +1,11 @@
+@import "~src/styles";
+
+.records-permit-requests__button__accept {
+    background-color: $c-primary;
+    color: $c-on-primary;
+}
+
+.records-permit-requests__button__decline {
+    background-color: $c-warn;
+    color: $c-on-primary;
+}

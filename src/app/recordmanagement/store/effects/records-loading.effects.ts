@@ -286,6 +286,7 @@ export class RecordsLoadingEffects {
                     .get(RECORD_PERMISSIONS_LIST_URL)
                     .pipe(
                         catchError(error => {
+                            return [];
                             return of({
                                 error: "error at loading record permissions list"
                             });

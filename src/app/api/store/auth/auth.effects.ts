@@ -79,6 +79,7 @@ export class AuthEffects {
                             error: string;
                             error_message: string;
                         }) => {
+                            console.log('successfull login');
                             localStorage.setItem("token", response.token);
                             if (this.guard.lastVisitedUrl)
                                 this.router.navigate([

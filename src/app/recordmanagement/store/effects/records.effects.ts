@@ -23,22 +23,24 @@ import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
 import { from, of } from "rxjs";
 
 import {
+    START_ADMITTING_RECORD_PERMISSION_REQUEST,
     START_REQUESTING_RECORD_PERMISSION,
     START_SAVING_RECORD,
-    START_SETTING_RECORD_DOCUMENT_TAGS,
+    START_SETTING_RECORD_DOCUMENT_TAGS, StartAdmittingRecordPermissionRequest,
     StartRequestingReadPermission,
     StartSavingRecord,
     StartSettingRecordDocumentTags
-} from "../actions/records.actions";
+} from '../actions/records.actions';
 import {
     GetRecordDocumentUrl, GetRecordpermissionRequestUrl,
-    GetSpecialRecordURL
+    GetSpecialRecordURL, RECORD_PERMISSIONS_LIST_URL
 } from '../../../statics/api_urls.statics';
 import { FullRecord, RestrictedRecord } from "../../models/record.model";
 import { Tag } from "../../models/tag.model";
 import { FullClient } from "../../models/client.model";
 import { AppSandboxService } from "../../../api/services/app-sandbox.service";
 import { RecordsSandboxService } from "../../services/records-sandbox.service";
+import {RecordPermissionRequest} from '../../models/record_permission.model';
 
 @Injectable()
 export class RecordsEffects {
@@ -130,6 +132,31 @@ export class RecordsEffects {
                             this.recordSB.showError("sending error");
                             return [];
                         }
+                        return [];
+                    })
+                )
+            );
+        })
+    );
+
+    @Effect()
+    startAdmittingRecordPermissionRequest = this.actions.pipe(
+        ofType(START_ADMITTING_RECORD_PERMISSION_REQUEST),
+        map((action: StartAdmittingRecordPermissionRequest) => {
+            return action.payload;
+        }),
+        mergeMap((request: RecordPermissionRequest) => {
+            return from(
+                this.http.post(RECORD_PERMISSIONS_LIST_URL, {
+                    id: request.id
+                }).pipe(
+                    //this.http.post(GetRecordpermissionRequestUrl('7172'), {}).pipe(
+                    catchError(error => {
+                        this.recordSB.showError(error.error.detail);
+                        return [];
+                    }),
+                    mergeMap((response: { error }) => {
+                        console.log("response", response);
                         return [];
                     })
                 )

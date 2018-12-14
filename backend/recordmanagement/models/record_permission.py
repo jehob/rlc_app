@@ -20,14 +20,14 @@ from backend.api.models import UserProfile
 class RecordPermission(models.Model):
     request_from = models.ForeignKey(
         UserProfile, related_name="record_permissions_requested", on_delete=models.CASCADE, null=False)
-    request_granted = models.ForeignKey(
-        UserProfile, related_name="record_permissions_granted", on_delete=models.SET_NULL, null=True)
+    request_processed = models.ForeignKey(
+        UserProfile, related_name="record_permissions_processed", on_delete=models.SET_NULL, null=True)
 
     record = models.ForeignKey('Record', related_name="permissions_requested", on_delete=models.CASCADE,
                                null=False)
 
     requested = models.DateTimeField(auto_now_add=True)
-    permitted_on = models.DateTimeField(null=True)
+    processed_on = models.DateTimeField(null=True)
     can_edit = models.BooleanField(default=False)
 
     record_permission_states_possible = (
