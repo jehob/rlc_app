@@ -24,12 +24,15 @@ import { RecordDocument } from "../../models/record_document.model";
 import { RecordMessage } from "../../models/record_message.model";
 import { RecordStartActions } from "./records-start.actions";
 import { RecordsSetActions } from "./records-set.actions";
+import {RecordPermissionRequest} from '../../models/record_permission.model';
 
 export const RESET_FULL_CLIENT_INFORMATION = "RESET_FULL_CLIENT_INFORMATION";
 export const RESET_POSSIBLE_CLIENTS = "RESET_POSSIBLE_CLIENTS";
 
 export const ADD_RECORD_DOCUMENT = "ADD_RECORD_DOCUMENT";
 export const ADD_RECORD_MESSAGE = "ADD_RECORD_MESSAGE";
+
+export const UPDATE_RECORD_PERMISSION_REQUEST = "UPDATE_RECORD_PERMISSION_REQUEST";
 
 export class AddRecordDocument implements Action {
     readonly type = ADD_RECORD_DOCUMENT;
@@ -51,10 +54,17 @@ export class ResetFullClientInformation implements Action {
     readonly type = RESET_FULL_CLIENT_INFORMATION;
 }
 
+export class UpdateRecordPermissionRequest implements Action {
+    readonly type = UPDATE_RECORD_PERMISSION_REQUEST;
+
+    constructor(public payload: RecordPermissionRequest){}
+}
+
 export type RecordsActions =
     | ResetPossibleClients
     | AddRecordDocument
     | AddRecordMessage
     | ResetFullClientInformation
     | RecordsSetActions
-    | RecordStartActions;
+    | RecordStartActions
+    | UpdateRecordPermissionRequest;

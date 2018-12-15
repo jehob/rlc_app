@@ -23,7 +23,6 @@ export class RecordsPermitRequestsComponent implements OnInit {
         // this.recordSB.getRecordPermissionRequests().subscribe((RecordPermissionRequests: RecordPermissionRequest[]) => {
         //     this.recordPermissionRequests = RecordPermissionRequests;
         // });
-
     }
 
     permitRequest(request: RecordPermissionRequest){

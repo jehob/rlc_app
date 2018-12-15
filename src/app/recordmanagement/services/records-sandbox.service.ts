@@ -27,7 +27,8 @@ import {
     ResetPossibleClients,
     StartAddingNewRecord,
     StartAddingNewRecordDocument,
-    StartAddingNewRecordMessage, StartAdmittingRecordPermissionRequest,
+    StartAddingNewRecordMessage,
+    StartAdmittingRecordPermissionRequest,
     StartLoadingClientPossibilities,
     StartLoadingRecordPermissionRequests,
     StartLoadingRecords,
@@ -36,7 +37,7 @@ import {
     StartRequestingReadPermission,
     StartSavingRecord,
     StartSettingRecordDocumentTags
-} from '../store/actions/records.actions';
+} from "../store/actions/records.actions";
 import { FullClient } from "../models/client.model";
 import { OriginCountry } from "../models/country.model";
 import { RestrictedUser } from "../../api/models/user.model";
@@ -58,8 +59,6 @@ export class RecordsSandboxService {
     > = this.recordStore.pipe(
         select((state: any) => state.records.admin.recod_permission_requests)
     );
-
-
 
     constructor(
         private router: Router,
@@ -298,19 +297,39 @@ export class RecordsSandboxService {
         this.recordStore.dispatch(new StartLoadingRecordPermissionRequests());
     }
 
-    getRecordPermissionRequests(): Observable<RecordPermissionRequest[]> {
+    getRecordPermissionRequests(
+        asArray: boolean = true
+    ): Observable<RecordPermissionRequest[]> {
+        return asArray
+            ? this.recordStore.pipe(
+                  select((state: any) =>
+                      Object.values(
+                          state.records.admin.record_permission_requests
+                      )
+                  )
+              )
+            : this.recordStore.pipe(
+                  select(
+                      (state: any) =>
+                          state.records.admin.record_permission_requests
+                  )
+              );
+    }
+
+    getSpecialRecordPermissionRequest(id): Observable<RecordPermissionRequest> {
         return this.recordStore.pipe(
             select(
-                (state: any) => state.records.admin.record_permission_requests
+                (state: any) =>
+                    state.records.admin.record_permission_requests[id]
             )
         );
     }
 
-    admitRecordPermissionRequest(request: RecordPermissionRequest){
-        this.recordStore.dispatch(new StartAdmittingRecordPermissionRequest(request));
+    admitRecordPermissionRequest(request: RecordPermissionRequest) {
+        this.recordStore.dispatch(
+            new StartAdmittingRecordPermissionRequest(request)
+        );
     }
 
-    declineRecordPermissionRequest(request: RecordPermissionRequest){
-
-    }
+    declineRecordPermissionRequest(request: RecordPermissionRequest) {}
 }

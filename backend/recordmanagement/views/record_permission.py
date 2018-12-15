@@ -79,7 +79,7 @@ class RecordPermissionAdmitViewSet(APIView):
         if 'id' not in request.data:
             raise CustomError(error_codes.ERROR__RECORD__PERMISSION__ID_NOT_PROVIDED)
         try:
-            request = models.RecordPermission.objects.get(pk=request.data['id'])
+            permission_request = models.RecordPermission.objects.get(pk=request.data['id'])
         except Exception as e:
             raise CustomError(error_codes.ERROR__RECORD__PERMISSION__ID_NOT_FOUND)
 
@@ -89,8 +89,12 @@ class RecordPermissionAdmitViewSet(APIView):
         if action != 'accept' and action != 'decline':
             raise CustomError(error_codes.ERROR__RECORD__PERMISSION__NO_VALID_ACTION_PROVIDED)
 
-        request.request_processed = user
-        request.processed_on = datetime.utcnow().replace(tzinfo=pytz.utc)
+        permission_request.request_processed = user
+        permission_request.processed_on = datetime.utcnow().replace(tzinfo=pytz.utc)
+        if action == 'accept':
+            permission_request.state = 'gr'
+        else:
+            permission_request.state = 'de'
+        permission_request.save()
+        return Response(serializers.RecordPermissionSerializer(permission_request).data)
 
-
-        pass

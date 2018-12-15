@@ -148,16 +148,19 @@ export class RecordsEffects {
         mergeMap((request: RecordPermissionRequest) => {
             return from(
                 this.http.post(RECORD_PERMISSIONS_LIST_URL, {
-                    id: request.id
+                    id: request.id,
+                    action: 'accept'
                 }).pipe(
-                    //this.http.post(GetRecordpermissionRequestUrl('7172'), {}).pipe(
                     catchError(error => {
                         this.recordSB.showError(error.error.detail);
                         return [];
                     }),
                     mergeMap((response: { error }) => {
                         console.log("response", response);
-                        return [];
+                        const changedRequest = RecordPermissionRequest.getRecordPermissionRequestFromJson(response);
+                        return [{
+
+                        }];
                     })
                 )
             );

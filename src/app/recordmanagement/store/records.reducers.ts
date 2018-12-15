@@ -34,7 +34,7 @@ import {
     SET_SPECIAL_ORIGIN_COUNTRY,
     SET_SPECIAL_RECORD,
     SET_SPECIAL_RECORD_DOCUMENTS,
-    SET_SPECIAL_RECORD_MESSAGES
+    SET_SPECIAL_RECORD_MESSAGES, UPDATE_RECORD_PERMISSION_REQUEST
 } from './actions/records.actions';
 import { OriginCountry } from "../models/country.model";
 import { Tag } from "../models/tag.model";
@@ -83,6 +83,14 @@ const initialState: RecordsState = {
     record_states: [],
     country_states: [],
     possible_clients: []
+};
+
+const getIdObjects = (array) => {
+    const obj = {};
+    array.forEach((item) => {
+        obj[item.id] = item;
+    });
+    return obj;
 };
 
 export function recordsReducer(state = initialState, action: RecordsActions) {
@@ -210,7 +218,18 @@ export function recordsReducer(state = initialState, action: RecordsActions) {
                 ...state,
                 admin: {
                     ...state.admin,
-                    record_permission_requests: action.payload
+                    record_permission_requests: getIdObjects(action.payload)
+                }
+            };
+        case UPDATE_RECORD_PERMISSION_REQUEST:
+            return {
+                ...state,
+                admin: {
+                    ...state.admin,
+                    record_permission_requests: {
+                        ...state.admin.record_permission_requests,
+                        [action.payload.id]: action.payload
+                    }
                 }
             };
         default:
