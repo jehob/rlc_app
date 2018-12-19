@@ -41,6 +41,7 @@ export const SET_POSSIBLE_CLIENTS = "SET_POSSIBLE_CLIENTS";
 export const SET_RECORD_DOCUMENT_TAGS = "SET_RECORD_DOCUMENT_TAGS";
 export const SET_RECORD_PERMISSION_REQUESTS = "SET_RECORD_PERMISSION_REQUESTS";
 
+
 export class SetRecords implements Action {
     readonly type = SET_RECORDS;
 

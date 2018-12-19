@@ -28,7 +28,7 @@ import {
     StartAddingNewRecord,
     StartAddingNewRecordDocument,
     StartAddingNewRecordMessage,
-    StartAdmittingRecordPermissionRequest,
+    StartAdmittingRecordPermissionRequest, StartDecliningRecordPermissionRequest,
     StartLoadingClientPossibilities,
     StartLoadingRecordPermissionRequests,
     StartLoadingRecords,
@@ -37,7 +37,7 @@ import {
     StartRequestingReadPermission,
     StartSavingRecord,
     StartSettingRecordDocumentTags
-} from "../store/actions/records.actions";
+} from '../store/actions/records.actions';
 import { FullClient } from "../models/client.model";
 import { OriginCountry } from "../models/country.model";
 import { RestrictedUser } from "../../api/models/user.model";
@@ -331,5 +331,14 @@ export class RecordsSandboxService {
         );
     }
 
-    declineRecordPermissionRequest(request: RecordPermissionRequest) {}
+    declineRecordPermissionRequest(request: RecordPermissionRequest) {
+        this.recordStore.dispatch(
+            new StartDecliningRecordPermissionRequest(request)
+        );
+    }
+
+    navigateToRecordOfRecordPermissionRequest(request: RecordPermissionRequest){
+        const url = `records/${request.record}`;
+        this.router.navigate([url])
+    }
 }

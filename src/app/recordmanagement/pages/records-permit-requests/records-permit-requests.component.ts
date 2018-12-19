@@ -14,15 +14,12 @@ export class RecordsPermitRequestsComponent implements OnInit {
 
     constructor(private recordSB: RecordsSandboxService) {}
 
-    columns = ['request_from', 'record', 'requested', 'state', 'accept'];
-
+    toProcessColumns = ['request_from', 'record', 'requested', 'state', 'accept'];
+    alreadyProcessedColumns = ['request_from', 'record', 'requested', 'state', 'processor', 'processed_on'];
 
     ngOnInit() {
         this.recordSB.startLoadingRecordPermissionRequests();
         this.recordPermissionRequests = this.recordSB.getRecordPermissionRequests();
-        // this.recordSB.getRecordPermissionRequests().subscribe((RecordPermissionRequests: RecordPermissionRequest[]) => {
-        //     this.recordPermissionRequests = RecordPermissionRequests;
-        // });
     }
 
     permitRequest(request: RecordPermissionRequest){
@@ -31,6 +28,10 @@ export class RecordsPermitRequestsComponent implements OnInit {
     }
 
     declineRequest(request: RecordPermissionRequest){
+        this.recordSB.declineRecordPermissionRequest(request);
+    }
 
+    gotoRecord(request: RecordPermissionRequest){
+        this.recordSB.navigateToRecordOfRecordPermissionRequest(request);
     }
 }

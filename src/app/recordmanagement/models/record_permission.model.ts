@@ -23,19 +23,19 @@ export class RecordPermissionRequest {
     constructor(
         public id: string,
         public request_from: RestrictedUser,
-        public request_granted: RestrictedUser | null,
+        public request_processed: RestrictedUser | null,
         public record: string,
         public requested: Date,
-        public permitted_on: Date,
+        public processed_on: Date,
         public can_edit: Boolean,
         public state: string
     ) {
         this.id = id;
         this.request_from = request_from;
-        this.request_granted = request_granted;
+        this.request_processed = request_processed;
         this.record = record;
         this.requested = requested;
-        this.permitted_on = permitted_on;
+        this.processed_on = processed_on;
         this.can_edit = can_edit;
         this.state = state;
     }
@@ -49,14 +49,13 @@ export class RecordPermissionRequest {
     }
 
     static getRecordPermissionRequestFromJson(json){
-        console.log('recordpermissionjson', json);
         return new RecordPermissionRequest(
             json.id,
             RestrictedUser.getRestrictedUserFromJson(json.request_from),
-            RestrictedUser.getRestrictedUserFromJson(json.request_granted),
+            RestrictedUser.getRestrictedUserFromJson(json.request_processed),
             json.record,
             new Date(json.requested),
-            new Date(json.permitted_on),
+            new Date(json.processed_on),
             json.can_edit === 'true',
             json.state
         )

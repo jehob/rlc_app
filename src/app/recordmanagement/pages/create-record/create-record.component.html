@@ -20,22 +20,22 @@
     <mat-card-content>
         <h1>Create Record</h1>
         <form [formGroup]="createRecordForm">
-
-            <div class="create-record__rows">
-                <mat-form-field class="create-record__item">
-                    <input matInput [matDatepicker]="picker" placeholder="birthday" formControlName="client_birthday"
-                           (click)="picker.open()">
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                </mat-form-field>
-
-                <mat-form-field class="create-record__item">
-                    <input type="text" matInput formControlName="client_name" placeholder="client name">
-                </mat-form-field>
-            </div>
-
-            <div class="create-record__rows">
-                <div class="create-record__item">
+            <div>
+                <p>Client information</p>
+                <div class="create-record__containers">
+                    <mat-form-field class="create-record__item">
+                        <input matInput [matDatepicker]="picker" placeholder="birthday" formControlName="client_birthday"
+                               (click)="picker.open()">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="create-record__containers">
+                    <mat-form-field class="create-record__item">
+                        <input type="text" matInput formControlName="client_name" placeholder="client name">
+                    </mat-form-field>
+                </div>
+                <div class="create-record__containers">
                     <app-autocomplete [allValuesObservable]="allCountries" placeholder="origin country"
                                       (selectedValueChanged)="selectedCountryChanged($event)"
                                       [errors]="originCountryError"
@@ -45,60 +45,63 @@
                         </mat-error>
                     </app-autocomplete>
                 </div>
+                <div class="create-record__containers">
+                    <mat-form-field class="create-record__item">
+                        <input type="text" matInput formControlName="client_phone_number" placeholder="phone number">
+                    </mat-form-field>
+                </div>
+                <div class="create-record__containers">
+                    <mat-form-field class="create-record__item create-record__notes">
+                        <textarea type="text" matInput formControlName="client_note" placeholder="note about client">
 
-                <mat-form-field class="create-record__item">
-                    <input type="text" matInput formControlName="client_phone_number" placeholder="phone number">
-                </mat-form-field>
-
+                        </textarea>
+                    </mat-form-field>
+                </div>
             </div>
-
-            <div class="create-record__rows">
-                <mat-form-field class="create-record__item create-record__notes">
-                    <textarea type="text" matInput formControlName="client_note" placeholder="note about client">
-
-                    </textarea>
-                </mat-form-field>
-            </div>
-
-            <div class="create-record__rows">
-                <mat-form-field class="create-record__item">
-                    <input matInput [matDatepicker]="picker_first_contact_date" placeholder="contact date"
-                           formControlName="first_contact_date"
-                           (click)="picker_first_contact_date.open()">
-                    <mat-datepicker-toggle matSuffix [for]="picker_first_contact_date"></mat-datepicker-toggle>
-                    <mat-datepicker #picker_first_contact_date></mat-datepicker>
-                </mat-form-field>
-
-                <mat-form-field class="create-record__item">
-                    <input type="text" matInput formControlName="record_token" placeholder="record token">
-                </mat-form-field>
-            </div>
-
-            <div class="create-record__rows">
-                <app-chip-autocomplete [allValuesObservable]="allConsultants"
-                                       placeholder="consultants"
-                                       (selectedValuesChanged)="selectedConsultantsChanged($event)"
-                                       [errors]="consultantErrors" class="create-record__item">
-                    <mat-error *ngIf="consultantErrors && consultantErrors.null">
-                        at least two consultants for case
-                    </mat-error>
-                </app-chip-autocomplete>
-
-                <app-chip-autocomplete [allValuesObservable]="allRecordTags" class="create-record__item"
-                                       placeholder="tags"
-                                       (selectedValuesChanged)="selectedRecordTagsChanged($event)"
-                                       [errors]="recordTagErrors">
-                    <mat-error *ngIf="recordTagErrors && recordTagErrors.null">
-                        at least one tag for case is required
-                    </mat-error>
-                </app-chip-autocomplete>
-            </div>
-            <div class="create-record__rows">
-                <mat-form-field class="create-record__item create-record__notes">
+            <mat-divider></mat-divider>
+            <div>
+                <p>Record specific information</p>
+                <div class="create-record__containers">
+                    <mat-form-field class="create-record__item">
+                        <input matInput [matDatepicker]="picker_first_contact_date" placeholder="contact date"
+                               formControlName="first_contact_date"
+                               (click)="picker_first_contact_date.open()">
+                        <mat-datepicker-toggle matSuffix [for]="picker_first_contact_date"></mat-datepicker-toggle>
+                        <mat-datepicker #picker_first_contact_date></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="create-record__containers">
+                    <mat-form-field class="create-record__item">
+                        <input type="text" matInput formControlName="record_token" placeholder="record token">
+                    </mat-form-field>
+                </div>
+                <div class="create-record__containers">
+                    <app-chip-autocomplete [allValuesObservable]="allConsultants"
+                                           placeholder="consultants"
+                                           (selectedValuesChanged)="selectedConsultantsChanged($event)"
+                                           [errors]="consultantErrors" class="create-record__item">
+                        <mat-error *ngIf="consultantErrors && consultantErrors.null">
+                            at least two consultants for case
+                        </mat-error>
+                    </app-chip-autocomplete>
+                </div>
+                <div class="create-record__containers">
+                    <app-chip-autocomplete [allValuesObservable]="allRecordTags" class="create-record__item"
+                                           placeholder="tags"
+                                           (selectedValuesChanged)="selectedRecordTagsChanged($event)"
+                                           [errors]="recordTagErrors">
+                        <mat-error *ngIf="recordTagErrors && recordTagErrors.null">
+                            at least one tag for case is required
+                        </mat-error>
+                    </app-chip-autocomplete>
+                </div>
+                <div class="create-record__containers">
+                    <mat-form-field class="create-record__item create-record__notes">
                     <textarea type="text" matInput formControlName="record_note" placeholder="note about record">
 
                     </textarea>
-                </mat-form-field>
+                    </mat-form-field>
+                </div>
             </div>
         </form>
     </mat-card-content>

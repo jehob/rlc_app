@@ -23,24 +23,31 @@ import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
 import { from, of } from "rxjs";
 
 import {
+    ADD_RECORD_DOCUMENT,
     START_ADMITTING_RECORD_PERMISSION_REQUEST,
+    START_DECLINING_RECORD_PERMISSION_REQUEST,
     START_REQUESTING_RECORD_PERMISSION,
     START_SAVING_RECORD,
-    START_SETTING_RECORD_DOCUMENT_TAGS, StartAdmittingRecordPermissionRequest,
+    START_SETTING_RECORD_DOCUMENT_TAGS,
+    StartAdmittingRecordPermissionRequest,
+    StartDecliningRecordPermissionRequest,
     StartRequestingReadPermission,
     StartSavingRecord,
-    StartSettingRecordDocumentTags
-} from '../actions/records.actions';
+    StartSettingRecordDocumentTags,
+    UPDATE_RECORD_PERMISSION_REQUEST
+} from "../actions/records.actions";
 import {
-    GetRecordDocumentUrl, GetRecordpermissionRequestUrl,
-    GetSpecialRecordURL, RECORD_PERMISSIONS_LIST_URL
-} from '../../../statics/api_urls.statics';
+    GetRecordDocumentUrl,
+    GetRecordpermissionRequestUrl,
+    GetSpecialRecordURL,
+    RECORD_PERMISSIONS_LIST_URL
+} from "../../../statics/api_urls.statics";
 import { FullRecord, RestrictedRecord } from "../../models/record.model";
 import { Tag } from "../../models/tag.model";
 import { FullClient } from "../../models/client.model";
 import { AppSandboxService } from "../../../api/services/app-sandbox.service";
 import { RecordsSandboxService } from "../../services/records-sandbox.service";
-import {RecordPermissionRequest} from '../../models/record_permission.model';
+import { RecordPermissionRequest } from "../../models/record_permission.model";
 
 @Injectable()
 export class RecordsEffects {
@@ -98,7 +105,6 @@ export class RecordsEffects {
                             });
                         }),
                         mergeMap((response: { error }) => {
-                            console.log("response", response);
                             if (response.error) {
                                 this.recordSB.showError("sending error");
                                 return [];
@@ -120,21 +126,25 @@ export class RecordsEffects {
             console.log("effect fired");
             // TODO
             return from(
-                this.http.post(GetRecordpermissionRequestUrl(record.id.toString()), {}).pipe(
-                //this.http.post(GetRecordpermissionRequestUrl('7172'), {}).pipe(
-                    catchError(error => {
-                        this.recordSB.showError(error.error.detail);
-                        return [];
-                    }),
-                    mergeMap((response: { error }) => {
-                        console.log("response", response);
-                        if (response.error) {
-                            this.recordSB.showError("sending error");
+                this.http
+                    .post(
+                        GetRecordpermissionRequestUrl(record.id.toString()),
+                        {}
+                    )
+                    .pipe(
+                        //this.http.post(GetRecordpermissionRequestUrl('7172'), {}).pipe(
+                        catchError(error => {
+                            this.recordSB.showError(error.error.detail);
                             return [];
-                        }
-                        return [];
-                    })
-                )
+                        }),
+                        mergeMap((response: { error }) => {
+                            if (response.error) {
+                                this.recordSB.showError("sending error");
+                                return [];
+                            }
+                            return [];
+                        })
+                    )
             );
         })
     );
@@ -146,23 +156,65 @@ export class RecordsEffects {
             return action.payload;
         }),
         mergeMap((request: RecordPermissionRequest) => {
+            console.log("action");
             return from(
-                this.http.post(RECORD_PERMISSIONS_LIST_URL, {
-                    id: request.id,
-                    action: 'accept'
-                }).pipe(
-                    catchError(error => {
-                        this.recordSB.showError(error.error.detail);
-                        return [];
-                    }),
-                    mergeMap((response: { error }) => {
-                        console.log("response", response);
-                        const changedRequest = RecordPermissionRequest.getRecordPermissionRequestFromJson(response);
-                        return [{
-
-                        }];
+                this.http
+                    .post(RECORD_PERMISSIONS_LIST_URL, {
+                        id: request.id,
+                        action: "accept"
                     })
-                )
+                    .pipe(
+                        catchError(error => {
+                            this.recordSB.showError(error.error.detail);
+                            return [];
+                        }),
+                        mergeMap((response: { error }) => {
+                            const changedRequest = RecordPermissionRequest.getRecordPermissionRequestFromJson(
+                                response
+                            );
+                            return [
+                                {
+                                    type: UPDATE_RECORD_PERMISSION_REQUEST,
+                                    payload: changedRequest
+                                }
+                            ];
+                        })
+                    )
+            );
+        })
+    );
+
+    @Effect()
+    startDecliningRecordPermissionRequest = this.actions.pipe(
+        ofType(START_DECLINING_RECORD_PERMISSION_REQUEST),
+        map((action: StartDecliningRecordPermissionRequest) => {
+            return action.payload;
+        }),
+        mergeMap((request: RecordPermissionRequest) => {
+            console.log("action");
+            return from(
+                this.http
+                    .post(RECORD_PERMISSIONS_LIST_URL, {
+                        id: request.id,
+                        action: "decline"
+                    })
+                    .pipe(
+                        catchError(error => {
+                            this.recordSB.showError(error.error.detail);
+                            return [];
+                        }),
+                        mergeMap((response: { error }) => {
+                            const changedRequest = RecordPermissionRequest.getRecordPermissionRequestFromJson(
+                                response
+                            );
+                            return [
+                                {
+                                    type: UPDATE_RECORD_PERMISSION_REQUEST,
+                                    payload: changedRequest
+                                }
+                            ];
+                        })
+                    )
             );
         })
     );

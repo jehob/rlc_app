@@ -9,3 +9,12 @@
     background-color: $c-warn;
     color: $c-on-primary;
 }
+
+.records-permit-requests__to-process-column__header {
+    padding-right: 15px;
+}
+
+.records-permit-requests__to-process-column__content {
+    padding-right: 15px;
+    width: 125px;
+}

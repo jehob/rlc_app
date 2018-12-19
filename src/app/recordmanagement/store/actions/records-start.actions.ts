@@ -45,6 +45,7 @@ export const START_SAVING_RECORD = "START_SAVING_RECORD";
 
 export const START_ADMITTING_RECORD_PERMISSION_REQUEST = "START_ADMITTING_RECORD_PERMISSION_REQUEST";
 
+export const START_DECLINING_RECORD_PERMISSION_REQUEST = "START_DECLINING_RECORD_PERMISSION_REQUEST";
 
 export class StartRequestingReadPermission implements Action {
     readonly type = START_REQUESTING_RECORD_PERMISSION;
@@ -115,6 +116,12 @@ export class StartAdmittingRecordPermissionRequest implements Action {
     constructor(public payload: RecordPermissionRequest){}
 }
 
+export class StartDecliningRecordPermissionRequest implements Action {
+    readonly type = START_DECLINING_RECORD_PERMISSION_REQUEST;
+
+    constructor(public payload: RecordPermissionRequest){}
+}
+
 export type RecordStartActions =
     | StartRequestingReadPermission
     | StartLoadingRecords
@@ -127,4 +134,5 @@ export type RecordStartActions =
     | StartAddingNewRecordMessage
     | StartSettingRecordDocumentTags
     | StartLoadingRecordPermissionRequests
-    | StartAdmittingRecordPermissionRequest;
+    | StartAdmittingRecordPermissionRequest
+    | StartDecliningRecordPermissionRequest;

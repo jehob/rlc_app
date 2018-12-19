@@ -89,10 +89,9 @@ export class RecordsLoadingEffects {
                         return of({ error: "error at loading records" });
                     }),
                     mergeMap(response => {
-                        //console.log("recordsFromBackend", response);
                         const loadedRecords: Array<RestrictedRecord> = [];
                         Object.values(response).map(record => {
-                            if (record.note) {
+                            if (Object.keys(record).indexOf('note') > -1) {
                                 loadedRecords.push(
                                     FullRecord.getFullRecordFromJson(record)
                                 );
@@ -292,7 +291,6 @@ export class RecordsLoadingEffects {
                             });
                         }),
                         mergeMap(response => {
-                            console.log('permissions list', response);
                             return [
                                 {
                                     type: SET_RECORD_PERMISSION_REQUESTS,
