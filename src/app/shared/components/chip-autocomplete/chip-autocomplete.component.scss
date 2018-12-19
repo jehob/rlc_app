@@ -16,3 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
+.chip-autocomplete__form-field {
+    width: calc(100% - 30px);
+    padding-left: 10px;
+}

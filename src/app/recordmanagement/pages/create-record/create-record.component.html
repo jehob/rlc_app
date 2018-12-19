@@ -39,7 +39,7 @@
                     <app-autocomplete [allValuesObservable]="allCountries" placeholder="origin country"
                                       (selectedValueChanged)="selectedCountryChanged($event)"
                                       [errors]="originCountryError"
-                                      [setSelectedValue]="givenOriginCountry">
+                                      [setSelectedValue]="givenOriginCountry" class="full_width">
                         <mat-error *ngIf="originCountryError && originCountryError.null">
                             please select a country
                         </mat-error>
@@ -79,14 +79,14 @@
                     <app-chip-autocomplete [allValuesObservable]="allConsultants"
                                            placeholder="consultants"
                                            (selectedValuesChanged)="selectedConsultantsChanged($event)"
-                                           [errors]="consultantErrors" class="create-record__item">
+                                           [errors]="consultantErrors" class="full_width">
                         <mat-error *ngIf="consultantErrors && consultantErrors.null">
                             at least two consultants for case
                         </mat-error>
                     </app-chip-autocomplete>
                 </div>
                 <div class="create-record__containers">
-                    <app-chip-autocomplete [allValuesObservable]="allRecordTags" class="create-record__item"
+                    <app-chip-autocomplete [allValuesObservable]="allRecordTags" class="full_width"
                                            placeholder="tags"
                                            (selectedValuesChanged)="selectedRecordTagsChanged($event)"
                                            [errors]="recordTagErrors">
