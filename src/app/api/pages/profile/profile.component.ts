@@ -82,7 +82,7 @@ export class ProfileComponent implements OnInit {
     }
 
     onUploadClick() {
-        console.log(this.fileInput.nativeElement.files);
+        //console.log(this.fileInput.nativeElement.files);
         const file = this.fileInput.nativeElement.files[0];
         this.apiSB.uploadProfilePicture(file);
         //this.apiSB.downloadSingleFile('aaa');
