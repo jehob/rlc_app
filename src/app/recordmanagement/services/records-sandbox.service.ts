@@ -19,63 +19,94 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { select, Store } from "@ngrx/store";
+import { Location } from "@angular/common";
+import { take } from "rxjs/operators";
+import { Observable } from "rxjs";
 import { RecordsState } from "../store/records.reducers";
 import {
     ResetPossibleClients,
     StartAddingNewRecord,
+    StartAddingNewRecordDocument,
+    StartAddingNewRecordMessage,
+    StartAdmittingRecordPermissionRequest, StartDecliningRecordPermissionRequest,
     StartLoadingClientPossibilities,
+    StartLoadingRecordPermissionRequests,
     StartLoadingRecords,
     StartLoadingRecordStatics,
-    StartLoadingSpecialRecord, StartSavingRecord
-} from '../store/records.actions';
-import { take } from "rxjs/operators";
+    StartLoadingSpecialRecord,
+    StartRequestingReadPermission,
+    StartSavingRecord,
+    StartSettingRecordDocumentTags
+} from '../store/actions/records.actions';
 import { FullClient } from "../models/client.model";
-import { Observable } from "rxjs";
 import { OriginCountry } from "../models/country.model";
 import { RestrictedUser } from "../../api/models/user.model";
-import { RecordTag } from "../models/record_tags.model";
+import { Tag } from "../models/tag.model";
 import { ApiSandboxService } from "../../api/services/api-sandbox.service";
-import {FullRecord} from '../models/record.model';
+import { FullRecord, RestrictedRecord } from "../models/record.model";
+import { StorageService } from "../../shared/services/storage.service";
+import { SnackbarService } from "../../shared/services/snackbar.service";
+import { ApiState } from "../../api/store/api.reducers";
+import { getRecordFolder } from "../../statics/storage_folders.statics";
+import { RecordPermissionRequest } from "../models/record_permission.model";
 
 @Injectable({
     providedIn: "root"
 })
 export class RecordsSandboxService {
+    record_permission_requests: Observable<
+        RecordPermissionRequest[]
+    > = this.recordStore.pipe(
+        select((state: any) => state.records.admin.recod_permission_requests)
+    );
+
     constructor(
         private router: Router,
-        private store: Store<RecordsState>,
-        private apiSB: ApiSandboxService
+        private recordStore: Store<RecordsState>,
+        private apiStore: Store<ApiState>,
+        private apiSB: ApiSandboxService,
+        private snackbarService: SnackbarService,
+        private storageService: StorageService,
+        private location: Location
     ) {}
 
     loadRecords(searchString?: string) {
-        this.store.dispatch(new StartLoadingRecords(searchString));
+        this.recordStore.dispatch(new StartLoadingRecords(searchString));
     }
 
     getRecords() {
-        return this.store.pipe(select((state: any) => state.records.records));
+        return this.recordStore.pipe(
+            select((state: any) => state.records.records)
+        );
     }
 
     getPossibleClients(): Observable<FullClient[]> {
-        return this.store.pipe(
+        return this.recordStore.pipe(
             select((state: any) => state.records.possible_clients)
         );
     }
 
     getConsultants(): Observable<RestrictedUser[]> {
-        return this.store.pipe(
+        return this.recordStore.pipe(
             select((state: any) => state.records.consultants)
         );
     }
 
     getRecordTags() {
-        return this.store.pipe(
+        return this.recordStore.pipe(
             select((state: any) => state.records.record_tags)
+        );
+    }
+
+    getRecordDocumentTags() {
+        return this.recordStore.pipe(
+            select((state: any) => state.records.record_document_tags)
         );
     }
 
     getSpecialPossibleClient(id: string): FullClient {
         let returnClient: FullClient = null;
-        this.store
+        this.recordStore
             .pipe(
                 take(1),
                 select((state: any) =>
@@ -89,21 +120,21 @@ export class RecordsSandboxService {
     }
 
     loadAndGetSpecialRecord(id: string): Observable<any> {
-        this.store.dispatch(new StartLoadingSpecialRecord(id));
-        return this.store.pipe(
+        this.recordStore.dispatch(new StartLoadingSpecialRecord(id));
+        return this.recordStore.pipe(
             select((state: any) => state.records.special_record)
         );
     }
 
     getSpecialRecord(): Observable<any> {
-        return this.store.pipe(
+        return this.recordStore.pipe(
             select((state: any) => state.records.special_record)
         );
     }
 
     getOriginCountryById(id: string): OriginCountry {
         let originCountry: OriginCountry = null;
-        this.store
+        this.recordStore
             .pipe(
                 take(1),
                 select((state: any) =>
@@ -117,19 +148,21 @@ export class RecordsSandboxService {
     }
 
     loadClientPossibilities(birthday: Date) {
-        this.store.dispatch(new StartLoadingClientPossibilities(birthday));
+        this.recordStore.dispatch(
+            new StartLoadingClientPossibilities(birthday)
+        );
     }
 
     startLoadingRecordStatics() {
-        this.store.dispatch(new StartLoadingRecordStatics());
+        this.recordStore.dispatch(new StartLoadingRecordStatics());
     }
 
     resetPossibleClients() {
-        this.store.dispatch(new ResetPossibleClients());
+        this.recordStore.dispatch(new ResetPossibleClients());
     }
 
     getOriginCountries(): Observable<OriginCountry[]> {
-        return this.store.pipe(
+        return this.recordStore.pipe(
             select((state: any) => state.records.origin_countries)
         );
     }
@@ -138,7 +171,7 @@ export class RecordsSandboxService {
         createFormValues: any,
         client: FullClient,
         consultants: RestrictedUser[],
-        tags: RecordTag[]
+        tags: Tag[]
     ) {
         let newRecord = {};
         if (client) {
@@ -162,12 +195,14 @@ export class RecordsSandboxService {
             ),
             record_token: createFormValues.record_token,
             record_note: createFormValues.record_note,
-            consultants: consultants ? consultants.map(consultant => consultant.id) : "",
+            consultants: consultants
+                ? consultants.map(consultant => consultant.id)
+                : "",
             tags: tags ? tags.map(tag => tag.id) : []
         };
 
         //console.log('new record which will be send to the backend', newRecord);
-        this.store.dispatch(new StartAddingNewRecord(newRecord));
+        this.recordStore.dispatch(new StartAddingNewRecord(newRecord));
     }
 
     successfullyCreatedRecord(response: any) {
@@ -181,13 +216,129 @@ export class RecordsSandboxService {
         // do more
     }
 
-    saveRecord(
-        record: FullRecord,
-        client: FullClient
-    ) {
-        this.store.dispatch(new StartSavingRecord({record, client}));
-
+    saveRecord(record: FullRecord, client: FullClient) {
+        this.recordStore.dispatch(new StartSavingRecord({ record, client }));
     }
 
+    goBack() {
+        this.location.back();
+    }
 
+    uploadRecordDocuments(files: File[]) {
+        let record_id = null;
+        this.recordStore
+            .pipe(select((state: any) => state.records.special_record.record))
+            .subscribe(record => {
+                record_id = record.id;
+            });
+        let rlc_id = null;
+        this.apiStore
+            .pipe(select((state: any) => state.api.rlc))
+            .subscribe(rlc => {
+                rlc_id = rlc.id;
+            });
+        this.storageService.uploadFiles(
+            files,
+            getRecordFolder(rlc_id, record_id),
+            () => {
+                this.snackbarService.showSuccessSnackBar("upload finished");
+                for (const file of files) {
+                    const information = {
+                        record_id,
+                        filename: file.name
+                    };
+                    this.recordStore.dispatch(
+                        new StartAddingNewRecordDocument(information)
+                    );
+                }
+            }
+        );
+    }
+
+    downloadRecordDocument(file_name: string) {
+        let record_id = null;
+        this.recordStore
+            .pipe(select((state: any) => state.records.special_record.record))
+            .subscribe(record => {
+                record_id = record.id;
+            });
+        let rlc_id = null;
+        this.apiStore
+            .pipe(select((state: any) => state.api.rlc))
+            .subscribe(rlc => {
+                rlc_id = rlc.id;
+            });
+        this.storageService.downloadFile(
+            getRecordFolder(rlc_id, record_id) + "/" + file_name
+        );
+    }
+
+    startAddingNewRecordMessage(message: string) {
+        this.recordStore.dispatch(new StartAddingNewRecordMessage(message));
+    }
+
+    showError(error_message: string) {
+        this.apiSB.showErrorSnackBar(error_message);
+    }
+
+    startSettingDocumentTags(tags: Tag[], document_id: string) {
+        this.recordStore.dispatch(
+            new StartSettingRecordDocumentTags({ tags, document_id })
+        );
+    }
+
+    startRequestReadPermission(restrictedRecord: RestrictedRecord) {
+        this.recordStore.dispatch(
+            new StartRequestingReadPermission(restrictedRecord)
+        );
+    }
+
+    startLoadingRecordPermissionRequests() {
+        this.recordStore.dispatch(new StartLoadingRecordPermissionRequests());
+    }
+
+    getRecordPermissionRequests(
+        asArray: boolean = true
+    ): Observable<RecordPermissionRequest[]> {
+        return asArray
+            ? this.recordStore.pipe(
+                  select((state: any) =>
+                      Object.values(
+                          state.records.admin.record_permission_requests
+                      )
+                  )
+              )
+            : this.recordStore.pipe(
+                  select(
+                      (state: any) =>
+                          state.records.admin.record_permission_requests
+                  )
+              );
+    }
+
+    getSpecialRecordPermissionRequest(id): Observable<RecordPermissionRequest> {
+        return this.recordStore.pipe(
+            select(
+                (state: any) =>
+                    state.records.admin.record_permission_requests[id]
+            )
+        );
+    }
+
+    admitRecordPermissionRequest(request: RecordPermissionRequest) {
+        this.recordStore.dispatch(
+            new StartAdmittingRecordPermissionRequest(request)
+        );
+    }
+
+    declineRecordPermissionRequest(request: RecordPermissionRequest) {
+        this.recordStore.dispatch(
+            new StartDecliningRecordPermissionRequest(request)
+        );
+    }
+
+    navigateToRecordOfRecordPermissionRequest(request: RecordPermissionRequest){
+        const url = `records/${request.record}`;
+        this.router.navigate([url])
+    }
 }

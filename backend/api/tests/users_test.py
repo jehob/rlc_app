@@ -1,27 +1,25 @@
-""" rlcapp - record and organization management software for refugee law clinics
-Copyright (C) 2018  Dominik Walser
+#  rlcapp - record and organization management software for refugee law clinics
+#  Copyright (C) 2018  Dominik Walser
+# 
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as
+#  published by the Free Software Foundation, either version 3 of the
+#  License, or (at your option) any later version.
+# 
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+# 
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/> """
 from rest_framework.test import APIClient
 from django.test import TransactionTestCase
-from ..models import UserProfile, Permission
+from ..models import UserProfile, Rlc
 from .fixtures import CreateFixtures
 from .statics import StaticTestMethods
 from rest_framework.authtoken.models import Token
-
-
-# TODO: test destroy
 
 
 class UsersTests(TransactionTestCase):
@@ -39,8 +37,8 @@ class UsersTests(TransactionTestCase):
                                   (64, 'CC@web.de', 'CC', 'qwe'),
                                   (65, 'DD@web.de', 'DD', 'qwe')))
         CreateFixtures.add_groups(((72, 'GroupA', True, [62, 63]),
-                                  (73, 'GroupB', True, [63, 64]),
-                                  (74, 'GroupC', True, [64, 65])))
+                                   (73, 'GroupB', True, [63, 64]),
+                                   (74, 'GroupC', True, [64, 65])))
         CreateFixtures.add_rlcs(((91, 'RlcA', [62, 63], True, True, 'note1'),
                                  (92, 'RlcB', [64, 65], True, True, 'note2')))
         CreateFixtures.add_groups_to_rlcs(((72, 91),
@@ -93,6 +91,12 @@ class UsersTests(TransactionTestCase):
         CreateFixtures.add_has_permission(15, 1130, user_has=64, for_rlc=91)
         CreateFixtures.add_has_permission(16, 1130, group_has=72, for_rlc=91)
 
+    @staticmethod
+    def checkArrays(testRef, real, toGet):
+        testRef.assertEqual(real.__len__(), toGet.__len__())
+        for item in toGet:
+            testRef.assertIn(item, real)
+
     def test_create_new_user_success(self):
         client = APIClient()
         before = UserProfile.objects.count()
@@ -111,7 +115,7 @@ class UsersTests(TransactionTestCase):
         user = {
             'email': 'peter_parker@gmx.de',
             'name': 'Peter Parker',
-            'birthday': '1990-13-4',
+            'birthday': '1990-12-4',
             'password': 'abc123',
             'phone_number': '1283812812',
             'street': 'Klausweg 12',
@@ -129,7 +133,7 @@ class UsersTests(TransactionTestCase):
         response = client.post(self.base_url_create, {
             'email': 'peter_parker@gmx.de',
             'name': 'Peter Parker',
-            'birthday': '1990-13-4',
+            'birthday': '1990-12-4',
             'password': 'abc123',
             'password_repeat': 'abc123',
             'phone_number': '1283812812',
@@ -285,20 +289,18 @@ class UsersTests(TransactionTestCase):
         user1 = UserProfile.objects.get(pk=62)
         user1_perms = user1.get_as_user_permissions()
 
-        self.assertEqual(user1_perms.__len__(), 2)
-        self.assertEqual(user1_perms[0].id, 1)
-        self.assertEqual(user1_perms[1].id, 9)
+        UsersTests.checkArrays(self, [i.id for i in user1_perms], [1, 9])
 
     def test_get_overall_permissions(self):
         self.fixtures_has_permissions()
 
         user1 = UserProfile.objects.get(pk=62)
         user1_perms = user1.get_overall_permissions()
+        ids = []
+        for perm in user1_perms:
+            ids.append(perm.id)
 
-        self.assertEqual(user1_perms.__len__(), 3)
-        self.assertEqual(user1_perms[0].id, 1)
-        self.assertEqual(user1_perms[1].id, 9)
-        self.assertEqual(user1_perms[2].id, 5)
+        UsersTests.checkArrays(self, [i.id for i in user1_perms], [1, 5, 9, 14, 16])
 
     def test_get_overall_special_permissions(self):
         self.fixtures_has_permissions()
@@ -306,9 +308,7 @@ class UsersTests(TransactionTestCase):
         user1 = UserProfile.objects.get(pk=65)
         user1_perms = user1.get_overall_special_permissions(permission=1120)
 
-        self.assertEqual(user1_perms.__len__(), 2)
-        self.assertEqual(user1_perms[0].id, 12)
-        self.assertEqual(user1_perms[1].id, 13)
+        UsersTests.checkArrays(self, [i.id for i in user1_perms], [13, 12])
 
     def test_has_permission(self):
         self.fixtures_has_permissions()
@@ -326,7 +326,5 @@ class UsersTests(TransactionTestCase):
     def test_get_users_with_special_permissions(self):
         self.fixtures_has_permissions()
 
-        consultants = UserProfile.objects.get_consultants(91)
-
-        users = list(UserProfile.objects.get_users_with_special_permission(11, for_user=13))
-        self.assertTrue(users.__len__() == 4)
+        consultants = Rlc.objects.first().get_consultants()
+        self.assertTrue(list(consultants).__len__() == 3)

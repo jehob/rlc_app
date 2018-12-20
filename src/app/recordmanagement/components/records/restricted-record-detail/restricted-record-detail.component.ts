@@ -42,4 +42,8 @@ export class RestrictedRecordDetailComponent implements OnInit {
     onTagClick(tag){
         this.router.navigateByUrl(`records?search=${tag.name}`);
     }
+
+    onRequestReadPermission(){
+        this.recordSB.startRequestReadPermission(this.record);
+    }
 }

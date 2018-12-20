@@ -37,6 +37,7 @@ import {
 } from "@angular/material";
 import { map, startWith } from "rxjs/operators";
 import { Filterable } from "../../models/filterable.model";
+import {Tag} from '../../../recordmanagement/models/tag.model';
 
 @Component({
     selector: "app-chip-autocomplete",
@@ -44,7 +45,10 @@ import { Filterable } from "../../models/filterable.model";
     styleUrls: ["./chip-autocomplete.component.scss"]
 })
 export class ChipAutocompleteComponent implements OnInit, OnChanges {
-    selectedValues: Filterable[] = [];
+    @Input()
+    firstSelected: Filterable[];
+
+    selectedValues: Filterable[];
     filteredValues: Observable<Filterable[]>;
 
     allValues: Filterable[];
@@ -93,6 +97,8 @@ export class ChipAutocompleteComponent implements OnInit, OnChanges {
                 )
             );
         });
+
+        this.selectedValues = this.firstSelected ? this.firstSelected : [];
     }
 
     ngOnChanges(changes: SimpleChanges) {

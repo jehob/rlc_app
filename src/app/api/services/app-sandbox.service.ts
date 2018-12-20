@@ -16,17 +16,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import {Injectable} from '@angular/core';
-import {AppState} from '../../store/app.reducers';
-import {select, Store} from '@ngrx/store';
-import {take} from 'rxjs/operators';
-import {Logout, ReloadStaticInformation, SetToken, TryLogin} from '../store/auth/auth.actions';
-import {Router} from '@angular/router';
-import {RecordsSandboxService} from '../../recordmanagement/services/records-sandbox.service';
+import { Injectable } from "@angular/core";
+import { AppState } from "../../store/app.reducers";
+import { select, Store } from "@ngrx/store";
+import { take } from "rxjs/operators";
+import {
+    Logout,
+    ReloadStaticInformation,
+    SetToken,
+    TryLogin
+} from "../store/auth/auth.actions";
+import { Router } from "@angular/router";
+import { RecordsSandboxService } from "../../recordmanagement/services/records-sandbox.service";
+import {Observable} from 'rxjs';
+import {AuthState} from '../store/auth/auth.reducers';
 
 @Injectable()
-export class AppSandboxService{
-    constructor(private store: Store<AppState>, private router: Router, private recordSB: RecordsSandboxService){}
+export class AppSandboxService {
+    savedLocation = '';
+
+    constructor(
+        private store: Store<AppState>,
+        private router: Router
+    ) {}
 
     isAuthenticated(): boolean {
         let isAuthenticated = false;
@@ -45,21 +57,25 @@ export class AppSandboxService{
         this.router.navigate(["login"]);
     }
 
-    login(username: string, password: string){
-        this.store.dispatch(new TryLogin({username, password}));
+    login(username: string, password: string) {
+        this.store.dispatch(new TryLogin({ username, password }));
+
     }
 
-    startApp() {
+    startApp(): Observable<AuthState> {
         const token = localStorage.getItem("token");
         if (token !== null) {
             this.store.dispatch(new SetToken(token));
             this.store.dispatch(new ReloadStaticInformation());
         }
-
-        return this.store.select("auth");
+        return this.store.pipe(select("auth"));
     }
 
-    getAuthState(){
-        return this.store.select("auth");
+    getAuthState(): Observable<AuthState> {
+        return this.store.pipe(select("auth"));
     }
+    saveLocation(){
+        this.savedLocation = this.router.url;
+    }
+
 }

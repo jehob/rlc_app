@@ -1,25 +1,3 @@
-""" rlcapp - record and organization management software for refugee law clinics
-Copyright (C) 2018  Dominik Walser
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/> """
-# from rest_framework import viewsets, filters, mixins
-# from rest_framework.authtoken.views import ObtainAuthToken
-# from rest_framework.authtoken.serializers import AuthTokenSerializer
-# from rest_framework.authentication import TokenAuthentication
-# from rest_framework.permissions import IsAuthenticated
-# from rest_framework.authtoken.models import Token
-# from rest_framework.response import Response
 """ Definition of ModelViewSet
 class ModelViewSet(mixins.CreateModelMixin,
                    mixins.RetrieveModelMixin,
@@ -28,12 +6,27 @@ class ModelViewSet(mixins.CreateModelMixin,
                    mixins.ListModelMixin,
                    GenericViewSet)
 """
+#  rlcapp - record and organization management software for refugee law clinics
+#  Copyright (C) 2018  Dominik Walser
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as
+#  published by the Free Software Foundation, either version 3 of the
+#  License, or (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-from backend.recordmanagement.views.client import ClientsViewSet
 from .user import *
 from .group import *
 from .permission import *
 from .has_permission import *
 from .rlc import *
-from .statics import *
 from .other import *
+from .storage import *
+

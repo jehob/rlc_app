@@ -18,48 +18,50 @@
 
 @import "../styles/basic.scss";
 
-.root-container {
-    width: 100%;
-
-    position: relative;
-    margin: 0 auto;
-    height: auto !important;
-    height: 100%;
-    min-height: 100%;
-}
-mat-drawer {
-    width: 200px;
-    padding: 16px;
-    background-color: $c-primary;
-}
-.drawer-header {
-    border-bottom: 5px solid $c-on-primary;
-    margin-bottom: 15px;
-}
-.drawer-header img {
-    width: 125px;
-    height: auto;
-    margin-bottom: 15px;
-}
-.drawer-navigation {
-    list-style-type: none;
-    padding-left: 0;
-    margin: 0;
-}
-.drawer-navigation li {
-    margin-bottom: 10px;
-}
-a {
-    cursor: pointer;
-    color: $c-on-primary;
-    text-decoration: none;
-}
-.drawer-navigation li {
-    margin-bottom: 10px;
-}
-
-mat-drawer-content {
+mat-sidenav-content {
     //background-color: #E4EAEE;
     padding: 15px; /*TODO: Look up MG*/
-    height: 100%;
+    //height: 100%;
+}
+
+mat-sidenav{
+    width: 256px;
+}
+
+.root-toolbar{
+    background-color: $c-primary !important;
+    color: $c-on-primary;
+    border-bottom: 0px solid $c-secondary;
+}
+
+.root-toolbar img{
+   width: 35px;
+   height: auto; 
+   margin-right: 5px;
+}
+.root-container {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.is-mobile .root-toolbar {
+    position: fixed;
+    z-index: 2;
+}
+
+.sidenav-container {
+    flex: 1;
+    margin: 0 !important;
+}
+
+.is-mobile .sidenav-container {
+    flex: 1 0 auto;
+}
+mat-nav-list{
+    padding: 0;
 }

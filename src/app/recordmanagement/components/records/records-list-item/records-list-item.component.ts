@@ -21,7 +21,7 @@ import {FullRecord, RestrictedRecord} from '../../../models/record.model';
 import {RestrictedUser} from '../../../../api/models/user.model';
 import {Router} from '@angular/router';
 import {GetRecordsSearchURL} from '../../../../statics/api_urls.statics';
-import {RecordTag} from '../../../models/record_tags.model';
+import {Tag} from '../../../models/tag.model';
 
 @Component({
     selector: "app-records-list-item",
@@ -44,7 +44,7 @@ export class RecordsListItemComponent implements OnInit {
         this.router.navigateByUrl(`records?search=${consultant.name}`);
     }
 
-    onTagClick(tag: RecordTag){
+    onTagClick(tag: Tag){
         this.router.navigateByUrl(`records?search=${tag.name}`);
     }
 

@@ -21,6 +21,8 @@ import { Actions, Effect, ofType } from "@ngrx/effects";
 import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
 import { from } from "rxjs";
+import { isDevMode } from '@angular/core';
+
 import { Router } from "@angular/router";
 import {
     TRY_RELOAD_STATIC_INFORMATION,
@@ -30,11 +32,18 @@ import {
 } from "./auth.actions";
 import LogRocket from "logrocket";
 import { LOGIN_URL } from "../../../statics/api_urls.statics";
-import { SET_USER } from "../api.actions";
+import {
+    SET_ALL_PERMISSIONS, SET_RLC,
+    SET_USER,
+    SET_USER_PERMISSIONS
+} from '../api.actions';
 import { AuthGuardService } from "../../services/auth-guard.service";
 import { FullUser } from "../../models/user.model";
-import {RecordsSandboxService} from '../../../recordmanagement/services/records-sandbox.service';
-import {ApiSandboxService} from '../../services/api-sandbox.service';
+import { RecordsSandboxService } from "../../../recordmanagement/services/records-sandbox.service";
+import { ApiSandboxService } from "../../services/api-sandbox.service";
+import {HasPermission, Permission} from '../../models/permission.model';
+import {RestrictedRlc} from '../../models/rlc.model';
+import {AppSandboxService} from '../../services/app-sandbox.service';
 
 @Injectable()
 export class AuthEffects {
@@ -44,7 +53,8 @@ export class AuthEffects {
         private router: Router,
         private guard: AuthGuardService,
         private recordSB: RecordsSandboxService,
-        private apiSB: ApiSandboxService
+        private apiSB: ApiSandboxService,
+        private appSB: AppSandboxService
     ) {}
 
     @Effect()
@@ -57,7 +67,7 @@ export class AuthEffects {
             return from(
                 this.http.post(LOGIN_URL, authData).pipe(
                     catchError(error => {
-                        console.log('error', error)
+                        console.log("error", error);
                         this.apiSB.showErrorSnackBar("Login not successfull");
                         return [];
                     }),
@@ -65,17 +75,19 @@ export class AuthEffects {
                         (response: {
                             token: string;
                             user: any;
-                            consultants: any;
-                            countries: any;
+                            all_permissions: any;
+                            permissions: any;
+                            rlc: any;
+                            error: string;
+                            error_message: string;
                         }) => {
+                            //console.log('successfull login');
                             localStorage.setItem("token", response.token);
-
                             if (this.guard.lastVisitedUrl)
                                 this.router.navigate([
                                     this.guard.getLastVisitedUrl()
                                 ]);
-                            else this.router.navigate([""]);
-
+                            else this.router.navigate([this.appSB.savedLocation]);
                             return [
                                 {
                                     type: SET_TOKEN,
@@ -87,7 +99,7 @@ export class AuthEffects {
                     )
                 )
             );
-        }),
+        })
     );
 
     @Effect()
@@ -110,16 +122,39 @@ export class AuthEffects {
         })
     );
 
-    static getStaticInformation(response: { user: any; }) {
-        // for logging
-        LogRocket.identify(response.user.id);
-        // keep this console.log
-        console.log("identified: ", response.user.id);
-
-        return  [
+    static getStaticInformation(response: {
+        user: any;
+        all_permissions: any;
+        permissions: any;
+        rlc: any;
+    }) {
+        // not on prod
+        if (!isDevMode()){
+            // for logging
+            LogRocket.identify(response.user.id);
+            // keep this console.log
+            console.log("identified: ", response.user.id);
+        }
+        return [
             {
                 type: SET_USER,
                 payload: FullUser.getFullUserFromJson(response.user)
+            },
+            {
+                type: SET_ALL_PERMISSIONS,
+                payload: Permission.getPermissionsFromJsonArray(
+                    response.all_permissions
+                )
+            },
+            {
+                type: SET_USER_PERMISSIONS,
+                payload: HasPermission.getPermissionsFromJsonArray(
+                    response.permissions
+                )
+            },
+            {
+                type: SET_RLC,
+                payload: RestrictedRlc.getRestrictedRlcFromJson(response.rlc)
             }
         ];
     }

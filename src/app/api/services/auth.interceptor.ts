@@ -26,11 +26,15 @@ import {
 import { AuthState } from "../store/auth/auth.reducers";
 import { Store } from "@ngrx/store";
 import { Observable } from "rxjs";
-import { switchMap, take } from "rxjs/operators";
+import { catchError, switchMap, take } from "rxjs/operators";
+import { AppSandboxService } from "./app-sandbox.service";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-    constructor(private store: Store<AuthState>) {}
+    constructor(
+        private store: Store<AuthState>,
+        private appSB: AppSandboxService
+    ) {}
 
     intercept(
         req: HttpRequest<any>,
@@ -39,13 +43,26 @@ export class AuthInterceptor implements HttpInterceptor {
         return this.store.select("auth").pipe(
             take(1),
             switchMap((authState: AuthState) => {
+                if (req.url.startsWith("http")) {
+                    return next.handle(req);
+                }
+
                 const copiedReq = req.clone({
                     headers: req.headers.set(
                         "Authorization",
                         "Token " + authState.token
                     )
                 });
-                return next.handle(copiedReq);
+                return next.handle(copiedReq).pipe(
+                    catchError((error, caught) => {
+                        if (error.status === 401) {
+                            this.appSB.saveLocation();
+                            this.appSB.logout();
+                            return [];
+                        }
+                        throw error;
+                    })
+                );
             })
         );
     }

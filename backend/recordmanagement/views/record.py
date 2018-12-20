@@ -1,95 +1,83 @@
-""" rlcapp - record and organization management software for refugee law clinics
-Copyright (C) 2018  Dominik Walser
+#  rlcapp - record and organization management software for refugee law clinics
+#  Copyright (C) 2018  Dominik Walser
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as
+#  published by the Free Software Foundation, either version 3 of the
+#  License, or (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/> """
-from rest_framework import viewsets, mixins
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import status
 from django.db.models import Q
 import os
 
 from backend.recordmanagement import models, serializers
-from backend.api import permissions
 from backend.api.models import UserProfile
-from backend.api.statics.staticNames import StaticPermissionNames as Static
 from backend.api.other_functions.emails import EmailSender
-
-
-class RecordsFullDetailViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
-                               mixins.DestroyModelMixin, viewsets.GenericViewSet):
-    authentication_classes = (TokenAuthentication,)
-    serializer_class = serializers.RecordFullDetailSerializer
-    permission_classes = (permissions.EditRecord, IsAuthenticated)
-
-    def perform_create(self, serializer):
-        creator = models.UserProfile.objects.get(id=self.request.user.id)
-        client = models.Client.objects.get(id=self.request.data['client'])
-        user_rlcs = [str(rlc.id) for rlc in list(self.request.user.rlc_members.all())]
-        if self.request.data['from_rlc'] not in user_rlcs:
-            raise AttributeError
-        from_rlc = models.Rlc.objects.get(id=self.request.data['from_rlc'])
-        serializer.save(creator=creator, client=client, from_rlc=from_rlc)
-
-    def get_queryset(self):
-        return models.Record.objects.all()
+from backend.static.permissions import PERMISSION_VIEW_RECORDS_FULL_DETAIL
+from backend.static.error_codes import *
+from backend.api.errors import CustomError
 
 
 class RecordsListViewSet(viewsets.ViewSet):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
-
     def list(self, request):
+        """
+
+        :param request:
+        :return:
+        """
+        parts = request.query_params.get('search', '').split(' ')
         user = request.user
 
-        rlcs = list(user.rlc_members.all())
-        search = request.query_params.get('search', '')
-        parts = search.split(' ')
-        search_query = Q()
-        for part in parts:
-            search_query.add(
-                Q(tagged__name__contains=part) | Q(note__contains=part) | Q(working_on_record__name__contains=part),
-                Q.AND)
-
         if user.is_superuser:
-            queryset = models.Record.objects.filter(search_query)
-            serializer = serializers.RecordFullDetailSerializer(queryset, many=True)
+            entries = models.Record.objects.all()
+            for part in parts:
+                consultants = UserProfile.objects.filter(name__icontains=part)
+                entries = entries.filter(
+                    Q(tagged__name__icontains=part) | Q(note__icontains=part) | Q(working_on_record__in=consultants)).distinct()
+            serializer = serializers.RecordFullDetailSerializer(entries, many=True)
             return Response(serializer.data)
 
-        records = []
-        for rlc in rlcs:
-            if user.has_permission(Static.VIEW_RECORDS_FULL_DETAIL, for_rlc=rlc.id):
-                queryset = models.Record.objects.filter(search_query, from_rlc_id=rlc.id)
-                serializer = serializers.RecordFullDetailSerializer(queryset, many=True)
-                records += serializer.data
-            else:
-                queryset = models.Record.objects.filter(search_query,
-                                                        id__in=user.working_on_record.values_list('id', flat=True),
-                                                        from_rlc_id=rlc.id).distinct()
-                serializer = serializers.RecordFullDetailSerializer(queryset, many=True)
-                records += serializer.data
+        entries = models.Record.objects.filter(from_rlc=user.rlc)
+        # entries = models.Record.objects.filter_by_rlc(user.rlc)
+        for part in parts:
+            consultants = UserProfile.objects.filter(name__icontains=part)
+            entries = entries.filter(
+                Q(tagged__name__icontains=part) | Q(note__icontains=part) | Q(working_on_record__in=consultants)).distinct()
+        # entries = entries.filter_by_search_parts(parts)
 
-                queryset = models.Record.objects.exclude(
-                    id__in=user.working_on_record.values_list('id', flat=True)).filter(
-                    search_query, from_rlc_id=rlc.id).distinct()
-                serializer = serializers.RecordNoDetailSerializer(queryset, many=True)
-                records += serializer.data
+        records = []
+        if user.has_permission(PERMISSION_VIEW_RECORDS_FULL_DETAIL, for_rlc=user.rlc):
+            queryset = entries
+            serializer = serializers.RecordFullDetailSerializer(queryset, many=True)
+            records += serializer.data
+        else:
+            queryset = entries.get_full_access_records(user).distinct()
+            serializer = serializers.RecordFullDetailSerializer(queryset, many=True)
+            records += serializer.data
+
+            # queryset = entries.exclude(
+            #     id__in=user.working_on_record.values_list('id', flat=True)).distinct()
+            a = list(entries)
+            queryset = entries.get_no_access_records(user)
+            b = list(queryset)
+            serializer = serializers.RecordNoDetailSerializer(queryset, many=True)
+            records += serializer.data
         return Response(records)
 
     def create(self, request):
-        rlc = request.user.rlc_members.first()
+        """outdated"""
+        rlc = request.user.rlc
         record = models.Record(client_id=request.data['client'], first_contact_date=request.data['first_contact_date'],
                                last_contact_date=request.data['last_contact_date'],
                                record_token=request.data['record_token'],
@@ -105,26 +93,29 @@ class RecordsListViewSet(viewsets.ViewSet):
         return Response(serializers.RecordFullDetailSerializer(record).data)
 
     def retrieve(self, request, pk=None):
-        queryset = models.Record.objects.get(pk=pk)
-        if request.user.rlc_members.first() != queryset.from_rlc:
-            return Response({'error': 'wrong rlc', 'error_token': 'api.retrieve_record.wrong_rlc'}, status=400)
-        if request.user.has_permission(Static.VIEW_RECORDS_FULL_DETAIL) or request.user.working_on_record.filter(
-            id=pk).count() == 1:
-            serializer = serializers.RecordFullDetailSerializer(queryset)
+        try:
+            record = models.Record.objects.get(pk=id)
+        except Exception as e:
+            raise CustomError(ERROR__RECORD__DOCUMENT__NOT_FOUND)
+
+        if request.user.rlc != record.from_rlc:
+            raise CustomError(ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC)
+        if record.user_has_permission(request.user):
+            serializer = serializers.RecordFullDetailSerializer(record)
         else:
-            serializer = serializers.RecordNoDetailSerializer(queryset)
+            serializer = serializers.RecordNoDetailSerializer(record)
         return Response(serializer.data)
 
 
 class RecordViewSet(APIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
-
     def post(self, request):
         data = request.data
-        rlc = request.user.rlc_members.first()
+        rlc = request.user.rlc
         if 'client_id' in data:
-            client = models.Client.objects.get(pk=data['client_id'])
+            try:
+                client = models.Client.objects.get(pk=data['client_id'])
+            except:
+                raise CustomError(ERROR__RECORD__CLIENT__NOT_EXISTING)
             client.note = data['client_note']
             client.phone_number = data['client_phone_number']
             client.save()
@@ -159,18 +150,22 @@ class RecordViewSet(APIView):
     def get(self, request, id):
         record = models.Record.objects.get(pk=id)
         user = request.user
-        if user.rlc_members.first() != record.from_rlc and not user.is_superuser:
-            return Response({'error': 'wrong rlc', 'error_token': 'api.retrieve_record.wrong_rlc'}, status=400)
+        if user.rlc != record.from_rlc and not user.is_superuser:
+            raise CustomError(ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC)
 
-        if user.working_on_record.filter(id=id).count() == 1:
+        if record.user_has_permission(user):
             record_serializer = serializers.RecordFullDetailSerializer(record)
             client_serializer = serializers.ClientSerializer(record.client)
             origin_country = serializers.OriginCountrySerializer(record.client.origin_country)
+            documents = serializers.RecordDocumentSerializer(record.record_documents, many=True)
+            messages = serializers.RecordMessageSerializer(record.record_messages, many=True)
 
             return Response({
                 'record': record_serializer.data,
                 'client': client_serializer.data,
-                'origin_country': origin_country.data
+                'origin_country': origin_country.data,
+                'record_documents': documents.data,
+                'record_messages': messages.data
             })
         else:
             serializer = serializers.RecordNoDetailSerializer(record)
@@ -179,10 +174,10 @@ class RecordViewSet(APIView):
     def patch(self, request, id):
         record = models.Record.objects.get(pk=id)
         user = request.user
-        if user.rlc_members.first() != record.from_rlc and not user.is_superuser:
-            return Response({'error': 'wrong rlc', 'error_token': 'api.retrieve_record.wrong_rlc'}, status=400)
+        if user.rlc != record.from_rlc and not user.is_superuser:
+            raise CustomError(ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC)
 
-        if user.working_on_record.filter(id=id).count() == 1:
+        if record.user_has_permission(user):
             if request.data['record_note']:
                 record.note = request.data['record_note']
             record.save()
@@ -193,10 +188,9 @@ class RecordViewSet(APIView):
                 else:
                     url = 'no url, please contact the administrator'
 
-                EmailSender.send_email_notification((user.email, ), "Patched Record",
+                EmailSender.send_email_notification((user.email,), "Patched Record",
                                                     "RLC Intranet Notification - A record of yours was changed. Look here:" +
                                                     url)
 
             return Response({'success': 'true'})
-
-        return Response({'no permission': 'true'})
+        raise CustomError(ERROR__API__PERMISSION__INSUFFICIENT)

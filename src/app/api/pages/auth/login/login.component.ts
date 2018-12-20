@@ -39,18 +39,17 @@ export class LoginComponent implements OnInit {
         }
 
         this.loginForm = new FormGroup({
-            email: new FormControl("", [
+            email: new FormControl("abc@web.de", [
                 Validators.required,
                 Validators.email
             ]),
-            password: new FormControl("", [Validators.required])
+            password: new FormControl("formel11.F", [Validators.required])
         });
     }
 
     ngOnInit() {}
 
     onLogInClick() {
-        console.log('login clicked');
         if (this.loginForm.valid)
             this.appSB.login(this.loginForm.value.email, this.loginForm.value.password);
     }

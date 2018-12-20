@@ -21,7 +21,8 @@
     <mat-card-header>
         <h2>Records</h2>
         <mat-form-field class="records-list__search-input">
-            <input matInput type="text" placeholder="Search" [(ngModel)]="value" (keyup.enter)="onSearchClick()">
+            <input matInput type="text" placeholder="Search" [(ngModel)]="value" (keyup.enter)="onSearchClick()"
+                   (input)="onSearchChange($event.target.value)">
             <button mat-button matSuffix mat-icon-button aria-label="Search" (click)="onSearchClick()">
                 <mat-icon>search</mat-icon>
             </button>
@@ -29,13 +30,15 @@
     </mat-card-header>
 
     <mat-card-content>
-        <div class="records-list__table-container mat-elevation-z8">
+        <div class="records-list__table-container">
             <table mat-table [dataSource]="(records | async)">
                 <ng-container matColumnDef="access" class="records-list__access-container">
                     <th mat-header-cell *matHeaderCellDef>access</th>
                     <td mat-cell *matCellDef="let record">
-                        <div
-                            [class]="record.note ? 'record-list-item__access-indicator record-list-item__access-indicator--full' : 'record-list-item__access-indicator'"></div>
+                        <!--<div-->
+                            <!--[class]="(record.note || record.note === '') ? 'record-list-item__access-indicator record-list-item__access-indicator&#45;&#45;full' : 'record-list-item__access-indicator'"></div>-->
+                        <mat-icon *ngIf="(record.note || record.note === ''); else not_visible">visibility</mat-icon>
+                        <ng-template #not_visible><mat-icon>visibility_off</mat-icon></ng-template>
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="token">
@@ -44,7 +47,7 @@
                         <p>{{ record.token }}</p>
                     </td>
                 </ng-container>
-                <ng-container matColumnDef="state">
+                <ng-container matColumnDef="state" class="records-list__state-container">
                     <th mat-header-cell *matHeaderCellDef>state</th>
                     <td mat-cell *matCellDef="let record">
                         <div [ngSwitch]="record.state">

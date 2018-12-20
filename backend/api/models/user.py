@@ -1,29 +1,25 @@
-""" rlcapp - record and organization management software for refugee law clinics
-Copyright (C) 2018  Dominik Walser
+#  rlcapp - record and organization management software for refugee law clinics
+#  Copyright (C) 2018  Dominik Walser
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as
+#  published by the Free Software Foundation, either version 3 of the
+#  License, or (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/> """
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.core.validators import RegexValidator
 
 from . import HasPermission, Permission
-
-# TODO: extra member model?? for managing member (member ressort)
-# TODO: correct Validator, make sure to edit corresponding tests
-phone_regex = RegexValidator(regex=r'^\+{0,2}\d{9,15}$',
-                             message="Phone number must be entered "
-                                     "in the format: Up to 15 digits allowed.")
+from backend.static.regex_validators import phone_regex
 
 
 class UserProfileManager(BaseUserManager):
@@ -82,35 +78,44 @@ class UserProfileManager(BaseUserManager):
                                             permission_for_group=for_group,
                                             permission_for_rlc=for_rlc).values('rlc_has_permission')
         rlc_ids = [has_permission['rlc_has_permission'] for has_permission in rlcs]
-        result = result | UserProfile.objects.filter(rlc_members__in=rlc_ids).distinct()
+        result = result | UserProfile.objects.filter(rlc__in=rlc_ids).distinct()
 
         return result
 
 
 class UserProfile(AbstractBaseUser, PermissionsMixin):
     """ profile of users """
-    # TODO: regex for all?
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     birthday = models.DateField(null=True)
     phone_number = models.CharField(validators=[phone_regex], max_length=17, null=True, default=None)
 
     # address
-    street = models.CharField(max_length=255, default=None, null=True)  # TODO: number?, but 13a
+    street = models.CharField(max_length=255, default=None, null=True)
     city = models.CharField(max_length=255, default=None, null=True)
     postal_code = models.CharField(max_length=255, default=None, null=True)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
+    rlc = models.ForeignKey('Rlc', related_name='rlc_members', on_delete=models.SET_NULL, null=True)
+
     objects = UserProfileManager()
 
     user_states_possible = (
         ('ac', 'active'),
+        ('ia', 'inactive'),
         ('ex', 'exam'),
         ('ab', 'abroad')
-    )  # TODO: implement
+    )
 
+    user_record_states_possible = (
+        ('ac', 'accepting'),
+        ('na', 'not accepting'),
+        ('de', 'depends')
+    )
+
+    # in bearbeitung, abgeschlossen,
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']  # email already in there, other are default
 
@@ -140,14 +145,15 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         """
         Returns: all HasPermissions the groups in which the user is member of have as list
         """
-        rlcs = [rlc['id'] for rlc in list(self.rlc_members.values('id'))]
-        return list(HasPermission.objects.filter(rlc_has_permission_id__in=rlcs))
+        return list(HasPermission.objects.filter(rlc_has_permission_id=self.rlc.id))
 
     def get_overall_permissions(self):
         """
         Returns: all HasPermissions which the user has direct and
                     indirect (through membership in a group or rlc) as list
         """
+        if self.is_superuser:
+            return HasPermission.objects.all()
         return self.get_as_user_permissions() + self.get_as_group_member_permissions() + \
                self.get_as_rlc_member_permissions()
 
@@ -165,11 +171,10 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         return list(HasPermission.objects.filter(group_has_permission_id__in=groups, permission_id=permission))
 
     def get_as_rlc_member_special_permissions(self, permission):
-        rlcs = [rlc['id'] for rlc in list(self.rlc_members.values('id'))]
-        return list(HasPermission.objects.filter(rlc_has_permission_id__in=rlcs, permission_id=permission))
+        return list(HasPermission.objects.filter(rlc_has_permission_id=self.rlc.id, permission_id=permission))
 
     def get_overall_special_permissions(self, permission):
-        if isinstance(permission, str):  # TODO new test
+        if isinstance(permission, str):
             permission = Permission.objects.get(name=permission).id
         return self.get_as_user_special_permissions(permission) + self.get_as_group_member_special_permissions(
             permission) + self.get_as_rlc_member_special_permissions(permission)
@@ -188,8 +193,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
                                             permission_for_rlc_id=for_rlc).count() >= 1
 
     def has_as_rlc_member_permission(self, permission, for_user=None, for_group=None, for_rlc=None):
-        rlcs = [rlc['id'] for rlc in list(self.rlc_members.values('id'))]
-        return HasPermission.objects.filter(rlc_has_permission_id__in=rlcs, permission_id=permission,
+        return HasPermission.objects.filter(rlc_has_permission_id=self.rlc.id, permission_id=permission,
                                             permission_for_user_id=for_user,
                                             permission_for_group_id=for_group,
                                             permission_for_rlc_id=for_rlc).count() >= 1

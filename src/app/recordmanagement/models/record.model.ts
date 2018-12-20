@@ -16,13 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
+import {Tag} from './tag.model';
+
 export class RestrictedRecord {
     constructor(
         public id: number,
         public token: string,
         public last_contact_date: Date,
         public state: string,
-        public tags: [number, string],
+        public tags: Tag[],
         public working_on_record: [number, string]
     ) {
         this.id = id;
@@ -39,7 +41,7 @@ export class RestrictedRecord {
             json.record_token,
             new Date(json.last_contact_date),
             json.state,
-            json.tagged,
+            Tag.getTagsFromJsonArray(json.tagged),
             json.working_on_record
         );
     }
@@ -51,12 +53,11 @@ export class FullRecord extends RestrictedRecord {
         token: string,
         last_contact_date: Date,
         state: string,
-        tags: [number, string],
+        tags: Tag[],
         working_on_record: [number, string],
         public created_on: Date,
         public last_edited: Date,
         public first_contact_date: Date,
-        //public record_token: string,
         public note: string,
         public from_rlc: number,
         public client: number
@@ -65,7 +66,6 @@ export class FullRecord extends RestrictedRecord {
         this.created_on = created_on;
         this.last_edited = last_edited;
         this.first_contact_date = first_contact_date;
-        //this.record_token = record_token;
         this.note = note;
         this.from_rlc = from_rlc;
         this.client = client;
@@ -77,12 +77,11 @@ export class FullRecord extends RestrictedRecord {
             json.record_token,
             new Date(json.last_contact_date),
             json.state,
-            json.tagged,
+            Tag.getTagsFromJsonArray(json.tagged),
             json.working_on_record,
             new Date(json.created_on),
             new Date(json.last_edited),
             new Date(json.first_contact_date),
-            //json.record_token,
             json.note,
             json.from_rlc,
             json.client

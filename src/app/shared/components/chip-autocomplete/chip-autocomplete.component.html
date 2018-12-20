@@ -1,9 +1,10 @@
 <form [formGroup]="valuesForm">
-    <mat-form-field (click)="onFormFieldClick()">
+    <mat-form-field (click)="onFormFieldClick()" class="chip-autocomplete__form-field">
         <mat-chip-list #chipList>
             <mat-chip
                 *ngFor="let value of selectedValues"
                 (removed)="removeValue(value)"
+                (dblclick)="removeValue(value)"
             >
                 {{ value.getFilterableProperty() }}
                 <mat-icon matChipRemove>cancel</mat-icon>

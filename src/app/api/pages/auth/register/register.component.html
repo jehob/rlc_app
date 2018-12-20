@@ -17,15 +17,15 @@
             <input matInput placeholder="name*" formControlName="name">
         </mat-form-field>
         <mat-form-field class="register__input-item">
-            <input matInput placeholder="password*" type="password" formControlName="password">
+            <input matInput id="password" placeholder="password*" type="password" formControlName="password">
             <mat-error *ngIf="userForm.controls['password'].errors && userForm.controls['password'].errors.weak">password must contain at least 1 special,
-                1 upper case, 1 lower case and a digit character
+                1 upper case, 1 lower case character and a digit
             </mat-error>
             <mat-error *ngIf="userForm.controls['password'].errors && userForm.controls['password'].errors.short">password too short
             </mat-error>
         </mat-form-field>
         <mat-form-field class="register__input-item">
-            <input matInput placeholder="confirm password*" type="password" formControlName="password_confirm">
+            <input matInput id="password_repeat" placeholder="confirm password*" type="password" formControlName="password_confirm">
             <mat-error *ngIf="userForm.errors && userForm.errors.mismatch">
                 passwords must be the same
             </mat-error>

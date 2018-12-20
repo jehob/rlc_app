@@ -18,28 +18,33 @@
 
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import { AppState } from "../../store/app.reducers";
+import { take } from "rxjs/operators";
+import moment from "moment";
+import { HttpClient } from "@angular/common/http";
 import { select, Store } from "@ngrx/store";
+
+import { AppState } from "../../store/app.reducers";
 import { ApiState } from "../store/api.reducers";
 import { FullUser } from "../models/user.model";
-import { take } from "rxjs/operators";
 import {
     StartCreateUser,
     StartLoadingOtherUsers,
     StartPatchUser
 } from "../store/api.actions";
-import { MatSnackBar, MatSnackBarConfig } from "@angular/material";
-import moment from "moment";
-import { HttpClient } from "@angular/common/http";
 import { RLCS_URL } from "../../statics/api_urls.statics";
+import { StorageService } from "../../shared/services/storage.service";
+import { SnackbarService } from "../../shared/services/snackbar.service";
+import { Observable } from "rxjs";
+import { HasPermission, Permission } from "../models/permission.model";
 
 @Injectable()
 export class ApiSandboxService {
     constructor(
         public router: Router,
-        private snackBar: MatSnackBar,
+        private snackbarService: SnackbarService,
         private appStateStore: Store<AppState>,
         private apiStateStore: Store<ApiState>,
+        private storageService: StorageService,
         private http: HttpClient
     ) {}
 
@@ -47,8 +52,57 @@ export class ApiSandboxService {
         return moment(date).format("YYYY-MM-DD");
     }
 
-    getUser() {
+    getUser(): Observable<FullUser> {
         return this.apiStateStore.pipe(select((state: any) => state.api.user));
+    }
+
+    getUserPermissions(): Observable<HasPermission[]> {
+        return this.apiStateStore.pipe(
+            select((state: any) => state.api.user_permissions)
+        );
+    }
+
+    hasPermissionFromString(permission: string, subscriberCallback): void {
+        /*
+        checks if the user has permission and returns to subscriberCallback true or false
+         */
+        this.apiStateStore
+            .pipe(select((state: any) => state.api.all_permissions))
+            .subscribe((all_permissions: Permission[]) => {
+                if (all_permissions.length > 0) {
+                    try {
+                        const id = Number(
+                            all_permissions.filter(
+                                single_permission =>
+                                    single_permission.name === permission
+                            )[0].id
+                        );
+                        this.hasPermissionFromId(id, subscriberCallback);
+                    } catch (e) {
+                        subscriberCallback(false);
+                    }
+
+                }
+            });
+    }
+
+    hasPermissionFromId(permission: number, subscriberCallback): void {
+        /*
+        checks if the user has permission and returns to subscriberCallback true or false
+         */
+        this.apiStateStore
+            .pipe(select((state: any) => state.api.user_permissions))
+            .subscribe((user_permissions: HasPermission[]) => {
+                const result = user_permissions.filter(
+                    (hasPermission: HasPermission) =>
+                        Number(hasPermission.permission_id) === permission
+                );
+                if (result.length === 0) {
+                    subscriberCallback(false);
+                } else {
+                    subscriberCallback(true);
+                }
+            });
     }
 
     patchUser(user: FullUser) {
@@ -86,18 +140,23 @@ export class ApiSandboxService {
     }
 
     showSuccessSnackBar(message: string) {
-        const config = new MatSnackBarConfig();
-        config.panelClass = ["snackbar__success"];
-        config.duration = 2500;
-        config.verticalPosition = "top";
-        this.snackBar.open(message, "", config);
+        this.snackbarService.showSuccessSnackBar(message);
     }
 
     showErrorSnackBar(message: string) {
-        const config = new MatSnackBarConfig();
-        config.panelClass = ["snackbar__error"];
-        config.duration = 2500;
-        config.verticalPosition = "top";
-        this.snackBar.open(message, "", config);
+        this.snackbarService.showErrorSnackBar(message);
+    }
+
+    uploadProfilePicture(file: File) {
+        this.storageService.uploadFile(file, "profile_pictures");
+    }
+
+    downloadSingleFile(filekey: string) {
+        this.storageService.downloadFile(filekey);
+    }
+
+    relogUser(){
+        console.log('relog user');
+        this.router.navigate(['login']);
     }
 }

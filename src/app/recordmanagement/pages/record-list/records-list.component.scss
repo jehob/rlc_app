@@ -20,11 +20,11 @@
 
 .records-list__container {
     max-width: 1500px;
-    padding: 30px;
+    padding: 15px;
     //width: 900px;
     //overflow-y: scroll;
-    max-height: 93vh;
-    height: auto;
+    //max-height: 93vh;
+    height: 90%;
 }
 mat-card-header {
     width: 100%;
@@ -36,8 +36,12 @@ mat-card-header {
 }
 .records-list__table-container {
     overflow: auto;
-    max-height: 89vh;
+    height: 100%;
     //overflow-y: scroll;
+}
+
+mat-card-content{
+    height: 90%;
 }
 table {
     width: 100%;
@@ -46,6 +50,11 @@ table {
 .records-list__access-container {
     max-width: 60px;
 }
+
+.records-list__state-container {
+    margin: 5px;
+}
+
 .records-list__mat-column-consultants{
     width: auto;
     padding: 2px;

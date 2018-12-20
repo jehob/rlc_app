@@ -22,7 +22,7 @@ import { Observable } from "rxjs";
 import { RestrictedRecord} from '../../models/record.model';
 import { ActivatedRoute, Router } from "@angular/router";
 import {RestrictedUser} from '../../../api/models/user.model';
-import {RecordTag} from '../../models/record_tags.model';
+import {Tag} from '../../models/tag.model';
 import {GetRecordsSearchURL} from '../../../statics/api_urls.statics';
 
 @Component({
@@ -31,9 +31,11 @@ import {GetRecordsSearchURL} from '../../../statics/api_urls.statics';
     styleUrls: ["./records-list.component.scss"]
 })
 export class RecordsListComponent implements OnInit {
+    timeout = 400;
     records: Observable<RestrictedRecord[]>;
     columns = ['access', 'token', 'state', 'consultants', 'tags'];
     value = "";
+    timer = null;
 
     constructor(
         private recordsSandbox: RecordsSandboxService,
@@ -61,11 +63,20 @@ export class RecordsListComponent implements OnInit {
         } else this.router.navigateByUrl(`records`);
     }
 
+    onSearchChange(searchValue: string){
+        clearTimeout(this.timer);
+        this.timer = setTimeout(this.fireSearch.bind(this), this.timeout);
+    }
+
+    fireSearch(): void{
+        this.onSearchClick();
+    }
+
     onRecordSelect(record: RestrictedRecord){
         this.router.navigateByUrl(`records/${record.id}`);
     }
 
-    onTagClick(tag: RecordTag){
+    onTagClick(tag: Tag){
         this.router.navigateByUrl(`records?search=${tag.name}`);
     }
 

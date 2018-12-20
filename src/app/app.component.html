@@ -16,12 +16,26 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<mat-drawer-container class="root-container">
-    <mat-drawer class="f-white" mode="side" opened *ngIf="(authState | async).authenticated">
+<div class="root-container" [class.example-is-mobile]="mobileQuery.matches">
+    <mat-toolbar class="root-toolbar">
+        <button mat-icon-button (click)="toggleNav()"><mat-icon>menu</mat-icon></button>
+        <img src="../../static/images/rlc_intranet_logo.png" alt="RLC App">        
+        <h1>RLC app</h1>
+    </mat-toolbar>
 
-    <app-sidebar></app-sidebar>
-    </mat-drawer>
-    <mat-drawer-content>
-        <router-outlet></router-outlet>
-    </mat-drawer-content>
-</mat-drawer-container>
+    <mat-sidenav-container class="sidenav-container"
+                            [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+
+        <mat-sidenav #snav [opened]="mobileQuery.matches ? 'false' : 'true'" [mode]="mobileQuery.matches ? 'over' : 'side'"
+                    [fixedInViewport]="mobileQuery.matches" fixedTopGap="56" *ngIf="(authState | async).authenticated">
+            <mat-nav-list>
+                <app-sidebar></app-sidebar>
+            </mat-nav-list>
+        </mat-sidenav>
+
+        <mat-sidenav-content>
+            <router-outlet></router-outlet>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</div>
+

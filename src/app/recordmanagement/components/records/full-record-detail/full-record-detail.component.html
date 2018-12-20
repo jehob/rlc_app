@@ -1,8 +1,27 @@
+<!--
+  ~ rlcapp - record and organization management software for refugee law clinics
+  ~ Copyright (C) 2018  Dominik Walser
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
 <mat-card>
     <mat-card-header>
-        <h1>record: {{ record.token }}</h1>
+        <h1>Record: {{ record.token }}</h1>
     </mat-card-header>
     <mat-card-content>
+        <h1>Information</h1>
         <div>
             <form [formGroup]="recordEditForm" (ngSubmit)="onSaveClick()" class="full-record-detail__form">
                 <mat-form-field>
@@ -20,20 +39,26 @@
                 </div>
                 <div>
                     <mat-label>Tags</mat-label>
-                    <mat-chip-list>
+                    <mat-chip-list class="full-record-detail__chip-list">
                         <mat-chip *ngFor="let tag of record.tags" (click)="this.onTagClick(tag)">{{ tag.name }}</mat-chip>
-
                     </mat-chip-list>
                 </div>
                 <mat-form-field>
                     <textarea matInput type="text" placeholder="note" formControlName="note"></textarea>
                 </mat-form-field>
 
+                <div>
+                    <button mat-flat-button color="warn" aria-label="Back" (click)="onBackClick()" type="button" class="full-record-detail__button">
+                        Back
+                    </button>
+                    <button mat-flat-button matSuffix color="primary" aria-label="Search" type="submit" class="full-record-detail__button">
+                        Save
+                    </button>
+                </div>
 
-                <button mat-button matSuffix aria-label="Search" type="submit">
-                    Save
-                </button>
             </form>
         </div>
+        <app-record-documents-list [documents]="record_documents"></app-record-documents-list>
+        <app-record-messages [messages]="record_messages"></app-record-messages>
     </mat-card-content>
 </mat-card>
