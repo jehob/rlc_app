@@ -23,9 +23,9 @@
                 {{record_document.name}}
             </mat-panel-title>
             <mat-panel-description>
-                <p *ngFor="let tag of record_document.tags">{{tag.name}}</p>
+                <div *ngFor="let tag of record_document.tags" class="record-document-item__tags">{{tag.name}}</div>
             </mat-panel-description>
-            <mat-icon (click)="onDownload($event)">cloud_download</mat-icon>
+            <mat-icon (click)="onDownload($event)" class="record-document-item__download-icon">cloud_download</mat-icon>
         </mat-expansion-panel-header>
         <div class="record-document-item__expansion-panel-content">
             <div>

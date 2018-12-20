@@ -28,6 +28,6 @@
         <mat-form-field class="record-messages__sending-container">
             <input matInput placeholder="message..." formControlName="message">
         </mat-form-field>
-        <button class="record-messages__send-button" mat-flat-button [disabled]="!messageForm.valid" type="submit">send</button>
+        <button class="record-messages__send-button" mat-flat-button [disabled]="!messageForm.controls['message'].value" type="submit">send</button>
     </form>
 </div>

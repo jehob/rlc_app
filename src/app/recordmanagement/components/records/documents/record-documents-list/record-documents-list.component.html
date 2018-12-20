@@ -16,13 +16,15 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<div class="record-documents-list__container">
+<div>
+    <h1>Files</h1>
     <div>
         <div *ngFor="let document of documents">
             <app-record-document-item [record_document]="document"></app-record-document-item>
         </div>
     </div>
-    <div>
-        <input type="file" id="your-files" multiple (drop)="dropped($event)" (change)="selected($event)">
+    <div (drop)="dropped($event)" class="record-documents-list__dropper" (dragover)="dragover($event)">
+        <p>drop files here to upload</p>
+        <!--<input type="file" id="your-files" multiple (drop)="dropped($event)" (change)="selected($event)">-->
     </div>
 </div>
