@@ -49,4 +49,8 @@ export class RecordDocumentsListComponent implements OnInit {
     onDocumentClick(document: RecordDocument){
         this.recordSB.downloadRecordDocument(document.name);
     }
+
+    dragover($event){
+        $event.preventDefault();
+    }
 }

@@ -49,10 +49,12 @@ class RecordsListViewSet(viewsets.ViewSet):
             return Response(serializer.data)
 
         entries = models.Record.objects.filter(from_rlc=user.rlc)
+        # entries = models.Record.objects.filter_by_rlc(user.rlc)
         for part in parts:
             consultants = UserProfile.objects.filter(name__icontains=part)
             entries = entries.filter(
                 Q(tagged__name__icontains=part) | Q(note__icontains=part) | Q(working_on_record__in=consultants)).distinct()
+        # entries = entries.filter_by_search_parts(parts)
 
         records = []
         if user.has_permission(PERMISSION_VIEW_RECORDS_FULL_DETAIL, for_rlc=user.rlc):
@@ -60,13 +62,15 @@ class RecordsListViewSet(viewsets.ViewSet):
             serializer = serializers.RecordFullDetailSerializer(queryset, many=True)
             records += serializer.data
         else:
-            queryset = entries.filter(
-                id__in=user.working_on_record.values_list('id', flat=True)).distinct()
+            queryset = entries.get_full_access_records(user).distinct()
             serializer = serializers.RecordFullDetailSerializer(queryset, many=True)
             records += serializer.data
 
-            queryset = entries.exclude(
-                id__in=user.working_on_record.values_list('id', flat=True)).distinct()
+            # queryset = entries.exclude(
+            #     id__in=user.working_on_record.values_list('id', flat=True)).distinct()
+            a = list(entries)
+            queryset = entries.get_no_access_records(user)
+            b = list(queryset)
             serializer = serializers.RecordNoDetailSerializer(queryset, many=True)
             records += serializer.data
         return Response(records)
@@ -149,7 +153,7 @@ class RecordViewSet(APIView):
         if user.rlc != record.from_rlc and not user.is_superuser:
             raise CustomError(ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC)
 
-        if user.working_on_record.filter(id=id).count() == 1:
+        if record.user_has_permission(user):
             record_serializer = serializers.RecordFullDetailSerializer(record)
             client_serializer = serializers.ClientSerializer(record.client)
             origin_country = serializers.OriginCountrySerializer(record.client.origin_country)
@@ -173,7 +177,7 @@ class RecordViewSet(APIView):
         if user.rlc != record.from_rlc and not user.is_superuser:
             raise CustomError(ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC)
 
-        if user.working_on_record.filter(id=id).count() == 1:
+        if record.user_has_permission(user):
             if request.data['record_note']:
                 record.note = request.data['record_note']
             record.save()

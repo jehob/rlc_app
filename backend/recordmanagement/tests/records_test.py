@@ -16,12 +16,13 @@
 
 from rest_framework.test import APIClient
 from django.test import TransactionTestCase
+from datetime import date, datetime
+
 from backend.api.models import UserProfile, Rlc
-from backend.recordmanagement.models import Record, Client
+from backend.recordmanagement.models import Record, Client, RecordPermission
 from backend.api.tests.fixtures import CreateFixtures
 from backend.api.tests.statics import StaticTestMethods
 from backend.static.permissions import *
-from datetime import date, datetime
 
 
 class RecordTests(TransactionTestCase):
@@ -143,3 +144,21 @@ class RecordTests(TransactionTestCase):
         self.assertTrue(record.user_has_permission(user1))
         self.assertTrue(record.user_has_permission(user2))
         self.assertTrue(not record.user_has_permission(user3))
+
+    def test_user_has_permission_record_permissions(self):
+        user1 = UserProfile(email='abc1@web.de', name="abc1")
+        user1.save()
+        user2 = UserProfile(email='abc2@web.de', name="abc2")
+        user2.save()
+        user3 = UserProfile(email='abc3@web.de', name="abc3")
+        user3.save()
+        record = Record(record_token='asd123')
+        record.save()
+        record.working_on_record.add(user1)
+
+        permission = RecordPermission(request_from=user2, request_processed=user3, state='gr', record=record)
+        permission.save()
+
+        self.assertTrue(record.user_has_permission(user1))
+        self.assertTrue(record.user_has_permission(user2))
+

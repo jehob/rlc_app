@@ -22,7 +22,6 @@ from ..models import RecordTag, OriginCountry, Record, RecordDocumentTag
 
 
 class StaticViewSet(APIView):
-
     def get(self, request):
         user = request.user
 

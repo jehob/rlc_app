@@ -34,7 +34,7 @@ export class RecordMessagesComponent implements OnInit {
 
     constructor(private recordSB: RecordsSandboxService) {
         this.messageForm = new FormGroup({
-            message: new FormControl("", Validators.required)
+            message: new FormControl("")
         });
     }
 
@@ -42,6 +42,6 @@ export class RecordMessagesComponent implements OnInit {
 
     onSendClick() {
         this.recordSB.startAddingNewRecordMessage(this.messageForm.value.message);
-        this.messageForm.controls['message'].reset();
+        this.messageForm.controls['message'].setValue('');
     }
 }

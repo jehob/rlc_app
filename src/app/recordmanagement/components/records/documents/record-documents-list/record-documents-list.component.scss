@@ -15,16 +15,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
+@import '~src/styles/basic';
 
-
-.record-documents-list__container {
-    //border: solid green;
+.record-documents-list__dropper {
+    background: $c-background;
+    min-width: 150px;
+    min-height: 50px;
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
 }
 
-.record_documents_list__custom {
-    //border: solid green;
-}
-
-.record_documents_list__dropper {
-    border: solid red;
-}

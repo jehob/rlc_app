@@ -35,8 +35,10 @@
                 <ng-container matColumnDef="access" class="records-list__access-container">
                     <th mat-header-cell *matHeaderCellDef>access</th>
                     <td mat-cell *matCellDef="let record">
-                        <div
-                            [class]="record.note ? 'record-list-item__access-indicator record-list-item__access-indicator--full' : 'record-list-item__access-indicator'"></div>
+                        <!--<div-->
+                            <!--[class]="(record.note || record.note === '') ? 'record-list-item__access-indicator record-list-item__access-indicator&#45;&#45;full' : 'record-list-item__access-indicator'"></div>-->
+                        <mat-icon *ngIf="(record.note || record.note === ''); else not_visible">visibility</mat-icon>
+                        <ng-template #not_visible><mat-icon>visibility_off</mat-icon></ng-template>
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="token">
@@ -45,7 +47,7 @@
                         <p>{{ record.token }}</p>
                     </td>
                 </ng-container>
-                <ng-container matColumnDef="state">
+                <ng-container matColumnDef="state" class="records-list__state-container">
                     <th mat-header-cell *matHeaderCellDef>state</th>
                     <td mat-cell *matCellDef="let record">
                         <div [ngSwitch]="record.state">

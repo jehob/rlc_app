@@ -15,8 +15,53 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 from django.db import models
+from django.db.models import Q
 from backend.api.models import UserProfile, Rlc
 from backend.recordmanagement.models import RecordTag
+
+
+class RecordQuerySet(models.QuerySet):
+    def get_full_access_records(self, user):
+        from backend.recordmanagement.models import RecordPermission
+        permissions = RecordPermission.objects.filter(request_from=user, state='gr')
+
+        return self.filter(Q(id__in=user.working_on_record.values_list('id', flat=True)) | Q(
+            id__in=permissions.values_list('record_id', flat=True)))
+
+    def get_no_access_records(self, user):
+        # permissions = RecordPermission.objects.filter(request_from=user, state='gr')
+        # return self.exclude(Q(id__in=user.working_on_record.values_list('id', flat=True)) | Q(
+        #     id__in=permissions.values_list('record_id', flat=True)))
+        has_perm = self.get_full_access_records(user)
+        a = list(has_perm)
+        b = list(self)
+        c = list(self.exclude(id__in=has_perm.values_list('id', flat=True)))
+
+        return self.exclude(id__in=has_perm.values_list('id', flat=True))
+
+
+class RecordManager(models.Manager):
+    def get_query_set(self):
+        return RecordQuerySet(self.model, using=self._db)
+
+    # def __getattr__(self, item, *args):
+    #     if item.startwith("_"):
+    #         raise AttributeError
+    #     return getattr(self.get_query_set(), item, *args)
+
+    def get_full_access_record(self, user):
+        # from backend.recordmanagement.models import RecordPermission
+        # permissions = RecordPermission.objects.filter(request_from=user, state='gr')
+        #
+        # return Record.objects.filter(Q(id__in=user.working_on_record.values_list('id', flat=True)) | Q(
+        #     id__in=permissions.values_list('record_id', flat=True)))
+        return self.get_query_set().get_full_access_record(user)
+
+    def getNoAccessRecords(self, user):
+        from backend.recordmanagement.models import RecordPermission
+        permissions = RecordPermission.objects.filter(request_from=user, state='gr')
+        return Record.objects.exclude(Q(id__in=user.working_on_record.values_list('id', flat=True)) | Q(
+            id__in=permissions.values_list('record_id', flat=True)))
 
 
 class Record(models.Model):
@@ -49,6 +94,8 @@ class Record(models.Model):
 
     state = models.CharField(max_length=2, choices=record_states_possible)
 
+    objects = RecordQuerySet.as_manager()
+
     def __str__(self):
         return 'record: ' + str(self.id) + ':' + self.record_token
 
@@ -58,4 +105,7 @@ class Record(models.Model):
         :param user: the user to check
         :return: boolean, true if the user has permission
         """
-        return self.working_on_record.filter(id=user.id).count() == 1
+        from backend.recordmanagement.models import RecordPermission
+        return self.working_on_record.filter(id=user.id).count() == 1 or RecordPermission.objects.filter(record=self,
+                                                                                                         request_from=user,
+                                                                                                         state='gr')

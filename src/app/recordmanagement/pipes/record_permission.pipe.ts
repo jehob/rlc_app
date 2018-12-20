@@ -1,4 +1,4 @@
-/*!
+/*
  * rlcapp - record and organization management software for refugee law clinics
  * Copyright (C) 2018  Dominik Walser
  *
@@ -15,29 +15,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
-@import '~src/styles/basic';
 
-.record-document-item__expansion-panel-content {
-    display: flex;
-    flex-direction: column;
+import { Pipe, PipeTransform } from '@angular/core';
+import {RecordPermissionRequest} from '../models/record_permission.model';
+
+@Pipe({ name: 'recordPermissionsRequested' })
+export class RecordPermissionsRequestedPipe implements PipeTransform {
+    transform(allPermissionRequests: RecordPermissionRequest[]) {
+        return allPermissionRequests.filter(request => request.state === 're');
+    }
 }
 
-.record-document-item__expansion-panel-header {
-    height: 30px;
-}
-
-.mat-expansion-panel-header {
-    height: 30px;
-}
-
-.record-document-item__download-icon {
-    margin-right: 20px;
-}
-
-.record-document-item__tags {
-    margin-left: 18px;
-    background: $c-primary;
-    color: $c-on-primary;
-    border-radius: 5px;
-    padding: 5px;
+@Pipe({ name: 'recordPermissionsProcessed' })
+export class RecordPermissionsProcessedPipe implements PipeTransform {
+    transform(allPermissionRequests: RecordPermissionRequest[]) {
+        return allPermissionRequests.filter(request => request.state !== 're');
+    }
 }
