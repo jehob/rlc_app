@@ -21,6 +21,8 @@ import { Actions, Effect, ofType } from "@ngrx/effects";
 import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
 import { from } from "rxjs";
+import { isDevMode } from '@angular/core';
+
 import { Router } from "@angular/router";
 import {
     TRY_RELOAD_STATIC_INFORMATION,
@@ -79,7 +81,7 @@ export class AuthEffects {
                             error: string;
                             error_message: string;
                         }) => {
-                            console.log('successfull login');
+                            //console.log('successfull login');
                             localStorage.setItem("token", response.token);
                             if (this.guard.lastVisitedUrl)
                                 this.router.navigate([
@@ -126,10 +128,13 @@ export class AuthEffects {
         permissions: any;
         rlc: any;
     }) {
-        // for logging
-        LogRocket.identify(response.user.id);
-        // keep this console.log
-        console.log("identified: ", response.user.id);
+        // not on prod
+        if (!isDevMode()){
+            // for logging
+            LogRocket.identify(response.user.id);
+            // keep this console.log
+            console.log("identified: ", response.user.id);
+        }
         return [
             {
                 type: SET_USER,
