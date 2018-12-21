@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 
 import {RecordsSandboxService} from '../../../../services/records-sandbox.service';
 import {RecordDocument} from '../../../../models/record_document.model';
@@ -28,6 +28,9 @@ import {RecordDocument} from '../../../../models/record_document.model';
 export class RecordDocumentsListComponent implements OnInit {
     @Input()
     documents: RecordDocument;
+
+    @ViewChild("fileInput")
+    fileInput: ElementRef<HTMLInputElement>;
 
     constructor(private recordSB: RecordsSandboxService) {}
 
@@ -43,7 +46,9 @@ export class RecordDocumentsListComponent implements OnInit {
 
     selected($event){
         event.preventDefault();
-        console.log($event);
+        //console.log($event);
+        const files = Array.from(this.fileInput.nativeElement.files);
+        this.recordSB.uploadRecordDocuments(files);
     }
 
     onDocumentClick(document: RecordDocument){
