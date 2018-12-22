@@ -136,3 +136,8 @@ ERROR__RECORD__PERMISSION__NO_REQUESTS_FOUND = {
     'error_detail': 'no requests in database',
     'error_code': 'record.permission.no_requests_found'
 }
+
+ERROR__API__REGISTER__NO_RLC_PROVIDED = {
+    'error_detail': 'no rlc was provided',
+    'error_code': 'api.register.no_rlc_provided'
+}

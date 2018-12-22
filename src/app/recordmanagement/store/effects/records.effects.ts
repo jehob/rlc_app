@@ -123,7 +123,7 @@ export class RecordsEffects {
             return action.payload;
         }),
         mergeMap((record: RestrictedRecord) => {
-            console.log("effect fired");
+            //console.log("effect fired");
             // TODO
             return from(
                 this.http

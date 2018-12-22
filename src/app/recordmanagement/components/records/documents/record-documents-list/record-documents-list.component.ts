@@ -46,7 +46,6 @@ export class RecordDocumentsListComponent implements OnInit {
 
     selected($event){
         event.preventDefault();
-        //console.log($event);
         const files = Array.from(this.fileInput.nativeElement.files);
         this.recordSB.uploadRecordDocuments(files);
     }

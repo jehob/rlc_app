@@ -41,8 +41,6 @@ export class RecordDocumentItemComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log('document arrived', this.record_document);
-        console.log('tagged', this.record_document.tags);
         this.selectedTags = this.record_document.tags;
     }
 
@@ -52,7 +50,6 @@ export class RecordDocumentItemComponent implements OnInit {
     }
 
     selectedDocumentTagsChanged(selectedTags: Tag[]){
-        console.log('changed', selectedTags);
         this.recordSB.startSettingDocumentTags(selectedTags, this.record_document.id.toString());
     }
 }

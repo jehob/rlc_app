@@ -20,6 +20,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from django.forms.models import model_to_dict
+from django.http import QueryDict
 from rest_framework import status
 from datetime import datetime
 import pytz
@@ -29,6 +30,7 @@ from ..serializers import UserProfileSerializer, UserProfileCreatorSerializer, U
 from ..permissions import UpdateOwnProfile
 from backend.static.error_codes import *
 from backend.api.errors import CustomError
+from backend.static.error_codes import ERROR__API__REGISTER__NO_RLC_PROVIDED
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
@@ -67,13 +69,19 @@ class UserProfileCreatorViewSet(viewsets.ModelViewSet):
     permission_classes = ()
 
     def create(self, request):
-        data = dict(request.data)
-        del data['rlc']
+        if type(request.data) is QueryDict:
+            data = request.data.dict()
+        else:
+            data = dict(request.data)
+        if 'rlc' in data:
+            del data['rlc']
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
 
         user = UserProfile.objects.get(email=request.data['email'])
+        if 'rlc' not in request.data:
+            raise CustomError(ERROR__API__REGISTER__NO_RLC_PROVIDED)
         user.rlc = Rlc.objects.get(pk=request.data['rlc'])
         if 'birthday' in request.data:
             user.birthday = request.data['birthday']

@@ -73,7 +73,6 @@ class UsersTests(TransactionTestCase):
         # rlc - rlc 111x
         # user - rlc, user 112x
         # user, group - rlc 113x
-
         CreateFixtures.add_has_permission(1, 1030, user_has=62, for_user=63)
         CreateFixtures.add_has_permission(2, 1031, user_has=63, for_user=62)
         CreateFixtures.add_has_permission(3, 1032, user_has=63, for_user=64)
@@ -100,10 +99,13 @@ class UsersTests(TransactionTestCase):
     def test_create_new_user_success(self):
         client = APIClient()
         before = UserProfile.objects.count()
+        rlc = Rlc(name='rlc1')
+        rlc.save()
         response = client.post(self.base_url_create, {
-            'email': 'peter_parker@gmx.de',
+            "email": "peter_parker@gmx.de",
             'name': 'Peter Parker',
-            'password': 'abc123'
+            'password': 'abc123',
+            'rlc': rlc.id
         })
         after = UserProfile.objects.count()
         self.assertTrue(response.status_code == 201)
