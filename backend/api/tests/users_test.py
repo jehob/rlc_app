@@ -114,6 +114,8 @@ class UsersTests(TransactionTestCase):
     def test_create_new_user_full_success(self):
         client = APIClient()
         before = UserProfile.objects.count()
+        rlc = Rlc(name='rlc1')
+        rlc.save()
         user = {
             'email': 'peter_parker@gmx.de',
             'name': 'Peter Parker',
@@ -122,31 +124,13 @@ class UsersTests(TransactionTestCase):
             'phone_number': '1283812812',
             'street': 'Klausweg 12',
             'city': 'munich',
-            'postal_code': '12321'
+            'postal_code': '12321',
+            'rlc': rlc.id
         }
         response = client.post(self.base_url_create, user)
         after = UserProfile.objects.count()
         self.assertTrue(response.status_code == 201)
         self.assertTrue(before + 1 == after)
-
-    def test_create_new_user_extra_password_success(self):
-        client = APIClient()
-        before = UserProfile.objects.count()
-        response = client.post(self.base_url_create, {
-            'email': 'peter_parker@gmx.de',
-            'name': 'Peter Parker',
-            'birthday': '1990-12-4',
-            'password': 'abc123',
-            'password_repeat': 'abc123',
-            'phone_number': '1283812812',
-            'street': 'Klausweg 12',
-            'city': 'munich',
-            'postal_code': '12322'
-        })
-        after = UserProfile.objects.count()
-        self.assertTrue(response.status_code == 201)
-        self.assertTrue(before + 1 == after)
-        self.assertTrue(response.data['street'] != None)
 
     def test_create_new_user_error_no_email(self):
         client = APIClient()

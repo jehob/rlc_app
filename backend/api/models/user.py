@@ -115,7 +115,6 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         ('de', 'depends')
     )
 
-    # in bearbeitung, abgeschlossen,
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']  # email already in there, other are default
 

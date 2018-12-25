@@ -67,7 +67,7 @@ export class ProfileComponent implements OnInit {
     }
 
     onSaveClick() {
-        this.apiSB.patchUser(
+        this.apiSB.startPatchUser(
             new FullUser(
                 undefined,
                 this.userForm.value.email,

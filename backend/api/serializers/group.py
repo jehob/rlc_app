@@ -17,7 +17,6 @@
 from rest_framework import serializers
 
 from ..models import Group
-from .has_permission import HasPermissionOnlyPermissionForSerializer, HasPermissionOnlyHasPermissionSerializer
 
 
 class GroupSerializer(serializers.ModelSerializer):

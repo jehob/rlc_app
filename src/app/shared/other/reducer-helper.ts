@@ -1,3 +1,4 @@
+
 /*
  * rlcapp - record and organization management software for refugee law clinics
  * Copyright (C) 2018  Dominik Walser
@@ -16,23 +17,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-// This file is required by karma.conf.js and loads recursively all the .spec and framework files
-
-import "zone.js/dist/zone-testing";
-import {getTestBed} from '@angular/core/testing';
-import {
-    BrowserDynamicTestingModule,
-    platformBrowserDynamicTesting
-} from "@angular/platform-browser-dynamic/testing";
-
-declare const require: any;
-
-// First, initialize the Angular testing environment.
-getTestBed().initTestEnvironment(
-    BrowserDynamicTestingModule,
-    platformBrowserDynamicTesting()
-);
-// Then we find all the tests.
-const context = require.context("./", true, /\.spec\.ts$/);
-// And load the modules.
-context.keys().map(context);
+export const getIdObjects = (array) => {
+    const obj = {};
+    array.forEach((item) => {
+        obj[item.id] = item;
+    });
+    return obj;
+};

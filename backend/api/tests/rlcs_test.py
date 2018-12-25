@@ -36,3 +36,4 @@ class RlcsTest(TransactionTestCase):
         response = client.get(self.base_list_url)
 
         self.assertTrue(response.data.__len__() == 2)
+

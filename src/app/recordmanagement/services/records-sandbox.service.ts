@@ -22,13 +22,15 @@ import { select, Store } from "@ngrx/store";
 import { Location } from "@angular/common";
 import { take } from "rxjs/operators";
 import { Observable } from "rxjs";
+
 import { RecordsState } from "../store/records.reducers";
 import {
     ResetPossibleClients,
     StartAddingNewRecord,
     StartAddingNewRecordDocument,
     StartAddingNewRecordMessage,
-    StartAdmittingRecordPermissionRequest, StartDecliningRecordPermissionRequest,
+    StartAdmittingRecordPermissionRequest,
+    StartDecliningRecordPermissionRequest,
     StartLoadingClientPossibilities,
     StartLoadingRecordPermissionRequests,
     StartLoadingRecords,
@@ -37,7 +39,7 @@ import {
     StartRequestingReadPermission,
     StartSavingRecord,
     StartSettingRecordDocumentTags
-} from '../store/actions/records.actions';
+} from "../store/actions/records.actions";
 import { FullClient } from "../models/client.model";
 import { OriginCountry } from "../models/country.model";
 import { RestrictedUser } from "../../api/models/user.model";
@@ -74,33 +76,58 @@ export class RecordsSandboxService {
         this.recordStore.dispatch(new StartLoadingRecords(searchString));
     }
 
-    getRecords() {
+    getRecords(
+        asArray: boolean = true
+    ): Observable<RestrictedRecord[] | any> {
         return this.recordStore.pipe(
-            select((state: any) => state.records.records)
+            select((state: any) => {
+                const values = state.records.records;
+                return asArray ? Object.values(values) : values;
+            })
         );
     }
 
-    getPossibleClients(): Observable<FullClient[]> {
+    getPossibleClients(
+        asArray: boolean = true
+    ): Observable<FullClient[] | any> {
         return this.recordStore.pipe(
-            select((state: any) => state.records.possible_clients)
+            select((state: any) => {
+                const values = state.records.possible_clients;
+                return asArray ? Object.values(values) : values;
+            })
         );
     }
 
-    getConsultants(): Observable<RestrictedUser[]> {
+    getConsultants(
+        asArray: boolean = true
+    ): Observable<RestrictedUser[] | any> {
         return this.recordStore.pipe(
-            select((state: any) => state.records.consultants)
+            select((state: any) => {
+                const values = state.records.consultants;
+                return asArray ? Object.values(values) : values;
+            })
         );
     }
 
-    getRecordTags() {
+    getRecordTags(
+        asArray: boolean = true
+    ): Observable<Tag[] | any> {
         return this.recordStore.pipe(
-            select((state: any) => state.records.record_tags)
+            select((state: any) => {
+                const values = state.records.record_tags;
+                return asArray ? Object.values(values) : values;
+            })
         );
     }
 
-    getRecordDocumentTags() {
+    getRecordDocumentTags(
+        asArray: boolean = true
+    ): Observable<Tag[] | any> {
         return this.recordStore.pipe(
-            select((state: any) => state.records.record_document_tags)
+            select((state: any) => {
+                const values = state.records.record_document_tags;
+                return asArray ? Object.values(values) : values;
+            })
         );
     }
 
@@ -109,10 +136,12 @@ export class RecordsSandboxService {
         this.recordStore
             .pipe(
                 take(1),
-                select((state: any) =>
-                    state.records.possible_clients.find(
-                        client => client.id === id
-                    )
+                select(
+                    (state: any) =>
+                        // state.records.possible_clients.find(
+                        //     client => client.id === id
+                        // )
+                        state.records.possible_clients[id]
                 )
             )
             .subscribe(state => (returnClient = state));
@@ -138,9 +167,10 @@ export class RecordsSandboxService {
             .pipe(
                 take(1),
                 select((state: any) =>
-                    state.records.origin_countries.find(
-                        country => country.id === id
-                    )
+                    // state.records.origin_countries.find(
+                    //     country => country.id === id
+                    // )
+                    state.records.origin_countries[id]
                 )
             )
             .subscribe(country => (originCountry = country));
@@ -161,9 +191,12 @@ export class RecordsSandboxService {
         this.recordStore.dispatch(new ResetPossibleClients());
     }
 
-    getOriginCountries(): Observable<OriginCountry[]> {
+    getOriginCountries(asArray: boolean = true): Observable<OriginCountry[] | any> {
         return this.recordStore.pipe(
-            select((state: any) => state.records.origin_countries)
+            select((state: any) => {
+                const values = state.records.origin_countries;
+                return asArray ? Object.values(values) : values;
+            })
         );
     }
 
@@ -299,24 +332,18 @@ export class RecordsSandboxService {
 
     getRecordPermissionRequests(
         asArray: boolean = true
-    ): Observable<RecordPermissionRequest[]> {
-        return asArray
-            ? this.recordStore.pipe(
-                  select((state: any) =>
-                      Object.values(
-                          state.records.admin.record_permission_requests
-                      )
-                  )
-              )
-            : this.recordStore.pipe(
-                  select(
-                      (state: any) =>
-                          state.records.admin.record_permission_requests
-                  )
-              );
+    ): Observable<RecordPermissionRequest[] | any> {
+        return this.recordStore.pipe(
+            select((state: any) => {
+                const values = state.records.admin.record_permission_requests;
+                return asArray ? Object.values(values) : values;
+            })
+        );
     }
 
-    getSpecialRecordPermissionRequest(id): Observable<RecordPermissionRequest> {
+    getSpecialRecordPermissionRequest(
+        id: string
+    ): Observable<RecordPermissionRequest> {
         return this.recordStore.pipe(
             select(
                 (state: any) =>
@@ -337,8 +364,10 @@ export class RecordsSandboxService {
         );
     }
 
-    navigateToRecordOfRecordPermissionRequest(request: RecordPermissionRequest){
+    navigateToRecordOfRecordPermissionRequest(
+        request: RecordPermissionRequest
+    ) {
         const url = `records/${request.record}`;
-        this.router.navigate([url])
+        this.router.navigate([url]);
     }
 }

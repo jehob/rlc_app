@@ -42,6 +42,7 @@ import { FullClient } from "../models/client.model";
 import { RecordDocument } from "../models/record_document.model";
 import { RecordMessage } from "../models/record_message.model";
 import {RecordPermissionRequest} from '../models/record_permission.model';
+import {getIdObjects} from '../../shared/other/reducer-helper';
 
 export interface RecordsState {
     special_record: {
@@ -85,14 +86,6 @@ const initialState: RecordsState = {
     possible_clients: []
 };
 
-const getIdObjects = (array) => {
-    const obj = {};
-    array.forEach((item) => {
-        obj[item.id] = item;
-    });
-    return obj;
-};
-
 export function recordsReducer(state = initialState, action: RecordsActions) {
     switch (action.type) {
         case SET_SPECIAL_RECORD:
@@ -122,22 +115,22 @@ export function recordsReducer(state = initialState, action: RecordsActions) {
         case SET_RECORDS:
             return {
                 ...state,
-                records: action.payload
+                records: getIdObjects(action.payload)
             };
         case SET_CONSULTANTS:
             return {
                 ...state,
-                consultants: action.payload
+                consultants: getIdObjects(action.payload)
             };
         case SET_ORIGIN_COUNTRIES:
             return {
                 ...state,
-                origin_countries: action.payload
+                origin_countries: getIdObjects(action.payload)
             };
         case SET_RECORD_TAGS:
             return {
                 ...state,
-                record_tags: action.payload
+                record_tags: getIdObjects(action.payload)
             };
         case SET_RECORD_STATES:
             return {
@@ -152,7 +145,7 @@ export function recordsReducer(state = initialState, action: RecordsActions) {
         case SET_POSSIBLE_CLIENTS:
             return {
                 ...state,
-                possible_clients: action.payload
+                possible_clients: getIdObjects(action.payload)
             };
         case RESET_POSSIBLE_CLIENTS:
             return {
@@ -164,7 +157,7 @@ export function recordsReducer(state = initialState, action: RecordsActions) {
                 ...state,
                 special_record: {
                     ...state.special_record,
-                    record_documents: action.payload
+                    record_documents: getIdObjects(action.payload)
                 }
             };
         case ADD_RECORD_DOCUMENT:
@@ -172,10 +165,10 @@ export function recordsReducer(state = initialState, action: RecordsActions) {
                 ...state,
                 special_record: {
                     ...state.special_record,
-                    record_documents: [
+                    record_documents: {
                         ...state.special_record.record_documents,
-                        action.payload
-                    ]
+                        [action.payload.id]: action.payload
+                    }
                 }
             };
         case ADD_RECORD_MESSAGE:
@@ -183,10 +176,10 @@ export function recordsReducer(state = initialState, action: RecordsActions) {
                 ...state,
                 special_record: {
                     ...state.special_record,
-                    record_messages: [
+                    record_messages: {
                         ...state.special_record.record_messages,
-                        action.payload
-                    ]
+                        [action.payload.id]: action.payload
+                    }
                 }
             };
         case SET_SPECIAL_RECORD_MESSAGES:
@@ -194,7 +187,7 @@ export function recordsReducer(state = initialState, action: RecordsActions) {
                 ...state,
                 special_record: {
                     ...state.special_record,
-                    record_messages: action.payload
+                    record_messages: getIdObjects(action.payload)
                 }
             };
         case RESET_FULL_CLIENT_INFORMATION:
@@ -211,7 +204,7 @@ export function recordsReducer(state = initialState, action: RecordsActions) {
         case SET_RECORD_DOCUMENT_TAGS:
             return {
                 ...state,
-                record_document_tags: action.payload
+                record_document_tags: getIdObjects(action.payload)
             };
         case SET_RECORD_PERMISSION_REQUESTS:
             return {

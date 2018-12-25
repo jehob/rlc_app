@@ -111,7 +111,7 @@ class HasPermissionTests(TransactionTestCase):
             'group_has_permission': self.group1.id,
             'permission_for_group': self.group1.id
         }
-        self.client.post(self.base_url, to_post)
+        response = self.client.post(self.base_url, to_post)
         response = self.client.post(self.base_url, to_post)
         after = HasPermission.objects.count()
 

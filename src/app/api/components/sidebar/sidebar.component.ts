@@ -3,7 +3,6 @@ import { Router } from "@angular/router";
 import { AppSandboxService } from "../../services/app-sandbox.service";
 import { FullUser } from "../../models/user.model";
 import { ApiSandboxService } from "../../services/api-sandbox.service";
-import { HasPermission } from "../../models/permission.model";
 import {PERMISSION_CAN_PERMIT_RECORD_PERMISSION_REQUESTS, PERMISSION_CAN_VIEW_RECORDS} from '../../../statics/permissions.statics';
 
 @Component({

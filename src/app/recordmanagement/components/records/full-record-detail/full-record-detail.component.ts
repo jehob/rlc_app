@@ -58,8 +58,8 @@ export class FullRecordDetailComponent implements OnInit {
                     this.record = special_record.record;
                     this.client = special_record.client;
                     this.origin_country = special_record.origin_country;
-                    this.record_documents = special_record.record_documents;
-                    this.record_messages = special_record.record_messages;
+                    this.record_documents = Object.values(special_record.record_documents);
+                    this.record_messages = Object.values(special_record.record_messages);
 
                     this.recordEditForm.controls['note'].setValue(this.record.note);
                 }

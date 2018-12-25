@@ -20,6 +20,7 @@ import {FullUser, RestrictedUser} from '../models/user.model';
 import {ApiActions, SET_ALL_PERMISSIONS, SET_OTHER_USERS, SET_RLC, SET_USER, SET_USER_PERMISSIONS} from './api.actions';
 import {HasPermission, Permission} from '../models/permission.model';
 import {RestrictedRlc} from '../models/rlc.model';
+import {getIdObjects} from '../../shared/other/reducer-helper';
 
 export interface ApiState {
     user: FullUser;
@@ -47,17 +48,17 @@ export function apiReducer(state = initialState, action: ApiActions) {
         case SET_OTHER_USERS:
             return {
                 ...state,
-                other_users: action.payload
+                other_users: getIdObjects(action.payload)
             };
         case SET_ALL_PERMISSIONS:
             return {
                 ...state,
-                all_permissions: action.payload
+                all_permissions: getIdObjects(action.payload)
             };
         case SET_USER_PERMISSIONS:
             return {
                 ...state,
-                user_permissions: action.payload
+                user_permissions: getIdObjects(action.payload)
             };
         case SET_RLC:
             return {

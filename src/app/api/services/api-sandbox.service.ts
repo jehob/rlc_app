@@ -25,7 +25,7 @@ import { select, Store } from "@ngrx/store";
 
 import { AppState } from "../../store/app.reducers";
 import { ApiState } from "../store/api.reducers";
-import { FullUser } from "../models/user.model";
+import { FullUser, RestrictedUser } from "../models/user.model";
 import {
     StartCreateUser,
     StartLoadingOtherUsers,
@@ -56,9 +56,25 @@ export class ApiSandboxService {
         return this.apiStateStore.pipe(select((state: any) => state.api.user));
     }
 
-    getUserPermissions(): Observable<HasPermission[]> {
+    getUserPermissions(
+        asArray: boolean = true
+    ): Observable<HasPermission[] | any> {
         return this.apiStateStore.pipe(
-            select((state: any) => state.api.user_permissions)
+            select((state: any) => {
+                const values = state.api.user_permissions;
+                return asArray ? Object.values(values) : values;
+            })
+        );
+    }
+
+    getAllPermissions(
+        asArray: boolean = true
+    ): Observable<Permission[] | any> {
+        return this.apiStateStore.pipe(
+            select((state: any) => {
+                const values = state.api.all_permissions;
+                return asArray ? Object.values(values) : values;
+            })
         );
     }
 
@@ -66,33 +82,29 @@ export class ApiSandboxService {
         /*
         checks if the user has permission and returns to subscriberCallback true or false
          */
-        this.apiStateStore
-            .pipe(select((state: any) => state.api.all_permissions))
-            .subscribe((all_permissions: Permission[]) => {
-                if (all_permissions.length > 0) {
-                    try {
-                        const id = Number(
-                            all_permissions.filter(
-                                single_permission =>
-                                    single_permission.name === permission
-                            )[0].id
-                        );
-                        this.hasPermissionFromId(id, subscriberCallback);
-                    } catch (e) {
-                        subscriberCallback(false);
-                    }
-
+        this.getAllPermissions().subscribe((all_permissions: Permission[]) => {
+            if (all_permissions.length > 0) {
+                try {
+                    const id = Number(
+                        all_permissions.filter(
+                            single_permission =>
+                                single_permission.name === permission
+                        )[0].id
+                    );
+                    this.hasPermissionFromId(id, subscriberCallback);
+                } catch (e) {
+                    subscriberCallback(false);
                 }
-            });
+            }
+        });
     }
 
     hasPermissionFromId(permission: number, subscriberCallback): void {
         /*
         checks if the user has permission and returns to subscriberCallback true or false
          */
-        this.apiStateStore
-            .pipe(select((state: any) => state.api.user_permissions))
-            .subscribe((user_permissions: HasPermission[]) => {
+        this.getUserPermissions().subscribe(
+            (user_permissions: HasPermission[]) => {
                 const result = user_permissions.filter(
                     (hasPermission: HasPermission) =>
                         Number(hasPermission.permission_id) === permission
@@ -102,10 +114,11 @@ export class ApiSandboxService {
                 } else {
                     subscriberCallback(true);
                 }
-            });
+            }
+        );
     }
 
-    patchUser(user: FullUser) {
+    startPatchUser(user: FullUser) {
         let userFromStore: FullUser = null;
         this.apiStateStore
             .pipe(select((state: any) => state.api.user))
@@ -133,9 +146,14 @@ export class ApiSandboxService {
     startLoadingOtherUsers() {
         this.apiStateStore.dispatch(new StartLoadingOtherUsers());
     }
-    getOtherUsers() {
+    getOtherUsers(
+        asArray: boolean = true
+    ): Observable<RestrictedUser[] | any> {
         return this.apiStateStore.pipe(
-            select((state: any) => state.api.other_users)
+            select((state: any) => {
+                const values = state.api.other_users;
+                return asArray ? Object.values(values) : values;
+            })
         );
     }
 
@@ -155,8 +173,8 @@ export class ApiSandboxService {
         this.storageService.downloadFile(filekey);
     }
 
-    relogUser(){
-        console.log('relog user');
-        this.router.navigate(['login']);
+    relogUser() {
+        // console.log('relog user');
+        this.router.navigate(["login"]);
     }
 }

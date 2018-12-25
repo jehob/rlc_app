@@ -34,4 +34,8 @@ class Rlc(models.Model):
         return 'rlc: ' + str(self.id) + ':' + self.name
 
     def get_consultants(self):
+        """
+        gets all user from rlc with permission to consult
+        :return:
+        """
         return UserProfile.objects.get_users_with_special_permission(PERMISSION_CAN_CONSULT, for_rlc=self.id)

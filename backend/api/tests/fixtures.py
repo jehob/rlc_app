@@ -268,7 +268,8 @@ class CreateFixtures:
         rlc.save()
         if members is not None:
             for member in members:
-                rlc.rlc_members.add(member)
+                user = UserProfile.objects.get(pk=member)
+                rlc.rlc_members.add(user)
         return rlc
 
     @staticmethod
