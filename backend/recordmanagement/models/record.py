@@ -33,35 +33,15 @@ class RecordQuerySet(models.QuerySet):
         # return self.exclude(Q(id__in=user.working_on_record.values_list('id', flat=True)) | Q(
         #     id__in=permissions.values_list('record_id', flat=True)))
         has_perm = self.get_full_access_records(user)
-        a = list(has_perm)
-        b = list(self)
-        c = list(self.exclude(id__in=has_perm.values_list('id', flat=True)))
-
         return self.exclude(id__in=has_perm.values_list('id', flat=True))
 
-
-class RecordManager(models.Manager):
-    def get_query_set(self):
-        return RecordQuerySet(self.model, using=self._db)
-
-    # def __getattr__(self, item, *args):
-    #     if item.startwith("_"):
-    #         raise AttributeError
-    #     return getattr(self.get_query_set(), item, *args)
-
-    def get_full_access_record(self, user):
-        # from backend.recordmanagement.models import RecordPermission
-        # permissions = RecordPermission.objects.filter(request_from=user, state='gr')
-        #
-        # return Record.objects.filter(Q(id__in=user.working_on_record.values_list('id', flat=True)) | Q(
-        #     id__in=permissions.values_list('record_id', flat=True)))
-        return self.get_query_set().get_full_access_record(user)
-
-    def getNoAccessRecords(self, user):
-        from backend.recordmanagement.models import RecordPermission
-        permissions = RecordPermission.objects.filter(request_from=user, state='gr')
-        return Record.objects.exclude(Q(id__in=user.working_on_record.values_list('id', flat=True)) | Q(
-            id__in=permissions.values_list('record_id', flat=True)))
+    def filter_by_rlc(self, rlc):
+        """
+        filters by the instance of the given rlc
+        :param rlc: instance of rlc
+        :return: filtered values
+        """
+        return self.filter(from_rlc=rlc)
 
 
 class Record(models.Model):

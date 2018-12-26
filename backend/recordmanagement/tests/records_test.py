@@ -32,63 +32,6 @@ class RecordTests(TransactionTestCase):
         self.base_detail_url = '/api/records/record/'
         self.base_create_record_url = '/api/records/create_record/'
 
-    def test_create_record_new_client_success(self):
-        users, rlcs, client, tags = RecordTests.create_samples()
-        client = StaticTestMethods.force_authentication_with_user(users[0].email)
-
-        all_records_before = Record.objects.count()
-        to_post = {
-            "client_birthday": date(2000, 3, 21),
-            "client_name": "Mubaba Baba",
-            "client_phone_number": "123123123",
-            "client_note": "new client note",
-            "first_contact_date": date(2018, 8, 30),
-            "record_token": "AZ12391-123",
-            "consultants": [2],
-            "tags": [1],
-            "record_note": "new record note"
-        }
-        response = client.post(self.base_create_record_url, to_post)
-        all_records_after = Record.objects.count()
-        self.assertTrue(response.status_code == 200)
-        self.assertTrue(all_records_before + 1 == all_records_after)
-
-    def test_list_just_own_rlc_records(self):
-        """
-        this can crash if test method "test_create_record_new_client_success" is red
-        :return:
-        """
-        users, rlcs, record = self.create_first_record()
-        client = StaticTestMethods.force_authentication_with_user(users[0].email)
-
-        response = client.get(self.base_list_url)
-        after_creation_user_counting = response.data
-        self.assertTrue(response.status_code == 200)
-        self.assertTrue(after_creation_user_counting.__len__() == 1)
-        self.assertTrue(after_creation_user_counting[0]['id'] == record['id'])
-
-    def test_list_no_record_from_other_rlc(self):
-        users, rlcs, record = self.create_first_record()
-        client = StaticTestMethods.force_authentication_with_user(users[2].email)
-
-        response = client.get(self.base_list_url)
-        self.assertTrue(response.status_code == 200)
-        self.assertTrue(response.data.__len__() == 0)
-
-    def test_retrieve_record_success(self):
-        users, rlcs, record = self.create_first_record()
-        client = StaticTestMethods.force_authentication_with_user(users[1].email)
-
-        response = client.get(self.base_detail_url + str(record['id']) + '/')
-        self.assertTrue(response.data.__len__() == 3)
-
-    def test_retrieve_record_wrong_rlc_error(self):
-        users, rlcs, record = self.create_first_record()
-        client = StaticTestMethods.force_authentication_with_user(users[2].email)
-
-        response = client.get(self.base_detail_url + str(record['id']) + '/')
-        self.assertTrue('error' in response.data)
-
     @staticmethod
     def create_samples():
         """
@@ -128,6 +71,73 @@ class RecordTests(TransactionTestCase):
         response = client.post(self.base_create_record_url, to_post)
         new_record = response.data
         return users, rlcs, new_record
+
+    def test_create_record_new_client_success(self):
+        """
+        :return:
+        """
+        users, rlcs, client, tags = RecordTests.create_samples()
+        client = StaticTestMethods.force_authentication_with_user(users[0].email)
+
+        all_records_before = Record.objects.count()
+        to_post = {
+            "client_birthday": date(2000, 3, 21),
+            "client_name": "Mubaba Baba",
+            "client_phone_number": "123123123",
+            "client_note": "new client note",
+            "first_contact_date": date(2018, 8, 30),
+            "record_token": "AZ12391-123",
+            "consultants": [2],
+            "tags": [1],
+            "record_note": "new record note"
+        }
+        response = client.post(self.base_create_record_url, to_post)
+        all_records_after = Record.objects.count()
+        self.assertTrue(response.status_code == 200)
+        self.assertTrue(all_records_before + 1 == all_records_after)
+
+    def test_list_just_own_rlc_records(self):
+        """
+        this can crash if test method "test_create_record_new_client_success" is red
+        :return:
+        """
+        users, rlcs, record = self.create_first_record()
+        client = StaticTestMethods.force_authentication_with_user(users[0].email)
+        record_from_other_rlc = Record(from_rlc=rlcs[1], record_token='213')
+        record_from_other_rlc.save()
+
+        response = client.get(self.base_list_url)
+        after_creation_user_counting = response.data
+        self.assertTrue(response.status_code == 200)
+        self.assertTrue(after_creation_user_counting.__len__() == 1)
+        self.assertTrue(after_creation_user_counting[0]['id'] == record['id'])
+
+    def test_list_no_record_from_other_rlc(self):
+        users, rlcs, record = self.create_first_record()
+        client = StaticTestMethods.force_authentication_with_user(users[2].email)
+
+        response = client.get(self.base_list_url)
+        self.assertTrue(response.status_code == 200)
+        self.assertTrue(response.data.__len__() == 0)
+
+    def test_retrieve_record_success(self):
+        users, rlcs, record = self.create_first_record()
+        client = StaticTestMethods.force_authentication_with_user(users[1].email)
+
+        response = client.get(self.base_detail_url + str(record['id']) + '/')
+        self.assertTrue(response.status_code == 200)
+        self.assertTrue('record' in response.data)
+        self.assertTrue('client' in response.data)
+        self.assertTrue('origin_country' in response.data)
+        self.assertTrue('record_documents' in response.data)
+        self.assertTrue('record_messages' in response.data)
+
+    def test_retrieve_record_wrong_rlc_error(self):
+        users, rlcs, record = self.create_first_record()
+        client = StaticTestMethods.force_authentication_with_user(users[2].email)
+
+        response = client.get(self.base_detail_url + str(record['id']) + '/')
+        self.assertTrue(response.status_code == 400)
 
     def test_user_has_permission(self):
         user1 = UserProfile(email='abc1@web.de', name="abc1")

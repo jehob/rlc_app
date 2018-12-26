@@ -48,13 +48,12 @@ class RecordsListViewSet(viewsets.ViewSet):
             serializer = serializers.RecordFullDetailSerializer(entries, many=True)
             return Response(serializer.data)
 
-        entries = models.Record.objects.filter(from_rlc=user.rlc)
-        # entries = models.Record.objects.filter_by_rlc(user.rlc)
+        # entries = models.Record.objects.filter(from_rlc=user.rlc)
+        entries = models.Record.objects.filter_by_rlc(user.rlc)
         for part in parts:
             consultants = UserProfile.objects.filter(name__icontains=part)
             entries = entries.filter(
                 Q(tagged__name__icontains=part) | Q(note__icontains=part) | Q(working_on_record__in=consultants)).distinct()
-        # entries = entries.filter_by_search_parts(parts)
 
         records = []
         if user.has_permission(PERMISSION_VIEW_RECORDS_FULL_DETAIL, for_rlc=user.rlc):
@@ -66,11 +65,7 @@ class RecordsListViewSet(viewsets.ViewSet):
             serializer = serializers.RecordFullDetailSerializer(queryset, many=True)
             records += serializer.data
 
-            # queryset = entries.exclude(
-            #     id__in=user.working_on_record.values_list('id', flat=True)).distinct()
-            a = list(entries)
             queryset = entries.get_no_access_records(user)
-            b = list(queryset)
             serializer = serializers.RecordNoDetailSerializer(queryset, many=True)
             records += serializer.data
         return Response(records)
@@ -141,7 +136,7 @@ class RecordViewSet(APIView):
             else:
                 url = 'no url, please contact the administrator'
 
-            EmailSender.send_email_notification((actual_consultant.email,), "New Record",
+            EmailSender.send_email_notification([actual_consultant.email], "New Record",
                                                 "RLC Intranet Notification - Your were assigned as a consultant for a new record. Look here:" +
                                                 url)
 
@@ -188,7 +183,7 @@ class RecordViewSet(APIView):
                 else:
                     url = 'no url, please contact the administrator'
 
-                EmailSender.send_email_notification((user.email,), "Patched Record",
+                EmailSender.send_email_notification([user.email], "Patched Record",
                                                     "RLC Intranet Notification - A record of yours was changed. Look here:" +
                                                     url)
 

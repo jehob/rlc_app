@@ -21,4 +21,4 @@ from django.contrib import admin
 # admin.site.register(models.Record)
 # admin.site.register(models.Client)
 # admin.site.register(models.OriginCountry)
-# admin.site.register(models.Tag) 
+# admin.site.register(models.Tag)
