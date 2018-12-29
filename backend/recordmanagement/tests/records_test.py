@@ -172,3 +172,5 @@ class RecordTests(TransactionTestCase):
         self.assertTrue(record.user_has_permission(user1))
         self.assertTrue(record.user_has_permission(user2))
 
+
+

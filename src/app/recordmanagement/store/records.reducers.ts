@@ -26,7 +26,9 @@ import {
     SET_CONSULTANTS,
     SET_COUNTRY_STATES,
     SET_ORIGIN_COUNTRIES,
-    SET_POSSIBLE_CLIENTS, SET_RECORD_DOCUMENT_TAGS, SET_RECORD_PERMISSION_REQUESTS,
+    SET_POSSIBLE_CLIENTS,
+    SET_RECORD_DOCUMENT_TAGS,
+    SET_RECORD_PERMISSION_REQUESTS,
     SET_RECORD_STATES,
     SET_RECORD_TAGS,
     SET_RECORDS,
@@ -34,35 +36,37 @@ import {
     SET_SPECIAL_ORIGIN_COUNTRY,
     SET_SPECIAL_RECORD,
     SET_SPECIAL_RECORD_DOCUMENTS,
-    SET_SPECIAL_RECORD_MESSAGES, UPDATE_RECORD_PERMISSION_REQUEST
-} from './actions/records.actions';
+    SET_SPECIAL_RECORD_MESSAGES,
+    UPDATE_RECORD_PERMISSION_REQUEST
+} from "./actions/records.actions";
 import { OriginCountry } from "../models/country.model";
 import { Tag } from "../models/tag.model";
 import { FullClient } from "../models/client.model";
 import { RecordDocument } from "../models/record_document.model";
 import { RecordMessage } from "../models/record_message.model";
-import {RecordPermissionRequest} from '../models/record_permission.model';
-import {getIdObjects} from '../../shared/other/reducer-helper';
+import { RecordPermissionRequest } from "../models/record_permission.model";
+import { getIdObjects } from "../../shared/other/reducer-helper";
+import {RestrictedUser} from '../../api/models/user.model';
 
 export interface RecordsState {
     special_record: {
         record: RestrictedRecord;
         client: FullClient;
         origin_country: OriginCountry;
-        record_documents: RecordDocument[];
-        record_messages: RecordMessage[];
+        record_documents: { [id: number]: RecordDocument };
+        record_messages: { [id: number]: RecordMessage };
     };
     admin: {
-        record_permission_requests: RecordPermissionRequest[]
+        record_permission_requests: { [id: number]: RecordPermissionRequest };
     };
-    records: RestrictedRecord[];
-    consultants: RestrictedRecord[];
-    origin_countries: OriginCountry[];
-    record_tags: Tag[];
-    record_document_tags: Tag[];
+    records: { [id: number]: RestrictedRecord };
+    consultants: { [id: number]: RestrictedUser };
+    origin_countries: { [id: number]: OriginCountry };
+    record_tags: { [id: number]: Tag };
+    record_document_tags: { [id: number]: Tag };
     record_states: any;
     country_states: any;
-    possible_clients: FullClient[];
+    possible_clients: { [id: number]: FullClient };
 }
 
 const initialState: RecordsState = {
@@ -70,20 +74,20 @@ const initialState: RecordsState = {
         record: null,
         client: null,
         origin_country: null,
-        record_documents: [],
-        record_messages: []
+        record_documents: {},
+        record_messages: {}
     },
-    admin : {
-        record_permission_requests: []
+    admin: {
+        record_permission_requests: {}
     },
-    records: [],
-    consultants: [],
-    origin_countries: [],
-    record_tags: [],
-    record_document_tags: [],
+    records: {},
+    consultants: {},
+    origin_countries: {},
+    record_tags: {},
+    record_document_tags: {},
     record_states: [],
     country_states: [],
-    possible_clients: []
+    possible_clients: {}
 };
 
 export function recordsReducer(state = initialState, action: RecordsActions) {

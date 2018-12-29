@@ -24,17 +24,17 @@ import {getIdObjects} from '../../shared/other/reducer-helper';
 
 export interface ApiState {
     user: FullUser;
-    other_users: RestrictedUser[],
-    all_permissions: Permission[],
-    user_permissions: HasPermission [],
+    other_users: { [id: number]: RestrictedUser },
+    all_permissions: { [id: number]: Permission },
+    user_permissions: { [id: number]: HasPermission },
     rlc: RestrictedRlc
 }
 
 const initialState: ApiState = {
     user: null,
-    other_users: [],
-    all_permissions: [],
-    user_permissions: [],
+    other_users: {},
+    all_permissions: {},
+    user_permissions: {},
     rlc: null
 };
 
