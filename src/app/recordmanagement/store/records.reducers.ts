@@ -69,7 +69,7 @@ export interface RecordsState {
     possible_clients: { [id: number]: FullClient };
 }
 
-const initialState: RecordsState = {
+export const initialState: RecordsState = {
     special_record: {
         record: null,
         client: null,
