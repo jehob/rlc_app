@@ -25,12 +25,13 @@ import { select, Store } from "@ngrx/store";
 
 import { AppState } from "../../store/app.reducers";
 import { ApiState } from "../store/api.reducers";
-import { FullUser, RestrictedUser } from "../models/user.model";
+import {ForeignUser, FullUser, RestrictedUser} from '../models/user.model';
 import {
+    SetSpecialForeignUser,
     StartCreateUser,
-    StartLoadingOtherUsers,
+    StartLoadingOtherUsers, StartLoadingSpecialForeignUser,
     StartPatchUser
-} from "../store/api.actions";
+} from '../store/api.actions';
 import { RLCS_URL } from "../../statics/api_urls.statics";
 import { StorageService } from "../../shared/services/storage.service";
 import { SnackbarService } from "../../shared/services/snackbar.service";
@@ -174,7 +175,21 @@ export class ApiSandboxService {
     }
 
     relogUser() {
-        // console.log('relog user');
         this.router.navigate(["login"]);
+    }
+
+    setForeignUser(foreignUser: ForeignUser){
+        this.apiStateStore.dispatch(new SetSpecialForeignUser(foreignUser));
+    }
+
+    getSpecialForeignUser(): Observable<ForeignUser | any> {
+        return this.apiStateStore.pipe(
+            select((state: any) => state.api.foreign_user)
+        );
+    }
+
+    loadAndGetSpecialForeignUser(id: string): Observable<ForeignUser | any> {
+        this.apiStateStore.dispatch(new StartLoadingSpecialForeignUser(id));
+        return this.getSpecialForeignUser();
     }
 }

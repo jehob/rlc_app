@@ -20,6 +20,8 @@ from django.core.validators import RegexValidator
 
 from . import HasPermission, Permission
 from backend.static.regex_validators import phone_regex
+from backend.api.errors import CustomError
+from backend.static.error_codes import ERROR__API__PERMISSION__NOT_FOUND
 
 
 class UserProfileManager(BaseUserManager):
@@ -210,7 +212,10 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
             False if the user doesnt have the permission
         """
         if isinstance(permission, str):
-            permission = Permission.objects.get(name=permission).id
+            try:
+                permission = Permission.objects.get(name=permission).id
+            except Exception as e:
+                raise CustomError(ERROR__API__PERMISSION__NOT_FOUND)
         if for_user is not None and for_group is not None and for_rlc is not None:
             raise AttributeError()
         return self.has_as_user_permission(permission, for_user, for_group, for_rlc) or \

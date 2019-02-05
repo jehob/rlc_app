@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { Component, OnInit } from "@angular/core";
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { FullRecord } from "../../../models/record.model";
 import { RecordsSandboxService } from "../../../services/records-sandbox.service";
 import { FullClient } from "../../../models/client.model";
@@ -30,7 +30,7 @@ import {RecordMessage} from '../../../models/record_message.model';
     templateUrl: "./full-record-detail.component.html",
     styleUrls: ["./full-record-detail.component.scss"]
 })
-export class FullRecordDetailComponent implements OnInit {
+export class FullRecordDetailComponent implements OnInit, OnDestroy {
     record: FullRecord;
     client: FullClient;
     origin_country: OriginCountry;
@@ -42,6 +42,10 @@ export class FullRecordDetailComponent implements OnInit {
         this.recordEditForm = new FormGroup({
             note: new FormControl('')
         })
+    }
+
+    ngOnDestroy(){
+        this.recordSB.resetFullClientInformation();
     }
 
     ngOnInit() {

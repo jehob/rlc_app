@@ -45,7 +45,46 @@ export class RestrictedUser implements Filterable {
     }
 }
 
+export class ForeignUser extends RestrictedUser{
+    /**
+     * ForeignUser represents a user from the own rlc but not the user himself -> contact information,
+     * RestrictedUser < foreign < full
+     */
+    constructor(
+        id: string = "",
+        public email: string = "",
+        name: string = "",
+        public phone_number: string = ""
+    ) {
+        super(id, name);
+        this.email = email;
+        this.phone_number = phone_number;
+    }
+
+    static getForeignUserFromJson(json) {
+        if (json)
+            return new ForeignUser(
+                json.id,
+                json.email,
+                json.name,
+                json.phone_number
+            );
+        return null;
+    }
+}
+
 export class FullUser extends RestrictedUser {
+    /**
+     * FullUser represents the user itself with FULL information
+     * @param id
+     * @param email
+     * @param name
+     * @param birthday
+     * @param phone_number
+     * @param street
+     * @param city
+     * @param postal_code
+     */
     constructor(
         id: string = "",
         public email: string = "",

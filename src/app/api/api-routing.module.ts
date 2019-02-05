@@ -22,8 +22,10 @@ import { NgModule } from "@angular/core";
 import { ProfileComponent } from "./pages/profile/profile.component";
 import { DashboardComponent } from "./pages/Dashboard/dashboard.component";
 import { LoginComponent } from "./pages/auth/login/login.component";
-import {RegisterComponent} from './pages/auth/register/register.component';
-import {ProfilesListComponent} from './pages/profiles-list/profiles-list.component';
+import { RegisterComponent } from "./pages/auth/register/register.component";
+import { ProfilesListComponent } from "./pages/profiles-list/profiles-list.component";
+import { ForeignProfileComponent } from "./pages/foreign-profile/foreign-profile.component";
+import {ForgotPasswordComponent} from './pages/auth/forgot-password/forgot-password.component';
 
 const apiRoutes: Routes = [
     {
@@ -33,6 +35,7 @@ const apiRoutes: Routes = [
     },
     {
         path: "profiles",
+        pathMatch: "full",
         component: ProfilesListComponent,
         canActivate: [AuthGuardService]
     },
@@ -43,7 +46,13 @@ const apiRoutes: Routes = [
         canActivate: [AuthGuardService]
     },
     { path: "login", component: LoginComponent },
-    { path: "register", component: RegisterComponent}
+    { path: "register", component: RegisterComponent },
+    {
+        path: "profiles/:id",
+        component: ForeignProfileComponent,
+        canActivate: [AuthGuardService]
+    },
+    { path: "forgot-password", component: ForgotPasswordComponent}
 ];
 
 @NgModule({

@@ -141,3 +141,28 @@ ERROR__API__REGISTER__NO_RLC_PROVIDED = {
     'error_detail': 'no rlc was provided',
     'error_code': 'api.register.no_rlc_provided'
 }
+
+ERROR__API__USER__NOT_FOUND = {
+    'error_detail': 'specified user not found',
+    'error_code': 'api.user.user_nof_found'
+}
+
+ERROR__API__USER__ID_NOT_PROVIDED = {
+    'error_detail': 'no id provided',
+    'error_code': 'api.user.id_not_provided'
+}
+
+ERROR__API__USER__NOT_SAME_RLC = {
+    'error_detail': 'you are not from the same rlc',
+    'error_code': 'api.user.not_same_rlc'
+}
+
+ERROR__API__PERMISSION__NOT_FOUND = {
+    'error_detail': 'given permission not found',
+    'error_code': 'api.permission.not_found'
+}
+
+ERROR__API__EMAIL__NO_EMAIL_PROVIDED = {
+    'error_detail': 'no "email" provided',
+    'error_code': 'api.email.no_email_provided'
+}

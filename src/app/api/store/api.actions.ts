@@ -17,12 +17,13 @@
  ******************************************************************************/
 
 import { Action } from "@ngrx/store";
-import {FullUser, RestrictedUser} from '../models/user.model';
+import {ForeignUser, FullUser, RestrictedUser} from '../models/user.model';
 import {HasPermission, Permission} from '../models/permission.model';
 import {RestrictedRlc} from '../models/rlc.model';
 
 export const SET_USER = "SET_USER";
 export const SET_OTHER_USERS = "SET_OTHER_USERS";
+export const SET_SPECIAL_FOREIGN_USER = "SET_SPECIAL_FOREIGN_USER";
 export const SET_ALL_PERMISSIONS = "SET_ALL_PERMISSIONS";
 export const SET_USER_PERMISSIONS = "SET_USER_PERMISSIONS";
 export const SET_RLC = "SET_RLC";
@@ -30,11 +31,18 @@ export const SET_RLC = "SET_RLC";
 export const START_PATCH_USER = "START_PATCH_USER";
 export const START_CREATE_USER = "START_CREATE_USER";
 export const START_LOADING_OTHER_USERS = "START_LOADING_OTHER_USERS";
+export const START_LOADING_SPECIAL_FOREIGN_USER = "START_LOADING_SPECIAL_FOREIGN_USER";
 
 export class SetUser implements Action {
     readonly type = SET_USER;
 
     constructor(public payload: FullUser) {}
+}
+
+export class SetSpecialForeignUser implements Action {
+    readonly type = SET_SPECIAL_FOREIGN_USER;
+
+    constructor(public payload: ForeignUser){}
 }
 
 export class SetAllPermissions implements Action{
@@ -77,13 +85,21 @@ export class SetRlc implements Action {
     constructor(public payload: RestrictedRlc) {}
 }
 
+export class StartLoadingSpecialForeignUser implements Action {
+    readonly type = START_LOADING_SPECIAL_FOREIGN_USER;
+
+    constructor(public payload: string){}
+}
+
 
 export type ApiActions =
     | SetUser
     | SetAllPermissions
     | SetUserPermissions
+    | SetSpecialForeignUser
     | SetOtherUsers
     | StartPatchUser
     | StartCreateUser
     | StartLoadingOtherUsers
+    | StartLoadingSpecialForeignUser
     | SetRlc;

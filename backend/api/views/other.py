@@ -32,11 +32,16 @@ from rest_framework.response import Response
 from ..other_functions.emails import EmailSender
 from ..models.rlc import Rlc
 from ..serializers.rlc import RlcOnlyNameSerializer
+from backend.api.errors import CustomError
+from backend.static.error_codes import ERROR__API__EMAIL__NO_EMAIL_PROVIDED
 
 
 class SendEmailViewSet(APIView):
     def post(self, request):
-        email = request.data['email']
+        if 'email' in request.data:
+            email = request.data['email']
+        else:
+            raise CustomError(ERROR__API__EMAIL__NO_EMAIL_PROVIDED)
         EmailSender.send_email_notification([email], 'SYSTEM NOTIFICATION', 'There was a change')
         return Response()
 

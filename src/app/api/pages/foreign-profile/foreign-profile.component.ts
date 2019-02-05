@@ -16,29 +16,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { Component, OnInit } from "@angular/core";
-import { Observable } from "rxjs";
-import {Router} from '@angular/router';
-
-import { RestrictedUser } from "../../models/user.model";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute, Params} from '@angular/router';
 import { ApiSandboxService } from "../../services/api-sandbox.service";
+import {ForeignUser} from '../../models/user.model';
 
 @Component({
-    selector: "app-profiles-list",
-    templateUrl: "./profiles-list.component.html",
-    styleUrls: ["./profiles-list.component.scss"]
+    selector: "app-foreign-profile",
+    templateUrl: "./foreign-profile.component.html",
+    styleUrls: ["./foreign-profile.component.scss"]
 })
-export class ProfilesListComponent implements OnInit {
-    otherUsers: Observable<RestrictedUser[]>;
+export class ForeignProfileComponent implements OnInit, OnDestroy {
+    foreignUser: ForeignUser;
 
-    constructor(private apiSB: ApiSandboxService, private router: Router) {}
+    constructor(private apiSB: ApiSandboxService, private route: ActivatedRoute) {}
 
-    ngOnInit() {
-        this.apiSB.startLoadingOtherUsers();
-        this.otherUsers = this.apiSB.getOtherUsers();
+    ngOnInit(): void {
+        this.route.params.subscribe((params: Params) => {
+            this.apiSB.loadAndGetSpecialForeignUser(params["id"]).subscribe((foreignUser: ForeignUser) => {
+                this.foreignUser = foreignUser;
+            });
+        })
     }
 
-    onUserClick(user: RestrictedUser){
-        this.router.navigateByUrl(`profiles/${user.id}`);
+    ngOnDestroy(): void {
     }
 }

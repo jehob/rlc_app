@@ -38,6 +38,7 @@
                     <input matInput placeholder="Password" i18n-placeholder="@@login_password" type="password"
                            formControlName="password" (keyup.enter)="onLogInClick()">
                 </mat-form-field>
+                <p class="is_link login__forgot-password is_clickable" (click)="onForgotPasswordClick()">Forgot Password?</p>
             </form>
         </div>
         <div class="action-holder">

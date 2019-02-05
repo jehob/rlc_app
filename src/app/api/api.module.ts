@@ -33,6 +33,8 @@ import {SharedModule} from '../shared/shared.module';
 import { ProfilesListComponent } from './pages/profiles-list/profiles-list.component';
 import { ProfilesListItemComponent } from './components/profiles-list-item/profiles-list-item.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { ForeignProfileComponent } from './pages/foreign-profile/foreign-profile.component';
+import { ForgotPasswordComponent } from './pages/auth/forgot-password/forgot-password.component';
 
 @NgModule({
     imports: [
@@ -50,7 +52,9 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
         LoginComponent,
         ProfilesListComponent,
         ProfilesListItemComponent,
-        SidebarComponent
+        SidebarComponent,
+        ForeignProfileComponent,
+        ForgotPasswordComponent
     ],
     providers: [],
     exports: [SidebarComponent]

@@ -23,7 +23,7 @@
     </mat-card-header>
     <mat-card-content>
         <mat-list>
-            <mat-list-item *ngFor="let user of (otherUsers | async)">
+            <mat-list-item *ngFor="let user of (otherUsers | async)" (click)="this.onUserClick(user)">
                 <p>{{ user.name }}</p>
                 <mat-divider></mat-divider>
             </mat-list-item>

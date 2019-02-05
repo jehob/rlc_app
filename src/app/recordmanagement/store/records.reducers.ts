@@ -198,7 +198,8 @@ export function recordsReducer(state = initialState, action: RecordsActions) {
             return {
                 ...state,
                 special_record: {
-                    ...state.special_record,
+                    ...state.special_record, // ?
+                    record: null,
                     client: null,
                     origin_country: null,
                     record_documents: [],

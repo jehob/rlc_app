@@ -49,6 +49,12 @@ class UserProfileSerializer(serializers.ModelSerializer):
         }
 
 
+class UserProfileForeignSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.UserProfile
+        fields = ('id', 'name', 'email', 'name', 'phone_number')
+
+
 class UserProfileNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserProfile

@@ -16,6 +16,7 @@
 
 from django.core.management.base import BaseCommand
 from ._fixtures import Fixtures
+from backend.api.models import UserProfile, Rlc
 
 
 class Command(BaseCommand):
@@ -27,3 +28,18 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         Fixtures.create_handmade_examples()
         Fixtures.create_real_permissions()
+        # Command.add_admin_account()
+        Command.add_standard_account()
+
+    @staticmethod
+    def add_admin_account():
+        user = UserProfile(name="Bruce Wayne", email="jehob@web.de", is_superuser=True)
+        user.set_password("qwe123")
+        user.save()
+
+    @staticmethod
+    def add_standard_account():
+        rlc = Rlc.objects.first()
+        user = UserProfile(name="Bruce Wayne", email="abc@web.de", rlc_id=rlc.id)
+        user.set_password("qwe123")
+        user.save()

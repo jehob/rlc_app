@@ -16,17 +16,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import {FullUser, RestrictedUser} from '../models/user.model';
-import {ApiActions, SET_ALL_PERMISSIONS, SET_OTHER_USERS, SET_RLC, SET_USER, SET_USER_PERMISSIONS} from './api.actions';
+import {ForeignUser, FullUser, RestrictedUser} from '../models/user.model';
+import {
+    ApiActions,
+    SET_ALL_PERMISSIONS,
+    SET_OTHER_USERS,
+    SET_RLC,
+    SET_SPECIAL_FOREIGN_USER,
+    SET_USER,
+    SET_USER_PERMISSIONS
+} from './api.actions';
 import {HasPermission, Permission} from '../models/permission.model';
 import {RestrictedRlc} from '../models/rlc.model';
 import {getIdObjects} from '../../shared/other/reducer-helper';
+import {applySourceSpanToStatementIfNeeded} from '@angular/compiler/src/output/output_ast';
 
 export interface ApiState {
     user: FullUser;
     other_users: { [id: number]: RestrictedUser },
     all_permissions: { [id: number]: Permission },
     user_permissions: { [id: number]: HasPermission },
+    foreign_user: ForeignUser,
     rlc: RestrictedRlc
 }
 
@@ -35,6 +45,7 @@ const initialState: ApiState = {
     other_users: {},
     all_permissions: {},
     user_permissions: {},
+    foreign_user: null,
     rlc: null
 };
 
@@ -64,6 +75,11 @@ export function apiReducer(state = initialState, action: ApiActions) {
             return {
                 ...state,
                 rlc: action.payload
+            };
+        case SET_SPECIAL_FOREIGN_USER:
+            return {
+                ...state,
+                foreign_user: action.payload
             };
         default:
             return state;

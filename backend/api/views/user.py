@@ -27,27 +27,32 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-from rest_framework import viewsets, filters
-from rest_framework.authtoken.serializers import AuthTokenSerializer
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.authtoken.models import Token
-from rest_framework.response import Response
+from datetime import datetime
+
+import pytz
 from django.forms.models import model_to_dict
 from django.http import QueryDict
 from rest_framework import status
-from datetime import datetime
-import pytz
+from rest_framework import viewsets, filters
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from ..models import UserProfile, Permission, Rlc
-from ..serializers import UserProfileSerializer, UserProfileCreatorSerializer, UserProfileNameSerializer, RlcSerializer
-from ..permissions import UpdateOwnProfile
-from backend.static.error_codes import *
 from backend.api.errors import CustomError
+from backend.static.error_codes import *
 from backend.static.error_codes import ERROR__API__REGISTER__NO_RLC_PROVIDED
+from backend.static.permissions import PERMISSION_CAN_VIEW_FULL_USER_DETAIL_OVERALL, \
+    PERMISSION_CAN_VIEW_FULL_USER_DETAIL_OWN_RLC
+from ..models import UserProfile, Permission, Rlc
+from ..permissions import UpdateOwnProfile
+from ..serializers import UserProfileSerializer, UserProfileCreatorSerializer, UserProfileNameSerializer, RlcSerializer, \
+    UserProfileForeignSerializer
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
-    """Handles creating (for now, remove?), reading and updating profiles"""
+    """Handles reading and updating profiles"""
 
     serializer_class = UserProfileSerializer
     queryset = UserProfile.objects.all()
@@ -72,6 +77,26 @@ class UserProfileViewSet(viewsets.ModelViewSet):
                 return self.get_paginated_response(serializer.data)
             serializer = UserProfileNameSerializer(queryset, many=True)
             return Response(serializer.data)
+
+    def retrieve(self, request, pk=None, **kwargs):
+        if pk is None:
+            raise CustomError(ERROR__API__USER__ID_NOT_PROVIDED)
+        try:
+            user = UserProfile.objects.get(pk=pk)
+        except Exception as e:
+            raise CustomError(ERROR__API__USER__NOT_FOUND)
+
+        if request.user.rlc != user.rlc:
+            if request.user.has_permission(PERMISSION_CAN_VIEW_FULL_USER_DETAIL_OVERALL):
+                serializer = UserProfileSerializer(user)
+            else:
+                raise CustomError(ERROR__API__USER__NOT_SAME_RLC)
+        else:
+            if request.user.has_permission(PERMISSION_CAN_VIEW_FULL_USER_DETAIL_OWN_RLC):
+                serializer = UserProfileSerializer(user)
+            else:
+                serializer = UserProfileForeignSerializer(user)
+        return Response(serializer.data)
 
 
 class UserProfileCreatorViewSet(viewsets.ModelViewSet):
@@ -161,3 +186,19 @@ class LoginViewSet(viewsets.ViewSet):
             'permissions': user_permissions,
             'all_permissions': overall_permissions
         }
+
+
+class ResetPasswordViewSet(APIView):
+    def post(self, request):
+        if 'email' in request.data:
+            email = request.data['email']
+        else:
+            raise CustomError(ERROR__API__EMAIL__NO_EMAIL_PROVIDED)
+        try:
+            user = UserProfile.objects.get(email=email)
+        except:
+            raise CustomError(ERROR__API__EMAIL__NO_EMAIL_PROVIDED)
+
+        user.is_active = False
+
+        pass

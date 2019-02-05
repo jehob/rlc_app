@@ -25,6 +25,7 @@ import { Observable } from "rxjs";
 
 import { RecordsState } from "../store/records.reducers";
 import {
+    ResetFullClientInformation,
     ResetPossibleClients,
     StartAddingNewRecord,
     StartAddingNewRecordDocument,
@@ -39,7 +40,7 @@ import {
     StartRequestingReadPermission,
     StartSavingRecord,
     StartSettingRecordDocumentTags
-} from "../store/actions/records.actions";
+} from '../store/actions/records.actions';
 import { FullClient } from "../models/client.model";
 import { OriginCountry } from "../models/country.model";
 import { RestrictedUser } from "../../api/models/user.model";
@@ -369,5 +370,9 @@ export class RecordsSandboxService {
     ) {
         const url = `records/${request.record}`;
         this.router.navigate([url]);
+    }
+
+    resetFullClientInformation(){
+        this.recordStore.dispatch(new ResetFullClientInformation());
     }
 }

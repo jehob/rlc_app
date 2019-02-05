@@ -15,19 +15,19 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 
+import os
+
+from django.db.models import Q
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import status
-from django.db.models import Q
-import os
 
-from backend.recordmanagement import models, serializers
+from backend.api.errors import CustomError
 from backend.api.models import UserProfile
 from backend.api.other_functions.emails import EmailSender
-from backend.static.permissions import PERMISSION_VIEW_RECORDS_FULL_DETAIL
+from backend.recordmanagement import models, serializers
 from backend.static.error_codes import *
-from backend.api.errors import CustomError
+from backend.static.permissions import PERMISSION_VIEW_RECORDS_FULL_DETAIL
 
 
 class RecordsListViewSet(viewsets.ViewSet):
@@ -45,7 +45,8 @@ class RecordsListViewSet(viewsets.ViewSet):
             for part in parts:
                 consultants = UserProfile.objects.filter(name__icontains=part)
                 entries = entries.filter(
-                    Q(tagged__name__icontains=part) | Q(note__icontains=part) | Q(working_on_record__in=consultants)).distinct()
+                    Q(tagged__name__icontains=part) | Q(note__icontains=part) | Q(
+                        working_on_record__in=consultants)).distinct()
             serializer = serializers.RecordFullDetailSerializer(entries, many=True)
             return Response(serializer.data)
 
@@ -54,7 +55,8 @@ class RecordsListViewSet(viewsets.ViewSet):
         for part in parts:
             consultants = UserProfile.objects.filter(name__icontains=part)
             entries = entries.filter(
-                Q(tagged__name__icontains=part) | Q(note__icontains=part) | Q(working_on_record__in=consultants)).distinct()
+                Q(tagged__name__icontains=part) | Q(note__icontains=part) | Q(
+                    working_on_record__in=consultants)).distinct()
 
         records = []
         if user.has_permission(PERMISSION_VIEW_RECORDS_FULL_DETAIL, for_rlc=user.rlc):
@@ -90,7 +92,7 @@ class RecordsListViewSet(viewsets.ViewSet):
 
     def retrieve(self, request, pk=None):
         try:
-            record = models.Record.objects.get(pk=id)
+            record = models.Record.objects.get(pk=pk) # changed
         except Exception as e:
             raise CustomError(ERROR__RECORD__DOCUMENT__NOT_FOUND)
 

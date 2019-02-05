@@ -26,7 +26,10 @@ import {
     StartPatchUser,
     SET_USER,
     START_LOADING_OTHER_USERS,
-    SET_OTHER_USERS
+    SET_OTHER_USERS,
+    StartLoadingSpecialForeignUser,
+    START_LOADING_SPECIAL_FOREIGN_USER,
+    SET_SPECIAL_FOREIGN_USER
 } from "./api.actions";
 import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
 import { from, of } from "rxjs";
@@ -36,8 +39,8 @@ import {
     PROFILES_URL
 } from "../../statics/api_urls.statics";
 import { ApiSandboxService } from "../services/api-sandbox.service";
-import { FullUser, RestrictedUser } from "../models/user.model";
-import {SnackbarService} from '../../shared/services/snackbar.service';
+import { ForeignUser, FullUser, RestrictedUser } from "../models/user.model";
+import { SnackbarService } from "../../shared/services/snackbar.service";
 
 @Injectable()
 export class ApiEffects {
@@ -96,17 +99,17 @@ export class ApiEffects {
             return action.payload;
         }),
         switchMap((user: any) => {
-            console.log('user start create');
+            console.log("user start create");
             return from(
                 this.http.post(CREATE_PROFILE_URL, user).pipe(
                     catchError(error => {
-                        console.log('1');
+                        console.log("1");
                         console.log(error);
-                        this.snackbar.showErrorSnackBar('error at register');
+                        this.snackbar.showErrorSnackBar("error at register");
                         return [];
                     }),
                     mergeMap((response: any) => {
-                        console.log('2');
+                        console.log("2");
 
                         if (!response.error) {
                             this.apiSB.showSuccessSnackBar(
@@ -137,6 +140,42 @@ export class ApiEffects {
                             response
                         );
                         return [{ type: SET_OTHER_USERS, payload: users }];
+                    })
+                )
+            );
+        })
+    );
+
+    @Effect()
+    getProfile = this.actions.pipe(
+        ofType(START_LOADING_SPECIAL_FOREIGN_USER),
+        map((action: StartLoadingSpecialForeignUser) => {
+            return action.payload;
+        }),
+        switchMap((id: string) => {
+            console.log("load special user start");
+            return from(
+                this.http.get(GetSpecialProfileURL(id)).pipe(
+                    catchError(error => {
+                        console.log(error);
+                        this.snackbar.showErrorSnackBar(
+                            "error at loading user"
+                        );
+                        return [];
+                    }),
+                    mergeMap((response: any) => {
+                        if (!response.error) {
+                            const user = ForeignUser.getForeignUserFromJson(
+                                response
+                            );
+                            return [
+                                {
+                                    type: SET_SPECIAL_FOREIGN_USER,
+                                    payload: user
+                                }
+                            ];
+                        }
+                        return [];
                     })
                 )
             );
