@@ -13,19 +13,6 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
-#
-#  This program is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU Affero General Public License as
-#  published by the Free Software Foundation, either version 3 of the
-#  License, or (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU Affero General Public License for more details.
-#
-#  You should have received a copy of the GNU Affero General Public License
-#  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 from datetime import datetime
 
@@ -42,7 +29,6 @@ from rest_framework.views import APIView
 
 from backend.api.errors import CustomError
 from backend.static.error_codes import *
-from backend.static.error_codes import ERROR__API__REGISTER__NO_RLC_PROVIDED
 from backend.static.permissions import PERMISSION_CAN_VIEW_FULL_USER_DETAIL_OVERALL, \
     PERMISSION_CAN_VIEW_FULL_USER_DETAIL_OWN_RLC
 from ..models import UserProfile, Permission, Rlc
@@ -186,19 +172,3 @@ class LoginViewSet(viewsets.ViewSet):
             'permissions': user_permissions,
             'all_permissions': overall_permissions
         }
-
-
-class ResetPasswordViewSet(APIView):
-    def post(self, request):
-        if 'email' in request.data:
-            email = request.data['email']
-        else:
-            raise CustomError(ERROR__API__EMAIL__NO_EMAIL_PROVIDED)
-        try:
-            user = UserProfile.objects.get(email=email)
-        except:
-            raise CustomError(ERROR__API__EMAIL__NO_EMAIL_PROVIDED)
-
-        user.is_active = False
-
-        pass

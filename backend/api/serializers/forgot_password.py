@@ -14,10 +14,12 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-from .user import *
-from .group import *
-from .rlc import *
-from .permission import *
-from .has_permission import *
-from .forgot_password import *
+from rest_framework import serializers
 
+from backend.api.models import ForgotPasswordLinks
+
+
+class ForgotPasswordSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ForgotPasswordLinks
+        fields = '__all__'

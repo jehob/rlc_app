@@ -20,3 +20,4 @@ from .user import *
 from .group import *
 from .rlc import *
 from .language import *
+from .forgot_password import *

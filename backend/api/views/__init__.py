@@ -42,4 +42,5 @@ from .has_permission import *
 from .rlc import *
 from .other import *
 from .storage import *
+from .forgot_password import *
 
