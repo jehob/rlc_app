@@ -36,6 +36,7 @@ class ForgotPasswordLinks(models.Model):
         UserProfile, related_name="activation_link", on_delete=models.SET_NULL, null=True)
     link = models.CharField(auto_created=True, unique=True, default=generate_link_id, max_length=32)
     date = models.DateTimeField(auto_now_add=True)
+    ip_address = models.CharField(max_length=64)
 
     def __str__(self):
         return 'forgot_password: ' + str(self.id) + ':' + self.user.email

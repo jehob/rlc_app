@@ -43,10 +43,9 @@ class ResetPasswordViewSet(APIView):
         except:
             raise CustomError(ERROR__API__EMAIL__NO_EMAIL_PROVIDED)
 
-        ip = get_client_ip(request)
-
         user.is_active = False
-        forgot_password_link = ForgotPasswordLinks(user=user)
-        #forgot_password_link.save()
+        ip = get_client_ip(request)
+        forgot_password_link = ForgotPasswordLinks(user=user, ip_address=ip)
+        forgot_password_link.save()
         return Response(ForgotPasswordSerializer(forgot_password_link).data)
 
