@@ -14,10 +14,13 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 
 from backend.api.errors import CustomError
+from backend.api.other_functions.emails import EmailSender
+from backend.static.env_getter import get_website_base_url
 from backend.static.error_codes import *
 from ..models import UserProfile, ForgotPasswordLinks
 from ..serializers import ForgotPasswordSerializer
@@ -32,7 +35,15 @@ def get_client_ip(request):
     return ip
 
 
-class ResetPasswordViewSet(APIView):
+class ForgotPasswordViewSet(ModelViewSet):
+    queryset = ForgotPasswordLinks.objects.all()
+    serializer_class = ForgotPasswordSerializer
+
+
+class ForgotPasswordUnauthenticatedViewSet(APIView):
+    authentication_classes = ()
+    permission_classes = ()
+
     def post(self, request):
         if 'email' in request.data:
             email = request.data['email']
@@ -43,9 +54,36 @@ class ResetPasswordViewSet(APIView):
         except:
             raise CustomError(ERROR__API__EMAIL__NO_EMAIL_PROVIDED)
 
+        link_already = ForgotPasswordLinks.objects.filter(user=user).__len__()
+        if link_already >= 1:
+            raise CustomError(ERROR__API__USER__ALREADY_FORGOT_PASSWORD)
+
         user.is_active = False
+        user.save()
         ip = get_client_ip(request)
         forgot_password_link = ForgotPasswordLinks(user=user, ip_address=ip)
         forgot_password_link.save()
-        return Response(ForgotPasswordSerializer(forgot_password_link).data)
 
+        url = get_website_base_url() + "api/reset-password/" + forgot_password_link.link
+        EmailSender.send_email_notification([user.email], "Password reset",
+                                            "Your password was resetted click here: " + url)
+
+        return Response()
+
+
+class ResetPasswordViewSet(APIView):
+    authentication_classes = ()
+    permission_classes = ()
+
+    def post(self, request, id):
+        try:
+            link = ForgotPasswordLinks.objects.get(link=id)
+        except:
+            raise CustomError(ERROR__API__USER__PASSWORD_RESET_LINK_DOES_NOT_EXIST)
+        if 'new_password' not in request.data:
+            raise CustomError(ERROR__API__USER__NEW_PASSWORD_NOT_PROVIDED)
+        new_password = request.data['new_password']
+        link.user.set_password(new_password)
+        link.user.is_active = True
+        link.user.save()
+        return Response()

@@ -15,7 +15,6 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 from datetime import datetime
-
 import pytz
 from django.forms.models import model_to_dict
 from django.http import QueryDict
@@ -25,7 +24,6 @@ from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from backend.api.errors import CustomError
 from backend.static.error_codes import *
@@ -73,7 +71,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             raise CustomError(ERROR__API__USER__NOT_FOUND)
 
         if request.user.rlc != user.rlc:
-            if request.user.has_permission(PERMISSION_CAN_VIEW_FULL_USER_DETAIL_OVERALL):
+            if request.user.is_superuser or request.user.has_permission(PERMISSION_CAN_VIEW_FULL_USER_DETAIL_OVERALL):
                 serializer = UserProfileSerializer(user)
             else:
                 raise CustomError(ERROR__API__USER__NOT_SAME_RLC)
@@ -134,6 +132,7 @@ class LoginViewSet(viewsets.ViewSet):
         all possible permissions, country states, countries, clients, record states, consultants
         """
         serializer = self.serializer_class(data=request.data)
+        LoginViewSet.check_if_user_active(request.data['username'])
         if serializer.is_valid():
             token, created = Token.objects.get_or_create(user=serializer.validated_data['user'])
             Token.objects.filter(user=token.user).exclude(key=token.key).delete()
@@ -172,3 +171,17 @@ class LoginViewSet(viewsets.ViewSet):
             'permissions': user_permissions,
             'all_permissions': overall_permissions
         }
+
+    @staticmethod
+    def check_if_user_active(user_email):
+        """
+        checks if user exists and if user is active
+        :param user_email: string, email of user
+        :return:
+        """
+        try:
+            user = UserProfile.objects.get(email=user_email)
+        except:
+            raise CustomError(ERROR__API__USER__NOT_FOUND)
+        if not user.is_active:
+            raise CustomError(ERROR__API__USER__INACTIVE)

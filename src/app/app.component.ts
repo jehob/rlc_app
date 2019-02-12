@@ -65,5 +65,7 @@ export class AppComponent implements OnDestroy{
             this.snav.toggle();
     }
 
-    
+    redirectToMainPage(){
+        this.router.navigate([""]);
+    }
 }

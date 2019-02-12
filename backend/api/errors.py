@@ -34,7 +34,7 @@ class CustomError(APIException):
             if 'error_detail' in detail:
                 self.detail = detail['error_detail']
             if 'error_code' in detail:
-                self.code = detail['error_code']
+                self.default_code = detail['error_code']
         elif detail is not None:
             self.detail = {'detail': force_text(detail)}
         else:

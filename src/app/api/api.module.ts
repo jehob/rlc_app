@@ -35,6 +35,7 @@ import { ProfilesListItemComponent } from './components/profiles-list-item/profi
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { ForeignProfileComponent } from './pages/foreign-profile/foreign-profile.component';
 import { ForgotPasswordComponent } from './pages/auth/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './pages/auth/reset-password/reset-password.component';
 
 @NgModule({
     imports: [
@@ -54,7 +55,8 @@ import { ForgotPasswordComponent } from './pages/auth/forgot-password/forgot-pas
         ProfilesListItemComponent,
         SidebarComponent,
         ForeignProfileComponent,
-        ForgotPasswordComponent
+        ForgotPasswordComponent,
+        ResetPasswordComponent
     ],
     providers: [],
     exports: [SidebarComponent]

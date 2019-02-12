@@ -21,29 +21,37 @@ import { Actions, Effect, ofType } from "@ngrx/effects";
 import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
 import { from } from "rxjs";
-import { isDevMode } from '@angular/core';
+import { isDevMode } from "@angular/core";
 
 import { Router } from "@angular/router";
 import {
     TRY_RELOAD_STATIC_INFORMATION,
     SET_TOKEN,
     TRY_LOGIN,
-    TryLogin
-} from "./auth.actions";
+    TryLogin,
+    FORGOT_PASSWORD,
+    ForgotPassword, RESET_PASSWORD, ResetPassword
+} from './auth.actions';
 import LogRocket from "logrocket";
-import { LOGIN_URL } from "../../../statics/api_urls.statics";
 import {
-    SET_ALL_PERMISSIONS, SET_RLC,
+    FORGOT_PASSWORD_URL, GetResetPasswordUrl,
+    LOGIN_URL
+} from '../../../statics/api_urls.statics';
+import {
+    SET_ALL_PERMISSIONS,
+    SET_RLC,
     SET_USER,
     SET_USER_PERMISSIONS
-} from '../api.actions';
+} from "../api.actions";
 import { AuthGuardService } from "../../services/auth-guard.service";
 import { FullUser } from "../../models/user.model";
 import { RecordsSandboxService } from "../../../recordmanagement/services/records-sandbox.service";
 import { ApiSandboxService } from "../../services/api-sandbox.service";
-import {HasPermission, Permission} from '../../models/permission.model';
-import {RestrictedRlc} from '../../models/rlc.model';
-import {AppSandboxService} from '../../services/app-sandbox.service';
+import { HasPermission, Permission } from "../../models/permission.model";
+import { RestrictedRlc } from "../../models/rlc.model";
+import { AppSandboxService } from "../../services/app-sandbox.service";
+import { RecordPermissionRequest } from "../../../recordmanagement/models/record_permission.model";
+import { UPDATE_RECORD_PERMISSION_REQUEST } from "../../../recordmanagement/store/actions/records.actions";
 
 @Injectable()
 export class AuthEffects {
@@ -68,7 +76,7 @@ export class AuthEffects {
                 this.http.post(LOGIN_URL, authData).pipe(
                     catchError(error => {
                         console.log("error", error);
-                        this.apiSB.showErrorSnackBar("Login not successfull");
+                        this.apiSB.showErrorSnackBar(`Login not successfull: ${error.error.detail}`);
                         return [];
                     }),
                     mergeMap(
@@ -87,7 +95,10 @@ export class AuthEffects {
                                 this.router.navigate([
                                     this.guard.getLastVisitedUrl()
                                 ]);
-                            else this.router.navigate([this.appSB.savedLocation]);
+                            else
+                                this.router.navigate([
+                                    this.appSB.savedLocation
+                                ]);
                             return [
                                 {
                                     type: SET_TOKEN,
@@ -122,6 +133,61 @@ export class AuthEffects {
         })
     );
 
+    @Effect()
+    forgotPassword = this.actions.pipe(
+        ofType(FORGOT_PASSWORD),
+        map((action: ForgotPassword) => {
+            return action.payload;
+        }),
+        mergeMap((payload: { email: string }) => {
+            console.log('forgot password effect', payload);
+            return from(
+                this.http
+                    .post(FORGOT_PASSWORD_URL, { email: payload.email })
+                    .pipe(
+                        catchError(error => {
+                            console.log('error', error);
+                            this.recordSB.showError(error.error.detail);
+                            return [];
+                        }),
+                        mergeMap((response) => {
+                            console.log('response: ', response);
+                            this.apiSB.showSuccessSnackBar("a reactivation email was sent to the given email address");
+                            this.router.navigate(["login"]);
+                            return [];
+                        })
+                    )
+            );
+        })
+    );
+
+    @Effect()
+    resetPassword = this.actions.pipe(
+        ofType(RESET_PASSWORD),
+        map((action: ResetPassword) => {
+            return action.payload;
+        }),
+        mergeMap((payload: { new_password: string, link_id: string }) => {
+            return from(
+                this.http
+                    .post(GetResetPasswordUrl(payload.link_id), { new_password: payload.new_password })
+                    .pipe(
+                        catchError(error => {
+                            console.log('error', error);
+                            this.recordSB.showError(error.error.detail);
+                            return [];
+                        }),
+                        mergeMap((response) => {
+                            console.log('response: ', response);
+                            this.apiSB.showSuccessSnackBar("password resetted");
+                            this.router.navigate(["login"]);
+                            return [];
+                        })
+                    )
+            );
+        })
+    );
+
     static getStaticInformation(response: {
         user: any;
         all_permissions: any;
@@ -129,7 +195,7 @@ export class AuthEffects {
         rlc: any;
     }) {
         // not on prod
-        if (!isDevMode()){
+        if (!isDevMode()) {
             // for logging
             LogRocket.identify(response.user.id);
             // keep this console.log

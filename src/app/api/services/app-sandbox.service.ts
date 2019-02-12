@@ -21,11 +21,12 @@ import { AppState } from "../../store/app.reducers";
 import { select, Store } from "@ngrx/store";
 import { take } from "rxjs/operators";
 import {
+    ForgotPassword,
     Logout,
-    ReloadStaticInformation,
+    ReloadStaticInformation, ResetPassword,
     SetToken,
     TryLogin
-} from "../store/auth/auth.actions";
+} from '../store/auth/auth.actions';
 import { Router } from "@angular/router";
 import { RecordsSandboxService } from "../../recordmanagement/services/records-sandbox.service";
 import {Observable} from 'rxjs';
@@ -78,4 +79,11 @@ export class AppSandboxService {
         this.savedLocation = this.router.url;
     }
 
+    forgotPassword(email: string): void {
+        this.store.dispatch(new ForgotPassword({email}));
+    }
+
+    resetPassword(new_password: string, link_id: string): void {
+        this.store.dispatch(new ResetPassword({new_password, link_id}));
+    }
 }

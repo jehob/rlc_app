@@ -22,6 +22,8 @@ export const TRY_LOGIN = "TRY_LOGIN";
 export const TRY_RELOAD_STATIC_INFORMATION = "TRY_RELOAD_STATIC_INFORMATION";
 export const SET_TOKEN = "SET_TOKEN";
 export const LOGOUT = "LOGOUT";
+export const FORGOT_PASSWORD = "FORGOT_PASSWORD";
+export const RESET_PASSWORD = "RESET_PASSWORD";
 
 export class TryLogin implements Action {
     readonly type = TRY_LOGIN;
@@ -43,4 +45,22 @@ export class Logout implements Action {
     readonly type = LOGOUT;
 }
 
-export type AuthActions = TryLogin | ReloadStaticInformation | SetToken | Logout;
+export class ForgotPassword implements Action {
+    readonly type = FORGOT_PASSWORD;
+
+    constructor(public payload: { email: string }) {}
+}
+
+export class ResetPassword implements Action {
+    readonly type = RESET_PASSWORD;
+
+    constructor(public payload: { new_password: string, link_id: string }) {}
+}
+
+export type AuthActions =
+    | TryLogin
+    | ReloadStaticInformation
+    | SetToken
+    | Logout
+    | ResetPassword
+    | ForgotPassword;

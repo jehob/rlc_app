@@ -146,7 +146,10 @@ class RecordViewSet(APIView):
         return Response(serializers.RecordFullDetailSerializer(record).data)
 
     def get(self, request, id):
-        record = models.Record.objects.get(pk=id)
+        try:
+            record = models.Record.objects.get(pk=id)
+        except:
+            raise CustomError(ERROR__RECORD__RECORD__NOT_EXISTING)
         user = request.user
         if user.rlc != record.from_rlc and not user.is_superuser:
             raise CustomError(ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC)

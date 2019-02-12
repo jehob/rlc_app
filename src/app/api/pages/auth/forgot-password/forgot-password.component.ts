@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { ApiSandboxService } from "../../../services/api-sandbox.service";
 import { FormControl, FormGroup } from "@angular/forms";
+import {AppSandboxService} from '../../../services/app-sandbox.service';
 
 @Component({
     selector: "app-forgot-password",
@@ -10,7 +10,7 @@ import { FormControl, FormGroup } from "@angular/forms";
 export class ForgotPasswordComponent implements OnInit {
     email_form: FormGroup;
 
-    constructor(private apiSB: ApiSandboxService) {
+    constructor(private appSB: AppSandboxService) {
         this.email_form = new FormGroup({
             email: new FormControl("")
         });
@@ -19,6 +19,7 @@ export class ForgotPasswordComponent implements OnInit {
     ngOnInit() {}
 
     onResetPasswordClick() {
-        console.log("email", this.email_form.controls['email'].value);
+        if (this.email_form.valid)
+            this.appSB.forgotPassword(this.email_form.controls['email'].value);
     }
 }

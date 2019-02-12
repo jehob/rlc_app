@@ -18,15 +18,16 @@
 
 import { Component, OnInit } from "@angular/core";
 import {
-    AbstractControl,
     FormControl,
     FormGroup,
-    ValidatorFn,
     Validators
 } from "@angular/forms";
+
 import { MatSnackBar } from "@angular/material";
 import { ApiSandboxService } from "../../../services/api-sandbox.service";
 import { RestrictedRlc } from "../../../models/rlc.model";
+import {matchValidator, passwordValidator} from '../../../../statics/validators.statics';
+import {CustomErrorStateMatcher} from '../../../../statics/errror_state_matcher.statics';
 
 @Component({
     selector: "app-register",
@@ -36,6 +37,7 @@ import { RestrictedRlc } from "../../../models/rlc.model";
 export class RegisterComponent implements OnInit {
     userForm: FormGroup;
     allRlcs: RestrictedRlc[] = [];
+    errorStateMatcher = new CustomErrorStateMatcher();
 
     constructor(
         private snackBar: MatSnackBar,
@@ -53,7 +55,7 @@ export class RegisterComponent implements OnInit {
                 name: new FormControl("", Validators.required),
                 password: new FormControl("", [
                     Validators.required,
-                    this.passwordValidator()
+                    passwordValidator
                 ]),
                 password_confirm: new FormControl("", [Validators.required]),
                 phone_number: new FormControl(""),
@@ -63,7 +65,7 @@ export class RegisterComponent implements OnInit {
                 birthday: new FormControl(date),
                 rlc: new FormControl("", [Validators.required])
             },
-            this.passwordMatchValidator
+            matchValidator('password', 'password_confirm')
         );
 
         this.apiSB.getAllRlcs().subscribe((response: any) => {
@@ -101,28 +103,5 @@ export class RegisterComponent implements OnInit {
 
             this.apiSB.registerUser(user);
         }
-    }
-
-    passwordMatchValidator(g: FormGroup) {
-        return g.get("password").value === g.get("password_confirm").value
-            ? null
-            : { mismatch: true };
-    }
-
-    passwordValidator(): ValidatorFn {
-        return (control: AbstractControl): { [key: string]: any } | null => {
-            const password: string = control.value;
-            const hasNumber = /\d/.test(password);
-            const hasUpper = /[A-Z]/.test(password);
-            const hasLower = /[a-z]/.test(password);
-            const hasSpecial = /[$@!%*?&+=#'"`\/<>,.^()[\]\\|{}]/.test(
-                password
-            );
-            const length = password.length >= 9;
-            if (!hasNumber || !hasUpper || !hasLower || !hasSpecial)
-                return { weak: "true" };
-            else if (!length) return { short: "true" };
-            return null;
-        };
     }
 }

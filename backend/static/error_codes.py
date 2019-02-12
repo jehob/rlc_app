@@ -166,3 +166,28 @@ ERROR__API__EMAIL__NO_EMAIL_PROVIDED = {
     'error_detail': 'no "email" provided',
     'error_code': 'api.email.no_email_provided'
 }
+
+ERROR__API__USER__ALREADY_FORGOT_PASSWORD = {
+    'error_detail': 'already sent you an reactivation link',
+    'error_code': 'api.user.already_forgot_password'
+}
+
+ERROR__API__USER__INACTIVE = {
+    'error_detail': 'account is inactive',
+    'error_code': 'api.user.inactive'
+}
+
+ERROR__API__USER__PASSWORD_RESET_LINK_DOES_NOT_EXIST = {
+    'error_detail': 'there is no reset password link with this id',
+    'error_code': 'api.user.password_reset_link_does_not_exist'
+}
+
+ERROR__API__USER__NEW_PASSWORD_NOT_PROVIDED = {
+    'error_detail': 'no new password provided',
+    'error_code': 'api.user.new_password_not_provided'
+}
+
+ERROR__ENV__MISSING_VARIABLE = {
+    'error_detail': 'a environment variable isnt set',
+    'error_code': 'env.missing_variable'
+}

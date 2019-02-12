@@ -36,14 +36,17 @@
         </mat-form-field>
         <mat-form-field class="register__input-item">
             <input matInput id="password" placeholder="password*" type="password" formControlName="password">
-            <mat-error *ngIf="userForm.controls['password'].errors && userForm.controls['password'].errors.weak">password must contain at least 1 special,
+            <mat-error *ngIf="userForm.controls['password'].errors && userForm.controls['password'].errors.weak">
+                password must contain at least 1 special,
                 1 upper case, 1 lower case character and a digit
             </mat-error>
-            <mat-error *ngIf="userForm.controls['password'].errors && userForm.controls['password'].errors.short">password too short
+            <mat-error *ngIf="userForm.controls['password'].errors && userForm.controls['password'].errors.short">
+                password too short
             </mat-error>
         </mat-form-field>
         <mat-form-field class="register__input-item">
-            <input matInput id="password_repeat" placeholder="confirm password*" type="password" formControlName="password_confirm">
+            <input matInput id="password_repeat" placeholder="confirm password*" type="password"
+                   formControlName="password_confirm" [errorStateMatcher]="errorStateMatcher">
             <mat-error *ngIf="userForm.errors && userForm.errors.mismatch">
                 passwords must be the same
             </mat-error>
@@ -65,6 +68,7 @@
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
-        <button class="register__btn-register" type="submit"  mat-flat-button [disabled]="!userForm.valid">Register</button>
+        <button class="register__btn-register" type="submit" mat-flat-button [disabled]="!userForm.valid">Register
+        </button>
     </form>
 </div>

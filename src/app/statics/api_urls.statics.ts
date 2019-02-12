@@ -26,7 +26,10 @@ export const CREATE_RECORD_URL = "api/records/create_record/";
 export const RLCS_URL = "api/get_rlcs/";
 export const UPLOAD_SIGNING_BASE_URL = "api/storage_up/";
 export const RECORD_PERMISSIONS_LIST_URL = "api/records/record_permission_requests/";
+export const FORGOT_PASSWORD_URL = "api/forgot_password/";
 
+
+const RESET_PASSWORD_URL = "api/reset_password/";
 const SPECIAL_RECORD_BASE_URL = "api/records/record/";
 const DOWNLOAD_SIGNING_BASE_URL = "api/storage_down/";
 const RECORD_DOCUMENT_BASE_URL = "api/records/documents/";
@@ -66,4 +69,8 @@ export const GetRecordDocumentUrl = (document_id: string) => {
 
 export const GetRecordpermissionRequestUrl = (record_id: string) => {
     return `${SPECIAL_RECORD_BASE_URL}${record_id}/request_permission`;
+};
+
+export const GetResetPasswordUrl = (link_id: string) => {
+    return `${RESET_PASSWORD_URL}${link_id}/`;
 };

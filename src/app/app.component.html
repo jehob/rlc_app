@@ -19,8 +19,8 @@
 <div class="root-container" [class.example-is-mobile]="mobileQuery.matches">
     <mat-toolbar class="root-toolbar">
         <button mat-icon-button (click)="toggleNav()"><mat-icon>menu</mat-icon></button>
-        <img src="../../static/images/rlc_intranet_logo.png" alt="RLC App">        
-        <h1>RLC app</h1>
+        <img src="../../static/images/rlc_intranet_logo.png" alt="RLC App" (click)="redirectToMainPage()">
+        <h1 (click)="redirectToMainPage()">RLC app</h1>
     </mat-toolbar>
 
     <mat-sidenav-container class="sidenav-container"
