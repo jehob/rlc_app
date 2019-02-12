@@ -110,12 +110,14 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         ('ex', 'exam'),
         ('ab', 'abroad')
     )
+    user_state = models.CharField(max_length=2, choices=user_states_possible)
 
     user_record_states_possible = (
         ('ac', 'accepting'),
         ('na', 'not accepting'),
         ('de', 'depends')
     )
+    user_record_state = models.CharField(max_length=2, choices=user_record_states_possible)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']  # email already in there, other are default

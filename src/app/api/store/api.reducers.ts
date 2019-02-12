@@ -24,7 +24,7 @@ import {
     SET_RLC,
     SET_SPECIAL_FOREIGN_USER,
     SET_USER,
-    SET_USER_PERMISSIONS
+    SET_USER_PERMISSIONS, SET_USER_RECORD_STATES, SET_USER_STATES
 } from './api.actions';
 import {HasPermission, Permission} from '../models/permission.model';
 import {RestrictedRlc} from '../models/rlc.model';
@@ -37,7 +37,9 @@ export interface ApiState {
     all_permissions: { [id: number]: Permission },
     user_permissions: { [id: number]: HasPermission },
     foreign_user: ForeignUser,
-    rlc: RestrictedRlc
+    rlc: RestrictedRlc,
+    user_states: any,
+    user_record_states: any
 }
 
 const initialState: ApiState = {
@@ -46,7 +48,9 @@ const initialState: ApiState = {
     all_permissions: {},
     user_permissions: {},
     foreign_user: null,
-    rlc: null
+    rlc: null,
+    user_states: [],
+    user_record_states: []
 };
 
 export function apiReducer(state = initialState, action: ApiActions) {
@@ -80,6 +84,16 @@ export function apiReducer(state = initialState, action: ApiActions) {
             return {
                 ...state,
                 foreign_user: action.payload
+            };
+        case SET_USER_STATES:
+            return {
+                ...state,
+                user_states: action.payload
+            };
+        case SET_USER_RECORD_STATES:
+            return {
+                ...state,
+                user_record_states: action.payload
             };
         default:
             return state;

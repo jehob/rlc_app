@@ -41,8 +41,8 @@ import {
     SET_ALL_PERMISSIONS,
     SET_RLC,
     SET_USER,
-    SET_USER_PERMISSIONS
-} from "../api.actions";
+    SET_USER_PERMISSIONS, SET_USER_RECORD_STATES, SET_USER_STATES
+} from '../api.actions';
 import { AuthGuardService } from "../../services/auth-guard.service";
 import { FullUser } from "../../models/user.model";
 import { RecordsSandboxService } from "../../../recordmanagement/services/records-sandbox.service";
@@ -88,6 +88,8 @@ export class AuthEffects {
                             rlc: any;
                             error: string;
                             error_message: string;
+                            user_states: any;
+                            user_record_states;
                         }) => {
                             //console.log('successfull login');
                             localStorage.setItem("token", response.token);
@@ -193,6 +195,8 @@ export class AuthEffects {
         all_permissions: any;
         permissions: any;
         rlc: any;
+        user_states: any;
+        user_record_states: any;
     }) {
         // not on prod
         if (!isDevMode()) {
@@ -221,6 +225,14 @@ export class AuthEffects {
             {
                 type: SET_RLC,
                 payload: RestrictedRlc.getRestrictedRlcFromJson(response.rlc)
+            },
+            {
+                type: SET_USER_STATES,
+                payload: response.user_states
+            },
+            {
+                type: SET_USER_RECORD_STATES,
+                payload: response.user_record_states
             }
         ];
     }

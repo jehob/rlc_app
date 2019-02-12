@@ -18,7 +18,7 @@ from rest_framework.response import Response
 
 from backend.api.serializers import UserProfileNameSerializer
 from ..serializers import RecordTagNameSerializer, OriginCountryNameStateSerializer, RecordDocumentTagSerializer
-from ..models import RecordTag, OriginCountry, Record, RecordDocumentTag
+from ..models import RecordTag, OriginCountry, Record, RecordDocumentTag, UserProfile
 
 
 class StaticViewSet(APIView):

@@ -27,6 +27,8 @@ export const SET_SPECIAL_FOREIGN_USER = "SET_SPECIAL_FOREIGN_USER";
 export const SET_ALL_PERMISSIONS = "SET_ALL_PERMISSIONS";
 export const SET_USER_PERMISSIONS = "SET_USER_PERMISSIONS";
 export const SET_RLC = "SET_RLC";
+export const SET_USER_STATES = "SET_USER_STATES";
+export const SET_USER_RECORD_STATES = "SET_USER_RECORD_STATES";
 
 export const START_PATCH_USER = "START_PATCH_USER";
 export const START_CREATE_USER = "START_CREATE_USER";
@@ -91,6 +93,17 @@ export class StartLoadingSpecialForeignUser implements Action {
     constructor(public payload: string){}
 }
 
+export class SetUserStates implements Action {
+    readonly type = SET_USER_STATES;
+
+    constructor(public payload: any){}
+}
+
+export class SetUserRecordStates implements Action {
+    readonly type = SET_USER_RECORD_STATES;
+
+    constructor(public payload: any){}
+}
 
 export type ApiActions =
     | SetUser
@@ -102,4 +115,6 @@ export type ApiActions =
     | StartCreateUser
     | StartLoadingOtherUsers
     | StartLoadingSpecialForeignUser
-    | SetRlc;
+    | SetRlc
+    | SetUserStates
+    | SetUserRecordStates;
