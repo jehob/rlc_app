@@ -24,7 +24,7 @@ import pytz
 from backend.recordmanagement import models, serializers
 from backend.static import error_codes
 from backend.api.errors import CustomError
-from backend.static.permissions import PERMISSION_CAN_PERMIT_RECORD_PERMISSION_REQUESTS
+from backend.static.permissions import PERMISSION_PERMIT_RECORD_PERMISSION_REQUESTS_RLC
 
 
 class RecordPermissionViewSet(viewsets.ModelViewSet):
@@ -61,7 +61,7 @@ class RecordPermissionAdmitViewSet(APIView):
         :return:
         """
         user = request.user
-        if not user.has_permission(PERMISSION_CAN_PERMIT_RECORD_PERMISSION_REQUESTS, for_rlc=user.rlc):
+        if not user.has_permission(PERMISSION_PERMIT_RECORD_PERMISSION_REQUESTS_RLC, for_rlc=user.rlc):
             raise CustomError(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
         requests = models.RecordPermission.objects.filter(record__from_rlc=user.rlc)
         if requests.count() == 0:
@@ -75,7 +75,7 @@ class RecordPermissionAdmitViewSet(APIView):
         :return:
         """
         user = request.user
-        if not user.has_permission(PERMISSION_CAN_PERMIT_RECORD_PERMISSION_REQUESTS, for_rlc=user.rlc):
+        if not user.has_permission(PERMISSION_PERMIT_RECORD_PERMISSION_REQUESTS_RLC, for_rlc=user.rlc):
             raise CustomError(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
         if 'id' not in request.data:
             raise CustomError(error_codes.ERROR__RECORD__PERMISSION__ID_NOT_PROVIDED)

@@ -47,8 +47,8 @@ class RecordTests(TransactionTestCase):
         client = CreateFixtures.add_client(20, "Peter Parker", "batman", "1929129912", date.today(), 30)
         tags = CreateFixtures.add_tags([(1, "Abschiebung"), (2, "Familiennachzug")])
 
-        permission = CreateFixtures.add_permission(90, PERMISSION_CAN_VIEW_RECORDS)
-        CreateFixtures.add_permission(91, PERMISSION_VIEW_RECORDS_FULL_DETAIL)
+        permission = CreateFixtures.add_permission(90, PERMISSION_VIEW_RECORDS_RLC)
+        CreateFixtures.add_permission(91, PERMISSION_VIEW_RECORDS_FULL_DETAIL_RLC)
         CreateFixtures.add_has_permission(100, permission.id, rlc_has=rlc1.id, for_rlc=rlc1.id)
         CreateFixtures.add_has_permission(101, permission.id, rlc_has=rlc2.id, for_rlc=rlc2.id)
         return users, [rlc1, rlc2], client, tags

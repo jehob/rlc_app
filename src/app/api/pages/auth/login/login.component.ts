@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit {
                 Validators.required,
                 Validators.email
             ]),
-            password: new FormControl("formel11.F", [Validators.required])
+            password: new FormControl("qwe123", [Validators.required])
         });
     }
 

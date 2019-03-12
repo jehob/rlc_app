@@ -64,13 +64,15 @@ import { RecordDocument } from "../../models/record_document.model";
 import { RecordMessage } from "../../models/record_message.model";
 import { RESET_FULL_CLIENT_INFORMATION } from "../actions/records.actions";
 import {RecordPermissionRequest} from '../../models/record_permission.model';
+import {SnackbarService} from '../../../shared/services/snackbar.service';
 
 @Injectable()
 export class RecordsLoadingEffects {
     constructor(
         private actions: Actions,
         private http: HttpClient,
-        private appSB: AppSandboxService
+        private appSB: AppSandboxService,
+        private snackbarService: SnackbarService
     ) {}
 
     @Effect()
@@ -86,7 +88,8 @@ export class RecordsLoadingEffects {
             return from(
                 this.http.get(url).pipe(
                     catchError(error => {
-                        return of({ error: "error at loading records" });
+                        this.snackbarService.showErrorSnackBar(`error at loading records: ${error.error.detail}`);
+                        return [];
                     }),
                     mergeMap(response => {
                         const loadedRecords: Array<RestrictedRecord> = [];
@@ -118,9 +121,8 @@ export class RecordsLoadingEffects {
                 return from(
                     this.http.get(RECORDS_STATICS_URL).pipe(
                         catchError(error => {
-                            return of({
-                                error: "error at loading record statics"
-                            });
+                            this.snackbarService.showErrorSnackBar(`error at loading record statics: ${error.error.detail}`);
+                            return [];
                         }),
                         mergeMap(
                             (response: {
@@ -188,9 +190,8 @@ export class RecordsLoadingEffects {
                     })
                     .pipe(
                         catchError(error => {
-                            return of({
-                                error: "error at loading client possibilities"
-                            });
+                            this.snackbarService.showErrorSnackBar(`error at loading client possibilities: ${error.error.detail}`);
+                            return [];
                         }),
                         mergeMap(response => {
                             const clients = FullClient.getFullClientsFromJsonArray(
@@ -215,7 +216,8 @@ export class RecordsLoadingEffects {
             return from(
                 this.http.get(GetSpecialRecordURL(id)).pipe(
                     catchError(error => {
-                        return of({ error: "error at loading special record" });
+                        this.snackbarService.showErrorSnackBar(`error at loading special record: ${error.error.detail}`);
+                        return [];
                     }),
                     mergeMap((response: any) => {
                         if (response.record) {
@@ -285,10 +287,8 @@ export class RecordsLoadingEffects {
                     .get(RECORD_PERMISSIONS_LIST_URL)
                     .pipe(
                         catchError(error => {
+                            this.snackbarService.showErrorSnackBar(`error at loading record permission list: ${error.error.detail}`);
                             return [];
-                            return of({
-                                error: "error at loading record permissions list"
-                            });
                         }),
                         mergeMap(response => {
                             return [

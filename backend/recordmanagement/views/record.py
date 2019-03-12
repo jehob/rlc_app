@@ -27,7 +27,7 @@ from backend.api.models import UserProfile
 from backend.api.other_functions.emails import EmailSender
 from backend.recordmanagement import models, serializers
 from backend.static.error_codes import *
-from backend.static.permissions import PERMISSION_VIEW_RECORDS_FULL_DETAIL
+from backend.static.permissions import PERMISSION_VIEW_RECORDS_FULL_DETAIL_RLC
 
 
 class RecordsListViewSet(viewsets.ViewSet):
@@ -59,7 +59,7 @@ class RecordsListViewSet(viewsets.ViewSet):
                     working_on_record__in=consultants)).distinct()
 
         records = []
-        if user.has_permission(PERMISSION_VIEW_RECORDS_FULL_DETAIL, for_rlc=user.rlc):
+        if user.has_permission(PERMISSION_VIEW_RECORDS_FULL_DETAIL_RLC, for_rlc=user.rlc):
             queryset = entries
             serializer = serializers.RecordFullDetailSerializer(queryset, many=True)
             records += serializer.data
@@ -91,6 +91,7 @@ class RecordsListViewSet(viewsets.ViewSet):
         return Response(serializers.RecordFullDetailSerializer(record).data)
 
     def retrieve(self, request, pk=None):
+        # TODO: deprecated?
         try:
             record = models.Record.objects.get(pk=pk) # changed
         except Exception as e:

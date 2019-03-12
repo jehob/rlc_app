@@ -29,42 +29,58 @@
 
 from rest_framework import viewsets
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .. import models, serializers
 
 
 class GroupViewSet(viewsets.ModelViewSet):
-    queryset = models.Group.objects.all()
+    # queryset = models.Group.objects.all()
     serializer_class = serializers.GroupSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        if not user.is_superuser:
+            return models.Group.objects.filter(from_rlc=user.rlc)
+        else:
+            return models.Group.objects.all()
+
+    # def list(self, request, *args, **kwargs):
+    #     pass
 
     def perform_create(self, serializer):
         creator = models.UserProfile.objects.get(id=self.request.user.id)
         serializer.save(creator=creator)
 
-    def partial_update(self, request, *args, **kwargs):
+#
+#
+# class GroupTestViewSet(viewsets.ViewSet):
+#     def list(self, request):
+#         queryset = models.Group.objects.all()
+#         serializer = serializers.GroupSerializer(queryset, many=True)
+#         return Response(serializer.data)
+#
+#     def create(self, request):
+#         pass
+#
+#     def retrieve(self, request, pk=None):
+#         queryset = models.Group.objects.all()
+#         serializer = serializers.GroupSerializer(queryset, many=True)
+#         return Response(serializer.data)
+#
+#     def update(self, request, pk=None):
+#         pass
+#
+#     def partial_update(self, request, pk=None):
+#
+#         pass
+#
+#     def destroy(self, request, pk=None):
+#         pass
+#
+
+
+class GroupTestViewSet(APIView):
+    def get(self, request, id):
         a = 10
-
-
-class GroupTestViewSet(viewsets.ViewSet):
-    def list(self, request):
-        queryset = models.Group.objects.all()
-        serializer = serializers.GroupSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-    def create(self, request):
-        pass
-
-    def retrieve(self, request, pk=None):
-        queryset = models.Group.objects.all()
-        serializer = serializers.GroupSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-    def update(self, request, pk=None):
-        pass
-
-    def partial_update(self, request, pk=None):
-
-        pass
-
-    def destroy(self, request, pk=None):
-        pass
+        return Response()

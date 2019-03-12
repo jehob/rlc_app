@@ -82,7 +82,7 @@ class Record(models.Model):
     def user_has_permission(self, user):
         """
         return if the user has permission edit and view the record in full detail
-        :param user: the user to check
+        :param user: user object, the user to check
         :return: boolean, true if the user has permission
         """
         from backend.recordmanagement.models import RecordPermission

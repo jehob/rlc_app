@@ -86,4 +86,6 @@ export class AppSandboxService {
     resetPassword(new_password: string, link_id: string): void {
         this.store.dispatch(new ResetPassword({new_password, link_id}));
     }
+
+
 }

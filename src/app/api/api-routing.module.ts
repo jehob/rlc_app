@@ -17,8 +17,8 @@
  ******************************************************************************/
 
 import { RouterModule, Routes } from "@angular/router";
-import { AuthGuardService } from "./services/auth-guard.service";
 import { NgModule } from "@angular/core";
+import { AuthGuardService } from "./services/auth-guard.service";
 import { ProfileComponent } from "./pages/profile/profile.component";
 import { DashboardComponent } from "./pages/Dashboard/dashboard.component";
 import { LoginComponent } from "./pages/auth/login/login.component";
@@ -27,6 +27,7 @@ import { ProfilesListComponent } from "./pages/profiles-list/profiles-list.compo
 import { ForeignProfileComponent } from "./pages/foreign-profile/foreign-profile.component";
 import {ForgotPasswordComponent} from './pages/auth/forgot-password/forgot-password.component';
 import {ResetPasswordComponent} from './pages/auth/reset-password/reset-password.component';
+import {ManageGroupsComponent} from './pages/manage-groups/manage-groups.component';
 
 const apiRoutes: Routes = [
     {
@@ -46,13 +47,19 @@ const apiRoutes: Routes = [
         component: DashboardComponent,
         canActivate: [AuthGuardService]
     },
-    { path: "login", component: LoginComponent },
-    { path: "register", component: RegisterComponent },
     {
         path: "profiles/:id",
         component: ForeignProfileComponent,
         canActivate: [AuthGuardService]
     },
+    {
+        path: "manage-groups",
+        component: ManageGroupsComponent,
+        canActivate: [AuthGuardService]
+    },
+    // without access control
+    { path: "login", component: LoginComponent },
+    { path: "register", component: RegisterComponent },
     { path: "forgot-password", component: ForgotPasswordComponent},
     { path: "reset-password/:id", component: ResetPasswordComponent}
 ];

@@ -15,27 +15,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Injectable } from "@angular/core";
-import {MatSnackBar, MatSnackBarConfig} from '@angular/material';
+import { ManageGroupsComponent } from './manage-groups.component';
 
-@Injectable()
-export class SnackbarService {
-    constructor(private snackBar: MatSnackBar) {}
+describe('ManageGroupsComponent', () => {
+  let component: ManageGroupsComponent;
+  let fixture: ComponentFixture<ManageGroupsComponent>;
 
-    public showSuccessSnackBar(message: string) {
-        const config = new MatSnackBarConfig();
-        config.panelClass = ["snackbar__success"];
-        config.duration = 2500;
-        config.verticalPosition = "top";
-        this.snackBar.open(message, "", config);
-    }
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ ManageGroupsComponent ]
+    })
+    .compileComponents();
+  }));
 
-    public showErrorSnackBar(message: string) {
-        const config = new MatSnackBarConfig();
-        config.panelClass = ["snackbar__error"];
-        config.duration = 2500000;
-        config.verticalPosition = "top";
-        this.snackBar.open(message, "", config);
-    }
-}
+  beforeEach(() => {
+    fixture = TestBed.createComponent(ManageGroupsComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

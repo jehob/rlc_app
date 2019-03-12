@@ -27,8 +27,8 @@ from rest_framework.response import Response
 
 from backend.api.errors import CustomError
 from backend.static.error_codes import *
-from backend.static.permissions import PERMISSION_CAN_VIEW_FULL_USER_DETAIL_OVERALL, \
-    PERMISSION_CAN_VIEW_FULL_USER_DETAIL_OWN_RLC
+from backend.static.permissions import PERMISSION_VIEW_FULL_USER_DETAIL_OVERALL, \
+    PERMISSION_VIEW_FULL_USER_DETAIL_RLC
 from ..models import UserProfile, Permission, Rlc
 from ..permissions import UpdateOwnProfile
 from ..serializers import UserProfileSerializer, UserProfileCreatorSerializer, UserProfileNameSerializer, RlcSerializer, \
@@ -71,12 +71,12 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             raise CustomError(ERROR__API__USER__NOT_FOUND)
 
         if request.user.rlc != user.rlc:
-            if request.user.is_superuser or request.user.has_permission(PERMISSION_CAN_VIEW_FULL_USER_DETAIL_OVERALL):
+            if request.user.is_superuser or request.user.has_permission(PERMISSION_VIEW_FULL_USER_DETAIL_OVERALL):
                 serializer = UserProfileSerializer(user)
             else:
                 raise CustomError(ERROR__API__USER__NOT_SAME_RLC)
         else:
-            if request.user.has_permission(PERMISSION_CAN_VIEW_FULL_USER_DETAIL_OWN_RLC):
+            if request.user.has_permission(PERMISSION_VIEW_FULL_USER_DETAIL_RLC):
                 serializer = UserProfileSerializer(user)
             else:
                 serializer = UserProfileForeignSerializer(user)

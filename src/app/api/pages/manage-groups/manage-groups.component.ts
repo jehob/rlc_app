@@ -16,26 +16,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { Injectable } from "@angular/core";
-import {MatSnackBar, MatSnackBarConfig} from '@angular/material';
+import { Component, OnInit } from "@angular/core";
+import { ApiSandboxService } from "../../services/api-sandbox.service";
 
-@Injectable()
-export class SnackbarService {
-    constructor(private snackBar: MatSnackBar) {}
+@Component({
+    selector: "app-manage-groups",
+    templateUrl: "./manage-groups.component.html",
+    styleUrls: ["./manage-groups.component.scss"]
+})
+export class ManageGroupsComponent implements OnInit {
+    constructor(private apiSB: ApiSandboxService) {}
 
-    public showSuccessSnackBar(message: string) {
-        const config = new MatSnackBarConfig();
-        config.panelClass = ["snackbar__success"];
-        config.duration = 2500;
-        config.verticalPosition = "top";
-        this.snackBar.open(message, "", config);
-    }
-
-    public showErrorSnackBar(message: string) {
-        const config = new MatSnackBarConfig();
-        config.panelClass = ["snackbar__error"];
-        config.duration = 2500000;
-        config.verticalPosition = "top";
-        this.snackBar.open(message, "", config);
-    }
+    ngOnInit() {}
 }

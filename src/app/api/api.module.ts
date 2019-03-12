@@ -36,6 +36,7 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { ForeignProfileComponent } from './pages/foreign-profile/foreign-profile.component';
 import { ForgotPasswordComponent } from './pages/auth/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './pages/auth/reset-password/reset-password.component';
+import { ManageGroupsComponent } from './pages/manage-groups/manage-groups.component';
 
 @NgModule({
     imports: [
@@ -56,7 +57,8 @@ import { ResetPasswordComponent } from './pages/auth/reset-password/reset-passwo
         SidebarComponent,
         ForeignProfileComponent,
         ForgotPasswordComponent,
-        ResetPasswordComponent
+        ResetPasswordComponent,
+        ManageGroupsComponent
     ],
     providers: [],
     exports: [SidebarComponent]

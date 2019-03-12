@@ -19,3 +19,4 @@
 export const PERMISSION_CAN_CONSULT = 'can_consult';
 export const PERMISSION_CAN_VIEW_RECORDS = 'can_view_records';
 export const PERMISSION_CAN_PERMIT_RECORD_PERMISSION_REQUESTS = 'can_permit_record_permission_requests';
+export const PERMISSION_CAN_MANAGE_GROUPS_RLC = 'manage_groups_rlc';

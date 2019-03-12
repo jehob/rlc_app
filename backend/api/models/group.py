@@ -14,12 +14,14 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 from django.db import models
+
 from . import UserProfile
 
 
 class Group(models.Model):
     creator = models.ForeignKey(UserProfile, related_name='group_created', on_delete=models.SET_NULL, null=True)
-    from_rlc = models.ForeignKey('Rlc', related_name='group_from_rlc', on_delete=models.SET_NULL, null=True, default=None)
+    from_rlc = models.ForeignKey('Rlc', related_name='group_from_rlc', on_delete=models.SET_NULL, null=True,
+                                 default=None)
     name = models.CharField(max_length=200, null=False)
     visible = models.BooleanField(null=False)
     group_members = models.ManyToManyField(UserProfile, related_name="group_members")

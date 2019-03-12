@@ -23,14 +23,14 @@
 }
 
 .snackbar__success {
-    background: green;
-    color: white;
+    background: green !important;
+    color: white !important;
     vertical-align: center;
 }
 
 .snackbar__error {
-    background: red;
-    color: white;
+    background: #A81810 !important;
+    color: white !important;
     vertical-align: center;
 }
 
