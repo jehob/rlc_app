@@ -220,6 +220,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
                 raise CustomError(ERROR__API__PERMISSION__NOT_FOUND)
         if for_user is not None and for_group is not None and for_rlc is not None:
             raise AttributeError()
+
         return self.has_as_user_permission(permission, for_user, for_group, for_rlc) or \
                self.has_as_group_member_permission(permission, for_user, for_group, for_rlc) or \
                self.has_as_rlc_member_permission(permission, for_user, for_group, for_rlc)

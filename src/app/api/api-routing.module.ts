@@ -27,7 +27,10 @@ import { ProfilesListComponent } from "./pages/profiles-list/profiles-list.compo
 import { ForeignProfileComponent } from "./pages/foreign-profile/foreign-profile.component";
 import {ForgotPasswordComponent} from './pages/auth/forgot-password/forgot-password.component';
 import {ResetPasswordComponent} from './pages/auth/reset-password/reset-password.component';
-import {ManageGroupsComponent} from './pages/manage-groups/manage-groups.component';
+import {GroupsListComponent} from './pages/groups-list/groups-list.component';
+import {GroupComponent} from './pages/group/group.component';
+import {PermissionListComponent} from './pages/permission-list/permission-list.component';
+import {EditPermissionComponent} from './pages/edit-permission/edit-permission.component';
 
 const apiRoutes: Routes = [
     {
@@ -53,8 +56,25 @@ const apiRoutes: Routes = [
         canActivate: [AuthGuardService]
     },
     {
-        path: "manage-groups",
-        component: ManageGroupsComponent,
+        path: "groups",
+        pathMatch: "full",
+        component: GroupsListComponent,
+        canActivate: [AuthGuardService]
+    },
+    {
+        path: "groups/:id",
+        component: GroupComponent,
+        canActivate: [AuthGuardService]
+    },
+    {
+        path: "permissions",
+        pathMatch: "full",
+        component: PermissionListComponent,
+        canActivate: [AuthGuardService]
+    },
+    {
+        path: "permissions/:id",
+        component: EditPermissionComponent,
         canActivate: [AuthGuardService]
     },
     // without access control

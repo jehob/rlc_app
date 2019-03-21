@@ -19,33 +19,21 @@
 import { Filterable } from "../../shared/models/filterable.model";
 
 export class Permission implements Filterable {
-    constructor(
-        public id: string,
-        public name: string
-    ) {
+    constructor(public id: string, public name: string) {
         this.id = id;
         this.name = name;
     }
 
     static getPermissionsFromJsonArray(jsonArray) {
         const permissions: Array<Permission> = [];
-        Object.values(jsonArray).forEach((permission: {
-            id;
-            name;
-        }) => {
+        Object.values(jsonArray).forEach((permission: { id; name }) => {
             permissions.push(Permission.getPermissionFromJson(permission));
         });
         return permissions;
     }
 
-    static getPermissionFromJson(json: {
-        id;
-        name
-    }) {
-        return new Permission(
-            json.id,
-            json.name
-        );
+    static getPermissionFromJson(json: { id; name }) {
+        return new Permission(json.id, json.name);
     }
 
     getFilterableProperty() {
@@ -53,7 +41,7 @@ export class Permission implements Filterable {
     }
 }
 
-export class HasPermission{
+export class HasPermission {
     constructor(
         public id: string,
         public permission_id: string,
@@ -76,18 +64,22 @@ export class HasPermission{
 
     static getPermissionsFromJsonArray(jsonArray) {
         const hasPermissions: Array<HasPermission> = [];
-        Object.values(jsonArray).forEach((permission: {
-            id;
-            permission;
-            user_has_permission;
-            group_has_permission;
-            rlc_has_permission;
-            permission_for_user;
-            permission_for_group;
-            permission_for_rlc;
-        }) => {
-            hasPermissions.push(HasPermission.getHasPermissionFromJson(permission));
-        });
+        Object.values(jsonArray).forEach(
+            (permission: {
+                id;
+                permission;
+                user_has_permission;
+                group_has_permission;
+                rlc_has_permission;
+                permission_for_user;
+                permission_for_group;
+                permission_for_rlc;
+            }) => {
+                hasPermissions.push(
+                    HasPermission.getHasPermissionFromJson(permission)
+                );
+            }
+        );
         return hasPermissions;
     }
 
@@ -111,5 +103,67 @@ export class HasPermission{
             json.permission_for_group,
             json.permission_for_rlc
         );
+    }
+
+    static checkPermissionMet(
+        permissions: HasPermission[],
+        permissionId: number,
+        permission_for: {
+            for_rlc: number | string;
+            for_user: number | string;
+            for_group: number | string;
+        }
+    ): boolean {
+        /*
+        checks if a permissionId with permission_for restriction is met by any permission in result
+         */
+        const result: HasPermission[] = permissions.filter(
+            (hasPermission: HasPermission) => {
+                if (Number(hasPermission.permission_id) !== permissionId)
+                    return false;
+                if (!permission_for) return true;
+
+                if (
+                    !permission_for.for_user &&
+                    !permission_for.for_group &&
+                    !permission_for.for_rlc
+                ) {
+                    return true;
+                } else if (
+                    permission_for.for_user &&
+                    !permission_for.for_group &&
+                    !permission_for.for_rlc
+                ) {
+                    return (
+                        Number(hasPermission.forUser) ===
+                        Number(permission_for.for_user)
+                    );
+                } else if (
+                    !permission_for.for_user &&
+                    permission_for.for_group &&
+                    !permission_for.for_rlc
+                ) {
+                    return (
+                        Number(hasPermission.forGroup) ===
+                        Number(permission_for.for_group)
+                    );
+                } else if (
+                    !permission_for.for_user &&
+                    !permission_for.for_group &&
+                    permission_for.for_rlc
+                ) {
+                    return (
+                        Number(hasPermission.forRlc) ===
+                        Number(permission_for.for_rlc)
+                    );
+                } else {
+                    console.log(
+                        "error, permission_for cannot apply to multiple permission holders"
+                    );
+                    return false;
+                }
+            }
+        );
+        return result.length !== 0;
     }
 }

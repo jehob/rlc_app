@@ -287,6 +287,7 @@ export class RecordsLoadingEffects {
                     .get(RECORD_PERMISSIONS_LIST_URL)
                     .pipe(
                         catchError(error => {
+                            console.log(error);
                             this.snackbarService.showErrorSnackBar(`error at loading record permission list: ${error.error.detail}`);
                             return [];
                         }),

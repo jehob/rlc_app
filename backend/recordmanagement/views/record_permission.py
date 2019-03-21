@@ -85,7 +85,7 @@ class RecordPermissionAdmitViewSet(APIView):
             raise CustomError(error_codes.ERROR__RECORD__PERMISSION__ID_NOT_FOUND)
 
         if 'action' not in request.data:
-            raise CustomError(error_codes.ERROR__RECORD__PERMISSION__NO_ACTION_PROVIDED)
+            raise CustomError(error_codes.ERROR__API__NO_ACTION_PROVIDED)
         action = request.data['action']
         if action != 'accept' and action != 'decline':
             raise CustomError(error_codes.ERROR__RECORD__PERMISSION__NO_VALID_ACTION_PROVIDED)

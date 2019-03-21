@@ -16,30 +16,35 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import {ForeignUser, FullUser, RestrictedUser} from '../models/user.model';
+import { ForeignUser, FullUser, RestrictedUser } from "../models/user.model";
 import {
-    ApiActions,
-    SET_ALL_PERMISSIONS,
+    ApiActions, RESET_SPECIAL_FOREIGN_USER, RESET_SPECIAL_GROUP,
+    SET_ALL_PERMISSIONS, SET_GROUPS,
     SET_OTHER_USERS,
     SET_RLC,
-    SET_SPECIAL_FOREIGN_USER,
+    SET_SPECIAL_FOREIGN_USER, SET_SPECIAL_GROUP,
     SET_USER,
-    SET_USER_PERMISSIONS, SET_USER_RECORD_STATES, SET_USER_STATES
+    SET_USER_PERMISSIONS,
+    SET_USER_RECORD_STATES,
+    SET_USER_STATES
 } from './api.actions';
-import {HasPermission, Permission} from '../models/permission.model';
-import {RestrictedRlc} from '../models/rlc.model';
-import {getIdObjects} from '../../shared/other/reducer-helper';
-import {applySourceSpanToStatementIfNeeded} from '@angular/compiler/src/output/output_ast';
+import { HasPermission, Permission } from "../models/permission.model";
+import { RestrictedRlc } from "../models/rlc.model";
+import { getIdObjects } from "../../shared/other/reducer-helper";
+import { applySourceSpanToStatementIfNeeded } from "@angular/compiler/src/output/output_ast";
+import {FullGroup, RestrictedGroup} from '../models/group.model';
 
 export interface ApiState {
     user: FullUser;
-    other_users: { [id: number]: RestrictedUser },
-    all_permissions: { [id: number]: Permission },
-    user_permissions: { [id: number]: HasPermission },
-    foreign_user: ForeignUser,
-    rlc: RestrictedRlc,
-    user_states: any,
-    user_record_states: any
+    other_users: { [id: number]: RestrictedUser };
+    all_permissions: { [id: number]: Permission };
+    user_permissions: { [id: number]: HasPermission };
+    groups: { [id: number]: RestrictedGroup };
+    group: FullGroup,
+    foreign_user: ForeignUser;
+    rlc: RestrictedRlc;
+    user_states: any;
+    user_record_states: any;
 }
 
 const initialState: ApiState = {
@@ -47,6 +52,8 @@ const initialState: ApiState = {
     other_users: {},
     all_permissions: {},
     user_permissions: {},
+    groups: {},
+    group: null,
     foreign_user: null,
     rlc: null,
     user_states: [],
@@ -94,6 +101,26 @@ export function apiReducer(state = initialState, action: ApiActions) {
             return {
                 ...state,
                 user_record_states: action.payload
+            };
+        case SET_GROUPS:
+            return {
+                ...state,
+                groups: getIdObjects(action.payload)
+            };
+        case RESET_SPECIAL_FOREIGN_USER:
+            return {
+                ...state,
+                foreign_user: null
+            };
+        case SET_SPECIAL_GROUP:
+            return {
+                ...state,
+                group: action.payload
+            };
+        case RESET_SPECIAL_GROUP:
+            return {
+                ...state,
+                group: null
             };
         default:
             return state;

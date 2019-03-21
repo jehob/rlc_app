@@ -25,18 +25,24 @@ import { select, Store } from "@ngrx/store";
 
 import { AppState } from "../../store/app.reducers";
 import { ApiState } from "../store/api.reducers";
-import {ForeignUser, FullUser, RestrictedUser} from '../models/user.model';
+import { ForeignUser, FullUser, RestrictedUser } from "../models/user.model";
 import {
-    SetSpecialForeignUser,
+    ResetSpecialForeignUser,
+    SetSpecialForeignUser, StartAddingGroupMember,
     StartCreateUser,
-    StartLoadingOtherUsers, StartLoadingSpecialForeignUser,
-    StartPatchUser
+    StartLoadingGroups,
+    StartLoadingOtherUsers,
+    StartLoadingSpecialForeignUser,
+    StartLoadingSpecialGroup,
+    StartPatchUser, StartRemovingGroupMember
 } from '../store/api.actions';
 import { RLCS_URL } from "../../statics/api_urls.statics";
 import { StorageService } from "../../shared/services/storage.service";
 import { SnackbarService } from "../../shared/services/snackbar.service";
 import { Observable } from "rxjs";
 import { HasPermission, Permission } from "../models/permission.model";
+import { FullGroup, RestrictedGroup } from "../models/group.model";
+import {RestrictedRlc} from '../models/rlc.model';
 
 @Injectable()
 export class ApiSandboxService {
@@ -57,6 +63,14 @@ export class ApiSandboxService {
         return this.apiStateStore.pipe(select((state: any) => state.api.user));
     }
 
+    getRlc(): Observable<RestrictedRlc> {
+        return this.apiStateStore.pipe(select((state: any) => state.api.rlc));
+    }
+
+    getGroup(): Observable<FullGroup> {
+        return this.apiStateStore.pipe(select((state: any) => state.api.group));
+    }
+
     getUserPermissions(
         asArray: boolean = true
     ): Observable<HasPermission[] | any> {
@@ -68,9 +82,7 @@ export class ApiSandboxService {
         );
     }
 
-    getAllPermissions(
-        asArray: boolean = true
-    ): Observable<Permission[] | any> {
+    getAllPermissions(asArray: boolean = true): Observable<Permission[] | any> {
         return this.apiStateStore.pipe(
             select((state: any) => {
                 const values = state.api.all_permissions;
@@ -79,7 +91,7 @@ export class ApiSandboxService {
         );
     }
 
-    hasPermissionFromString(permission: string, subscriberCallback): void {
+    hasPermissionFromString(permission: string, subscriberCallback, permission_for: any = null): void {
         /*
         checks if the user has permission and returns to subscriberCallback true or false
          */
@@ -92,31 +104,34 @@ export class ApiSandboxService {
                                 single_permission.name === permission
                         )[0].id
                     );
-                    this.hasPermissionFromId(id, subscriberCallback);
+                    this.hasPermissionFromId(id, subscriberCallback, permission_for);
                 } catch (e) {
                     subscriberCallback(false);
                 }
             }
-        });
+        }).unsubscribe();
     }
 
-    hasPermissionFromId(permission: number, subscriberCallback): void {
+    hasPermissionFromId(permission: number, subscriberCallback, permission_for: any = null): void {
         /*
         checks if the user has permission and returns to subscriberCallback true or false
          */
         this.getUserPermissions().subscribe(
             (user_permissions: HasPermission[]) => {
-                const result = user_permissions.filter(
-                    (hasPermission: HasPermission) =>
-                        Number(hasPermission.permission_id) === permission
-                );
-                if (result.length === 0) {
-                    subscriberCallback(false);
-                } else {
-                    subscriberCallback(true);
-                }
+                // const a: boolean = HasPermission.checkPermissionMet(user_permissions, permission, permission_for);
+                subscriberCallback(HasPermission.checkPermissionMet(user_permissions, permission, permission_for));
+
+                // const result: HasPermission[] = user_permissions.filter(
+                //     (hasPermission: HasPermission) =>
+                //         Number(hasPermission.permission_id) === permission
+                // );
+                // if (result.length === 0) {
+                //     subscriberCallback(false);
+                // } else {
+                //     subscriberCallback(true);
+                // }
             }
-        );
+        ).unsubscribe();
     }
 
     startPatchUser(user: FullUser) {
@@ -147,9 +162,21 @@ export class ApiSandboxService {
     startLoadingOtherUsers() {
         this.apiStateStore.dispatch(new StartLoadingOtherUsers());
     }
-    getOtherUsers(
-        asArray: boolean = true
-    ): Observable<RestrictedUser[] | any> {
+
+    startLoadingGroups() {
+        this.apiStateStore.dispatch(new StartLoadingGroups());
+    }
+
+    getGroups(asArray: boolean = true): Observable<RestrictedGroup[]> | any {
+        return this.apiStateStore.pipe(
+            select((state: any) => {
+                const values = state.api.groups;
+                return asArray ? Object.values(values) : values;
+            })
+        );
+    }
+
+    getOtherUsers(asArray: boolean = true): Observable<RestrictedUser[] | any> {
         return this.apiStateStore.pipe(
             select((state: any) => {
                 const values = state.api.other_users;
@@ -178,8 +205,12 @@ export class ApiSandboxService {
         this.router.navigate(["login"]);
     }
 
-    setForeignUser(foreignUser: ForeignUser){
+    setForeignUser(foreignUser: ForeignUser) {
         this.apiStateStore.dispatch(new SetSpecialForeignUser(foreignUser));
+    }
+
+    resetForeignUser() {
+        this.apiStateStore.dispatch(new ResetSpecialForeignUser());
     }
 
     getSpecialForeignUser(): Observable<ForeignUser | any> {
@@ -191,5 +222,21 @@ export class ApiSandboxService {
     loadAndGetSpecialForeignUser(id: string): Observable<ForeignUser | any> {
         this.apiStateStore.dispatch(new StartLoadingSpecialForeignUser(id));
         return this.getSpecialForeignUser();
+    }
+
+    loadSpecialGroup(id: string): void {
+        this.apiStateStore.dispatch(new StartLoadingSpecialGroup(id));
+    }
+
+    getSpecialGroup() {
+        return this.apiStateStore.pipe(select((state: any) => state.api.group));
+    }
+
+    addGroupMember(user_id: string, group_id: string){
+        return this.apiStateStore.dispatch(new StartAddingGroupMember({user_id, group_id}));
+    }
+
+    removeGroupMember(user_id: string, group_id: string){
+        return this.apiStateStore.dispatch(new StartRemovingGroupMember({user_id, group_id}));
     }
 }

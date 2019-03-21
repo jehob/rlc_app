@@ -36,7 +36,13 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { ForeignProfileComponent } from './pages/foreign-profile/foreign-profile.component';
 import { ForgotPasswordComponent } from './pages/auth/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './pages/auth/reset-password/reset-password.component';
-import { ManageGroupsComponent } from './pages/manage-groups/manage-groups.component';
+import { GroupsListComponent } from './pages/groups-list/groups-list.component';
+import { GroupComponent } from './pages/group/group.component';
+import { EditGroupComponent } from './components/edit-group/edit-group.component';
+import { ShowGroupComponent } from './components/show-group/show-group.component';
+import { AddGroupMemberComponent } from './components/add-group-member/add-group-member.component';
+import { PermissionListComponent } from './pages/permission-list/permission-list.component';
+import { EditPermissionComponent } from './pages/edit-permission/edit-permission.component';
 
 @NgModule({
     imports: [
@@ -58,8 +64,15 @@ import { ManageGroupsComponent } from './pages/manage-groups/manage-groups.compo
         ForeignProfileComponent,
         ForgotPasswordComponent,
         ResetPasswordComponent,
-        ManageGroupsComponent
+        GroupsListComponent,
+        GroupComponent,
+        EditGroupComponent,
+        ShowGroupComponent,
+        AddGroupMemberComponent,
+        PermissionListComponent,
+        EditPermissionComponent
     ],
+    entryComponents: [AddGroupMemberComponent],
     providers: [],
     exports: [SidebarComponent]
 })

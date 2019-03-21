@@ -27,7 +27,8 @@ export const RLCS_URL = "api/get_rlcs/";
 export const UPLOAD_SIGNING_BASE_URL = "api/storage_up/";
 export const RECORD_PERMISSIONS_LIST_URL = "api/records/record_permission_requests/";
 export const FORGOT_PASSWORD_URL = "api/forgot_password/";
-
+export const GROUPS_URL = "api/groups/";
+export const GROUP_MEMBER_URL = "api/group_member/";
 
 const RESET_PASSWORD_URL = "api/reset_password/";
 const SPECIAL_RECORD_BASE_URL = "api/records/record/";
@@ -73,4 +74,8 @@ export const GetRecordpermissionRequestUrl = (record_id: string) => {
 
 export const GetResetPasswordUrl = (link_id: string) => {
     return `${RESET_PASSWORD_URL}${link_id}/`;
+};
+
+export const GetSpecialGroupURL = (id: string | number) => {
+    return `${GROUPS_URL}${id}/`;
 };

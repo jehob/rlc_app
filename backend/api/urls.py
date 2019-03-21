@@ -26,7 +26,6 @@ router.register('login', views.LoginViewSet, base_name='login')
 router.register('create_profile', views.UserProfileCreatorViewSet,
                 base_name='create_profile')
 router.register('groups', views.GroupViewSet, base_name='groups')
-router.register('groups_test', views.GroupTestViewSet, base_name='groups_test')
 router.register('permissions', views.PermissionViewSet, base_name='permissions')
 router.register('has_permission', views.HasPermissionViewSet, base_name="has_permission")
 router.register('rlcs', views.RlcViewSet, base_name='rlcs')
@@ -41,4 +40,5 @@ urlpatterns = [
     url(r'storage_down/', views.StorageDownloadViewSet.as_view()),
     url(r'forgot_password/', views.ForgotPasswordUnauthenticatedViewSet.as_view()),
     url(r'reset_password/(?P<id>.+)/$', views.ResetPasswordViewSet.as_view()),
+    url(r'group_member/', views.GroupMemberViewSet.as_view()),
 ]

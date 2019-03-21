@@ -15,24 +15,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
-
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ForeignProfileComponent } from './foreign-profile.component';
+import { GroupsListComponent } from './groups-list.component';
 
-describe('ForeignProfileComponent', () => {
-  let component: ForeignProfileComponent;
-  let fixture: ComponentFixture<ForeignProfileComponent>;
+describe('GroupsListComponent', () => {
+  let component: GroupsListComponent;
+  let fixture: ComponentFixture<GroupsListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ForeignProfileComponent ]
+      declarations: [ GroupsListComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ForeignProfileComponent);
+    fixture = TestBed.createComponent(GroupsListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

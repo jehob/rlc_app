@@ -22,12 +22,18 @@
         <p matLine>list of all users which are registered in your rlc at the moment</p>
     </mat-card-header>
     <mat-card-content>
-        <mat-list>
-            <mat-list-item *ngFor="let user of (otherUsers | async)" (click)="this.onUserClick(user)">
-                <p>{{ user.name }}</p>
-                <mat-divider></mat-divider>
-            </mat-list-item>
-        </mat-list>
+        <div *ngIf="otherUsers | async as catalog; else loading">
+            <ng-container *ngIf="catalog.length; else noItems">
+                <mat-list>
+                    <mat-list-item *ngFor="let user of (otherUsers | async)" (click)="this.onUserClick(user)">
+                        <p>{{ user.name }}</p>
+                    </mat-list-item>
+                </mat-list>
+            </ng-container>
+            <ng-template #noItems>No Items!</ng-template>
+        </div>
+        <ng-template #loading>loading...</ng-template>
+
 
     </mat-card-content>
 </mat-card>

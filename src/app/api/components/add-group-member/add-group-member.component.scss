@@ -1,4 +1,4 @@
-/*
+/*!
  * rlcapp - record and organization management software for refugee law clinics
  * Copyright (C) 2019  Dominik Walser
  *
@@ -16,16 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { Component, OnInit } from "@angular/core";
-import { ApiSandboxService } from "../../services/api-sandbox.service";
-
-@Component({
-    selector: "app-manage-groups",
-    templateUrl: "./manage-groups.component.html",
-    styleUrls: ["./manage-groups.component.scss"]
-})
-export class ManageGroupsComponent implements OnInit {
-    constructor(private apiSB: ApiSandboxService) {}
-
-    ngOnInit() {}
+.add-group-member__dialog-content {
+    max-height: 900px;
+    width: 300px;
 }

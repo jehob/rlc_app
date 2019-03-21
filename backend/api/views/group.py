@@ -28,32 +28,40 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 from rest_framework import viewsets
-from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.response import Response
 
+from backend.api.errors import CustomError
+from backend.static import error_codes
+from backend.static.permissions import PERMISSION_MANAGE_GROUPS_RLC
 from .. import models, serializers
 
 
 class GroupViewSet(viewsets.ModelViewSet):
-    # queryset = models.Group.objects.all()
     serializer_class = serializers.GroupSerializer
 
     def get_queryset(self):
         user = self.request.user
         if not user.is_superuser:
-            return models.Group.objects.filter(from_rlc=user.rlc)
+            # return models.Group.objects.get_groups_with_mange_rights(user)
+            if user.has_permission(PERMISSION_MANAGE_GROUPS_RLC, for_rlc=user.rlc):
+                return models.Group.objects.filter(from_rlc=user.rlc)
+            else:
+                return models.Group.objects.filter(from_rlc=user.rlc, visible=True)
         else:
             return models.Group.objects.all()
 
-    # def list(self, request, *args, **kwargs):
-    #     pass
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return serializers.GroupRestrictedSerializer
+        else:
+            return serializers.GroupSerializer
 
     def perform_create(self, serializer):
         creator = models.UserProfile.objects.get(id=self.request.user.id)
         serializer.save(creator=creator)
 
-#
-#
+
 # class GroupTestViewSet(viewsets.ViewSet):
 #     def list(self, request):
 #         queryset = models.Group.objects.all()
@@ -80,7 +88,27 @@ class GroupViewSet(viewsets.ModelViewSet):
 #
 
 
-class GroupTestViewSet(APIView):
-    def get(self, request, id):
-        a = 10
-        return Response()
+class GroupMemberViewSet(APIView):
+    def post(self, request):
+        if 'action' not in request.data or 'group_id' not in request.data or 'user_id' not in request.data:
+            raise CustomError(error_codes.ERROR__API__MISSING_ARGUMENT)
+        try:
+            group = models.Group.objects.get(pk=request.data['group_id'])
+        except:
+            raise CustomError(error_codes.ERROR__API__GROUP__GROUP_NOT_FOUND)
+
+        try:
+            user = models.UserProfile.objects.get(pk=request.data['user_id'])
+        except:
+            raise CustomError(error_codes.ERROR__API__USER__NOT_FOUND)
+
+        if request.data['action'] == 'add':
+            group.group_members.add(user)
+            group.save()
+            return Response(serializers.GroupSerializer(group).data)
+        elif request.data['action'] == 'remove':
+            group.group_members.remove(user)
+            group.save()
+            return Response(serializers.GroupSerializer(group).data)
+
+        raise CustomError(error_codes.ERROR__API__NO_ACTION_PROVIDED)

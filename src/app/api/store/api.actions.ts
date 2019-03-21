@@ -20,6 +20,7 @@ import { Action } from "@ngrx/store";
 import {ForeignUser, FullUser, RestrictedUser} from '../models/user.model';
 import {HasPermission, Permission} from '../models/permission.model';
 import {RestrictedRlc} from '../models/rlc.model';
+import {FullGroup, RestrictedGroup} from '../models/group.model';
 
 export const SET_USER = "SET_USER";
 export const SET_OTHER_USERS = "SET_OTHER_USERS";
@@ -29,11 +30,21 @@ export const SET_USER_PERMISSIONS = "SET_USER_PERMISSIONS";
 export const SET_RLC = "SET_RLC";
 export const SET_USER_STATES = "SET_USER_STATES";
 export const SET_USER_RECORD_STATES = "SET_USER_RECORD_STATES";
+export const SET_GROUPS = "SET_GROUPS";
+export const SET_SPECIAL_GROUP = "SET_SPECIAL_GROUP";
+
+export const RESET_SPECIAL_GROUP = "RESET_SPECIAL_GROUP";
+export const RESET_SPECIAL_FOREIGN_USER = "RESET_SPECIAL_FOREIGN_USER";
 
 export const START_PATCH_USER = "START_PATCH_USER";
 export const START_CREATE_USER = "START_CREATE_USER";
 export const START_LOADING_OTHER_USERS = "START_LOADING_OTHER_USERS";
+export const START_LOADING_GROUPS = "START_LOADING_GROUPS";
 export const START_LOADING_SPECIAL_FOREIGN_USER = "START_LOADING_SPECIAL_FOREIGN_USER";
+export const START_LOADING_SPECIAL_GROUP = "START_LOADING_SPECIAL_GROUP";
+export const START_ADDING_GROUP_MEMBER = "START_ADDING_GROUP_MEMBER";
+export const START_REMOVING_GROUP_MEMBER = "START_REMOVING_GROUP_MEMBER";
+
 
 export class SetUser implements Action {
     readonly type = SET_USER;
@@ -105,6 +116,48 @@ export class SetUserRecordStates implements Action {
     constructor(public payload: any){}
 }
 
+export class StartLoadingGroups implements  Action {
+    readonly type = START_LOADING_GROUPS;
+}
+
+export class SetGroups implements Action {
+    readonly type = SET_GROUPS;
+
+    constructor(public payload: RestrictedGroup[]){}
+}
+
+export class ResetSpecialForeignUser implements Action {
+    readonly type = RESET_SPECIAL_FOREIGN_USER;
+}
+
+export class SetSpecialGroup implements Action {
+    readonly type = SET_SPECIAL_GROUP;
+
+    constructor(public payload: FullGroup){}
+}
+
+export class ResetSpecialGroup implements Action {
+    readonly type = RESET_SPECIAL_GROUP;
+}
+
+export class StartLoadingSpecialGroup implements Action {
+    readonly type = START_LOADING_SPECIAL_GROUP;
+
+    constructor(public payload: string){}
+}
+
+export class StartAddingGroupMember implements Action {
+    readonly type = START_ADDING_GROUP_MEMBER;
+
+    constructor(public payload: {user_id: string, group_id: string }){}
+}
+
+export class StartRemovingGroupMember implements Action {
+    readonly type = START_REMOVING_GROUP_MEMBER;
+
+    constructor(public payload: {user_id: string, group_id: string }){}
+}
+
 export type ApiActions =
     | SetUser
     | SetAllPermissions
@@ -117,4 +170,12 @@ export type ApiActions =
     | StartLoadingSpecialForeignUser
     | SetRlc
     | SetUserStates
-    | SetUserRecordStates;
+    | SetUserRecordStates
+    | StartLoadingGroups
+    | SetGroups
+    | ResetSpecialForeignUser
+    | SetSpecialGroup
+    | ResetSpecialGroup
+    | StartLoadingSpecialGroup
+    | StartAddingGroupMember
+    | StartRemovingGroupMember;

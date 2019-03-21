@@ -18,21 +18,21 @@
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ForeignProfileComponent } from './foreign-profile.component';
+import { GroupComponent } from './group.component';
 
-describe('ForeignProfileComponent', () => {
-  let component: ForeignProfileComponent;
-  let fixture: ComponentFixture<ForeignProfileComponent>;
+describe('GroupComponent', () => {
+  let component: GroupComponent;
+  let fixture: ComponentFixture<GroupComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ForeignProfileComponent ]
+      declarations: [ GroupComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ForeignProfileComponent);
+    fixture = TestBed.createComponent(GroupComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

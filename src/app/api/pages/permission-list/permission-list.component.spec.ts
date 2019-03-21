@@ -15,28 +15,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ManageGroupsComponent } from './manage-groups.component';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-describe('ManageGroupsComponent', () => {
-  let component: ManageGroupsComponent;
-  let fixture: ComponentFixture<ManageGroupsComponent>;
+import { PermissionListComponent } from "./permission-list.component";
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ManageGroupsComponent ]
-    })
-    .compileComponents();
-  }));
+describe("PermissionListComponent", () => {
+    let component: PermissionListComponent;
+    let fixture: ComponentFixture<PermissionListComponent>;
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ManageGroupsComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [PermissionListComponent]
+        }).compileComponents();
+    }));
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(PermissionListComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
+
+    it("should create", () => {
+        expect(component).toBeTruthy();
+    });
 });

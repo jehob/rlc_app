@@ -16,30 +16,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute, Params} from '@angular/router';
-import { ApiSandboxService } from "../../services/api-sandbox.service";
-import {ForeignUser} from '../../models/user.model';
+import { Component, OnInit } from "@angular/core";
+import {ApiSandboxService} from '../../services/api-sandbox.service';
+import {Permission} from '../../models/permission.model';
+import {Observable} from 'rxjs';
+import {Router} from '@angular/router';
 
 @Component({
-    selector: "app-foreign-profile",
-    templateUrl: "./foreign-profile.component.html",
-    styleUrls: ["./foreign-profile.component.scss"]
+    selector: "app-permission-list",
+    templateUrl: "./permission-list.component.html",
+    styleUrls: ["./permission-list.component.scss"]
 })
-export class ForeignProfileComponent implements OnInit, OnDestroy {
-    foreignUser: ForeignUser;
+export class PermissionListComponent implements OnInit {
+    permissions: Observable<Permission[]>;
 
-    constructor(private apiSB: ApiSandboxService, private route: ActivatedRoute) {}
+    constructor(private apiSB: ApiSandboxService, private router: Router) {}
 
-    ngOnInit(): void {
-        this.route.params.subscribe((params: Params) => {
-            this.apiSB.loadAndGetSpecialForeignUser(params["id"]).subscribe((foreignUser: ForeignUser) => {
-                this.foreignUser = foreignUser;
-            });
-        })
+    ngOnInit() {
+        this.permissions = this.apiSB.getAllPermissions();
     }
 
-    ngOnDestroy(): void {
-        this.apiSB.resetForeignUser();
+    onPermissionItemClick(permission: Permission){
+        this.router.navigate([`permissions/${permission.id}`]);
     }
 }

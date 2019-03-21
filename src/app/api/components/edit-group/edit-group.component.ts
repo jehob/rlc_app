@@ -16,30 +16,33 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute, Params} from '@angular/router';
+import { Component, OnInit } from "@angular/core";
+import { FullGroup } from "../../models/group.model";
 import { ApiSandboxService } from "../../services/api-sandbox.service";
-import {ForeignUser} from '../../models/user.model';
+import {MatDialog} from '@angular/material';
+import {AddGroupMemberComponent} from '../add-group-member/add-group-member.component';
 
 @Component({
-    selector: "app-foreign-profile",
-    templateUrl: "./foreign-profile.component.html",
-    styleUrls: ["./foreign-profile.component.scss"]
+    selector: "app-edit-group",
+    templateUrl: "./edit-group.component.html",
+    styleUrls: ["./edit-group.component.scss"]
 })
-export class ForeignProfileComponent implements OnInit, OnDestroy {
-    foreignUser: ForeignUser;
+export class EditGroupComponent implements OnInit {
+    group: FullGroup;
 
-    constructor(private apiSB: ApiSandboxService, private route: ActivatedRoute) {}
+    constructor(private apiSB: ApiSandboxService, public dialog: MatDialog) {}
 
-    ngOnInit(): void {
-        this.route.params.subscribe((params: Params) => {
-            this.apiSB.loadAndGetSpecialForeignUser(params["id"]).subscribe((foreignUser: ForeignUser) => {
-                this.foreignUser = foreignUser;
-            });
-        })
+    ngOnInit() {
+        this.apiSB.getGroup().subscribe((group: FullGroup) => {
+            this.group = group;
+        });
     }
 
-    ngOnDestroy(): void {
-        this.apiSB.resetForeignUser();
+    onAddGroupMemberClick() {
+        this.dialog.open(AddGroupMemberComponent);
+    }
+
+    onRemoveGroupMemberClick(user_id: string){
+        this.apiSB.removeGroupMember(user_id, this.group.id);
     }
 }

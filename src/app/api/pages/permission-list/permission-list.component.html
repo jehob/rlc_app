@@ -17,17 +17,22 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 <mat-card>
-    <div *ngIf="foreignUser; else noUser">
-        <mat-card-header>
-            <h1>User: {{foreignUser.name}}</h1>
-        </mat-card-header>
-        <mat-card-content>
-            <h2>Contact Information:</h2>
-            <p>Email: {{foreignUser.email}}</p>
-            <p>Phone number: {{foreignUser.phone_number}}</p>
-        </mat-card-content>
-    </div>
-   <ng-template #noUser>
-       <p>No user to show, error.</p>
-   </ng-template>
+    <mat-card-header>
+        <h1 matLine>Permission list</h1>
+    </mat-card-header>
+    <mat-card-content>
+        <h2>all Permissions:</h2>
+        <div *ngIf="permissions | async as catalog; else loading">
+            <ng-container *ngIf="catalog.length; else noItems">
+                <mat-list>
+                    <mat-list-item *ngFor="let permission of (permissions | async)" class="is_clickable"
+                                   (click)="onPermissionItemClick(permission)">
+                        <p>{{ permission.name }}</p>
+                    </mat-list-item>
+                </mat-list>
+            </ng-container>
+            <ng-template #noItems>No Items!</ng-template>
+        </div>
+        <ng-template #loading>loading...</ng-template>
+    </mat-card-content>
 </mat-card>

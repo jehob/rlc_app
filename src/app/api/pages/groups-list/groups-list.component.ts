@@ -16,30 +16,33 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute, Params} from '@angular/router';
+import { Component, OnInit } from "@angular/core";
 import { ApiSandboxService } from "../../services/api-sandbox.service";
-import {ForeignUser} from '../../models/user.model';
+import {Observable} from 'rxjs';
+import {RestrictedGroup} from '../../models/group.model';
+import {Router} from '@angular/router';
+import {SnackbarService} from '../../../shared/services/snackbar.service';
 
 @Component({
-    selector: "app-foreign-profile",
-    templateUrl: "./foreign-profile.component.html",
-    styleUrls: ["./foreign-profile.component.scss"]
+    selector: "app-manage-groups",
+    templateUrl: "./groups-list.component.html",
+    styleUrls: ["./groups-list.component.scss"]
 })
-export class ForeignProfileComponent implements OnInit, OnDestroy {
-    foreignUser: ForeignUser;
+export class GroupsListComponent implements OnInit {
+    groups: Observable<RestrictedGroup[]>;
 
-    constructor(private apiSB: ApiSandboxService, private route: ActivatedRoute) {}
+    constructor(private apiSB: ApiSandboxService, private router: Router, private snackbar: SnackbarService) {}
 
-    ngOnInit(): void {
-        this.route.params.subscribe((params: Params) => {
-            this.apiSB.loadAndGetSpecialForeignUser(params["id"]).subscribe((foreignUser: ForeignUser) => {
-                this.foreignUser = foreignUser;
-            });
-        })
+    ngOnInit() {
+        this.apiSB.startLoadingGroups();
+        this.groups = this.apiSB.getGroups();
     }
 
-    ngOnDestroy(): void {
-        this.apiSB.resetForeignUser();
+    onGroupClick(id: string){
+        this.router.navigate([`groups/${id}`]);
+    }
+
+    onAddGroupClick(){
+        this.snackbar.showErrorSnackBar("not available yet");
     }
 }

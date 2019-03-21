@@ -17,17 +17,21 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 <mat-card>
-    <div *ngIf="foreignUser; else noUser">
+    <div *ngIf="group; else noGroup">
         <mat-card-header>
-            <h1>User: {{foreignUser.name}}</h1>
+            <h2>Group: {{ group.name }}</h2>
         </mat-card-header>
         <mat-card-content>
-            <h2>Contact Information:</h2>
-            <p>Email: {{foreignUser.email}}</p>
-            <p>Phone number: {{foreignUser.phone_number}}</p>
+            <h1>Description</h1>
+            <h1>Members</h1>
+            <button matSuffix mat-flat-button color="primary" (click)="onAddGroupMemberClick()">add</button>
+            <div *ngFor="let member of group.members">
+                <p>{{member.name}}</p>
+                <button matSuffix mat-flat-button color="warn" (click)="onRemoveGroupMemberClick(member.id)">remove</button>
+            </div>
         </mat-card-content>
     </div>
-   <ng-template #noUser>
-       <p>No user to show, error.</p>
-   </ng-template>
+    <ng-template #noGroup>
+        <p>No group to show, error.</p>
+    </ng-template>
 </mat-card>

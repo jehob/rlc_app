@@ -28,13 +28,17 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from .. import models, serializers
-from ..permissions import EditPermissions
 
 
 class PermissionViewSet(viewsets.ModelViewSet):
     queryset = models.Permission.objects.all()
     serializer_class = serializers.PermissionNameSerializer
-    permission_classes = (EditPermissions, IsAuthenticated, )
+
+    def retrieve(self, request, *args, **kwargs):
+        pass
+
 

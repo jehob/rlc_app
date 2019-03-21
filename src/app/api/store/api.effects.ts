@@ -29,18 +29,27 @@ import {
     SET_OTHER_USERS,
     StartLoadingSpecialForeignUser,
     START_LOADING_SPECIAL_FOREIGN_USER,
-    SET_SPECIAL_FOREIGN_USER
-} from "./api.actions";
+    SET_SPECIAL_FOREIGN_USER,
+    START_LOADING_GROUPS,
+    StartLoadingGroups,
+    SET_GROUPS,
+    START_LOADING_SPECIAL_GROUP,
+    StartLoadingSpecialGroup,
+    SET_SPECIAL_GROUP, START_ADDING_GROUP_MEMBER, StartAddingGroupMember, START_REMOVING_GROUP_MEMBER, StartRemovingGroupMember
+} from './api.actions';
 import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
 import { from, of } from "rxjs";
 import {
     CREATE_PROFILE_URL,
-    GetSpecialProfileURL,
+    GetSpecialGroupURL,
+    GetSpecialProfileURL, GROUP_MEMBER_URL,
+    GROUPS_URL,
     PROFILES_URL
-} from "../../statics/api_urls.statics";
+} from '../../statics/api_urls.statics';
 import { ApiSandboxService } from "../services/api-sandbox.service";
 import { ForeignUser, FullUser, RestrictedUser } from "../models/user.model";
 import { SnackbarService } from "../../shared/services/snackbar.service";
+import { FullGroup, RestrictedGroup } from "../models/group.model";
 
 @Injectable()
 export class ApiEffects {
@@ -74,7 +83,6 @@ export class ApiEffects {
                             return of({ error: "unknown" });
                         }),
                         mergeMap((response: any) => {
-                            //console.log("yay", response);
                             this.apiSB.showSuccessSnackBar(
                                 "successfully saved"
                             );
@@ -125,14 +133,44 @@ export class ApiEffects {
     );
 
     @Effect()
+    startLoadingGroups = this.actions.pipe(
+        ofType(START_LOADING_GROUPS),
+        switchMap(() => {
+            return from(
+                this.http.get(GROUPS_URL).pipe(
+                    catchError(error => {
+                        this.snackbar.showErrorSnackBar(
+                            "error at loading groups: " + error.error.detail
+                        );
+                        return [];
+                    }),
+                    mergeMap((response: any) => {
+                        const groups = RestrictedGroup.getRestrictedGroupsFromJsonArray(
+                            response
+                        );
+                        return [
+                            {
+                                type: SET_GROUPS,
+                                payload: groups
+                            }
+                        ];
+                    })
+                )
+            );
+        })
+    );
+
+    @Effect()
     getProfiles = this.actions.pipe(
         ofType(START_LOADING_OTHER_USERS),
         switchMap(() => {
             return from(
                 this.http.get(PROFILES_URL).pipe(
                     catchError(error => {
-                        console.log(error);
-                        return of({ error: "error" });
+                        this.snackbar.showErrorSnackBar(
+                            "error at loading profiles: " + error.error.detail
+                        );
+                        return [];
                     }),
                     mergeMap((response: any) => {
                         //console.log(response);
@@ -176,6 +214,96 @@ export class ApiEffects {
                             ];
                         }
                         return [];
+                    })
+                )
+            );
+        })
+    );
+
+    @Effect()
+    startLoadingSpecialGroup = this.actions.pipe(
+        ofType(START_LOADING_SPECIAL_GROUP),
+        map((action: StartLoadingSpecialGroup) => {
+            return action.payload;
+        }),
+        switchMap((id: string) => {
+            return from(
+                this.http.get(GetSpecialGroupURL(id)).pipe(
+                    catchError(error => {
+                        this.snackbar.showErrorSnackBar(
+                            "error at loading special group: " +
+                                error.error.detail
+                        );
+                        return [];
+                    }),
+                    mergeMap((response: any) => {
+                        const group = FullGroup.getFullGroupFromJson(response);
+                        return [
+                            {
+                                type: SET_SPECIAL_GROUP,
+                                payload: group
+                            }
+                        ];
+                    })
+                )
+            );
+        })
+    );
+
+    @Effect()
+    startAddingGroupMember = this.actions.pipe(
+        ofType(START_ADDING_GROUP_MEMBER),
+        map((action: StartAddingGroupMember) => {
+            return action.payload;
+        }),
+        switchMap((toAdd: { user_id: string; group_id: string }) => {
+            return from(
+                this.http.post(GROUP_MEMBER_URL, {action: "add", user_id: toAdd.user_id, group_id: toAdd.group_id}).pipe(
+                    catchError(error => {
+                        this.snackbar.showErrorSnackBar(
+                            "error at adding group member: " +
+                            error.error.detail
+                        );
+                        return [];
+                    }),
+                    mergeMap((response: any) => {
+                        const group = FullGroup.getFullGroupFromJson(response);
+                        return [
+                            {
+                                type: SET_SPECIAL_GROUP,
+                                payload: group
+                            }
+                        ];
+                    })
+                )
+            );
+        })
+    );
+
+    @Effect()
+    startRemovingGroupMember = this.actions.pipe(
+        ofType(START_REMOVING_GROUP_MEMBER),
+        map((action: StartRemovingGroupMember) => {
+            return action.payload;
+        }),
+        switchMap((toAdd: { user_id: string; group_id: string }) => {
+            return from(
+                this.http.post(GROUP_MEMBER_URL, {action: "remove", user_id: toAdd.user_id, group_id: toAdd.group_id}).pipe(
+                    catchError(error => {
+                        this.snackbar.showErrorSnackBar(
+                            "error at removing group member: " +
+                            error.error.detail
+                        );
+                        return [];
+                    }),
+                    mergeMap((response: any) => {
+                        const group = FullGroup.getFullGroupFromJson(response);
+                        return [
+                            {
+                                type: SET_SPECIAL_GROUP,
+                                payload: group
+                            }
+                        ];
                     })
                 )
             );

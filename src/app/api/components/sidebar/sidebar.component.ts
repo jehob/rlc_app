@@ -22,10 +22,10 @@ import { AppSandboxService } from "../../services/app-sandbox.service";
 import { FullUser } from "../../models/user.model";
 import { ApiSandboxService } from "../../services/api-sandbox.service";
 import {
-    PERMISSION_CAN_MANAGE_GROUPS_RLC,
-    PERMISSION_CAN_PERMIT_RECORD_PERMISSION_REQUESTS,
+    PERMISSION_CAN_PERMIT_RECORD_PERMISSION_REQUESTS, PERMISSION_CAN_VIEW_PERMISSIONS_RLC,
     PERMISSION_CAN_VIEW_RECORDS
 } from '../../../statics/permissions.statics';
+import {RestrictedRlc} from '../../models/rlc.model';
 
 @Component({
     selector: "app-sidebar",
@@ -37,9 +37,9 @@ export class SidebarComponent implements OnInit {
     name = "";
     email = "";
 
-    record_enabled = false;
-    can_permit_requests = false;
-    can_manage_groups = false;
+    show_record_tabs = false;
+    show_record_permission_request_tab = false;
+    show_permissions_tab = false;
 
     constructor(
         private router: Router,
@@ -48,19 +48,34 @@ export class SidebarComponent implements OnInit {
     ) {}
 
     ngOnInit() {
+        this.apiSB.getRlc().subscribe((rlc: RestrictedRlc) => {
+            if (rlc){
+                this.apiSB.hasPermissionFromString(PERMISSION_CAN_VIEW_RECORDS, has_permission => {
+                    this.show_record_tabs = has_permission;
+                }, {
+                    for_rlc: rlc.id
+                });
+
+                this.apiSB.hasPermissionFromString(PERMISSION_CAN_PERMIT_RECORD_PERMISSION_REQUESTS, has_permission => {
+                    this.show_record_permission_request_tab = has_permission;
+                }, {
+                    for_rlc: rlc.id
+                });
+
+                this.apiSB.hasPermissionFromString(PERMISSION_CAN_VIEW_PERMISSIONS_RLC, has_permission => {
+                    this.show_permissions_tab = has_permission;
+                }, {
+                    for_rlc: rlc.id
+                });
+            }
+
+        });
+
+
+
         this.apiSB.getUser().subscribe((user: FullUser) => {
             this.name = user ? user.name : "";
             this.email = user ? user.email : "";
-        });
-
-        this.apiSB.hasPermissionFromString(PERMISSION_CAN_VIEW_RECORDS, has_permission => {
-            this.record_enabled = has_permission;
-        });
-        this.apiSB.hasPermissionFromString(PERMISSION_CAN_PERMIT_RECORD_PERMISSION_REQUESTS, has_permission => {
-            this.can_permit_requests = has_permission;
-        });
-        this.apiSB.hasPermissionFromString(PERMISSION_CAN_MANAGE_GROUPS_RLC, has_permission => {
-            this.can_manage_groups = has_permission;
         });
     }
 

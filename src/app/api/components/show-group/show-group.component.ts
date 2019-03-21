@@ -16,30 +16,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute, Params} from '@angular/router';
-import { ApiSandboxService } from "../../services/api-sandbox.service";
-import {ForeignUser} from '../../models/user.model';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
-    selector: "app-foreign-profile",
-    templateUrl: "./foreign-profile.component.html",
-    styleUrls: ["./foreign-profile.component.scss"]
+    selector: 'app-show-group',
+    templateUrl: './show-group.component.html',
+    styleUrls: ['./show-group.component.scss']
 })
-export class ForeignProfileComponent implements OnInit, OnDestroy {
-    foreignUser: ForeignUser;
+export class ShowGroupComponent implements OnInit {
 
-    constructor(private apiSB: ApiSandboxService, private route: ActivatedRoute) {}
-
-    ngOnInit(): void {
-        this.route.params.subscribe((params: Params) => {
-            this.apiSB.loadAndGetSpecialForeignUser(params["id"]).subscribe((foreignUser: ForeignUser) => {
-                this.foreignUser = foreignUser;
-            });
-        })
+    constructor() {
     }
 
-    ngOnDestroy(): void {
-        this.apiSB.resetForeignUser();
+    ngOnInit() {
     }
+
 }

@@ -16,30 +16,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import { Component, OnInit } from "@angular/core";
+import {Permission} from '../../models/permission.model';
+import {ApiSandboxService} from '../../services/api-sandbox.service';
 import {ActivatedRoute, Params} from '@angular/router';
-import { ApiSandboxService } from "../../services/api-sandbox.service";
-import {ForeignUser} from '../../models/user.model';
 
 @Component({
-    selector: "app-foreign-profile",
-    templateUrl: "./foreign-profile.component.html",
-    styleUrls: ["./foreign-profile.component.scss"]
+    selector: "app-edit-permission",
+    templateUrl: "./edit-permission.component.html",
+    styleUrls: ["./edit-permission.component.scss"]
 })
-export class ForeignProfileComponent implements OnInit, OnDestroy {
-    foreignUser: ForeignUser;
+export class EditPermissionComponent implements OnInit {
+    permission: Permission;
+    id: string;
 
     constructor(private apiSB: ApiSandboxService, private route: ActivatedRoute) {}
 
-    ngOnInit(): void {
+    ngOnInit() {
         this.route.params.subscribe((params: Params) => {
-            this.apiSB.loadAndGetSpecialForeignUser(params["id"]).subscribe((foreignUser: ForeignUser) => {
-                this.foreignUser = foreignUser;
-            });
-        })
-    }
-
-    ngOnDestroy(): void {
-        this.apiSB.resetForeignUser();
+            this.id = params['id'];
+        });
     }
 }

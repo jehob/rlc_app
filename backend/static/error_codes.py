@@ -122,7 +122,7 @@ ERROR__RECORD__PERMISSION__ID_NOT_PROVIDED = {
     'error_code': 'record.permission.id_not_provided'
 }
 
-ERROR__RECORD__PERMISSION__NO_ACTION_PROVIDED = {
+ERROR__API__NO_ACTION_PROVIDED = {
     'error_detail': 'no action in request.data provided',
     'error_code': 'record.permission.no_action_provided'
 }
@@ -188,6 +188,16 @@ ERROR__API__USER__NEW_PASSWORD_NOT_PROVIDED = {
 }
 
 ERROR__ENV__MISSING_VARIABLE = {
-    'error_detail': 'a environment variable isnt set',
+    'error_detail': 'a environment variable isn\'t set',
     'error_code': 'env.missing_variable'
+}
+
+ERROR__API__MISSING_ARGUMENT = {
+    'error_detail': 'argument missing (general error)',
+    'error_code': 'api.missing_argument'
+}
+
+ERROR__API__GROUP__GROUP_NOT_FOUND = {
+    'error_detail': 'no group with this id',
+    'error_code': 'api.group.not_found'
 }

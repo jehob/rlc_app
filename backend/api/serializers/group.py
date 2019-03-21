@@ -17,6 +17,7 @@
 from rest_framework import serializers
 
 from ..models import Group
+from ..serializers.user import UserProfileNameSerializer
 
 
 class GroupSerializer(serializers.ModelSerializer):
@@ -26,6 +27,7 @@ class GroupSerializer(serializers.ModelSerializer):
     permission_for_group = serializers.PrimaryKeyRelatedField(
         many=True, read_only=True, required=False,
     )
+    group_members = UserProfileNameSerializer(many=True)
 
     class Meta:
         model = Group
@@ -43,3 +45,9 @@ class GroupSmallSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ('id', 'name', 'group_has_permission', 'permission_for_group', )
+
+
+class GroupRestrictedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ('id', 'name')

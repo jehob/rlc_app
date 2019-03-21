@@ -24,25 +24,29 @@
 <mat-divider></mat-divider>
 <nav class="drawer-navigation-container">
     <ul class="drawer-navigation">
-        <li routerLinkActive="active" *ngIf="record_enabled" routerLink="/records"
+        <li routerLinkActive="active" *ngIf="show_record_tabs" routerLink="/records"
             [routerLinkActiveOptions]="{exact:true}"><a i18n="sidebar navigation for routing@@sidebar_records">
             <mat-icon>folder</mat-icon>
             Records</a></li>
-        <li routerLink="/records/add" *ngIf="record_enabled" routerLinkActive="active"
+        <li routerLink="/records/add" *ngIf="show_record_tabs" routerLinkActive="active"
             [routerLinkActiveOptions]="{exact:true}"><a i18n="sidebar navigation for routing@@sidebar_records">
             <mat-icon>create_new_folder</mat-icon>
             Create record</a></li>
         <li routerLinkActive="active" routerLink="/profiles"><a i18n="sidebar navigation for routing@@sidebar_records">
-            <mat-icon>people</mat-icon>
+            <mat-icon>people_outline</mat-icon>
             Profiles</a></li>
-        <li routerLink="/records/permit_requests" *ngIf="can_permit_requests" routerLinkActive="active"
+        <li routerLink="/records/permit_requests" *ngIf="show_record_permission_request_tab" routerLinkActive="active"
             [routerLinkActiveOptions]="{exact:true}"><a i18n="sidebar navigation for routing@@sidebar_permit">
             <mat-icon>offline_pin</mat-icon>
             Permit requests</a></li>
-        <li routerLink="/manage-groups" *ngIf="can_manage_groups" routerLinkActive="active"
+        <li routerLink="/groups" routerLinkActive="active"
             [routerLinkActiveOptions]="{exact:true}"><a i18n="sidebar navigation for routing@@sidebar_permit">
-            <mat-icon>group_add</mat-icon>
-            Manage groups</a></li>
+            <mat-icon>group</mat-icon>
+            Groups</a></li>
+        <li routerLink="/permissions" routerLinkActive="active"
+            [routerLinkActiveOptions]="{exact:true}"><a i18n="sidebar navigation for routing@@sidebar_permit">
+            <mat-icon>vpn_key</mat-icon>
+            Permissions</a></li>
         <mat-divider></mat-divider>
         <li><a (click)="logout()">
             <mat-icon>power_settings_new</mat-icon>
