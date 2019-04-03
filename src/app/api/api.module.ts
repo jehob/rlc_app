@@ -43,6 +43,7 @@ import { ShowGroupComponent } from './components/show-group/show-group.component
 import { AddGroupMemberComponent } from './components/add-group-member/add-group-member.component';
 import { PermissionListComponent } from './pages/permission-list/permission-list.component';
 import { EditPermissionComponent } from './pages/edit-permission/edit-permission.component';
+import { AddHasPermissionComponent } from './components/add-has-permission/add-has-permission.component';
 
 @NgModule({
     imports: [
@@ -70,9 +71,10 @@ import { EditPermissionComponent } from './pages/edit-permission/edit-permission
         ShowGroupComponent,
         AddGroupMemberComponent,
         PermissionListComponent,
-        EditPermissionComponent
+        EditPermissionComponent,
+        AddHasPermissionComponent
     ],
-    entryComponents: [AddGroupMemberComponent],
+    entryComponents: [AddGroupMemberComponent, AddHasPermissionComponent],
     providers: [],
     exports: [SidebarComponent]
 })

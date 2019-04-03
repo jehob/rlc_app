@@ -22,3 +22,19 @@ class Permission(models.Model):
 
     def __str__(self):
         return 'permissions: ' + str(self.id) + ':' + self.name
+
+    def get_groups_with_permission_from_rlc(self, rlc):
+        from backend.api.models import Group, HasPermission
+        groups = Group.objects.filter(from_rlc=rlc)
+        return HasPermission.objects.filter(permission=self,
+                                            group_has_permission__in=groups.values_list('pk', flat=True))
+
+    def get_users_with_permission_from_rlc(self, rlc):
+        from backend.api.models import UserProfile, HasPermission
+        users = UserProfile.objects.filter(rlc=rlc)
+        return HasPermission.objects.filter(permission=self,
+                                            user_has_permission__in=users.values_list('pk', flat=True))
+
+    def get_rlc_permissions_with_special_permission(self, rlc):
+        from backend.api.models import HasPermission
+        return HasPermission.objects.filter(permission=self, rlc_has_permission=rlc)

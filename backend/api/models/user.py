@@ -14,14 +14,13 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
-from django.core.validators import RegexValidator
+from django.db import models
 
-from . import HasPermission, Permission
-from backend.static.regex_validators import phone_regex
 from backend.api.errors import CustomError
 from backend.static.error_codes import ERROR__API__PERMISSION__NOT_FOUND
+from backend.static.regex_validators import phone_regex
+from . import HasPermission, Permission
 
 
 class UserProfileManager(BaseUserManager):
@@ -196,6 +195,9 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
                                             permission_for_rlc_id=for_rlc).count() >= 1
 
     def has_as_rlc_member_permission(self, permission, for_user=None, for_group=None, for_rlc=None):
+        if not self.rlc:
+            return False
+
         return HasPermission.objects.filter(rlc_has_permission_id=self.rlc.id, permission_id=permission,
                                             permission_for_user_id=for_user,
                                             permission_for_group_id=for_group,
@@ -223,4 +225,5 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 
         return self.has_as_user_permission(permission, for_user, for_group, for_rlc) or \
                self.has_as_group_member_permission(permission, for_user, for_group, for_rlc) or \
-               self.has_as_rlc_member_permission(permission, for_user, for_group, for_rlc)
+               self.has_as_rlc_member_permission(permission, for_user, for_group, for_rlc) or \
+               self.is_superuser

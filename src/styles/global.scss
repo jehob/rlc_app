@@ -46,3 +46,9 @@
 .full_width {
     width: 100%;
 }
+
+.vertical {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}

@@ -27,10 +27,12 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
+from django.forms.models import model_to_dict
 from rest_framework import viewsets
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
+from backend.api.errors import CustomError
+from backend.static import error_codes
 from .. import models, serializers
 
 
@@ -39,6 +41,26 @@ class PermissionViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.PermissionNameSerializer
 
     def retrieve(self, request, *args, **kwargs):
-        pass
+        if 'pk' not in kwargs:
+            raise CustomError(error_codes.ERROR__API__MISSING_ARGUMENT)
+        try:
+            permission = models.Permission.objects.get(pk=kwargs['pk'])
+        except:
+            raise CustomError(error_codes.ERROR__API__PERMISSION__NOT_FOUND)
 
+        user_permissions = [model_to_dict(permission) for permission in
+                            permission.get_users_with_permission_from_rlc(request.user.rlc)]
+        group_permissions = [model_to_dict(permission) for permission in
+                             permission.get_groups_with_permission_from_rlc(request.user.rlc)]
+        rlc_permissions = [model_to_dict(permission) for permission in
+                           permission.get_rlc_permissions_with_special_permission(request.user.rlc)]
 
+        data = serializers.PermissionSerializer(permission).data
+
+        data.update({
+            'has_permissions': user_permissions + group_permissions + rlc_permissions
+        })
+        return Response(data)
+        # groups of this rlc, this rlc, users of this rlc
+        # haspermissions = models.HasPermission.objects.filter()
+        # pass

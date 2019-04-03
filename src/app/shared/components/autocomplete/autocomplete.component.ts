@@ -47,6 +47,8 @@ export class AutocompleteComponent implements OnInit, OnChanges {
     errors;
     @Input()
     setSelectedValue;
+    @Input()
+    disableAfterSetSelectedValue: boolean;
 
     filteredValues: Observable<Filterable[]>;
 
@@ -60,6 +62,8 @@ export class AutocompleteComponent implements OnInit, OnChanges {
     }
 
     ngOnInit() {
+        this.disableAfterSetSelectedValue = this.disableAfterSetSelectedValue !== undefined;
+
         this.allValuesObservable.subscribe(values => {
             this.allValues = values;
             this.filteredValues = this.valueForm.controls[
@@ -89,7 +93,8 @@ export class AutocompleteComponent implements OnInit, OnChanges {
                 this.valueForm.controls["value"].setValue(
                     changes.setSelectedValue.currentValue
                 );
-                this.valueForm.controls["value"].disable();
+                if (this.disableAfterSetSelectedValue)
+                    this.valueForm.controls["value"].disable();
             } else {
                 this.valueForm.controls["value"].setValue("");
                 this.valueForm.controls["value"].enable();

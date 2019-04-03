@@ -18,9 +18,12 @@
 
 import { Component, OnInit } from "@angular/core";
 import { ApiSandboxService } from "../../services/api-sandbox.service";
-import {ActivatedRoute, Params} from '@angular/router';
-import {PERMISSION_CAN_MANAGE_GROUP, PERMISSION_CAN_MANAGE_GROUPS_RLC} from '../../../statics/permissions.statics';
-import {RestrictedRlc} from '../../models/rlc.model';
+import { ActivatedRoute, Params } from "@angular/router";
+import {
+    PERMISSION_CAN_MANAGE_GROUP,
+    PERMISSION_CAN_MANAGE_GROUPS_RLC
+} from "../../../statics/permissions.statics";
+import { RestrictedRlc } from "../../models/rlc.model";
 
 @Component({
     selector: "app-group",
@@ -38,24 +41,20 @@ export class GroupComponent implements OnInit {
 
     ngOnInit() {
         this.route.params.subscribe((params: Params) => {
-           this.id = params['id'];
-           this.apiSB.loadSpecialGroup(this.id);
+            this.id = params["id"];
+            this.apiSB.startLoadingSpecialGroup(this.id);
         });
-        this.apiSB.getRlc().subscribe((rlc: RestrictedRlc) => {
-            if (rlc){
-                this.apiSB.hasPermissionFromString(PERMISSION_CAN_MANAGE_GROUPS_RLC, (permission) => {
-                    if (permission)
-                        this.can_edit = true;
-                }, {
-                    for_rlc: rlc.id
-                });
-                this.apiSB.hasPermissionFromString(PERMISSION_CAN_MANAGE_GROUP, (permission) => {
-                    if (permission)
-                        this.can_edit = true;
-                }, {
-                   for_group: this.id
-                });
+        this.apiSB.hasPermissionFromStringForOwnRlc(
+            PERMISSION_CAN_MANAGE_GROUPS_RLC,
+            permission => {
+                if (permission) this.can_edit = true;
             }
-        });
+        );
+        this.apiSB.hasPermissionFromStringForOwnRlc(
+            PERMISSION_CAN_MANAGE_GROUP,
+            permission => {
+                if (permission) this.can_edit = true;
+            }
+        );
     }
 }

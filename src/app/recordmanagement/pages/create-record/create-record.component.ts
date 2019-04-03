@@ -35,8 +35,6 @@ import { Observable } from "rxjs";
 export class CreateRecordComponent implements OnInit {
     createRecordForm: FormGroup;
     client: FullClient;
-    originCountry: OriginCountry;
-    givenOriginCountry: OriginCountry;
 
     allConsultants: Observable<RestrictedUser[]>;
     consultantErrors: any;
@@ -44,6 +42,8 @@ export class CreateRecordComponent implements OnInit {
 
     allCountries: Observable<OriginCountry[]>;
     originCountryError: any;
+    originCountry: OriginCountry;
+    givenOriginCountry: OriginCountry;
 
     allRecordTags: Observable<Tag[]>;
     recordTagErrors: any;

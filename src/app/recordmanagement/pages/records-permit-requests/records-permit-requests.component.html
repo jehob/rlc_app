@@ -21,31 +21,44 @@
     <div *ngIf="recordPermissionRequests | async as catalog; else loading">
         <ng-container *ngIf="catalog.length; else noItems">
             <h1>To process</h1>
-            <div *ngIf="(recordPermissionRequests | async | recordPermissionsRequested).length === 0; else toProcessTable">
+            <div
+                *ngIf="(recordPermissionRequests | async | recordPermissionsRequested).length === 0; else toProcessTable">
                 <p>Oops, there are no permission requests to process.</p>
             </div>
             <ng-template #toProcessTable>
                 <table mat-table [dataSource]="(recordPermissionRequests | async | recordPermissionsRequested)">
-                    <ng-container matColumnDef="request_from" class="records-permit-requests__to-process-column__header">
-                        <th mat-header-cell *matHeaderCellDef class="records-permit-requests__to-process-column__header">Requestor</th>
-                        <td mat-cell *matCellDef="let recordPermissionRequest" class="records-permit-requests__to-process-column__content">
+                    <ng-container matColumnDef="request_from"
+                                  class="records-permit-requests__to-process-column__header">
+                        <th mat-header-cell *matHeaderCellDef
+                            class="records-permit-requests__to-process-column__header">Requestor
+                        </th>
+                        <td mat-cell *matCellDef="let recordPermissionRequest"
+                            class="records-permit-requests__to-process-column__content">
                             <p>{{ recordPermissionRequest.request_from.name }}</p>
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="record">
-                        <th mat-header-cell *matHeaderCellDef class="records-permit-requests__to-process-column__header">Record</th>
-                        <td mat-cell *matCellDef="let recordPermissionRequest" (click)="gotoRecord(recordPermissionRequest)" class="is_clickable">
+                        <th mat-header-cell *matHeaderCellDef
+                            class="records-permit-requests__to-process-column__header">Record
+                        </th>
+                        <td mat-cell *matCellDef="let recordPermissionRequest"
+                            (click)="gotoRecord(recordPermissionRequest)" class="is_clickable">
                             <p>{{ recordPermissionRequest.record }}</p>
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="requested">
-                        <th mat-header-cell *matHeaderCellDef class="records-permit-requests__to-process-column__header">Request date</th>
-                        <td mat-cell *matCellDef="let recordPermissionRequest" class="records-permit-requests__to-process-column__content">
+                        <th mat-header-cell *matHeaderCellDef
+                            class="records-permit-requests__to-process-column__header">Request date
+                        </th>
+                        <td mat-cell *matCellDef="let recordPermissionRequest"
+                            class="records-permit-requests__to-process-column__content">
                             <p>{{ (recordPermissionRequest.requested | date) }}</p>
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="state">
-                        <th mat-header-cell *matHeaderCellDef class="records-permit-requests__to-process-column__header">State</th>
+                        <th mat-header-cell *matHeaderCellDef
+                            class="records-permit-requests__to-process-column__header">State
+                        </th>
                         <td mat-cell *matCellDef="let recordPermissionRequest">
                             <p>{{ recordPermissionRequest.state }}</p>
                         </td>
@@ -70,43 +83,60 @@
 
 
             <h1>Already processed</h1>
-            <div *ngIf="(recordPermissionRequests | async | recordPermissionsProcessed).length === 0; else alreadyProcessedTable">
+            <div
+                *ngIf="(recordPermissionRequests | async | recordPermissionsProcessed).length === 0; else alreadyProcessedTable">
                 <p>Oops, there are no permission requests processed until now.</p>
             </div>
             <ng-template #alreadyProcessedTable>
                 <table mat-table [dataSource]="(recordPermissionRequests | async | recordPermissionsProcessed)">
                     <ng-container matColumnDef="request_from">
-                        <th mat-header-cell *matHeaderCellDef class="records-permit-requests__to-process-column__header">Requestor</th>
-                        <td mat-cell *matCellDef="let recordPermissionRequest" class="records-permit-requests__to-process-column__content">
+                        <th mat-header-cell *matHeaderCellDef
+                            class="records-permit-requests__to-process-column__header">Requestor
+                        </th>
+                        <td mat-cell *matCellDef="let recordPermissionRequest"
+                            class="records-permit-requests__to-process-column__content">
                             <p>{{ recordPermissionRequest.request_from.name }}</p>
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="record">
-                        <th mat-header-cell *matHeaderCellDef class="records-permit-requests__to-process-column__header">Record</th>
-                        <td mat-cell *matCellDef="let recordPermissionRequest" (click)="gotoRecord(recordPermissionRequest)" class="is_clickable">
+                        <th mat-header-cell *matHeaderCellDef
+                            class="records-permit-requests__to-process-column__header">Record
+                        </th>
+                        <td mat-cell *matCellDef="let recordPermissionRequest"
+                            (click)="gotoRecord(recordPermissionRequest)" class="is_clickable">
                             <p>{{ recordPermissionRequest.record }}</p>
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="requested">
-                        <th mat-header-cell *matHeaderCellDef class="records-permit-requests__to-process-column__header">Request Date</th>
-                        <td mat-cell *matCellDef="let recordPermissionRequest" class="records-permit-requests__to-process-column__content">
+                        <th mat-header-cell *matHeaderCellDef
+                            class="records-permit-requests__to-process-column__header">Request Date
+                        </th>
+                        <td mat-cell *matCellDef="let recordPermissionRequest"
+                            class="records-permit-requests__to-process-column__content">
                             <p>{{ (recordPermissionRequest.requested | date) }}</p>
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="state">
-                        <th mat-header-cell *matHeaderCellDef class="records-permit-requests__to-process-column__header">State</th>
+                        <th mat-header-cell *matHeaderCellDef
+                            class="records-permit-requests__to-process-column__header">State
+                        </th>
                         <td mat-cell *matCellDef="let recordPermissionRequest">
                             <p>{{ recordPermissionRequest.state }}</p>
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="processor">
-                        <th mat-header-cell *matHeaderCellDef class="records-permit-requests__to-process-column__header">Processor</th>
-                        <td mat-cell *matCellDef="let recordPermissionRequest" class="records-permit-requests__to-process-column__content">
+                        <th mat-header-cell *matHeaderCellDef
+                            class="records-permit-requests__to-process-column__header">Processor
+                        </th>
+                        <td mat-cell *matCellDef="let recordPermissionRequest"
+                            class="records-permit-requests__to-process-column__content">
                             <p>{{ recordPermissionRequest.request_processed.name }}</p>
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="processed_on">
-                        <th mat-header-cell *matHeaderCellDef class="records-permit-requests__to-process-column__header">Process date</th>
+                        <th mat-header-cell *matHeaderCellDef
+                            class="records-permit-requests__to-process-column__header">Process date
+                        </th>
                         <td mat-cell *matCellDef="let recordPermissionRequest">
                             <p>{{ recordPermissionRequest.processed_on | date }}</p>
                         </td>

@@ -201,3 +201,13 @@ ERROR__API__GROUP__GROUP_NOT_FOUND = {
     'error_detail': 'no group with this id',
     'error_code': 'api.group.not_found'
 }
+
+ERROR__API__HAS_PERMISSION__NO_ID_PROVIDED = {
+    'error_detail': 'no id for hasPermission provided',
+    'error_code': 'api.has_permission.no_id_provided'
+}
+
+ERROR__API__HAS_PERMISSION__NOT_FOUND = {
+    'error_detail': 'hasPermission not found',
+    'error_code': 'api.has_permission.not_found'
+}

@@ -18,8 +18,7 @@ from datetime import datetime
 import pytz
 from django.forms.models import model_to_dict
 from django.http import QueryDict
-from rest_framework import status
-from rest_framework import viewsets, filters
+from rest_framework import viewsets, filters, status
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.permissions import IsAuthenticated

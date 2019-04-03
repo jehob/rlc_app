@@ -23,11 +23,22 @@
         </mat-card-header>
         <mat-card-content>
             <h1>Description</h1>
-            <h1>Members</h1>
-            <button matSuffix mat-flat-button color="primary" (click)="onAddGroupMemberClick()">add</button>
+            <div class="vertical">
+                <h1>Members</h1>
+                <button matSuffix mat-flat-button color="primary" (click)="onAddGroupMemberClick()">add</button>
+            </div>
+            <button mat-flat-button color="primary" *ngIf="canEditPermissions" (click)="onEditPermissionsClick()">edit
+                permissions
+            </button>
             <div *ngFor="let member of group.members">
                 <p>{{member.name}}</p>
-                <button matSuffix mat-flat-button color="warn" (click)="onRemoveGroupMemberClick(member.id)">remove</button>
+                <button matSuffix mat-flat-button color="warn" (click)="onRemoveGroupMemberClick(member.id)">remove
+                </button>
+            </div>
+            <mat-divider></mat-divider>
+            <div *ngIf="canEditPermissions">
+                <h1>Permissions: </h1>
+
             </div>
         </mat-card-content>
     </div>

@@ -17,17 +17,16 @@
  ******************************************************************************/
 
 import { Component, OnInit } from "@angular/core";
-import {
-    FormControl,
-    FormGroup,
-    Validators
-} from "@angular/forms";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 
 import { MatSnackBar } from "@angular/material";
 import { ApiSandboxService } from "../../../services/api-sandbox.service";
 import { RestrictedRlc } from "../../../models/rlc.model";
-import {matchValidator, passwordValidator} from '../../../../statics/validators.statics';
-import {CustomErrorStateMatcher} from '../../../../statics/errror_state_matcher.statics';
+import {
+    matchValidator,
+    passwordValidator
+} from "../../../../statics/validators.statics";
+import { CustomErrorStateMatcher } from "../../../../statics/errror_state_matcher.statics";
 
 @Component({
     selector: "app-register",
@@ -43,6 +42,7 @@ export class RegisterComponent implements OnInit {
         private snackBar: MatSnackBar,
         private apiSB: ApiSandboxService
     ) {
+        this.apiSB.startLoadingRlcs();
         const date = new Date();
         date.setFullYear(date.getFullYear() - 20);
 
@@ -65,13 +65,11 @@ export class RegisterComponent implements OnInit {
                 birthday: new FormControl(date),
                 rlc: new FormControl("", [Validators.required])
             },
-            matchValidator('password', 'password_confirm')
+            matchValidator("password", "password_confirm")
         );
 
-        this.apiSB.getAllRlcs().subscribe((response: any) => {
-            this.allRlcs = RestrictedRlc.getRestrictedRlcsFromJsonArray(
-                response
-            );
+        this.apiSB.getAllRlcs().subscribe((rlcs: RestrictedRlc[]) => {
+            this.allRlcs = rlcs;
         });
     }
 
@@ -99,7 +97,6 @@ export class RegisterComponent implements OnInit {
             if (values.postal_code !== "")
                 user["postal_code"] = values.postal_code;
             if (values.city !== "") user["city"] = values.city;
-
 
             this.apiSB.registerUser(user);
         }

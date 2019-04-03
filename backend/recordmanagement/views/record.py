@@ -196,3 +196,9 @@ class RecordViewSet(APIView):
 
             return Response({'success': 'true'})
         raise CustomError(ERROR__API__PERMISSION__INSUFFICIENT)
+
+    def delete(self, request, id):
+
+
+        pass
+

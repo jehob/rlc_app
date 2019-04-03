@@ -24,7 +24,7 @@ export class Permission implements Filterable {
         this.name = name;
     }
 
-    static getPermissionsFromJsonArray(jsonArray) {
+    static getPermissionsFromJsonArray(jsonArray): Permission[] {
         const permissions: Array<Permission> = [];
         Object.values(jsonArray).forEach((permission: { id; name }) => {
             permissions.push(Permission.getPermissionFromJson(permission));
@@ -32,11 +32,11 @@ export class Permission implements Filterable {
         return permissions;
     }
 
-    static getPermissionFromJson(json: { id; name }) {
+    static getPermissionFromJson(json: { id; name }): Permission {
         return new Permission(json.id, json.name);
     }
 
-    getFilterableProperty() {
+    getFilterableProperty(): string {
         return this.name;
     }
 }
@@ -62,7 +62,7 @@ export class HasPermission {
         this.forRlc = forRlc;
     }
 
-    static getPermissionsFromJsonArray(jsonArray) {
+    static getPermissionsFromJsonArray(jsonArray): HasPermission[] {
         const hasPermissions: Array<HasPermission> = [];
         Object.values(jsonArray).forEach(
             (permission: {
@@ -92,7 +92,7 @@ export class HasPermission {
         permission_for_user;
         permission_for_group;
         permission_for_rlc;
-    }) {
+    }): HasPermission {
         return new HasPermission(
             json.id,
             json.permission,
@@ -165,5 +165,27 @@ export class HasPermission {
             }
         );
         return result.length !== 0;
+    }
+}
+
+export class SpecialPermission {
+    constructor(
+        public permission: Permission,
+        public has_permissions: HasPermission[]
+    ) {
+        this.permission = permission;
+        this.has_permissions = has_permissions;
+    }
+
+    static getSpecialPermissionFromJson(json: {
+        id;
+        name;
+        has_permissions;
+    }): SpecialPermission {
+        console.log("json:", json);
+        return new SpecialPermission(
+            new Permission(json.id, json.name),
+            HasPermission.getPermissionsFromJsonArray(json.has_permissions),
+        );
     }
 }

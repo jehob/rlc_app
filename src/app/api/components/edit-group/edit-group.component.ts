@@ -16,19 +16,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { FullGroup } from "../../models/group.model";
 import { ApiSandboxService } from "../../services/api-sandbox.service";
-import {MatDialog} from '@angular/material';
-import {AddGroupMemberComponent} from '../add-group-member/add-group-member.component';
+import { MatDialog } from "@angular/material";
+import { AddGroupMemberComponent } from "../add-group-member/add-group-member.component";
+import { PERMISSION_CAN_MANAGE_PERMISSIONS_RLC } from "../../../statics/permissions.statics";
+import { RestrictedRlc } from "../../models/rlc.model";
 
 @Component({
     selector: "app-edit-group",
     templateUrl: "./edit-group.component.html",
     styleUrls: ["./edit-group.component.scss"]
 })
-export class EditGroupComponent implements OnInit {
+export class EditGroupComponent implements OnInit, OnDestroy {
     group: FullGroup;
+    canEditPermissions = false;
 
     constructor(private apiSB: ApiSandboxService, public dialog: MatDialog) {}
 
@@ -36,13 +39,25 @@ export class EditGroupComponent implements OnInit {
         this.apiSB.getGroup().subscribe((group: FullGroup) => {
             this.group = group;
         });
+        this.apiSB.hasPermissionFromStringForOwnRlc(
+            PERMISSION_CAN_MANAGE_PERMISSIONS_RLC,
+            hasPermission => {
+                this.canEditPermissions = hasPermission;
+            }
+        );
+    }
+
+    ngOnDestroy(): void {
+        this.apiSB.resetSpecialGroup();
     }
 
     onAddGroupMemberClick() {
         this.dialog.open(AddGroupMemberComponent);
     }
 
-    onRemoveGroupMemberClick(user_id: string){
+    onRemoveGroupMemberClick(user_id: string) {
         this.apiSB.removeGroupMember(user_id, this.group.id);
     }
+
+    onEditPermissionsClick(): void {}
 }

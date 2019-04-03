@@ -29,6 +29,8 @@ export const RECORD_PERMISSIONS_LIST_URL = "api/records/record_permission_reques
 export const FORGOT_PASSWORD_URL = "api/forgot_password/";
 export const GROUPS_URL = "api/groups/";
 export const GROUP_MEMBER_URL = "api/group_member/";
+export const PERMISSION_URL = "api/permissions/";
+export const HAS_PERMISSION_URL = "api/has_permission/";
 
 const RESET_PASSWORD_URL = "api/reset_password/";
 const SPECIAL_RECORD_BASE_URL = "api/records/record/";
@@ -78,4 +80,12 @@ export const GetResetPasswordUrl = (link_id: string) => {
 
 export const GetSpecialGroupURL = (id: string | number) => {
     return `${GROUPS_URL}${id}/`;
+};
+
+export const GetSpecialPermissionURL = (id: string | number) => {
+    return `${PERMISSION_URL}${id}/`;
+};
+
+export const GetSpecialHasPermissionURL = (id: string | number) => {
+    return `${HAS_PERMISSION_URL}${id}/`;
 };

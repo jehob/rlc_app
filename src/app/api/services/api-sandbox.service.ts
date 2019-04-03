@@ -27,22 +27,35 @@ import { AppState } from "../../store/app.reducers";
 import { ApiState } from "../store/api.reducers";
 import { ForeignUser, FullUser, RestrictedUser } from "../models/user.model";
 import {
+    RemoveSingleHasPermission,
     ResetSpecialForeignUser,
-    SetSpecialForeignUser, StartAddingGroupMember,
+    ResetSpecialGroup,
+    ResetSpecialPermission,
+    SetSpecialForeignUser,
+    StartAddingGroupMember,
+    StartAddingHasPermission,
     StartCreateUser,
     StartLoadingGroups,
     StartLoadingOtherUsers,
+    StartLoadingRlcs,
     StartLoadingSpecialForeignUser,
     StartLoadingSpecialGroup,
-    StartPatchUser, StartRemovingGroupMember
-} from '../store/api.actions';
+    StartLoadingSpecialPermission,
+    StartPatchUser,
+    StartRemovingGroupMember,
+    StartRemovingHasPermission
+} from "../store/api.actions";
 import { RLCS_URL } from "../../statics/api_urls.statics";
 import { StorageService } from "../../shared/services/storage.service";
 import { SnackbarService } from "../../shared/services/snackbar.service";
 import { Observable } from "rxjs";
-import { HasPermission, Permission } from "../models/permission.model";
+import {
+    HasPermission,
+    Permission,
+    SpecialPermission
+} from "../models/permission.model";
 import { FullGroup, RestrictedGroup } from "../models/group.model";
-import {RestrictedRlc} from '../models/rlc.model';
+import { RestrictedRlc } from "../models/rlc.model";
 
 @Injectable()
 export class ApiSandboxService {
@@ -68,7 +81,9 @@ export class ApiSandboxService {
     }
 
     getGroup(): Observable<FullGroup> {
-        return this.apiStateStore.pipe(select((state: any) => state.api.group));
+        return this.apiStateStore.pipe(
+            select((state: any) => state.api.special_group)
+        );
     }
 
     getUserPermissions(
@@ -91,35 +106,67 @@ export class ApiSandboxService {
         );
     }
 
-    hasPermissionFromString(permission: string, subscriberCallback, permission_for: any = null): void {
-        /*
-        checks if the user has permission and returns to subscriberCallback true or false
-         */
-        this.getAllPermissions().subscribe((all_permissions: Permission[]) => {
-            if (all_permissions.length > 0) {
-                try {
-                    const id = Number(
-                        all_permissions.filter(
-                            single_permission =>
-                                single_permission.name === permission
-                        )[0].id
-                    );
-                    this.hasPermissionFromId(id, subscriberCallback, permission_for);
-                } catch (e) {
-                    subscriberCallback(false);
-                }
-            }
-        }).unsubscribe();
+    hasPermissionFromStringForOwnRlc(
+        permission: string,
+        subscriberCallback
+    ): void {
+        this.getRlc().subscribe((rlc: RestrictedRlc) => {
+            if (rlc)
+                this.hasPermissionFromString(permission, subscriberCallback, {
+                    for_rlc: rlc.id
+                });
+        });
     }
 
-    hasPermissionFromId(permission: number, subscriberCallback, permission_for: any = null): void {
+    hasPermissionFromString(
+        permission: string,
+        subscriberCallback,
+        permission_for: any = null
+    ): void {
         /*
         checks if the user has permission and returns to subscriberCallback true or false
          */
-        this.getUserPermissions().subscribe(
-            (user_permissions: HasPermission[]) => {
+        this.getAllPermissions()
+            .subscribe((all_permissions: Permission[]) => {
+                if (all_permissions.length > 0) {
+                    try {
+                        const id = Number(
+                            all_permissions.filter(
+                                single_permission =>
+                                    single_permission.name === permission
+                            )[0].id
+                        );
+                        this.hasPermissionFromId(
+                            id,
+                            subscriberCallback,
+                            permission_for
+                        );
+                    } catch (e) {
+                        subscriberCallback(false);
+                    }
+                }
+            })
+            .unsubscribe();
+    }
+
+    hasPermissionFromId(
+        permission: number,
+        subscriberCallback,
+        permission_for: any = null
+    ): void {
+        /*
+        checks if the user has permission and returns to subscriberCallback true or false
+         */
+        this.getUserPermissions()
+            .subscribe((user_permissions: HasPermission[]) => {
                 // const a: boolean = HasPermission.checkPermissionMet(user_permissions, permission, permission_for);
-                subscriberCallback(HasPermission.checkPermissionMet(user_permissions, permission, permission_for));
+                subscriberCallback(
+                    HasPermission.checkPermissionMet(
+                        user_permissions,
+                        permission,
+                        permission_for
+                    )
+                );
 
                 // const result: HasPermission[] = user_permissions.filter(
                 //     (hasPermission: HasPermission) =>
@@ -130,8 +177,8 @@ export class ApiSandboxService {
                 // } else {
                 //     subscriberCallback(true);
                 // }
-            }
-        ).unsubscribe();
+            })
+            .unsubscribe();
     }
 
     startPatchUser(user: FullUser) {
@@ -155,8 +202,14 @@ export class ApiSandboxService {
         this.apiStateStore.dispatch(new StartCreateUser(user));
     }
 
-    getAllRlcs() {
-        return this.http.get(RLCS_URL);
+    getAllRlcs(asArray: boolean = true): Observable<RestrictedRlc[]> {
+        //return this.http.get(RLCS_URL);
+        return this.apiStateStore.pipe(
+            select((state: any) => {
+                const values = state.api.rlcs;
+                return asArray ? Object.values(values) : values;
+            })
+        );
     }
 
     startLoadingOtherUsers() {
@@ -224,19 +277,75 @@ export class ApiSandboxService {
         return this.getSpecialForeignUser();
     }
 
-    loadSpecialGroup(id: string): void {
+    startLoadingSpecialGroup(id: string): void {
         this.apiStateStore.dispatch(new StartLoadingSpecialGroup(id));
     }
 
-    getSpecialGroup() {
-        return this.apiStateStore.pipe(select((state: any) => state.api.group));
+    getSpecialGroup(): Observable<FullGroup> {
+        return this.apiStateStore.pipe(
+            select((state: any) => state.api.special_group)
+        );
     }
 
-    addGroupMember(user_id: string, group_id: string){
-        return this.apiStateStore.dispatch(new StartAddingGroupMember({user_id, group_id}));
+    resetSpecialGroup(): void {
+        return this.apiStateStore.dispatch(new ResetSpecialGroup());
     }
 
-    removeGroupMember(user_id: string, group_id: string){
-        return this.apiStateStore.dispatch(new StartRemovingGroupMember({user_id, group_id}));
+    addGroupMember(user_id: string, group_id: string): void {
+        return this.apiStateStore.dispatch(
+            new StartAddingGroupMember({ user_id, group_id })
+        );
+    }
+
+    removeGroupMember(user_id: string, group_id: string): void {
+        return this.apiStateStore.dispatch(
+            new StartRemovingGroupMember({ user_id, group_id })
+        );
+    }
+
+    startLoadingSpecialPermission(id: string): void {
+        return this.apiStateStore.dispatch(
+            new StartLoadingSpecialPermission(id)
+        );
+    }
+
+    getSpecialPermission(): Observable<SpecialPermission> {
+        return this.apiStateStore.pipe(
+            select((state: any) => state.api.special_permission)
+        );
+    }
+
+    resetSpecialPermission(): void {
+        return this.apiStateStore.dispatch(new ResetSpecialPermission());
+    }
+
+    startLoadingRlcs(): void {
+        return this.apiStateStore.dispatch(new StartLoadingRlcs());
+    }
+
+    startRemovingHasPermission(id: string): void {
+        return this.apiStateStore.dispatch(new StartRemovingHasPermission(id));
+    }
+
+    startCreatingHasPermission(
+        permissionId: string,
+        userHas: RestrictedUser,
+        groupHas: RestrictedGroup,
+        rlcHas: RestrictedRlc,
+        forUser: RestrictedUser,
+        forGroup: RestrictedGroup,
+        forRlc: RestrictedRlc
+    ): void {
+        const toAdd = {
+            permission: permissionId,
+            user_has_permission: userHas ? userHas.id : null,
+            group_has_permission: groupHas ? groupHas.id : null,
+            rlc_has_permission: rlcHas ? rlcHas.id : null,
+            permission_for_user: forUser ? forUser.id : null,
+            permission_for_group: forGroup ? forGroup.id : null,
+            permission_for_rlc: forRlc ? forRlc.id : null
+        };
+
+        return this.apiStateStore.dispatch(new StartAddingHasPermission(toAdd));
     }
 }
