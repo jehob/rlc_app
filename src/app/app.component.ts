@@ -25,6 +25,7 @@ import { AppSandboxService } from "./api/services/app-sandbox.service";
 
 import {MediaMatcher} from '@angular/cdk/layout';
 import {ChangeDetectorRef, OnDestroy} from '@angular/core';
+import {MAIN_PAGE_FRONT_URL} from './statics/frontend_links.statics';
 
 @Component({
     selector: "app-root",
@@ -66,6 +67,6 @@ export class AppComponent implements OnDestroy{
     }
 
     redirectToMainPage(){
-        this.router.navigate([""]);
+        this.router.navigate([MAIN_PAGE_FRONT_URL]);
     }
 }

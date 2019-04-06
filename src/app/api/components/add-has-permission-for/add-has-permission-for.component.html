@@ -16,19 +16,11 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<h1 mat-dialog-title>add new permission</h1>
+<h1 mat-dialog-title>add new permission for group</h1>
 <div mat-dialog-content>
-    <mat-divider></mat-divider>
-    <p>permit holder</p>
-    <app-autocomplete [allValuesObservable]="allUsers" placeholder="user has permission"
-        (selectedValueChanged)="userHasChanged($event)" [setSelectedValue]="selectedHasUser">
-    </app-autocomplete>
-
-    <app-autocomplete [allValuesObservable]="allGroups" placeholder="group has permission"
-                      (selectedValueChanged)="groupHasChanged($event)" [setSelectedValue]="selectedHasGroup">
-    </app-autocomplete>
-
-    <mat-checkbox [(ngModel)]="hasRlcChecked" (change)="hasRlcChanged()">whole rlc has permission</mat-checkbox>
+    <app-autocomplete [allValuesObservable]="allPermissions" placeholder="permission to add"
+                      (selectedValueChanged)="onSelectedPermissionChanged($event)"
+                      [setSelectedValue]="selectedPermission"></app-autocomplete>
     <mat-divider></mat-divider>
     <p>permission is for</p>
     <app-autocomplete [allValuesObservable]="allUsers" placeholder="permission for user"

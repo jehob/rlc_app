@@ -16,26 +16,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { Component, Input, OnInit } from "@angular/core";
-import { RestrictedUser } from "../../../api/models/user.model";
-import {Router} from '@angular/router';
-import {GetRecordsSearchURL} from '../../../statics/api_urls.statics';
-import {GetRecordSearchFrontUrl} from '../../../statics/frontend_links.statics';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-@Component({
-    selector: "app-consultants-field",
-    templateUrl: "./consultants-field.component.html",
-    styleUrls: ["./consultants-field.component.scss"]
-})
-export class ConsultantsFieldComponent implements OnInit {
-    @Input()
-    consultants: RestrictedUser[];
+import { HasPermissionsListComponent } from "./has-permissions-list.component";
 
-    constructor(private router: Router) {}
+describe("HasPermissionsListComponent", () => {
+    let component: HasPermissionsListComponent;
+    let fixture: ComponentFixture<HasPermissionsListComponent>;
 
-    ngOnInit() {}
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [HasPermissionsListComponent]
+        }).compileComponents();
+    }));
 
-    onConsultantClick(consultant: RestrictedUser){
-        this.router.navigateByUrl(GetRecordSearchFrontUrl(consultant.name));
-    }
-}
+    beforeEach(() => {
+        fixture = TestBed.createComponent(HasPermissionsListComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
+
+    it("should create", () => {
+        expect(component).toBeTruthy();
+    });
+});

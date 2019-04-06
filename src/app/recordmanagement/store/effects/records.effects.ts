@@ -38,9 +38,9 @@ import {
 } from "../actions/records.actions";
 import {
     GetRecordDocumentUrl,
-    GetRecordpermissionRequestUrl,
+    GetRecordPermissionRequestUrl,
     GetSpecialRecordURL,
-    RECORD_PERMISSIONS_LIST_URL
+    RECORD_PERMISSIONS_LIST_API_URL
 } from "../../../statics/api_urls.statics";
 import { FullRecord, RestrictedRecord } from "../../models/record.model";
 import { Tag } from "../../models/tag.model";
@@ -128,11 +128,11 @@ export class RecordsEffects {
             return from(
                 this.http
                     .post(
-                        GetRecordpermissionRequestUrl(record.id.toString()),
+                        GetRecordPermissionRequestUrl(record.id.toString()),
                         {}
                     )
                     .pipe(
-                        //this.http.post(GetRecordpermissionRequestUrl('7172'), {}).pipe(
+                        //this.http.post(GetRecordPermissionRequestUrl('7172'), {}).pipe(
                         catchError(error => {
                             this.recordSB.showError(error.error.detail);
                             return [];
@@ -159,7 +159,7 @@ export class RecordsEffects {
             console.log("action");
             return from(
                 this.http
-                    .post(RECORD_PERMISSIONS_LIST_URL, {
+                    .post(RECORD_PERMISSIONS_LIST_API_URL, {
                         id: request.id,
                         action: "accept"
                     })
@@ -194,7 +194,7 @@ export class RecordsEffects {
             console.log("action");
             return from(
                 this.http
-                    .post(RECORD_PERMISSIONS_LIST_URL, {
+                    .post(RECORD_PERMISSIONS_LIST_API_URL, {
                         id: request.id,
                         action: "decline"
                     })

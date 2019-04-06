@@ -33,11 +33,11 @@ import {
     StartLoadingSpecialRecord
 } from '../actions/records-start.actions';
 import {
-    CLIENTS_BY_BIRTHDAY_URL,
+    CLIENTS_BY_BIRTHDAY_API_URL,
     GetRecordsSearchURL,
-    GetSpecialRecordURL, RECORD_PERMISSIONS_LIST_URL,
-    RECORDS_STATICS_URL,
-    RECORDS_URL
+    GetSpecialRecordURL, RECORD_PERMISSIONS_LIST_API_URL,
+    RECORDS_STATICS_API_URL,
+    RECORDS_API_URL
 } from '../../../statics/api_urls.statics';
 import { FullRecord, RestrictedRecord } from "../../models/record.model";
 import {
@@ -84,7 +84,7 @@ export class RecordsLoadingEffects {
         switchMap((searchString: string) => {
             const url = searchString
                 ? GetRecordsSearchURL(searchString)
-                : RECORDS_URL;
+                : RECORDS_API_URL;
             return from(
                 this.http.get(url).pipe(
                     catchError(error => {
@@ -119,7 +119,7 @@ export class RecordsLoadingEffects {
         switchMap(() => {
             if (this.appSB.isAuthenticated()) {
                 return from(
-                    this.http.get(RECORDS_STATICS_URL).pipe(
+                    this.http.get(RECORDS_STATICS_API_URL).pipe(
                         catchError(error => {
                             this.snackbarService.showErrorSnackBar(`error at loading record statics: ${error.error.detail}`);
                             return [];
@@ -185,7 +185,7 @@ export class RecordsLoadingEffects {
         switchMap((birthday: Date) => {
             return from(
                 this.http
-                    .post(CLIENTS_BY_BIRTHDAY_URL, {
+                    .post(CLIENTS_BY_BIRTHDAY_API_URL, {
                         birthday: ApiSandboxService.transformDate(birthday)
                     })
                     .pipe(
@@ -284,7 +284,7 @@ export class RecordsLoadingEffects {
         switchMap(() => {
             return from(
                 this.http
-                    .get(RECORD_PERMISSIONS_LIST_URL)
+                    .get(RECORD_PERMISSIONS_LIST_API_URL)
                     .pipe(
                         catchError(error => {
                             console.log(error);

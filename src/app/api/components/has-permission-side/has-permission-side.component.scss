@@ -1,4 +1,4 @@
-/*
+/*!
  * rlcapp - record and organization management software for refugee law clinics
  * Copyright (C) 2019  Dominik Walser
  *
@@ -16,18 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { Component, OnInit } from '@angular/core';
 
-@Component({
-  selector: 'app-profiles-list-item',
-  templateUrl: './profiles-list-item.component.html',
-  styleUrls: ['./profiles-list-item.component.scss']
-})
-export class ProfilesListItemComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+.has-permission-side__icon {
+    padding-right: 10px;
 }

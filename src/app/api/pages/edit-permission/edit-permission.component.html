@@ -22,7 +22,7 @@
     </mat-card-header>
     <mat-card-content>
         <div class="vertical edit-permission__container">
-            <h2>Name: {{permission ? permission.permission.name : ''}}</h2>
+            <h2>Name: {{permission ? permission.name : ''}}</h2>
             <button mat-flat-button color="primary" *ngIf="canEditPermissions" (click)="onAddClick()">Add</button>
         </div>
         <div *ngIf="has_permissions && has_permissions.length > 0">
@@ -36,36 +36,13 @@
                 <ng-container matColumnDef="has_permission">
                     <th mat-header-cell *matHeaderCellDef>permission holder</th>
                     <td mat-cell *matCellDef="let hasPermission" class="edit-permission__holder-column">
-                        <div *ngIf="hasPermission.userHas" class="vertical">
-                            <mat-icon class="edit-permission__icon">person</mat-icon>
-                            <p>{{allUsers[hasPermission.userHas].name }}</p>
-                        </div>
-                        <div *ngIf="hasPermission.groupHas" class="vertical">
-                            <mat-icon class="edit-permission__icon">people</mat-icon>
-                            <p>{{allGroups[hasPermission.groupHas].name }}</p>
-                        </div>
-                        <div *ngIf="hasPermission.rlcHas" class="vertical">
-                            <mat-icon class="edit-permission__icon">all_inclusive</mat-icon>
-                            <p>{{allRlcs[hasPermission.rlcHas].name }}</p>
-                        </div>
-
+                        <app-has-permission-side [hasPermission]="hasPermission" whichSide="has"></app-has-permission-side>
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="permission_for">
                     <th mat-header-cell *matHeaderCellDef>permission for</th>
                     <td mat-cell *matCellDef="let hasPermission" class="edit-permission__for-column">
-                        <div *ngIf="hasPermission.forUser" class="vertical">
-                            <mat-icon class="edit-permission__icon">person</mat-icon>
-                            <p>{{allUsers[hasPermission.forUser].name }}</p>
-                        </div>
-                        <div *ngIf="hasPermission.forGroup" class="vertical">
-                            <mat-icon class="edit-permission__icon">people</mat-icon>
-                            <p>{{allGroups[hasPermission.forGroup].name }}</p>
-                        </div>
-                        <div *ngIf="hasPermission.forRlc" class="vertical">
-                            <mat-icon class="edit-permission__icon">all_inclusive</mat-icon>
-                            <p>{{allRlcs[hasPermission.forRlc].name }}</p>
-                        </div>
+                        <app-has-permission-side [hasPermission]="hasPermission" whichSide="for"></app-has-permission-side>
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="remove">

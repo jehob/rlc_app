@@ -26,7 +26,13 @@ import {
     PERMISSION_CAN_VIEW_PERMISSIONS_RLC,
     PERMISSION_CAN_VIEW_RECORDS
 } from "../../../statics/permissions.statics";
-import { RestrictedRlc } from "../../models/rlc.model";
+import {
+    GROUPS_FRONT_URL, OWN_PROFILE_FRONT_URL, PERMISSIONS_FRONT_URL,
+    PROFILES_FRONT_URL,
+    RECORDS_ADD_FRONT_URL,
+    RECORDS_FRONT_URL,
+    RECORDS_PERMIT_REQUEST_FRONT_URL
+} from '../../../statics/frontend_links.statics';
 
 @Component({
     selector: "app-sidebar",
@@ -37,6 +43,14 @@ export class SidebarComponent implements OnInit {
     active = false;
     name = "";
     email = "";
+
+    recordsUrl = RECORDS_FRONT_URL;
+    recordsAddUrl = RECORDS_ADD_FRONT_URL;
+    recordsPermitRequestsUrl = RECORDS_PERMIT_REQUEST_FRONT_URL;
+    profilesUrl = PROFILES_FRONT_URL;
+    groupsUrl = GROUPS_FRONT_URL;
+    permissionsUrl = PERMISSIONS_FRONT_URL;
+
 
     show_record_tabs = false;
     show_record_permission_request_tab = false;
@@ -81,6 +95,6 @@ export class SidebarComponent implements OnInit {
     }
 
     showProfile() {
-        this.router.navigate(["profile"]);
+        this.router.navigate([OWN_PROFILE_FRONT_URL]);
     }
 }

@@ -24,6 +24,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import {RestrictedUser} from '../../../api/models/user.model';
 import {Tag} from '../../models/tag.model';
 import {GetRecordsSearchURL} from '../../../statics/api_urls.statics';
+import {GetRecordFrontUrl, GetRecordSearchFrontUrl} from '../../../statics/frontend_links.statics';
 
 @Component({
     selector: "app-records",
@@ -59,7 +60,7 @@ export class RecordsListComponent implements OnInit {
 
     onSearchClick() {
         if (this.value && this.value !== "") {
-            this.router.navigateByUrl(`records?search=${this.value}`);
+            this.router.navigateByUrl(GetRecordSearchFrontUrl(this.value));
         } else this.router.navigateByUrl(`records`);
     }
 
@@ -73,11 +74,12 @@ export class RecordsListComponent implements OnInit {
     }
 
     onRecordSelect(record: RestrictedRecord){
-        this.router.navigateByUrl(`records/${record.id}`);
+        this.router.navigateByUrl(GetRecordFrontUrl(record));
     }
 
     onTagClick(tag: Tag){
-        this.router.navigateByUrl(`records?search=${tag.name}`);
+        this.router.navigateByUrl(GetRecordSearchFrontUrl(tag.name));
+
     }
 
 }

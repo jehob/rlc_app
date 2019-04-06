@@ -27,9 +27,6 @@
                 <h1>Members</h1>
                 <button matSuffix mat-flat-button color="primary" (click)="onAddGroupMemberClick()">add</button>
             </div>
-            <button mat-flat-button color="primary" *ngIf="canEditPermissions" (click)="onEditPermissionsClick()">edit
-                permissions
-            </button>
             <div *ngFor="let member of group.members">
                 <p>{{member.name}}</p>
                 <button matSuffix mat-flat-button color="warn" (click)="onRemoveGroupMemberClick(member.id)">remove
@@ -38,7 +35,11 @@
             <mat-divider></mat-divider>
             <div *ngIf="canEditPermissions">
                 <h1>Permissions: </h1>
-
+                <button mat-flat-button color="primary" *ngIf="canEditPermissions" (click)="onEditPermissionsClick()">
+                    add permission
+                </button>
+                <app-has-permissions-list *ngIf="groupHasPermissions && groupHasPermissions.length > 0"
+                                          [hasPermissions]="groupHasPermissions" [permissionHolder]="group"></app-has-permissions-list>
             </div>
         </mat-card-content>
     </div>

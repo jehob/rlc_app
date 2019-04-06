@@ -23,6 +23,9 @@ import { MatDialog } from "@angular/material";
 import { AddGroupMemberComponent } from "../add-group-member/add-group-member.component";
 import { PERMISSION_CAN_MANAGE_PERMISSIONS_RLC } from "../../../statics/permissions.statics";
 import { RestrictedRlc } from "../../models/rlc.model";
+import {Observable} from 'rxjs';
+import {HasPermission} from '../../models/permission.model';
+import {AddHasPermissionForComponent} from '../add-has-permission-for/add-has-permission-for.component';
 
 @Component({
     selector: "app-edit-group",
@@ -33,11 +36,22 @@ export class EditGroupComponent implements OnInit, OnDestroy {
     group: FullGroup;
     canEditPermissions = false;
 
+    groupHasPermissions: HasPermission[];
+    groupPermissionsLoaded = false;
+
     constructor(private apiSB: ApiSandboxService, public dialog: MatDialog) {}
 
     ngOnInit() {
+        this.apiSB.startLoadingPermissionStatics();
+
         this.apiSB.getGroup().subscribe((group: FullGroup) => {
-            this.group = group;
+            if (group){
+                this.group = group;
+                if (this.group && this.canEditPermissions && !this.groupPermissionsLoaded){
+                    this.apiSB.startLoadingGroupHasPermissions(this.group.id);
+                    this.groupPermissionsLoaded = true;
+                }
+            }
         });
         this.apiSB.hasPermissionFromStringForOwnRlc(
             PERMISSION_CAN_MANAGE_PERMISSIONS_RLC,
@@ -45,6 +59,10 @@ export class EditGroupComponent implements OnInit, OnDestroy {
                 this.canEditPermissions = hasPermission;
             }
         );
+
+        this.apiSB.getActualHasPermissions().subscribe((hasPermissions: HasPermission[]) => {
+            this.groupHasPermissions = hasPermissions;
+        })
     }
 
     ngOnDestroy(): void {
@@ -59,5 +77,8 @@ export class EditGroupComponent implements OnInit, OnDestroy {
         this.apiSB.removeGroupMember(user_id, this.group.id);
     }
 
-    onEditPermissionsClick(): void {}
+    onEditPermissionsClick(): void {
+        if (this.canEditPermissions)
+            this.dialog.open(AddHasPermissionForComponent, {data: this.group});
+    }
 }

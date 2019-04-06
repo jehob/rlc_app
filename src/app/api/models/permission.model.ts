@@ -167,25 +167,3 @@ export class HasPermission {
         return result.length !== 0;
     }
 }
-
-export class SpecialPermission {
-    constructor(
-        public permission: Permission,
-        public has_permissions: HasPermission[]
-    ) {
-        this.permission = permission;
-        this.has_permissions = has_permissions;
-    }
-
-    static getSpecialPermissionFromJson(json: {
-        id;
-        name;
-        has_permissions;
-    }): SpecialPermission {
-        console.log("json:", json);
-        return new SpecialPermission(
-            new Permission(json.id, json.name),
-            HasPermission.getPermissionsFromJsonArray(json.has_permissions),
-        );
-    }
-}

@@ -16,32 +16,32 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import {Component, Inject, Input, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import { Component, Inject, OnInit } from "@angular/core";
 import { ApiSandboxService } from "../../services/api-sandbox.service";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
+import { AddHasPermissionComponent } from "../add-has-permission/add-has-permission.component";
+import { Observable } from "rxjs";
+import { Permission } from "../../models/permission.model";
 import { RestrictedUser } from "../../models/user.model";
 import { RestrictedGroup } from "../../models/group.model";
 import { RestrictedRlc } from "../../models/rlc.model";
-import { Observable } from "rxjs";
 
 @Component({
-    selector: "app-add-has-permission",
-    templateUrl: "./add-has-permission.component.html",
-    styleUrls: ["./add-has-permission.component.scss"]
+    selector: "app-add-has-permission-for",
+    templateUrl: "./add-has-permission-for.component.html",
+    styleUrls: ["./add-has-permission-for.component.scss"]
 })
-export class AddHasPermissionComponent implements OnInit {
-    permissionId: string;
+export class AddHasPermissionForComponent implements OnInit {
+    allPermissions: Observable<Permission[]>;
+    selectedPermission: Permission = null;
 
     allUsers: Observable<RestrictedUser[]>;
-    selectedHasUser: RestrictedUser = null;
     selectedForUser: RestrictedUser = null;
 
     allGroups: Observable<RestrictedGroup[]>;
-    selectedHasGroup: RestrictedGroup = null;
     selectedForGroup: RestrictedGroup = null;
 
     ownRlc: RestrictedRlc;
-    hasRlcChecked = false;
     forRlcChecked = false;
 
     constructor(
@@ -53,24 +53,24 @@ export class AddHasPermissionComponent implements OnInit {
     ngOnInit() {
         this.allUsers = this.apiSB.getOtherUsers();
         this.allGroups = this.apiSB.getGroups();
+        this.allPermissions = this.apiSB.getAllPermissions();
 
         this.apiSB.getRlc().subscribe((rlc: RestrictedRlc) => {
             this.ownRlc = rlc;
         });
+    }
 
-        if (this.data && this.data.permissionId){
-            this.permissionId = this.data.permissionId;
-        } else {
-            this.apiSB.showErrorSnackBar('error: no permission id')
-        }
+    onCloseClick(): void {
+        this.dialogRef.close();
     }
 
     onAddClick(): void {
+        const group = new RestrictedGroup(this.data.id, this.data.name);
         this.apiSB.startCreatingHasPermission(
-            this.permissionId,
-            this.selectedHasUser,
-            this.selectedHasGroup,
-            this.hasRlcChecked ? this.ownRlc : null,
+            this.selectedPermission.id,
+            null,
+            group,
+            null,
             this.selectedForUser,
             this.selectedForGroup,
             this.forRlcChecked ? this.ownRlc : null
@@ -78,24 +78,9 @@ export class AddHasPermissionComponent implements OnInit {
         this.dialogRef.close();
     }
 
-    onCloseClick(): void {
-        this.dialogRef.close();
-    }
-
-    userHasChanged(selectedUser: RestrictedUser): void {
-        this.selectedHasUser = selectedUser;
-        if (selectedUser) {
-            this.selectedHasGroup = null;
-            this.hasRlcChecked = false;
-        }
-    }
-
-    groupHasChanged(selectedGroup: RestrictedGroup): void {
-        this.selectedHasGroup = selectedGroup;
-        if (selectedGroup) {
-            this.selectedHasUser = null;
-            this.hasRlcChecked = false;
-        }
+    onSelectedPermissionChanged(selectedPermission: Permission): void {
+        console.log("new selected permission", selectedPermission);
+        this.selectedPermission = selectedPermission;
     }
 
     userForChanged(selectedUser: RestrictedUser): void {
@@ -112,11 +97,6 @@ export class AddHasPermissionComponent implements OnInit {
             this.selectedForUser = null;
             this.forRlcChecked = false;
         }
-    }
-
-    hasRlcChanged(): void {
-        this.selectedHasUser = null;
-        this.selectedHasGroup = null;
     }
 
     forRlcChanged(): void {

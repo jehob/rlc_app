@@ -22,6 +22,7 @@ import {Router} from '@angular/router';
 
 import { RestrictedUser } from "../../models/user.model";
 import { ApiSandboxService } from "../../services/api-sandbox.service";
+import {GetProfileFrontUrl} from '../../../statics/frontend_links.statics';
 
 @Component({
     selector: "app-profiles-list",
@@ -39,6 +40,6 @@ export class ProfilesListComponent implements OnInit {
     }
 
     onUserClick(user: RestrictedUser){
-        this.router.navigateByUrl(`profiles/${user.id}`);
+        this.router.navigateByUrl(GetProfileFrontUrl(user));
     }
 }

@@ -211,3 +211,13 @@ ERROR__API__HAS_PERMISSION__NOT_FOUND = {
     'error_detail': 'hasPermission not found',
     'error_code': 'api.has_permission.not_found'
 }
+
+ERROR__API__HAS_PERMISSION__CAN_NOT_CREATE = {
+    'error_detail': 'cant create hasPermission like that',
+    'error_code': 'api.has_permission.can_not_create'
+}
+
+ERROR__API__HAS_PERMISSION__ALREADY_EXISTING = {
+    'error_detail': 'hasPermission already exists',
+    'error_code': 'api.has_permission.already_existing'
+}

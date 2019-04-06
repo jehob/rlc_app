@@ -16,28 +16,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ProfilesListItemComponent } from './profiles-list-item.component';
+import { HasPermissionSideComponent } from "./has-permission-side.component";
 
-describe('ProfilesListItemComponent', () => {
-  let component: ProfilesListItemComponent;
-  let fixture: ComponentFixture<ProfilesListItemComponent>;
+describe("HasPermissionSideComponent", () => {
+    let component: HasPermissionSideComponent;
+    let fixture: ComponentFixture<HasPermissionSideComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ProfilesListItemComponent ]
-    })
-    .compileComponents();
-  }));
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [HasPermissionSideComponent]
+        }).compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ProfilesListItemComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(HasPermissionSideComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it("should create", () => {
+        expect(component).toBeTruthy();
+    });
 });

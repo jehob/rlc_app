@@ -21,6 +21,8 @@ import {ApiSandboxService} from '../../services/api-sandbox.service';
 import {Permission} from '../../models/permission.model';
 import {Observable} from 'rxjs';
 import {Router} from '@angular/router';
+import {GetPermissionsForGroupURL} from '../../../statics/api_urls.statics';
+import {GetPermissionFrontUrl} from '../../../statics/frontend_links.statics';
 
 @Component({
     selector: "app-permission-list",
@@ -37,6 +39,6 @@ export class PermissionListComponent implements OnInit {
     }
 
     onPermissionItemClick(permission: Permission){
-        this.router.navigate([`permissions/${permission.id}`]);
+        this.router.navigate([GetPermissionFrontUrl(permission)]);
     }
 }

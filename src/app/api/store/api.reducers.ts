@@ -19,18 +19,18 @@
 import { ForeignUser, FullUser, RestrictedUser } from "../models/user.model";
 import {
     ADD_SINGLE_HAS_PERMISSION,
-    ApiActions,
+    ApiActions, REMOVE_ACTUAL_HAS_PERMISSIONS,
     REMOVE_SINGLE_HAS_PERMISSION,
     RESET_SPECIAL_FOREIGN_USER,
-    RESET_SPECIAL_GROUP, RESET_SPECIAL_GROUP_HAS_PERMISSIONS,
-    RESET_SPECIAL_PERMISSION,
+    RESET_SPECIAL_GROUP,
+    RESET_SPECIAL_PERMISSION, SET_ACTUAL_HAS_PERMISSIONS,
     SET_ALL_PERMISSIONS,
     SET_GROUPS,
     SET_OTHER_USERS,
     SET_RLC,
     SET_RLCS,
     SET_SPECIAL_FOREIGN_USER,
-    SET_SPECIAL_GROUP, SET_SPECIAL_GROUP_HAS_PERMISSIONS,
+    SET_SPECIAL_GROUP,
     SET_SPECIAL_PERMISSION,
     SET_USER,
     SET_USER_PERMISSIONS,
@@ -39,12 +39,10 @@ import {
 } from './api.actions';
 import {
     HasPermission,
-    Permission,
-    SpecialPermission
+    Permission
 } from "../models/permission.model";
 import { RestrictedRlc } from "../models/rlc.model";
 import { getIdObjects } from "../../shared/other/reducer-helper";
-import { applySourceSpanToStatementIfNeeded } from "@angular/compiler/src/output/output_ast";
 import { FullGroup, RestrictedGroup } from "../models/group.model";
 
 export interface ApiState {
@@ -54,12 +52,12 @@ export interface ApiState {
     user_permissions: { [id: number]: HasPermission };
     groups: { [id: number]: RestrictedGroup };
     special_group: FullGroup;
-    special_group_has_permissions: { [id: number]: HasPermission};
+    actual_has_permissions: { [id: number]: HasPermission};
     foreign_user: ForeignUser;
     rlc: RestrictedRlc;
     user_states: any;
     user_record_states: any;
-    special_permission: SpecialPermission;
+    special_permission: Permission;
     rlcs: { [id: number]: RestrictedRlc };
 }
 
@@ -70,7 +68,7 @@ const initialState: ApiState = {
     user_permissions: {},
     groups: {},
     special_group: null,
-    special_group_has_permissions: {},
+    actual_has_permissions: {},
     foreign_user: null,
     rlc: null,
     user_states: [],
@@ -80,7 +78,6 @@ const initialState: ApiState = {
 };
 
 export function apiReducer(state = initialState, action: ApiActions) {
-    let hasPermissions: HasPermission[];
     switch (action.type) {
         case SET_USER:
             return {
@@ -158,42 +155,32 @@ export function apiReducer(state = initialState, action: ApiActions) {
                 rlcs: getIdObjects(action.payload)
             };
         case REMOVE_SINGLE_HAS_PERMISSION:
-            hasPermissions = [];
-            hasPermissions.push(...state.special_permission.has_permissions);
-            hasPermissions = hasPermissions.filter(
-                (hasPermission: HasPermission) =>
-                    hasPermission.id !== action.payload
-            );
+            const hasPermissions = state.actual_has_permissions;
+            delete hasPermissions[action.payload];
+
 
             return {
                 ...state,
-                special_permission: {
-                    ...state.special_permission,
-                    has_permissions: hasPermissions
-                }
+                actual_has_permissions: hasPermissions
             };
         case ADD_SINGLE_HAS_PERMISSION:
             const hasPerm: HasPermission = action.payload;
-            hasPermissions = [];
-            hasPermissions.push(...state.special_permission.has_permissions);
-            hasPermissions.push(hasPerm);
-
             return {
                 ...state,
-                special_permission: {
-                    ...state.special_permission,
-                    has_permissions: hasPermissions
+                actual_has_permissions: {
+                    ...state.actual_has_permissions,
+                    [hasPerm.id]: hasPerm
                 }
             };
-        case SET_SPECIAL_GROUP_HAS_PERMISSIONS:
+        case SET_ACTUAL_HAS_PERMISSIONS:
             return {
                 ...state,
-                special_group_has_permissions: getIdObjects(action.payload)
+                actual_has_permissions: getIdObjects(action.payload)
             };
-        case RESET_SPECIAL_GROUP_HAS_PERMISSIONS:
+        case REMOVE_ACTUAL_HAS_PERMISSIONS:
             return {
                 ...state,
-                special_group_has_permissions: {}
+                actual_has_permissions: {}
             };
         default:
             return state;

@@ -21,7 +21,7 @@ import { HttpClient } from "@angular/common/http";
 import {
     GetDownloadUrl,
     GetUploadUrl,
-    UPLOAD_SIGNING_BASE_URL
+    UPLOAD_SIGNING_BASE_API_URL
 } from "../../statics/api_urls.statics";
 import { SnackbarService } from "./snackbar.service";
 
@@ -60,7 +60,7 @@ export class StorageService {
         console.log('names', file_names);
 
         this.http
-            .post(UPLOAD_SIGNING_BASE_URL, {
+            .post(UPLOAD_SIGNING_BASE_API_URL, {
                 file_names,
                 file_types,
                 file_dir

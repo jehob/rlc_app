@@ -31,12 +31,14 @@ from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from backend.api.errors import CustomError
 from backend.static import error_codes
 from backend.static.permissions import PERMISSION_MANAGE_PERMISSIONS_RLC
-from ..models.has_permission import HasPermission
-from ..serializers.has_permission import HasPermissionSerializer
+from ..models import HasPermission, Group, Rlc, UserProfile
+from ..serializers import HasPermissionSerializer, GroupRestrictedSerializer, UserProfileNameSerializer, \
+    RlcOnlyNameSerializer
 
 
 class HasPermissionViewSet(viewsets.ModelViewSet):
@@ -72,8 +74,29 @@ class HasPermissionViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         if not request.user.has_permission(PERMISSION_MANAGE_PERMISSIONS_RLC, for_rlc=request.user.rlc):
             raise CustomError(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
+        if request.data['rlc_has_permission'] and request.user.rlc.id != request.data['rlc_has_permission'] or \
+            request.data['permission_for_rlc'] and request.user.rlc.id != request.data['permission_for_rlc']:
+            raise CustomError(error_codes.ERROR__API__HAS_PERMISSION__CAN_NOT_CREATE)
+        if HasPermission.already_existing(request.data):
+            raise CustomError(error_codes.ERROR__API__HAS_PERMISSION__ALREADY_EXISTING)
+
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class HasPermissionStaticsViewSet(APIView):
+    def get(self, response):
+        if response.user.is_superuser:
+            users = UserProfile.objects.all()
+            groups = Group.objects.all()
+        else:
+            users = UserProfile.objects.filter(rlc=response.user.rlc)
+            groups = Group.objects.filter(from_rlc=response.user.rlc)
+        data = {
+            'users': UserProfileNameSerializer(users, many=True).data,
+            'groups': GroupRestrictedSerializer(groups, many=True).data
+        }
+        return Response(data)

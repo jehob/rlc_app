@@ -34,8 +34,8 @@ import {
 } from './auth.actions';
 import LogRocket from "logrocket";
 import {
-    FORGOT_PASSWORD_URL, GetResetPasswordUrl,
-    LOGIN_URL
+    FORGOT_PASSWORD_API_URL, GetResetPasswordUrl,
+    LOGIN_API_URL
 } from '../../../statics/api_urls.statics';
 import {
     SET_ALL_PERMISSIONS,
@@ -52,6 +52,7 @@ import { RestrictedRlc } from "../../models/rlc.model";
 import { AppSandboxService } from "../../services/app-sandbox.service";
 import { RecordPermissionRequest } from "../../../recordmanagement/models/record_permission.model";
 import { UPDATE_RECORD_PERMISSION_REQUEST } from "../../../recordmanagement/store/actions/records.actions";
+import {LOGIN_FRONT_URL} from '../../../statics/frontend_links.statics';
 
 @Injectable()
 export class AuthEffects {
@@ -73,7 +74,7 @@ export class AuthEffects {
         }),
         switchMap((authData: { username: string; password: string }) => {
             return from(
-                this.http.post(LOGIN_URL, authData).pipe(
+                this.http.post(LOGIN_API_URL, authData).pipe(
                     catchError(error => {
                         console.log("error", error);
                         this.apiSB.showErrorSnackBar(`Login not successfull: ${error.error.detail}`);
@@ -128,7 +129,7 @@ export class AuthEffects {
     reload = this.actions.pipe(
         ofType(TRY_RELOAD_STATIC_INFORMATION),
         switchMap(() => {
-            return from(this.http.get(LOGIN_URL));
+            return from(this.http.get(LOGIN_API_URL));
         }),
         mergeMap((response: any) => {
             return [...AuthEffects.getStaticInformation(response)];
@@ -142,10 +143,9 @@ export class AuthEffects {
             return action.payload;
         }),
         mergeMap((payload: { email: string }) => {
-            console.log('forgot password effect', payload);
             return from(
                 this.http
-                    .post(FORGOT_PASSWORD_URL, { email: payload.email })
+                    .post(FORGOT_PASSWORD_API_URL, { email: payload.email })
                     .pipe(
                         catchError(error => {
                             console.log('error', error);
@@ -155,7 +155,7 @@ export class AuthEffects {
                         mergeMap((response) => {
                             console.log('response: ', response);
                             this.apiSB.showSuccessSnackBar("a reactivation email was sent to the given email address");
-                            this.router.navigate(["login"]);
+                            this.router.navigate([LOGIN_FRONT_URL]);
                             return [];
                         })
                     )
@@ -182,7 +182,7 @@ export class AuthEffects {
                         mergeMap((response) => {
                             console.log('response: ', response);
                             this.apiSB.showSuccessSnackBar("password resetted");
-                            this.router.navigate(["login"]);
+                            this.router.navigate([LOGIN_FRONT_URL]);
                             return [];
                         })
                     )

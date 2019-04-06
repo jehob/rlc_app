@@ -31,6 +31,7 @@ import { Router } from "@angular/router";
 import { RecordsSandboxService } from "../../recordmanagement/services/records-sandbox.service";
 import {Observable} from 'rxjs';
 import {AuthState} from '../store/auth/auth.reducers';
+import {LOGIN_FRONT_URL} from '../../statics/frontend_links.statics';
 
 @Injectable()
 export class AppSandboxService {
@@ -55,7 +56,7 @@ export class AppSandboxService {
     logout() {
         localStorage.clear();
         this.store.dispatch(new Logout());
-        this.router.navigate(["login"]);
+        this.router.navigate([LOGIN_FRONT_URL]);
     }
 
     login(username: string, password: string) {

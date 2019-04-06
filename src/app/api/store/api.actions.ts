@@ -24,11 +24,13 @@ import { FullGroup, RestrictedGroup } from "../models/group.model";
 
 export const ADD_SINGLE_HAS_PERMISSION = "ADD_SINGLE_HAS_PERMISSION";
 export const REMOVE_SINGLE_HAS_PERMISSION = "REMOVE_SINGLE_HAS_PERMISSION";
+export const REMOVE_ACTUAL_HAS_PERMISSIONS = "REMOVE_ACTUAL_HAS_PERMISSIONS";
 export const RESET_SPECIAL_FOREIGN_USER = "RESET_SPECIAL_FOREIGN_USER";
 export const RESET_SPECIAL_GROUP = "RESET_SPECIAL_GROUP";
 export const RESET_SPECIAL_GROUP_HAS_PERMISSIONS =
     "RESET_SPECIAL_GROUP_HAS_PERMISSIONS";
 export const RESET_SPECIAL_PERMISSION = "RESET_SPECIAL_PERMISSION";
+export const SET_ACTUAL_HAS_PERMISSIONS = "SET_ACTUAL_HAS_PERMISSIONS";
 export const SET_ALL_PERMISSIONS = "SET_ALL_PERMISSIONS";
 export const SET_GROUPS = "SET_GROUPS";
 export const SET_OTHER_USERS = "SET_OTHER_USERS";
@@ -47,6 +49,7 @@ export const START_ADDING_GROUP_MEMBER = "START_ADDING_GROUP_MEMBER";
 export const START_ADDING_HAS_PERMISSION = "START_ADDING_HAS_PERMISSION";
 export const START_CREATE_USER = "START_CREATE_USER";
 export const START_LOADING_GROUPS = "START_LOADING_GROUPS";
+export const START_LOADING_HAS_PERMISSION_STATICS = "START_LOADING_HAS_PERMISSION_STATICS";
 export const START_LOADING_OTHER_USERS = "START_LOADING_OTHER_USERS";
 export const START_LOADING_RLCS = "START_LOADING_RLCS";
 export const START_LOADING_SPECIAL_FOREIGN_USER =
@@ -181,7 +184,7 @@ export class StartLoadingSpecialPermission implements Action {
 export class SetSpecialPermission implements Action {
     readonly type = SET_SPECIAL_PERMISSION;
 
-    constructor(public payload: any) {}
+    constructor(public payload: Permission) {}
 }
 
 export class ResetSpecialPermission implements Action {
@@ -228,14 +231,18 @@ export class StartLoadingSpecialGroupHasPermissions implements Action {
     constructor(public payload: string) {}
 }
 
-export class SetSpecialGroupHasPermissions implements Action {
-    readonly type = SET_SPECIAL_GROUP_HAS_PERMISSIONS;
-
-    constructor(public payload: HasPermission[]) {}
+export class StartLoadingHasPermissionStatics implements Action {
+    readonly type = START_LOADING_HAS_PERMISSION_STATICS;
 }
 
-export class ResetSpecialGroupHasPermissions implements Action {
-    readonly type = RESET_SPECIAL_GROUP_HAS_PERMISSIONS;
+export class SetActualHasPermissions implements Action {
+    readonly type = SET_ACTUAL_HAS_PERMISSIONS;
+
+    constructor(public payload: HasPermission[]){}
+}
+
+export class RemoveActualHasPermissions implements Action {
+    readonly type = REMOVE_ACTUAL_HAS_PERMISSIONS;
 }
 
 export type ApiActions =
@@ -269,5 +276,6 @@ export type ApiActions =
     | StartRemovingGroupMember
     | StartRemovingHasPermission
     | StartLoadingSpecialGroupHasPermissions
-    | SetSpecialGroupHasPermissions
-    | ResetSpecialGroupHasPermissions;
+    | StartLoadingHasPermissionStatics
+    | SetActualHasPermissions
+    | RemoveActualHasPermissions;

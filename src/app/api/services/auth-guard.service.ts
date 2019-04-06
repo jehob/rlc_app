@@ -27,6 +27,7 @@ import {
 } from "@angular/router";
 import { AppState } from "../../store/app.reducers";
 import { AuthState } from "../store/auth/auth.reducers";
+import {LOGIN_FRONT_URL} from '../../statics/frontend_links.statics';
 
 @Injectable()
 export class AuthGuardService implements CanActivate {
@@ -43,7 +44,7 @@ export class AuthGuardService implements CanActivate {
             map((authState: AuthState) => {
                 if (!authState.authenticated) {
                     this.lastVisitedUrl = route.routeConfig.path;
-                    this.router.navigate(["login"]);
+                    this.router.navigate([LOGIN_FRONT_URL]);
                 }
                 return authState.authenticated;
             })

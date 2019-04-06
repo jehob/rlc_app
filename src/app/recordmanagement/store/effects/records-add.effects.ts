@@ -35,7 +35,7 @@ import {
     StartAddingNewRecordMessage
 } from "../actions/records-start.actions";
 import {
-    CREATE_RECORD_URL,
+    CREATE_RECORD_API_URL,
     GetAddRecordMessageUrl,
     GetCreateRecordDocumentUrl
 } from "../../../statics/api_urls.statics";
@@ -64,7 +64,7 @@ export class RecordsAddEffects {
         }),
         switchMap((newRecord: any) => {
             return from(
-                this.http.post(CREATE_RECORD_URL, newRecord).pipe(
+                this.http.post(CREATE_RECORD_API_URL, newRecord).pipe(
                     catchError(error => {
                         return of({ error: "error at creating new record" });
                     }),

@@ -47,26 +47,36 @@ import {
     SET_RLCS,
     START_REMOVING_HAS_PERMISSION,
     StartRemovingHasPermission,
-    REMOVE_SINGLE_HAS_PERMISSION, START_ADDING_HAS_PERMISSION, StartAddingHasPermission, ADD_SINGLE_HAS_PERMISSION
-} from './api.actions';
+    REMOVE_SINGLE_HAS_PERMISSION,
+    START_ADDING_HAS_PERMISSION,
+    StartAddingHasPermission,
+    ADD_SINGLE_HAS_PERMISSION,
+    START_LOADING_SPECIAL_GROUP_HAS_PERMISSIONS,
+    StartLoadingSpecialGroupHasPermissions,
+    START_LOADING_HAS_PERMISSION_STATICS,
+    SET_ACTUAL_HAS_PERMISSIONS
+} from "./api.actions";
 import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
 import { from, of } from "rxjs";
 import {
-    CREATE_PROFILE_URL,
+    CREATE_PROFILE_API_URL,
+    GetPermissionsForGroupURL,
     GetSpecialGroupURL,
     GetSpecialHasPermissionURL,
     GetSpecialPermissionURL,
     GetSpecialProfileURL,
-    GROUP_MEMBER_URL,
-    GROUPS_URL, HAS_PERMISSION_URL,
-    PROFILES_URL,
-    RLCS_URL
-} from '../../statics/api_urls.statics';
+    GROUP_MEMBER_API_URL,
+    GROUPS_API_URL,
+    HAS_PERMISSION_API_URL,
+    HAS_PERMISSIONS_STATICS_API_URL,
+    PROFILES_API_URL,
+    RLCS_API_URL
+} from "../../statics/api_urls.statics";
 import { ApiSandboxService } from "../services/api-sandbox.service";
 import { ForeignUser, FullUser, RestrictedUser } from "../models/user.model";
 import { SnackbarService } from "../../shared/services/snackbar.service";
 import { FullGroup, RestrictedGroup } from "../models/group.model";
-import {HasPermission, SpecialPermission} from '../models/permission.model';
+import { HasPermission, Permission } from "../models/permission.model";
 import { RestrictedRlc } from "../models/rlc.model";
 
 @Injectable()
@@ -127,7 +137,7 @@ export class ApiEffects {
         switchMap((user: any) => {
             console.log("user start create");
             return from(
-                this.http.post(CREATE_PROFILE_URL, user).pipe(
+                this.http.post(CREATE_PROFILE_API_URL, user).pipe(
                     catchError(error => {
                         console.log("1");
                         console.log(error);
@@ -155,7 +165,7 @@ export class ApiEffects {
         ofType(START_LOADING_GROUPS),
         switchMap(() => {
             return from(
-                this.http.get(GROUPS_URL).pipe(
+                this.http.get(GROUPS_API_URL).pipe(
                     catchError(error => {
                         this.snackbar.showErrorSnackBar(
                             "error at loading groups: " + error.error.detail
@@ -183,7 +193,7 @@ export class ApiEffects {
         ofType(START_LOADING_OTHER_USERS),
         switchMap(() => {
             return from(
-                this.http.get(PROFILES_URL).pipe(
+                this.http.get(PROFILES_API_URL).pipe(
                     catchError(error => {
                         this.snackbar.showErrorSnackBar(
                             "error at loading profiles: " + error.error.detail
@@ -209,7 +219,6 @@ export class ApiEffects {
             return action.payload;
         }),
         switchMap((id: string) => {
-            console.log("load special user start");
             return from(
                 this.http.get(GetSpecialProfileURL(id)).pipe(
                     catchError(error => {
@@ -277,7 +286,7 @@ export class ApiEffects {
         switchMap((toAdd: { user_id: string; group_id: string }) => {
             return from(
                 this.http
-                    .post(GROUP_MEMBER_URL, {
+                    .post(GROUP_MEMBER_API_URL, {
                         action: "add",
                         user_id: toAdd.user_id,
                         group_id: toAdd.group_id
@@ -315,7 +324,7 @@ export class ApiEffects {
         switchMap((toAdd: { user_id: string; group_id: string }) => {
             return from(
                 this.http
-                    .post(GROUP_MEMBER_URL, {
+                    .post(GROUP_MEMBER_API_URL, {
                         action: "remove",
                         user_id: toAdd.user_id,
                         group_id: toAdd.group_id
@@ -361,13 +370,23 @@ export class ApiEffects {
                         return [];
                     }),
                     mergeMap((response: any) => {
-                        const special_permission = SpecialPermission.getSpecialPermissionFromJson(
+                        console.log("'special' permission", response);
+                        const permission = Permission.getPermissionFromJson(
                             response
                         );
+                        const hasPermissions = HasPermission.getPermissionsFromJsonArray(
+                            response.has_permissions
+                        );
+                        console.log("permission read: ", permission);
+                        console.log("permission read: ", hasPermissions);
                         return [
                             {
                                 type: SET_SPECIAL_PERMISSION,
-                                payload: special_permission
+                                payload: permission
+                            },
+                            {
+                                type: SET_ACTUAL_HAS_PERMISSIONS,
+                                payload: hasPermissions
                             }
                         ];
                     })
@@ -381,7 +400,7 @@ export class ApiEffects {
         ofType(START_LOADING_RLCS),
         switchMap(() => {
             return from(
-                this.http.get(RLCS_URL).pipe(
+                this.http.get(RLCS_API_URL).pipe(
                     catchError(error => {
                         this.snackbar.showErrorSnackBar(
                             "error at loading rlcs: " + error.error.detail
@@ -442,21 +461,94 @@ export class ApiEffects {
         }),
         switchMap((toAdd: any) => {
             return from(
-                this.http.post(HAS_PERMISSION_URL, toAdd).pipe(
+                this.http.post(HAS_PERMISSION_API_URL, toAdd).pipe(
                     catchError(error => {
                         this.snackbar.showErrorSnackBar(
                             "error at creating hasPermission: " +
-                            error.error.detail
+                                error.error.detail
                         );
                         return [];
                     }),
                     mergeMap((response: any) => {
-                        console.log("response from creating hasPermission: ", response);
-                        const hasPermission = HasPermission.getHasPermissionFromJson(response);
+                        console.log(
+                            "response from creating hasPermission: ",
+                            response
+                        );
+                        const hasPermission = HasPermission.getHasPermissionFromJson(
+                            response
+                        );
                         return [
                             {
                                 type: ADD_SINGLE_HAS_PERMISSION,
                                 payload: hasPermission
+                            }
+                        ];
+                    })
+                )
+            );
+        })
+    );
+
+    @Effect()
+    startLoadingSpecialGroupHasPermissions = this.actions.pipe(
+        ofType(START_LOADING_SPECIAL_GROUP_HAS_PERMISSIONS),
+        map((action: StartLoadingSpecialGroupHasPermissions) => {
+            return action.payload;
+        }),
+        switchMap((id: string) => {
+            return from(
+                this.http.get(GetPermissionsForGroupURL(id)).pipe(
+                    catchError(error => {
+                        this.snackbar.showErrorSnackBar(
+                            "error at loading special group has permissions: " +
+                                error.error.detail
+                        );
+                        return [];
+                    }),
+                    mergeMap((response: any) => {
+                        const hasPermissions: HasPermission[] = HasPermission.getPermissionsFromJsonArray(
+                            response
+                        );
+                        return [
+                            {
+                                type: SET_ACTUAL_HAS_PERMISSIONS,
+                                payload: hasPermissions
+                            }
+                        ];
+                    })
+                )
+            );
+        })
+    );
+
+    @Effect()
+    startLoadingHasPermissionStatics = this.actions.pipe(
+        ofType(START_LOADING_HAS_PERMISSION_STATICS),
+        switchMap(() => {
+            return from(
+                this.http.get(HAS_PERMISSIONS_STATICS_API_URL).pipe(
+                    catchError(error => {
+                        this.snackbar.showErrorSnackBar(
+                            "error at loading hasPermission statics: " +
+                                error.error.detail
+                        );
+                        return [];
+                    }),
+                    mergeMap((response: any) => {
+                        const otherUsers = RestrictedUser.getRestrictedUsersFromJsonArray(
+                            response.users
+                        );
+                        const groups = RestrictedGroup.getRestrictedGroupsFromJsonArray(
+                            response.groups
+                        );
+                        return [
+                            {
+                                type: SET_OTHER_USERS,
+                                payload: otherUsers
+                            },
+                            {
+                                type: SET_GROUPS,
+                                payload: groups
                             }
                         ];
                     })

@@ -16,6 +16,17 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<p>
-  profiles-list-item works!
-</p>
+<div *ngIf="(whichSide=='for' && hasPermission.forUser) || (whichSide=='has' && hasPermission.userHas)"
+     class="vertical">
+    <mat-icon class="has-permission-side__icon">person</mat-icon>
+    <p>{{ name }}</p>
+</div>
+<div *ngIf="(whichSide=='for' && hasPermission.forGroup) || (whichSide=='has' && hasPermission.groupHas)"
+     class="vertical">
+    <mat-icon class="has-permission-side__icon">people</mat-icon>
+    <p>{{ name }}</p>
+</div>
+<div *ngIf="(whichSide=='for' && hasPermission.forRlc) || (whichSide=='has' && hasPermission.rlcHas)" class="vertical">
+    <mat-icon class="has-permission-side__icon">all_inclusive</mat-icon>
+    <p>whole rlc</p>
+</div>

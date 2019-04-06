@@ -22,6 +22,7 @@ import {Observable} from 'rxjs';
 import {RestrictedGroup} from '../../models/group.model';
 import {Router} from '@angular/router';
 import {SnackbarService} from '../../../shared/services/snackbar.service';
+import {GetGroupFrontUrl} from '../../../statics/frontend_links.statics';
 
 @Component({
     selector: "app-manage-groups",
@@ -39,7 +40,7 @@ export class GroupsListComponent implements OnInit {
     }
 
     onGroupClick(id: string){
-        this.router.navigate([`groups/${id}`]);
+        this.router.navigate([GetGroupFrontUrl(id)]);
     }
 
     onAddGroupClick(){

@@ -16,34 +16,35 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatTabsModule } from "@angular/material";
+import { StoreModule } from "@ngrx/store";
+import { EffectsModule } from "@ngrx/effects";
 import { NgModule } from "@angular/core";
-import { CommonModule } from "@angular/common";
 import { ApiRoutingModule } from "./api-routing.module";
-import { CustomMaterialModule } from "../custom-material.module";
 import { ProfileComponent } from "./pages/profile/profile.component";
 import { RegisterComponent } from "./pages/auth/register/register.component";
 import { DashboardComponent } from "./pages/Dashboard/dashboard.component";
 import { LoginComponent } from "./pages/auth/login/login.component";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { StoreModule } from "@ngrx/store";
 import { apiReducer } from "./store/api.reducers";
-import { EffectsModule } from "@ngrx/effects";
 import { ApiEffects } from "./store/api.effects";
-import {SharedModule} from '../shared/shared.module';
-import { ProfilesListComponent } from './pages/profiles-list/profiles-list.component';
-import { ProfilesListItemComponent } from './components/profiles-list-item/profiles-list-item.component';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
-import { ForeignProfileComponent } from './pages/foreign-profile/foreign-profile.component';
-import { ForgotPasswordComponent } from './pages/auth/forgot-password/forgot-password.component';
-import { ResetPasswordComponent } from './pages/auth/reset-password/reset-password.component';
-import { GroupsListComponent } from './pages/groups-list/groups-list.component';
-import { GroupComponent } from './pages/group/group.component';
-import { EditGroupComponent } from './components/edit-group/edit-group.component';
-import { ShowGroupComponent } from './components/show-group/show-group.component';
-import { AddGroupMemberComponent } from './components/add-group-member/add-group-member.component';
-import { PermissionListComponent } from './pages/permission-list/permission-list.component';
-import { EditPermissionComponent } from './pages/edit-permission/edit-permission.component';
-import { AddHasPermissionComponent } from './components/add-has-permission/add-has-permission.component';
+import { SharedModule } from "../shared/shared.module";
+import { ProfilesListComponent } from "./pages/profiles-list/profiles-list.component";
+import { SidebarComponent } from "./components/sidebar/sidebar.component";
+import { ForeignProfileComponent } from "./pages/foreign-profile/foreign-profile.component";
+import { ForgotPasswordComponent } from "./pages/auth/forgot-password/forgot-password.component";
+import { ResetPasswordComponent } from "./pages/auth/reset-password/reset-password.component";
+import { GroupsListComponent } from "./pages/groups-list/groups-list.component";
+import { GroupComponent } from "./pages/group/group.component";
+import { EditGroupComponent } from "./components/edit-group/edit-group.component";
+import { ShowGroupComponent } from "./components/show-group/show-group.component";
+import { AddGroupMemberComponent } from "./components/add-group-member/add-group-member.component";
+import { PermissionListComponent } from "./pages/permission-list/permission-list.component";
+import { EditPermissionComponent } from "./pages/edit-permission/edit-permission.component";
+import { AddHasPermissionComponent } from "./components/add-has-permission/add-has-permission.component";
+import { HasPermissionsListComponent } from "./components/has-permissions-list/has-permissions-list.component";
+import { HasPermissionSideComponent } from "./components/has-permission-side/has-permission-side.component";
+import { AddHasPermissionForComponent } from "./components/add-has-permission-for/add-has-permission-for.component";
 
 @NgModule({
     imports: [
@@ -52,7 +53,8 @@ import { AddHasPermissionComponent } from './components/add-has-permission/add-h
         FormsModule,
         ReactiveFormsModule,
         StoreModule.forFeature("api", apiReducer),
-        EffectsModule.forFeature([ApiEffects])
+        EffectsModule.forFeature([ApiEffects]),
+        MatTabsModule
     ],
     declarations: [
         ProfileComponent,
@@ -60,7 +62,6 @@ import { AddHasPermissionComponent } from './components/add-has-permission/add-h
         DashboardComponent,
         LoginComponent,
         ProfilesListComponent,
-        ProfilesListItemComponent,
         SidebarComponent,
         ForeignProfileComponent,
         ForgotPasswordComponent,
@@ -72,9 +73,16 @@ import { AddHasPermissionComponent } from './components/add-has-permission/add-h
         AddGroupMemberComponent,
         PermissionListComponent,
         EditPermissionComponent,
-        AddHasPermissionComponent
+        AddHasPermissionComponent,
+        HasPermissionsListComponent,
+        HasPermissionSideComponent,
+        AddHasPermissionForComponent
     ],
-    entryComponents: [AddGroupMemberComponent, AddHasPermissionComponent],
+    entryComponents: [
+        AddGroupMemberComponent,
+        AddHasPermissionComponent,
+        AddHasPermissionForComponent
+    ],
     providers: [],
     exports: [SidebarComponent]
 })

@@ -52,6 +52,7 @@ import { SnackbarService } from "../../shared/services/snackbar.service";
 import { ApiState } from "../../api/store/api.reducers";
 import { getRecordFolder } from "../../statics/storage_folders.statics";
 import { RecordPermissionRequest } from "../models/record_permission.model";
+import {GetRecordFrontUrl, RECORDS_FRONT_URL} from '../../statics/frontend_links.statics';
 
 @Injectable({
     providedIn: "root"
@@ -241,7 +242,7 @@ export class RecordsSandboxService {
 
     successfullyCreatedRecord(response: any) {
         this.apiSB.showSuccessSnackBar("you successfully created the record");
-        this.router.navigate(["records"]);
+        this.router.navigate([RECORDS_FRONT_URL]);
         // do more
     }
 
@@ -368,8 +369,7 @@ export class RecordsSandboxService {
     navigateToRecordOfRecordPermissionRequest(
         request: RecordPermissionRequest
     ) {
-        const url = `records/${request.record}`;
-        this.router.navigate([url]);
+        this.router.navigate([GetRecordFrontUrl(request.record)]);
     }
 
     resetFullClientInformation(){

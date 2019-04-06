@@ -19,7 +19,9 @@
 import { Component, OnInit } from "@angular/core";
 import { RestrictedRecord } from "../../../models/record.model";
 import { RecordsSandboxService } from "../../../services/records-sandbox.service";
-import {Router} from '@angular/router';
+import { Router } from "@angular/router";
+import { GetRecordSearchFrontUrl } from "../../../../statics/frontend_links.statics";
+import { Tag } from "../../../models/tag.model";
 
 @Component({
     selector: "app-restricted-record-detail",
@@ -29,7 +31,10 @@ import {Router} from '@angular/router';
 export class RestrictedRecordDetailComponent implements OnInit {
     record: RestrictedRecord;
 
-    constructor(private recordSB: RecordsSandboxService, private router: Router) {}
+    constructor(
+        private recordSB: RecordsSandboxService,
+        private router: Router
+    ) {}
 
     ngOnInit() {
         this.recordSB
@@ -39,11 +44,11 @@ export class RestrictedRecordDetailComponent implements OnInit {
             });
     }
 
-    onTagClick(tag){
-        this.router.navigateByUrl(`records?search=${tag.name}`);
+    onTagClick(tag: Tag) {
+        this.router.navigateByUrl(GetRecordSearchFrontUrl(tag.name));
     }
 
-    onRequestReadPermission(){
+    onRequestReadPermission() {
         this.recordSB.startRequestReadPermission(this.record);
     }
 }
