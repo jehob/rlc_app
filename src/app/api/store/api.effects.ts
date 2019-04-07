@@ -54,7 +54,10 @@ import {
     START_LOADING_SPECIAL_GROUP_HAS_PERMISSIONS,
     StartLoadingSpecialGroupHasPermissions,
     START_LOADING_HAS_PERMISSION_STATICS,
-    SET_ACTUAL_HAS_PERMISSIONS
+    SET_ACTUAL_HAS_PERMISSIONS,
+    START_ADDING_GROUP,
+    StartAddingGroup,
+    ADD_GROUP
 } from "./api.actions";
 import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
 import { from, of } from "rxjs";
@@ -92,11 +95,9 @@ export class ApiEffects {
     startPatchUser = this.actions.pipe(
         ofType(START_PATCH_USER),
         map((action: StartPatchUser) => {
-            //console.log("getPayload", action.payload);
             return action.payload;
         }),
         switchMap((updates: { id: string; userUpdates: any }) => {
-            //console.log("userUpdates", updates.userUpdates);
             return from(
                 this.http
                     .patch(
@@ -549,6 +550,39 @@ export class ApiEffects {
                             {
                                 type: SET_GROUPS,
                                 payload: groups
+                            }
+                        ];
+                    })
+                )
+            );
+        })
+    );
+
+    @Effect()
+    startAddingGroup = this.actions.pipe(
+        ofType(START_ADDING_GROUP),
+        map((action: StartAddingGroup) => {
+            return action.payload;
+        }),
+        switchMap((newGroup: { name: string; visible: boolean }) => {
+            return from(
+                this.http.post(GROUPS_API_URL, newGroup).pipe(
+                    catchError(error => {
+                        console.log(error);
+                        this.snackbar.showErrorSnackBar(
+                            "error at adding new group: " + error.error.detail
+                        );
+                        return [];
+                    }),
+                    mergeMap((response: any) => {
+                        // console.log("response from adding group: ", response);
+                        const group = RestrictedGroup.getRestrictedUserFromJson(
+                            response
+                        );
+                        return [
+                            {
+                                type: ADD_GROUP,
+                                payload: group
                             }
                         ];
                     })

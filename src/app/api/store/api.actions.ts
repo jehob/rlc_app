@@ -23,6 +23,7 @@ import { RestrictedRlc } from "../models/rlc.model";
 import { FullGroup, RestrictedGroup } from "../models/group.model";
 
 export const ADD_SINGLE_HAS_PERMISSION = "ADD_SINGLE_HAS_PERMISSION";
+export const ADD_GROUP = "ADD_GROUP";
 export const REMOVE_SINGLE_HAS_PERMISSION = "REMOVE_SINGLE_HAS_PERMISSION";
 export const REMOVE_ACTUAL_HAS_PERMISSIONS = "REMOVE_ACTUAL_HAS_PERMISSIONS";
 export const RESET_SPECIAL_FOREIGN_USER = "RESET_SPECIAL_FOREIGN_USER";
@@ -45,6 +46,7 @@ export const SET_USER = "SET_USER";
 export const SET_USER_PERMISSIONS = "SET_USER_PERMISSIONS";
 export const SET_USER_RECORD_STATES = "SET_USER_RECORD_STATES";
 export const SET_USER_STATES = "SET_USER_STATES";
+export const START_ADDING_GROUP = "START_ADDING_GROUP";
 export const START_ADDING_GROUP_MEMBER = "START_ADDING_GROUP_MEMBER";
 export const START_ADDING_HAS_PERMISSION = "START_ADDING_HAS_PERMISSION";
 export const START_CREATE_USER = "START_CREATE_USER";
@@ -245,6 +247,18 @@ export class RemoveActualHasPermissions implements Action {
     readonly type = REMOVE_ACTUAL_HAS_PERMISSIONS;
 }
 
+export class StartAddingGroup implements Action {
+    readonly type = START_ADDING_GROUP;
+
+    constructor(public payload: any){}
+}
+
+export class AddGroup implements Action {
+    readonly type = ADD_GROUP;
+
+    constructor(public payload: RestrictedGroup){}
+}
+
 export type ApiActions =
     | AddSingleHasPermission
     | RemoveSingleHasPermission
@@ -278,4 +292,6 @@ export type ApiActions =
     | StartLoadingSpecialGroupHasPermissions
     | StartLoadingHasPermissionStatics
     | SetActualHasPermissions
-    | RemoveActualHasPermissions;
+    | RemoveActualHasPermissions
+    | StartAddingGroup
+    | AddGroup;

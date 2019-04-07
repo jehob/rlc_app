@@ -16,25 +16,18 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<mat-card>
-    <mat-card-header>
-        <h1>Groups</h1>
-    </mat-card-header>
-    <mat-card-content>
-        <button mat-flat-button color="primary" *ngIf="canManageGroups" (click)="onAddGroupClick()">Add group</button>
-        <div *ngIf="groups | async as catalog; else loading">
-            <ng-container *ngIf="catalog.length; else noItems">
-                <mat-list>
-                    <mat-list-item class="is_clickable" *ngFor="let group of (groups | async)" (click)="onGroupClick(group.id)">
-                        <p>{{group.name}}</p>
-                    </mat-list-item>
-                </mat-list>
+<h1 mat-dialog-title>add new group</h1>
+<div mat-dialog-content>
+    <form [formGroup]="addGroupForm">
+        <mat-form-field>
+            <input matInput formControlName="name" placeholder="name">
+        </mat-form-field>
+        <mat-checkbox formControlName="visible">is visible</mat-checkbox>
 
-            </ng-container>
-            <ng-template #noItems>No Items!</ng-template>
-        </div>
-        <ng-template #loading>loading animation...</ng-template>
+    </form>
+</div>
 
-
-    </mat-card-content>
-</mat-card>
+<div mat-dialog-actions>
+    <button mat-flat-button color="warn" (click)="onCloseClick()">Close</button>
+    <button mat-flat-button color="primary" (click)="onAddClick()">Add</button>
+</div>

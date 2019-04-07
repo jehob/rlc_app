@@ -20,4 +20,4 @@ from .rlc import *
 from .permission import *
 from .has_permission import *
 from .forgot_password import *
-
+from .new_user_request import *

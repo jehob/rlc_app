@@ -45,6 +45,7 @@ import { AddHasPermissionComponent } from "./components/add-has-permission/add-h
 import { HasPermissionsListComponent } from "./components/has-permissions-list/has-permissions-list.component";
 import { HasPermissionSideComponent } from "./components/has-permission-side/has-permission-side.component";
 import { AddHasPermissionForComponent } from "./components/add-has-permission-for/add-has-permission-for.component";
+import { AddGroupComponent } from './components/add-group/add-group.component';
 
 @NgModule({
     imports: [
@@ -76,12 +77,14 @@ import { AddHasPermissionForComponent } from "./components/add-has-permission-fo
         AddHasPermissionComponent,
         HasPermissionsListComponent,
         HasPermissionSideComponent,
-        AddHasPermissionForComponent
+        AddHasPermissionForComponent,
+        AddGroupComponent
     ],
     entryComponents: [
         AddGroupMemberComponent,
         AddHasPermissionComponent,
-        AddHasPermissionForComponent
+        AddHasPermissionForComponent,
+        AddGroupComponent
     ],
     providers: [],
     exports: [SidebarComponent]

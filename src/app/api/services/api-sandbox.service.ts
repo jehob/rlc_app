@@ -31,7 +31,7 @@ import {
     ResetSpecialForeignUser,
     ResetSpecialGroup,
     ResetSpecialPermission,
-    SetSpecialForeignUser,
+    SetSpecialForeignUser, StartAddingGroup,
     StartAddingGroupMember,
     StartAddingHasPermission,
     StartCreateUser,
@@ -412,5 +412,9 @@ export class ApiSandboxService {
 
     startLoadingPermissionStatics(): void {
         this.apiStateStore.dispatch(new StartLoadingHasPermissionStatics());
+    }
+
+    startAddingGroup(newGroup: any): void {
+        this.apiStateStore.dispatch(new StartAddingGroup(newGroup));
     }
 }

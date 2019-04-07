@@ -34,6 +34,7 @@ import { CustomErrorStateMatcher } from "../../../../statics/errror_state_matche
     styleUrls: ["./register.component.scss"]
 })
 export class RegisterComponent implements OnInit {
+    // TODO: refactor this
     userForm: FormGroup;
     allRlcs: RestrictedRlc[] = [];
     errorStateMatcher = new CustomErrorStateMatcher();
@@ -73,7 +74,9 @@ export class RegisterComponent implements OnInit {
         });
     }
 
-    ngOnInit() {}
+    ngOnInit() {
+
+    }
 
     onRegisterClick() {
         if (this.userForm.errors && this.userForm.errors.mismatch) {

@@ -221,3 +221,8 @@ ERROR__API__HAS_PERMISSION__ALREADY_EXISTING = {
     'error_detail': 'hasPermission already exists',
     'error_code': 'api.has_permission.already_existing'
 }
+
+ERROR__API__GROUP__CAN_NOT_CREATE = {
+    'error_detail': 'cant create group, not enough data',
+    'error_code': 'api.has_permission.can_not_create'
+}

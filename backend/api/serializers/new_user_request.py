@@ -14,11 +14,15 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-from .permission import *
-from .has_permission import *
-from .user import *
-from .group import *
-from .rlc import *
-from .language import *
-from .forgot_password import *
-from .new_user_request import *
+from rest_framework import serializers
+from backend.api import models
+from backend.api.serializers.user import UserProfileNameSerializer, UserProfileSerializer
+
+
+class NewUserRequestSerializer(serializers.ModelSerializer):
+    request_from = UserProfileSerializer(many=False, read_only=True)
+    request_processed = UserProfileNameSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = models.NewUserRequest
+        fields = '__all__'

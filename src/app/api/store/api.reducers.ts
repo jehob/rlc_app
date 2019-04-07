@@ -18,12 +18,15 @@
 
 import { ForeignUser, FullUser, RestrictedUser } from "../models/user.model";
 import {
+    ADD_GROUP,
     ADD_SINGLE_HAS_PERMISSION,
-    ApiActions, REMOVE_ACTUAL_HAS_PERMISSIONS,
+    ApiActions,
+    REMOVE_ACTUAL_HAS_PERMISSIONS,
     REMOVE_SINGLE_HAS_PERMISSION,
     RESET_SPECIAL_FOREIGN_USER,
     RESET_SPECIAL_GROUP,
-    RESET_SPECIAL_PERMISSION, SET_ACTUAL_HAS_PERMISSIONS,
+    RESET_SPECIAL_PERMISSION,
+    SET_ACTUAL_HAS_PERMISSIONS,
     SET_ALL_PERMISSIONS,
     SET_GROUPS,
     SET_OTHER_USERS,
@@ -36,11 +39,8 @@ import {
     SET_USER_PERMISSIONS,
     SET_USER_RECORD_STATES,
     SET_USER_STATES
-} from './api.actions';
-import {
-    HasPermission,
-    Permission
-} from "../models/permission.model";
+} from "./api.actions";
+import { HasPermission, Permission } from "../models/permission.model";
 import { RestrictedRlc } from "../models/rlc.model";
 import { getIdObjects } from "../../shared/other/reducer-helper";
 import { FullGroup, RestrictedGroup } from "../models/group.model";
@@ -52,7 +52,7 @@ export interface ApiState {
     user_permissions: { [id: number]: HasPermission };
     groups: { [id: number]: RestrictedGroup };
     special_group: FullGroup;
-    actual_has_permissions: { [id: number]: HasPermission};
+    actual_has_permissions: { [id: number]: HasPermission };
     foreign_user: ForeignUser;
     rlc: RestrictedRlc;
     user_states: any;
@@ -158,7 +158,6 @@ export function apiReducer(state = initialState, action: ApiActions) {
             const hasPermissions = state.actual_has_permissions;
             delete hasPermissions[action.payload];
 
-
             return {
                 ...state,
                 actual_has_permissions: hasPermissions
@@ -181,6 +180,14 @@ export function apiReducer(state = initialState, action: ApiActions) {
             return {
                 ...state,
                 actual_has_permissions: {}
+            };
+        case ADD_GROUP:
+            return {
+                ...state,
+                groups: {
+                    ...state.groups,
+                    [action.payload.id]: action.payload
+                }
             };
         default:
             return state;

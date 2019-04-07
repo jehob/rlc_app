@@ -28,8 +28,8 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 from rest_framework import viewsets
-from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from backend.api.errors import CustomError
 from backend.static import error_codes
@@ -61,31 +61,17 @@ class GroupViewSet(viewsets.ModelViewSet):
         creator = models.UserProfile.objects.get(id=self.request.user.id)
         serializer.save(creator=creator)
 
+    def create(self, request, *args, **kwargs):
+        if request.user.has_permission(PERMISSION_MANAGE_GROUPS_RLC):
+            raise CustomError(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
 
-# class GroupTestViewSet(viewsets.ViewSet):
-#     def list(self, request):
-#         queryset = models.Group.objects.all()
-#         serializer = serializers.GroupSerializer(queryset, many=True)
-#         return Response(serializer.data)
-#
-#     def create(self, request):
-#         pass
-#
-#     def retrieve(self, request, pk=None):
-#         queryset = models.Group.objects.all()
-#         serializer = serializers.GroupSerializer(queryset, many=True)
-#         return Response(serializer.data)
-#
-#     def update(self, request, pk=None):
-#         pass
-#
-#     def partial_update(self, request, pk=None):
-#
-#         pass
-#
-#     def destroy(self, request, pk=None):
-#         pass
-#
+        if 'name' not in request.data or 'visible' not in request.data:
+            raise CustomError(error_codes.ERROR__API__GROUP__CAN_NOT_CREATE)
+
+        group = models.Group(name=request.data['name'], visible=request.data['visible'], creator=request.user,
+                             from_rlc=request.user.rlc)
+        group.save()
+        return Response(serializers.GroupRestrictedSerializer(group).data)
 
 
 class GroupMemberViewSet(APIView):

@@ -18,11 +18,13 @@
 
 import { Component, OnInit } from "@angular/core";
 import { ApiSandboxService } from "../../services/api-sandbox.service";
-import {Observable} from 'rxjs';
-import {RestrictedGroup} from '../../models/group.model';
-import {Router} from '@angular/router';
-import {SnackbarService} from '../../../shared/services/snackbar.service';
-import {GetGroupFrontUrl} from '../../../statics/frontend_links.statics';
+import { Observable } from "rxjs";
+import { RestrictedGroup } from "../../models/group.model";
+import { Router } from "@angular/router";
+import { GetGroupFrontUrl } from "../../../statics/frontend_links.statics";
+import { PERMISSION_CAN_MANAGE_GROUPS_RLC } from "../../../statics/permissions.statics";
+import { MatDialog } from "@angular/material";
+import {AddGroupComponent} from '../../components/add-group/add-group.component';
 
 @Component({
     selector: "app-manage-groups",
@@ -32,18 +34,35 @@ import {GetGroupFrontUrl} from '../../../statics/frontend_links.statics';
 export class GroupsListComponent implements OnInit {
     groups: Observable<RestrictedGroup[]>;
 
-    constructor(private apiSB: ApiSandboxService, private router: Router, private snackbar: SnackbarService) {}
+    canManageGroups = false;
+
+    constructor(
+        private apiSB: ApiSandboxService,
+        private router: Router,
+        public dialog: MatDialog
+    ) {}
 
     ngOnInit() {
         this.apiSB.startLoadingGroups();
         this.groups = this.apiSB.getGroups();
+
+        this.apiSB.hasPermissionFromStringForOwnRlc(
+            PERMISSION_CAN_MANAGE_GROUPS_RLC,
+            hasPermission => {
+                this.canManageGroups = hasPermission;
+            }
+        );
     }
 
-    onGroupClick(id: string){
+    onGroupClick(id: string) {
         this.router.navigate([GetGroupFrontUrl(id)]);
     }
 
-    onAddGroupClick(){
-        this.snackbar.showErrorSnackBar("not available yet");
+    onAddGroupClick() {
+        if (this.canManageGroups) {
+            this.dialog.open(AddGroupComponent);
+        } else {
+            this.apiSB.showErrorSnackBar("no permission to add new group");
+        }
     }
 }

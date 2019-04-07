@@ -14,11 +14,19 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-from .permission import *
-from .has_permission import *
-from .user import *
-from .group import *
-from .rlc import *
-from .language import *
-from .forgot_password import *
-from .new_user_request import *
+from django.core.management.base import BaseCommand
+from ._factories import UserFactory, ClientFactory, RecordFactory, GroupFactory
+from backend.api.models import *
+from ._fixtures import Fixtures, AddMethods
+from backend.recordmanagement.models import *
+from backend.static.permissions import get_all_permissions
+
+
+class Command(BaseCommand):
+    help = 'adds all "new" permissions'
+
+    def add_arguments(self, parser):
+        pass
+
+    def handle(self, *args, **options):
+        Fixtures.create_real_permissions_no_duplicates()
