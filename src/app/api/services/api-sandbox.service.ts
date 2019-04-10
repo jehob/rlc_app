@@ -31,12 +31,12 @@ import {
     ResetSpecialForeignUser,
     ResetSpecialGroup,
     ResetSpecialPermission,
-    SetSpecialForeignUser, StartAddingGroup,
+    SetSpecialForeignUser, StartActivatingUser, StartAddingGroup,
     StartAddingGroupMember,
-    StartAddingHasPermission,
-    StartCreateUser,
+    StartAddingHasPermission, StartAdmittingNewUserRequest, StartCheckingUserActivationLink,
+    StartCreateUser, StartDecliningNewUserRequest,
     StartLoadingGroups,
-    StartLoadingHasPermissionStatics,
+    StartLoadingHasPermissionStatics, StartLoadingNewUserRequests,
     StartLoadingOtherUsers,
     StartLoadingRlcs,
     StartLoadingSpecialForeignUser,
@@ -56,6 +56,7 @@ import {
 } from "../models/permission.model";
 import { FullGroup, RestrictedGroup } from "../models/group.model";
 import { RestrictedRlc } from "../models/rlc.model";
+import {NewUserRequest} from '../models/new_user_request.model';
 
 @Injectable()
 export class ApiSandboxService {
@@ -416,5 +417,34 @@ export class ApiSandboxService {
 
     startAddingGroup(newGroup: any): void {
         this.apiStateStore.dispatch(new StartAddingGroup(newGroup));
+    }
+
+    startLoadingNewUserRequests(): void {
+        this.apiStateStore.dispatch(new StartLoadingNewUserRequests());
+    }
+
+    getNewUserRequests(asArray: boolean = true): Observable<NewUserRequest[]> | any {
+        return this.apiStateStore.pipe(
+            select((state: any) => {
+                const values = state.api.new_user_requests;
+                return asArray ? Object.values(values) : values;
+            })
+        );
+    }
+
+    startAdmittingNewUserRequest(newUserRequest: NewUserRequest): void {
+        this.apiStateStore.dispatch(new StartAdmittingNewUserRequest(newUserRequest));
+    }
+
+    startDecliningNewUserRequest(newUserRequest: NewUserRequest): void {
+        this.apiStateStore.dispatch(new StartDecliningNewUserRequest(newUserRequest));
+    }
+
+    startCheckingUserActivationLink(link: string): void {
+        this.apiStateStore.dispatch(new StartCheckingUserActivationLink(link));
+    }
+
+    startActivatingUser(link: string): void {
+        this.apiStateStore.dispatch(new StartActivatingUser(link));
     }
 }

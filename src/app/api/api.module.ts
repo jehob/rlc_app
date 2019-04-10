@@ -21,6 +21,7 @@ import { MatTabsModule } from "@angular/material";
 import { StoreModule } from "@ngrx/store";
 import { EffectsModule } from "@ngrx/effects";
 import { NgModule } from "@angular/core";
+
 import { ApiRoutingModule } from "./api-routing.module";
 import { ProfileComponent } from "./pages/profile/profile.component";
 import { RegisterComponent } from "./pages/auth/register/register.component";
@@ -45,7 +46,13 @@ import { AddHasPermissionComponent } from "./components/add-has-permission/add-h
 import { HasPermissionsListComponent } from "./components/has-permissions-list/has-permissions-list.component";
 import { HasPermissionSideComponent } from "./components/has-permission-side/has-permission-side.component";
 import { AddHasPermissionForComponent } from "./components/add-has-permission-for/add-has-permission-for.component";
-import { AddGroupComponent } from './components/add-group/add-group.component';
+import { AddGroupComponent } from "./components/add-group/add-group.component";
+import { NewUserRequestsComponent } from "./pages/new-user-requests/new-user-requests.component";
+import {
+    NewUserRequestProcessedPipe,
+    NewUserRequestRequestedPipe
+} from "../recordmanagement/pipes/new_user_request.pipe";
+import { ActivateUserComponent } from './pages/auth/activate-user/activate-user.component';
 
 @NgModule({
     imports: [
@@ -78,7 +85,11 @@ import { AddGroupComponent } from './components/add-group/add-group.component';
         HasPermissionsListComponent,
         HasPermissionSideComponent,
         AddHasPermissionForComponent,
-        AddGroupComponent
+        AddGroupComponent,
+        NewUserRequestsComponent,
+        NewUserRequestRequestedPipe,
+        NewUserRequestProcessedPipe,
+        ActivateUserComponent
     ],
     entryComponents: [
         AddGroupMemberComponent,

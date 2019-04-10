@@ -1,0 +1,106 @@
+<!--
+  ~ rlcapp - record and organization management software for refugee law clinics
+  ~ Copyright (C) 2019  Dominik Walser
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<mat-card>
+    <h1>new user requests</h1>
+    <div *ngIf="newUserRequests | async as catalog; else loading">
+        <ng-container *ngIf="catalog.length; else noItems">
+            <h1>To process</h1>
+            <div *ngIf="(newUserRequests | async | newUserRequestRequested).length === 0; else toProcessTable">
+                <p>No new requests.</p>
+            </div>
+            <ng-template #toProcessTable>
+                <mat-accordion>
+                    <mat-expansion-panel *ngFor="let userRequest of (catalog | newUserRequestRequested)">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                {{userRequest.request_from.name}}
+                            </mat-panel-title>
+                            <mat-panel-description>
+                                <button mat-flat-button color="warn" (click)="onDeclineClick($event, userRequest)">
+                                    decline
+                                </button>
+                                <button mat-flat-button color="primary" (click)="onAcceptClick($event, userRequest)">
+                                    admit
+                                </button>
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+
+                        <p>requested: {{(userRequest.requested | date)}}</p>
+                        <p>email: {{userRequest.request_from.email}}</p>
+                        <p *ngIf="userRequest.request_from.birthday">
+                            birthday: {{(userRequest.request_from.birthday | date)}}</p>
+                        <p *ngIf="userRequest.request_from.phone_number">phone
+                            number: {{userRequest.request_from.phone_number}}</p>
+                        <p *ngIf="userRequest.request_from.street">street: {{userRequest.request_from.street}}</p>
+                        <p *ngIf="userRequest.request_from.city">city: {{userRequest.request_from.city}}</p>
+                        <p *ngIf="userRequest.request_from.postal_code">postal
+                            code: {{userRequest.request_from.postal_code}}</p>
+                    </mat-expansion-panel>
+                </mat-accordion>
+
+            </ng-template>
+
+            <h1>Already processed</h1>
+            <div *ngIf="(newUserRequests | async | newUserRequestProcessed).length === 0; else alreadyProcessedTable">
+                <p>No processed requests.</p>
+            </div>
+            <ng-template #alreadyProcessedTable>
+                <table mat-table [dataSource]="(newUserRequests | async | newUserRequestProcessed)">
+                    <ng-container matColumnDef="id">
+                        <th mat-header-cell *matHeaderCellDef>id</th>
+                        <td mat-cell *matCellDef="let newUserRequest">
+                            {{ newUserRequest.id }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="from">
+                        <th mat-header-cell *matHeaderCellDef>from</th>
+                        <td mat-cell *matCellDef="let newUserRequest">
+                            {{ newUserRequest.request_from.name }}
+
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="processor">
+                        <th mat-header-cell *matHeaderCellDef>processor</th>
+                        <td mat-cell *matCellDef="let newUserRequest">
+                            {{ newUserRequest.request_processed.name }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="processed_date">
+                        <th mat-header-cell *matHeaderCellDef>process date</th>
+                        <td mat-cell *matCellDef="let newUserRequest">
+                            {{ (newUserRequest.processed_on | date) }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="state">
+                        <th mat-header-cell *matHeaderCellDef>state</th>
+                        <td mat-cell *matCellDef="let newUserRequest">
+                            {{ newUserRequest.state }}
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="processedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: processedColumns;"></tr>
+                </table>
+            </ng-template>
+        </ng-container>
+        <ng-template #noItems>No items to display.</ng-template>
+    </div>
+    <ng-template #loading>loading animation...</ng-template>
+
+</mat-card>

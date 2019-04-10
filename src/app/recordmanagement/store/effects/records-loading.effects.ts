@@ -34,8 +34,8 @@ import {
 } from '../actions/records-start.actions';
 import {
     CLIENTS_BY_BIRTHDAY_API_URL,
-    GetRecordsSearchURL,
-    GetSpecialRecordURL, RECORD_PERMISSIONS_LIST_API_URL,
+    GetRecordsSearchApiURL,
+    GetSpecialRecordApiURL, RECORD_PERMISSIONS_LIST_API_URL,
     RECORDS_STATICS_API_URL,
     RECORDS_API_URL
 } from '../../../statics/api_urls.statics';
@@ -83,7 +83,7 @@ export class RecordsLoadingEffects {
         }),
         switchMap((searchString: string) => {
             const url = searchString
-                ? GetRecordsSearchURL(searchString)
+                ? GetRecordsSearchApiURL(searchString)
                 : RECORDS_API_URL;
             return from(
                 this.http.get(url).pipe(
@@ -214,7 +214,7 @@ export class RecordsLoadingEffects {
         }),
         switchMap((id: string) => {
             return from(
-                this.http.get(GetSpecialRecordURL(id)).pipe(
+                this.http.get(GetSpecialRecordApiURL(id)).pipe(
                     catchError(error => {
                         this.snackbarService.showErrorSnackBar(`error at loading special record: ${error.error.detail}`);
                         return [];

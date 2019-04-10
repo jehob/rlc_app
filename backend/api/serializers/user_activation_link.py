@@ -14,12 +14,12 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-from .permission import *
-from .has_permission import *
-from .user import *
-from .group import *
-from .rlc import *
-from .language import *
-from .forgot_password import *
-from .new_user_request import *
-from .user_activation_link import *
+from rest_framework import serializers
+
+from backend.api.models import UserActivationLink
+
+
+class UserActivationLinkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserActivationLink
+        fields = '__all__'

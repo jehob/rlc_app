@@ -19,8 +19,8 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import {
-    GetDownloadUrl,
-    GetUploadUrl,
+    GetDownloadApiUrl,
+    GetUploadApiUrl,
     UPLOAD_SIGNING_BASE_API_URL
 } from "../../statics/api_urls.statics";
 import { SnackbarService } from "./snackbar.service";
@@ -39,7 +39,7 @@ export class StorageService {
     uploadFile(file: File, fileDir: string, finished?) {
         console.log('file', file);
         this.http
-            .get(GetUploadUrl(file, fileDir))
+            .get(GetUploadApiUrl(file, fileDir))
             .subscribe((response: any) => {
                 this.uploadFileDirect(file, response.data, response.url, finished);
             });
@@ -104,7 +104,7 @@ export class StorageService {
     }
 
     downloadFile(filekey: string) {
-        this.http.get(GetDownloadUrl(filekey)).subscribe((response: any) => {
+        this.http.get(GetDownloadApiUrl(filekey)).subscribe((response: any) => {
             if (!response.error) window.location.href = response.data;
             else {
                 this.snackbarService.showErrorSnackBar(

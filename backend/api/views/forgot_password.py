@@ -86,4 +86,5 @@ class ResetPasswordViewSet(APIView):
         link.user.set_password(new_password)
         link.user.is_active = True
         link.user.save()
+        link.delete()
         return Response()

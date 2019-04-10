@@ -34,7 +34,7 @@ import {
 } from './auth.actions';
 import LogRocket from "logrocket";
 import {
-    FORGOT_PASSWORD_API_URL, GetResetPasswordUrl,
+    FORGOT_PASSWORD_API_URL, GetResetPasswordApiUrl,
     LOGIN_API_URL
 } from '../../../statics/api_urls.statics';
 import {
@@ -172,7 +172,7 @@ export class AuthEffects {
         mergeMap((payload: { new_password: string, link_id: string }) => {
             return from(
                 this.http
-                    .post(GetResetPasswordUrl(payload.link_id), { new_password: payload.new_password })
+                    .post(GetResetPasswordApiUrl(payload.link_id), { new_password: payload.new_password })
                     .pipe(
                         catchError(error => {
                             console.log('error', error);

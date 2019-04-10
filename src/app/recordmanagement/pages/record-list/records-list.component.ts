@@ -16,15 +16,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 import { RecordsSandboxService } from "../../services/records-sandbox.service";
 import { Observable } from "rxjs";
-import { RestrictedRecord} from '../../models/record.model';
+import {isRestrictedRecord, RestrictedRecord} from '../../models/record.model';
 import { ActivatedRoute, Router } from "@angular/router";
-import {RestrictedUser} from '../../../api/models/user.model';
-import {Tag} from '../../models/tag.model';
-import {GetRecordsSearchURL} from '../../../statics/api_urls.statics';
-import {GetRecordFrontUrl, GetRecordSearchFrontUrl} from '../../../statics/frontend_links.statics';
+import { RestrictedUser } from "../../../api/models/user.model";
+import { Tag } from "../../models/tag.model";
+import {
+    GetRecordFrontUrl,
+    GetRecordSearchFrontUrl
+} from "../../../statics/frontend_links.statics";
+import { tap } from "rxjs/internal/operators/tap";
 
 @Component({
     selector: "app-records",
@@ -34,7 +37,7 @@ import {GetRecordFrontUrl, GetRecordSearchFrontUrl} from '../../../statics/front
 export class RecordsListComponent implements OnInit {
     timeout = 400;
     records: Observable<RestrictedRecord[]>;
-    columns = ['access', 'token', 'state', 'consultants', 'tags'];
+    columns = ["access", "token", "state", "consultants", "tags"];
     value = "";
     timer = null;
 
@@ -51,11 +54,22 @@ export class RecordsListComponent implements OnInit {
                 this.recordsSandbox.loadRecords();
             }
         });
-
     }
 
     ngOnInit() {
-        this.records = this.recordsSandbox.getRecords();
+        this.records = this.recordsSandbox.getRecords().pipe(
+            tap(results => {
+                console.log("i can change the results: ", results);
+                results.sort((a, b) => {
+                    if (isRestrictedRecord(a) && !isRestrictedRecord(b)) {
+                        return 1;
+                    } else if (!isRestrictedRecord(a) && isRestrictedRecord(b)) {
+                        return -1;
+                    }
+                    return 0;
+                });
+            })
+        );
     }
 
     onSearchClick() {
@@ -64,22 +78,20 @@ export class RecordsListComponent implements OnInit {
         } else this.router.navigateByUrl(`records`);
     }
 
-    onSearchChange(searchValue: string){
+    onSearchChange(searchValue: string) {
         clearTimeout(this.timer);
         this.timer = setTimeout(this.fireSearch.bind(this), this.timeout);
     }
 
-    fireSearch(): void{
+    fireSearch(): void {
         this.onSearchClick();
     }
 
-    onRecordSelect(record: RestrictedRecord){
+    onRecordSelect(record: RestrictedRecord) {
         this.router.navigateByUrl(GetRecordFrontUrl(record));
     }
 
-    onTagClick(tag: Tag){
+    onTagClick(tag: Tag) {
         this.router.navigateByUrl(GetRecordSearchFrontUrl(tag.name));
-
     }
-
 }

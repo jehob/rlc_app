@@ -27,7 +27,6 @@ import {Observable} from 'rxjs';
     styleUrls: ["./records-permit-requests.component.scss"]
 })
 export class RecordsPermitRequestsComponent implements OnInit {
-    //recordPermissionRequests: RecordPermissionRequest[];
     recordPermissionRequests: Observable<RecordPermissionRequest[]>;
 
     constructor(private recordSB: RecordsSandboxService) {}

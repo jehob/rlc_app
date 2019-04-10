@@ -197,6 +197,16 @@ ERROR__API__MISSING_ARGUMENT = {
     'error_code': 'api.missing_argument'
 }
 
+ERROR__API__ID_NOT_FOUND = {
+    'error_detail': 'object with provided id not found',
+    'error_code': 'api.id_not_found'
+}
+
+ERROR__API__ACTION_NOT_VALID = {
+    'error_detail': 'provided action is not valid',
+    'error_code': 'api.action_not_valid'
+}
+
 ERROR__API__GROUP__GROUP_NOT_FOUND = {
     'error_detail': 'no group with this id',
     'error_code': 'api.group.not_found'
@@ -225,4 +235,24 @@ ERROR__API__HAS_PERMISSION__ALREADY_EXISTING = {
 ERROR__API__GROUP__CAN_NOT_CREATE = {
     'error_detail': 'cant create group, not enough data',
     'error_code': 'api.has_permission.can_not_create'
+}
+
+ERROR__API__USER_ACTIVATION__LINK_NOT_FOUND = {
+    'error_detail': 'activation link not found',
+    'error_code': 'api.user_activation.link_not_found'
+}
+
+ERROR__API__NEW_USER_REQUEST__REQUEST_NOT_FOUND = {
+    'error_detail': 'new user request for user not found',
+    'error_code': 'api.new_user_request.request_not_found'
+}
+
+ERROR__API__NEW_USER_REQUEST__ID_NOT_PROVIDED = {
+    'error_detail': 'no new user request id provided',
+    'error_code': 'api.new_user_request.id_not_provided'
+}
+
+ERROR__API__NEW_USER_REQUEST__NO_USER_ACTIVATION_LINK = {
+    'error_detail': 'no corresponding user activation link',
+    'error_code': 'api.new_user_request.no_user_activation_link'
 }

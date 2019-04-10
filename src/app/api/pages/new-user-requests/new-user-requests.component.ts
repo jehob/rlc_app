@@ -18,27 +18,32 @@
 
 import { Component, OnInit } from "@angular/core";
 import {ApiSandboxService} from '../../services/api-sandbox.service';
-import {Permission} from '../../models/permission.model';
+import {NewUserRequest} from '../../models/new_user_request.model';
 import {Observable} from 'rxjs';
-import {Router} from '@angular/router';
-import {GetPermissionsForGroupApiURL} from '../../../statics/api_urls.statics';
-import {GetPermissionFrontUrl} from '../../../statics/frontend_links.statics';
 
 @Component({
-    selector: "app-permission-list",
-    templateUrl: "./permission-list.component.html",
-    styleUrls: ["./permission-list.component.scss"]
+    selector: "app-new-user-requests",
+    templateUrl: "./new-user-requests.component.html",
+    styleUrls: ["./new-user-requests.component.scss"]
 })
-export class PermissionListComponent implements OnInit {
-    permissions: Observable<Permission[]>;
+export class NewUserRequestsComponent implements OnInit {
+    newUserRequests: Observable<NewUserRequest[]>;
+    processedColumns = ['id', 'from', 'processor', 'processed_date', 'state'];
 
-    constructor(private apiSB: ApiSandboxService, private router: Router) {}
+    constructor(private apiSB: ApiSandboxService) {}
 
     ngOnInit() {
-        this.permissions = this.apiSB.getAllPermissions();
+        this.apiSB.startLoadingNewUserRequests();
+        this.newUserRequests = this.apiSB.getNewUserRequests();
     }
 
-    onPermissionItemClick(permission: Permission){
-        this.router.navigate([GetPermissionFrontUrl(permission)]);
+    onAcceptClick(event, request: NewUserRequest): void {
+        event.stopPropagation();
+        this.apiSB.startAdmittingNewUserRequest(request);
+    }
+
+    onDeclineClick(event, request: NewUserRequest): void {
+        event.stopPropagation();
+        this.apiSB.startDecliningNewUserRequest(request);
     }
 }

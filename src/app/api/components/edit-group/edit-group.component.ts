@@ -38,6 +38,7 @@ export class EditGroupComponent implements OnInit, OnDestroy {
 
     groupHasPermissions: HasPermission[];
     groupPermissionsLoaded = false;
+    memberColumns = ['member', 'remove'];
 
     constructor(private apiSB: ApiSandboxService, public dialog: MatDialog) {}
 
