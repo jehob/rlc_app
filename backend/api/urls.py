@@ -30,6 +30,8 @@ router.register('permissions', views.PermissionViewSet, base_name='permissions')
 router.register('has_permission', views.HasPermissionViewSet, base_name="has_permission")
 router.register('rlcs', views.RlcViewSet, base_name='rlcs')
 router.register('forgot_password_links', views.ForgotPasswordViewSet, base_name="forgot_password_links")
+router.register('new_user_request', views.NewUserRequestViewSet, base_name="new_user_request")
+router.register('user_activation_links', views.UserActivationBackendViewSet, base_name="user_activation_links")
 
 urlpatterns = [
     url(r'', include(router.urls)),
@@ -42,5 +44,8 @@ urlpatterns = [
     url(r'reset_password/(?P<id>.+)/$', views.ResetPasswordViewSet.as_view()),
     url(r'group_member/', views.GroupMemberViewSet.as_view()),
     url(r'permissions_for_group/(?P<pk>.+)/$', views.PermissionsForGroupViewSet.as_view()),
-    url(r'has_permission_statics/', views.HasPermissionStaticsViewSet.as_view())
+    url(r'has_permission_statics/', views.HasPermissionStaticsViewSet.as_view()),
+    url(r'check_user_activation_link/(?P<id>.+)/$', views.CheckUserActivationLinkViewSet.as_view()),
+    url(r'activate_user_activation_link/(?P<id>.+)/$', views.UserActivationLinkViewSet.as_view()),
+    url(r'new_user_request_admit/', views.NewUserRequestAdmitViewSet.as_view()),
 ]

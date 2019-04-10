@@ -17,28 +17,31 @@
  ******************************************************************************/
 
 import { Component, OnInit } from "@angular/core";
-import {ApiSandboxService} from '../../services/api-sandbox.service';
-import {Permission} from '../../models/permission.model';
-import {Observable} from 'rxjs';
-import {Router} from '@angular/router';
-import {GetPermissionsForGroupApiURL} from '../../../statics/api_urls.statics';
-import {GetPermissionFrontUrl} from '../../../statics/frontend_links.statics';
+import { ActivatedRoute, Params } from "@angular/router";
+import { ApiSandboxService } from "../../../services/api-sandbox.service";
 
 @Component({
-    selector: "app-permission-list",
-    templateUrl: "./permission-list.component.html",
-    styleUrls: ["./permission-list.component.scss"]
+    selector: "app-activate-user",
+    templateUrl: "./activate-user.component.html",
+    styleUrls: ["./activate-user.component.scss"]
 })
-export class PermissionListComponent implements OnInit {
-    permissions: Observable<Permission[]>;
+export class ActivateUserComponent implements OnInit {
+    activationLink: string;
 
-    constructor(private apiSB: ApiSandboxService, private router: Router) {}
+    constructor(
+        private apiSB: ApiSandboxService,
+        public route: ActivatedRoute
+    ) {}
 
     ngOnInit() {
-        this.permissions = this.apiSB.getAllPermissions();
+        this.route.params.subscribe((params: Params) => {
+            this.activationLink = params["link"];
+
+            this.apiSB.startCheckingUserActivationLink(this.activationLink);
+        });
     }
 
-    onPermissionItemClick(permission: Permission){
-        this.router.navigate([GetPermissionFrontUrl(permission)]);
+    onActivateClick() {
+        this.apiSB.startActivatingUser(this.activationLink);
     }
 }

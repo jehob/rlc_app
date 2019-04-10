@@ -64,8 +64,8 @@ class RecordPermissionAdmitViewSet(APIView):
         if not user.has_permission(PERMISSION_PERMIT_RECORD_PERMISSION_REQUESTS_RLC, for_rlc=user.rlc):
             raise CustomError(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
         requests = models.RecordPermission.objects.filter(record__from_rlc=user.rlc)
-        if requests.count() == 0:
-            raise CustomError(error_codes)
+        # if requests.count() == 0:
+        #     raise CustomError(error_codes)
         return Response(serializers.RecordPermissionSerializer(requests, many=True).data)
 
     def post(self, request):

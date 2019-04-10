@@ -36,8 +36,8 @@ import {
 } from "../actions/records-start.actions";
 import {
     CREATE_RECORD_API_URL,
-    GetAddRecordMessageUrl,
-    GetCreateRecordDocumentUrl
+    GetAddRecordMessageApiUrl,
+    GetCreateRecordDocumentApiUrl
 } from "../../../statics/api_urls.statics";
 import { RecordDocument } from "../../models/record_document.model";
 import {
@@ -87,7 +87,7 @@ export class RecordsAddEffects {
             return from(
                 this.http
                     .post(
-                        GetCreateRecordDocumentUrl(newDocument.record_id),
+                        GetCreateRecordDocumentApiUrl(newDocument.record_id),
                         newDocument
                     )
                     .pipe(
@@ -131,7 +131,7 @@ export class RecordsAddEffects {
                 .unsubscribe();
             return from(
                 this.http
-                    .post(GetAddRecordMessageUrl(record_id), {
+                    .post(GetAddRecordMessageApiUrl(record_id), {
                         message: newMessage
                     })
                     .pipe(

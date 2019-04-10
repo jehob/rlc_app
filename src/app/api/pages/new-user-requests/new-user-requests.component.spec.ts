@@ -16,12 +16,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-export const PERMISSION_CAN_CONSULT = 'can_consult';
-export const PERMISSION_CAN_VIEW_RECORDS = 'view_records_rlc';
-export const PERMISSION_CAN_PERMIT_RECORD_PERMISSION_REQUESTS = 'permit_record_permission_requests_rlc';
-export const PERMISSION_CAN_MANAGE_GROUPS_RLC = 'manage_groups_rlc';
-export const PERMISSION_CAN_MANAGE_GROUP = 'manage_group';
-export const PERMISSION_CAN_ADD_GROUP_RLC = 'add_group_rlc';
-export const PERMISSION_CAN_VIEW_PERMISSIONS_RLC = 'view_permissions_rlc';
-export const PERMISSION_CAN_MANAGE_PERMISSIONS_RLC = 'manage_permissions_rlc';
-export const PERMISSION_ACCEPT_NEW_USERS_RLC = 'accept_new_users_rlc';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+
+import { NewUserRequestsComponent } from "./new-user-requests.component";
+
+describe("NewUserRequestsComponent", () => {
+    let component: NewUserRequestsComponent;
+    let fixture: ComponentFixture<NewUserRequestsComponent>;
+
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [NewUserRequestsComponent]
+        }).compileComponents();
+    }));
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(NewUserRequestsComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
+
+    it("should create", () => {
+        expect(component).toBeTruthy();
+    });
+});

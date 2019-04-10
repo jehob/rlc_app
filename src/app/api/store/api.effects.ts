@@ -57,30 +57,41 @@ import {
     SET_ACTUAL_HAS_PERMISSIONS,
     START_ADDING_GROUP,
     StartAddingGroup,
-    ADD_GROUP
-} from "./api.actions";
+    ADD_GROUP,
+    START_LOADING_NEW_USER_REQUESTS,
+    SET_NEW_USER_REQUESTS,
+    START_ADMITTING_NEW_USER_REQUEST,
+    StartAdmittingNewUserRequest,
+    START_DECLINING_NEW_USER_REQUEST,
+    StartDecliningNewUserRequest,
+    UPDATE_NEW_USER_REQUEST,
+    START_CHECKING_USER_ACTIVATION_LINK,
+    StartCheckingUserActivationLink
+} from './api.actions';
 import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
 import { from, of } from "rxjs";
 import {
-    CREATE_PROFILE_API_URL,
-    GetPermissionsForGroupURL,
-    GetSpecialGroupURL,
-    GetSpecialHasPermissionURL,
-    GetSpecialPermissionURL,
-    GetSpecialProfileURL,
+    CREATE_PROFILE_API_URL, GetCheckUserActivationApiUrl,
+    GetPermissionsForGroupApiURL,
+    GetSpecialGroupApiURL,
+    GetSpecialHasPermissionApiURL,
+    GetSpecialPermissionApiURL,
+    GetSpecialProfileApiURL,
     GROUP_MEMBER_API_URL,
     GROUPS_API_URL,
     HAS_PERMISSION_API_URL,
-    HAS_PERMISSIONS_STATICS_API_URL,
+    HAS_PERMISSIONS_STATICS_API_URL, NEW_USER_REQUEST_ADMIT_API_URL, NEW_USER_REQUEST_API_URL,
     PROFILES_API_URL,
     RLCS_API_URL
-} from "../../statics/api_urls.statics";
+} from '../../statics/api_urls.statics';
 import { ApiSandboxService } from "../services/api-sandbox.service";
 import { ForeignUser, FullUser, RestrictedUser } from "../models/user.model";
 import { SnackbarService } from "../../shared/services/snackbar.service";
 import { FullGroup, RestrictedGroup } from "../models/group.model";
 import { HasPermission, Permission } from "../models/permission.model";
 import { RestrictedRlc } from "../models/rlc.model";
+import {NewUserRequest} from '../models/new_user_request.model';
+import {clearResolutionOfComponentResourcesQueue} from '@angular/core/src/metadata/resource_loading';
 
 @Injectable()
 export class ApiEffects {
@@ -101,7 +112,7 @@ export class ApiEffects {
             return from(
                 this.http
                     .patch(
-                        GetSpecialProfileURL(updates.id),
+                        GetSpecialProfileApiURL(updates.id),
                         updates.userUpdates
                     )
                     .pipe(
@@ -221,7 +232,7 @@ export class ApiEffects {
         }),
         switchMap((id: string) => {
             return from(
-                this.http.get(GetSpecialProfileURL(id)).pipe(
+                this.http.get(GetSpecialProfileApiURL(id)).pipe(
                     catchError(error => {
                         console.log(error);
                         this.snackbar.showErrorSnackBar(
@@ -256,7 +267,7 @@ export class ApiEffects {
         }),
         switchMap((id: string) => {
             return from(
-                this.http.get(GetSpecialGroupURL(id)).pipe(
+                this.http.get(GetSpecialGroupApiURL(id)).pipe(
                     catchError(error => {
                         this.snackbar.showErrorSnackBar(
                             "error at loading special group: " +
@@ -362,7 +373,7 @@ export class ApiEffects {
         }),
         switchMap((id: string) => {
             return from(
-                this.http.get(GetSpecialPermissionURL(id)).pipe(
+                this.http.get(GetSpecialPermissionApiURL(id)).pipe(
                     catchError(error => {
                         this.snackbar.showErrorSnackBar(
                             "error at loading special permission: " +
@@ -432,7 +443,7 @@ export class ApiEffects {
         }),
         switchMap((id: string) => {
             return from(
-                this.http.delete(GetSpecialHasPermissionURL(id)).pipe(
+                this.http.delete(GetSpecialHasPermissionApiURL(id)).pipe(
                     catchError(error => {
                         this.snackbar.showErrorSnackBar(
                             "error at deleting hasPermission: " +
@@ -498,7 +509,7 @@ export class ApiEffects {
         }),
         switchMap((id: string) => {
             return from(
-                this.http.get(GetPermissionsForGroupURL(id)).pipe(
+                this.http.get(GetPermissionsForGroupApiURL(id)).pipe(
                     catchError(error => {
                         this.snackbar.showErrorSnackBar(
                             "error at loading special group has permissions: " +
@@ -575,7 +586,6 @@ export class ApiEffects {
                         return [];
                     }),
                     mergeMap((response: any) => {
-                        // console.log("response from adding group: ", response);
                         const group = RestrictedGroup.getRestrictedUserFromJson(
                             response
                         );
@@ -585,6 +595,121 @@ export class ApiEffects {
                                 payload: group
                             }
                         ];
+                    })
+                )
+            );
+        })
+    );
+
+    @Effect()
+    startLoadingNewUserRequests = this.actions.pipe(
+        ofType(START_LOADING_NEW_USER_REQUESTS),
+        switchMap(() => {
+            return from(
+                this.http.get(NEW_USER_REQUEST_API_URL).pipe(
+                    catchError(error => {
+                        console.log(error);
+                        this.snackbar.showErrorSnackBar(
+                            "error at loading new user requests: " + error.error.detail
+                        );
+                        return [];
+                    }),
+                    mergeMap((response: any) => {
+                        const requests = NewUserRequest.getNewUserRequestFromJsonArray(response);
+                        return [
+                            {
+                                type: SET_NEW_USER_REQUESTS,
+                                payload: requests
+                            }
+                        ];
+                    })
+                )
+            );
+        })
+    );
+
+    @Effect()
+    startAdmittingNewUserRequest = this.actions.pipe(
+        ofType(START_ADMITTING_NEW_USER_REQUEST),
+        map((action: StartAdmittingNewUserRequest) => {
+            return action.payload;
+        }),
+        switchMap((newUserRequest: NewUserRequest) => {
+            return from(
+                this.http.post(NEW_USER_REQUEST_ADMIT_API_URL, {id: newUserRequest.id, action: 'accept'}).pipe(
+                    catchError(error => {
+                        console.log(error);
+                        this.snackbar.showErrorSnackBar(
+                            "error at accepting new user request: " + error.error.detail
+                        );
+                        return [];
+                    }),
+                    mergeMap((response: any) => {
+                        console.log("response from accepting user request: ", response);
+                        const request = NewUserRequest.getNewUserRequestFromJson(response);
+                        console.log('request from accepting user', request);
+                        return [
+                            {
+                                type: UPDATE_NEW_USER_REQUEST,
+                                payload: request
+                            }
+                        ];
+                    })
+                )
+            );
+        })
+    );
+
+    @Effect()
+    startDecliningNewUserRequest = this.actions.pipe(
+        ofType(START_DECLINING_NEW_USER_REQUEST),
+        map((action: StartDecliningNewUserRequest) => {
+            return action.payload;
+        }),
+        switchMap((newUserRequest: NewUserRequest) => {
+            return from(
+                this.http.post(NEW_USER_REQUEST_ADMIT_API_URL, {id: newUserRequest.id, action: 'decline'}).pipe(
+                    catchError(error => {
+                        console.log(error);
+                        this.snackbar.showErrorSnackBar(
+                            "error at accepting new user request: " + error.error.detail
+                        );
+                        return [];
+                    }),
+                    mergeMap((response: any) => {
+                        console.log("response from declining user request: ", response);
+                        const request = NewUserRequest.getNewUserRequestFromJson(response);
+                        console.log('request from declining user', request);
+                        return [
+                            {
+                                type: UPDATE_NEW_USER_REQUEST,
+                                payload: request
+                            }
+                        ];
+                    })
+                )
+            );
+        })
+    );
+
+    @Effect()
+    startCheckingUserActivationLink = this.actions.pipe(
+        ofType(START_CHECKING_USER_ACTIVATION_LINK),
+        map((action: StartCheckingUserActivationLink) => {
+            return action.payload;
+        }),
+        switchMap((link: string) => {
+            return from(
+                this.http.get(GetCheckUserActivationApiUrl(link)).pipe(
+                    catchError(error => {
+                        console.log(error);
+                        this.snackbar.showErrorSnackBar(
+                            "error at checking user activation link: " + error.error.detail
+                        );
+                        return [];
+                    }),
+                    mergeMap((response: any) => {
+                        return [];
                     })
                 )
             );

@@ -32,65 +32,77 @@ export const GROUP_MEMBER_API_URL = "api/group_member/";
 export const PERMISSION_API_URL = "api/permissions/";
 export const HAS_PERMISSION_API_URL = "api/has_permission/";
 export const HAS_PERMISSIONS_STATICS_API_URL = "api/has_permission_statics/";
+export const NEW_USER_REQUEST_API_URL = "api/new_user_request/";
+export const NEW_USER_REQUEST_ADMIT_API_URL = "api/new_user_request_admit/";
 
+const CHECK_USER_ACTIVATION_API_URL = "api/check_user_activation_link/";
+const ACTIVATE_USER_ACTIVATION_API_URL = "api/activate_user_activation_link/";
 const RESET_PASSWORD_API_URL = "api/reset_password/";
 const SPECIAL_RECORD_BASE_API_URL = "api/records/record/";
 const DOWNLOAD_SIGNING_BASE_API_URL = "api/storage_down/";
 const RECORD_DOCUMENT_BASE_API_URL = "api/records/documents/";
 const PERMISSION_FOR_GROUP_BASE_API_URL = "api/permissions_for_group/";
 
-export const GetSpecialProfileURL = (id: string | number) => {
+export const GetSpecialProfileApiURL = (id: string | number) => {
     return `${PROFILES_API_URL}${id}/`;
 };
 
-export const GetRecordsSearchURL = (toSearch: string) => {
+export const GetRecordsSearchApiURL = (toSearch: string) => {
     return `${RECORDS_API_URL}?search=${toSearch}`;
 };
 
-export const GetSpecialRecordURL = (id: string | number) => {
+export const GetSpecialRecordApiURL = (id: string | number) => {
     return `${SPECIAL_RECORD_BASE_API_URL}${id}/`;
 };
 
-export const GetDownloadUrl = (file: string) => {
+export const GetDownloadApiUrl = (file: string) => {
     return `${DOWNLOAD_SIGNING_BASE_API_URL}?file=${file}`;
 };
 
-export const GetUploadUrl = (file: File, fileDirectory: string = '') => {
+export const GetUploadApiUrl = (file: File, fileDirectory: string = '') => {
     return `${UPLOAD_SIGNING_BASE_API_URL}?file_name=${file.name}&file_type=${file.type}&file_dir=${fileDirectory}`;
 };
 
-export const GetCreateRecordDocumentUrl = (record_id: string) => {
+export const GetCreateRecordDocumentApiUrl = (record_id: string) => {
     return `${SPECIAL_RECORD_BASE_API_URL}${record_id}/documents`;
 };
 
-export const GetAddRecordMessageUrl = (record_id: string) => {
+export const GetAddRecordMessageApiUrl = (record_id: string) => {
     return `${SPECIAL_RECORD_BASE_API_URL}${record_id}/messages`;
 };
 
-export const GetRecordDocumentUrl = (document_id: string) => {
+export const GetRecordDocumentApiUrl = (document_id: string) => {
     return `${RECORD_DOCUMENT_BASE_API_URL}${document_id}/`;
 };
 
-export const GetRecordPermissionRequestUrl = (record_id: string) => {
+export const GetRecordPermissionRequestApiUrl = (record_id: string) => {
     return `${SPECIAL_RECORD_BASE_API_URL}${record_id}/request_permission`;
 };
 
-export const GetResetPasswordUrl = (link_id: string) => {
+export const GetResetPasswordApiUrl = (link_id: string) => {
     return `${RESET_PASSWORD_API_URL}${link_id}/`;
 };
 
-export const GetSpecialGroupURL = (id: string | number) => {
+export const GetSpecialGroupApiURL = (id: string | number) => {
     return `${GROUPS_API_URL}${id}/`;
 };
 
-export const GetSpecialPermissionURL = (id: string | number) => {
+export const GetSpecialPermissionApiURL = (id: string | number) => {
     return `${PERMISSION_API_URL}${id}/`;
 };
 
-export const GetSpecialHasPermissionURL = (id: string | number) => {
+export const GetSpecialHasPermissionApiURL = (id: string | number) => {
     return `${HAS_PERMISSION_API_URL}${id}/`;
 };
 
-export const GetPermissionsForGroupURL = (id: string | number) => {
+export const GetPermissionsForGroupApiURL = (id: string | number) => {
     return `${PERMISSION_FOR_GROUP_BASE_API_URL}${id}/`;
+};
+
+export const GetCheckUserActivationApiUrl = (link: string) => {
+    return `${CHECK_USER_ACTIVATION_API_URL}${link}/`;
+};
+
+export const GetActivateUserApiUrl = (link: string) => {
+    return `${ACTIVATE_USER_ACTIVATION_API_URL}${link}/`;
 };

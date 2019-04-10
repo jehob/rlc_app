@@ -16,20 +16,24 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<mat-card>
-    <mat-card-header>
-        <h1>Groups</h1>
-    </mat-card-header>
+<mat-card class="groups-list__card">
     <mat-card-content>
-        <button mat-flat-button color="primary" *ngIf="canManageGroups" (click)="onAddGroupClick()">Add group</button>
+        <div class="vertical groups-list__header">
+            <h1>Groups</h1>
+            <button mat-flat-button color="primary" *ngIf="canManageGroups" (click)="onAddGroupClick()">Add group</button>
+        </div>
+
         <div *ngIf="groups | async as catalog; else loading">
             <ng-container *ngIf="catalog.length; else noItems">
                 <mat-list>
-                    <mat-list-item class="is_clickable" *ngFor="let group of (groups | async)" (click)="onGroupClick(group.id)">
-                        <p>{{group.name}}</p>
-                    </mat-list-item>
-                </mat-list>
+                    <div *ngFor="let group of (groups | async)">
+                        <mat-list-item class="is_clickable" (click)="onGroupClick(group.id)">
+                            <mat-icon mat-list-icon>group</mat-icon>
+                            <p mat-line>{{group.name}}</p>
 
+                        </mat-list-item>
+                    </div>
+                </mat-list>
             </ng-container>
             <ng-template #noItems>No Items!</ng-template>
         </div>

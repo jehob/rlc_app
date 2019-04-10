@@ -25,18 +25,18 @@ def generate_link_id():
     pot_id = get_random_string(length)
     while True:
         try:
-            ForgotPasswordLinks.objects.get(link=pot_id)
+            UserActivationLink.objects.get(link=pot_id)
             pot_id = get_random_string(length)
         except:
             return pot_id
 
 
-class ForgotPasswordLinks(models.Model):
-    user = models.ForeignKey(
-        UserProfile, related_name="forgot_password_link", on_delete=models.SET_NULL, null=True)
+class UserActivationLink(models.Model):
+    user = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
+
     link = models.CharField(auto_created=True, unique=True, default=generate_link_id, max_length=32)
     date = models.DateTimeField(auto_now_add=True)
-    ip_address = models.CharField(max_length=64)
+    activated = models.BooleanField(default=False)
 
     def __str__(self):
-        return 'forgot_password: ' + str(self.id) + ':' + self.user.email
+        return 'user activation link: ' + str(self.id) + ':' + self.user.email

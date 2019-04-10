@@ -53,7 +53,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(queryset, many=True)
             return Response(serializer.data)
         else:
-            queryset = UserProfile.objects.filter(rlc=request.user.rlc)
+            queryset = UserProfile.objects.filter(rlc=request.user.rlc, is_active=True)
             page = self.paginate_queryset(queryset)
             if page is not None:
                 serializer = UserProfileNameSerializer(page, many=True)
@@ -106,7 +106,17 @@ class UserProfileCreatorViewSet(viewsets.ModelViewSet):
         user.rlc = Rlc.objects.get(pk=request.data['rlc'])
         if 'birthday' in request.data:
             user.birthday = request.data['birthday']
+        user.is_active = False
         user.save()
+
+        # new user request
+        from backend.api.models import NewUserRequest
+        new_user_request = NewUserRequest(request_from=user)
+        new_user_request.save()
+        # new user activation link
+        from backend.api.models import UserActivationLink
+        user_activation_link = UserActivationLink(user=user)
+        user_activation_link.save()
 
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

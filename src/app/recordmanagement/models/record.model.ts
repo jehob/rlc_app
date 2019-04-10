@@ -88,3 +88,7 @@ export class FullRecord extends RestrictedRecord {
         );
     }
 }
+
+export const isRestrictedRecord = (record): boolean => {
+    return !(record.note || record.note === '');
+};

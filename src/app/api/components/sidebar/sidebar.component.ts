@@ -22,12 +22,16 @@ import { AppSandboxService } from "../../services/app-sandbox.service";
 import { FullUser } from "../../models/user.model";
 import { ApiSandboxService } from "../../services/api-sandbox.service";
 import {
+    PERMISSION_ACCEPT_NEW_USERS_RLC,
     PERMISSION_CAN_PERMIT_RECORD_PERMISSION_REQUESTS,
     PERMISSION_CAN_VIEW_PERMISSIONS_RLC,
     PERMISSION_CAN_VIEW_RECORDS
 } from "../../../statics/permissions.statics";
 import {
-    GROUPS_FRONT_URL, OWN_PROFILE_FRONT_URL, PERMISSIONS_FRONT_URL,
+    ACCEPT_NEW_USER_REQUESTS_FRONT_URL,
+    GROUPS_FRONT_URL,
+    OWN_PROFILE_FRONT_URL,
+    PERMISSIONS_FRONT_URL,
     PROFILES_FRONT_URL,
     RECORDS_ADD_FRONT_URL,
     RECORDS_FRONT_URL,
@@ -50,11 +54,12 @@ export class SidebarComponent implements OnInit {
     profilesUrl = PROFILES_FRONT_URL;
     groupsUrl = GROUPS_FRONT_URL;
     permissionsUrl = PERMISSIONS_FRONT_URL;
-
+    acceptNewUsersUrl = ACCEPT_NEW_USER_REQUESTS_FRONT_URL;
 
     show_record_tabs = false;
     show_record_permission_request_tab = false;
     show_permissions_tab = false;
+    show_accept_new_user_requests_tab = false;
 
     constructor(
         private router: Router,
@@ -65,22 +70,29 @@ export class SidebarComponent implements OnInit {
     ngOnInit() {
         this.apiSB.hasPermissionFromStringForOwnRlc(
             PERMISSION_CAN_VIEW_RECORDS,
-            has_permission => {
-                this.show_record_tabs = has_permission;
+            hasPermission => {
+                this.show_record_tabs = hasPermission;
             }
         );
 
         this.apiSB.hasPermissionFromStringForOwnRlc(
             PERMISSION_CAN_PERMIT_RECORD_PERMISSION_REQUESTS,
-            has_permission => {
-                this.show_record_permission_request_tab = has_permission;
+            hasPermission => {
+                this.show_record_permission_request_tab = hasPermission;
             }
         );
 
         this.apiSB.hasPermissionFromStringForOwnRlc(
             PERMISSION_CAN_VIEW_PERMISSIONS_RLC,
-            has_permission => {
-                this.show_permissions_tab = has_permission;
+            hasPermission => {
+                this.show_permissions_tab = hasPermission;
+            }
+        );
+
+        this.apiSB.hasPermissionFromStringForOwnRlc(
+            PERMISSION_ACCEPT_NEW_USERS_RLC,
+            hasPermission => {
+                this.show_accept_new_user_requests_tab = hasPermission;
             }
         );
 

@@ -28,7 +28,7 @@ import {
     RESET_SPECIAL_PERMISSION,
     SET_ACTUAL_HAS_PERMISSIONS,
     SET_ALL_PERMISSIONS,
-    SET_GROUPS,
+    SET_GROUPS, SET_NEW_USER_REQUESTS,
     SET_OTHER_USERS,
     SET_RLC,
     SET_RLCS,
@@ -38,12 +38,13 @@ import {
     SET_USER,
     SET_USER_PERMISSIONS,
     SET_USER_RECORD_STATES,
-    SET_USER_STATES
-} from "./api.actions";
+    SET_USER_STATES, UPDATE_NEW_USER_REQUEST
+} from './api.actions';
 import { HasPermission, Permission } from "../models/permission.model";
 import { RestrictedRlc } from "../models/rlc.model";
 import { getIdObjects } from "../../shared/other/reducer-helper";
 import { FullGroup, RestrictedGroup } from "../models/group.model";
+import { NewUserRequest } from "../models/new_user_request.model";
 
 export interface ApiState {
     user: FullUser;
@@ -59,6 +60,7 @@ export interface ApiState {
     user_record_states: any;
     special_permission: Permission;
     rlcs: { [id: number]: RestrictedRlc };
+    new_user_requests: { [id: number]: NewUserRequest };
 }
 
 const initialState: ApiState = {
@@ -74,7 +76,8 @@ const initialState: ApiState = {
     user_states: [],
     user_record_states: [],
     special_permission: null,
-    rlcs: {}
+    rlcs: {},
+    new_user_requests: {}
 };
 
 export function apiReducer(state = initialState, action: ApiActions) {
@@ -186,6 +189,19 @@ export function apiReducer(state = initialState, action: ApiActions) {
                 ...state,
                 groups: {
                     ...state.groups,
+                    [action.payload.id]: action.payload
+                }
+            };
+        case SET_NEW_USER_REQUESTS:
+            return {
+                ...state,
+                new_user_requests: getIdObjects(action.payload)
+            };
+        case UPDATE_NEW_USER_REQUEST:
+            return {
+                ...state,
+                new_user_requests: {
+                    ...state.new_user_requests,
                     [action.payload.id]: action.payload
                 }
             };

@@ -37,9 +37,9 @@ import {
     UPDATE_RECORD_PERMISSION_REQUEST
 } from "../actions/records.actions";
 import {
-    GetRecordDocumentUrl,
-    GetRecordPermissionRequestUrl,
-    GetSpecialRecordURL,
+    GetRecordDocumentApiUrl,
+    GetRecordPermissionRequestApiUrl,
+    GetSpecialRecordApiURL,
     RECORD_PERMISSIONS_LIST_API_URL
 } from "../../../statics/api_urls.statics";
 import { FullRecord, RestrictedRecord } from "../../models/record.model";
@@ -67,7 +67,7 @@ export class RecordsEffects {
         switchMap((payload: { record: FullRecord; client: FullClient }) => {
             return from(
                 this.http
-                    .patch(GetSpecialRecordURL(payload.record.id), {
+                    .patch(GetSpecialRecordApiURL(payload.record.id), {
                         record_note: payload.record.note
                     })
                     .pipe(
@@ -94,7 +94,7 @@ export class RecordsEffects {
         mergeMap((payload: { tags: Tag[]; document_id: string }) => {
             return from(
                 this.http
-                    .post(GetRecordDocumentUrl(payload.document_id), {
+                    .post(GetRecordDocumentApiUrl(payload.document_id), {
                         tag_ids: payload.tags
                     })
                     .pipe(
@@ -128,11 +128,11 @@ export class RecordsEffects {
             return from(
                 this.http
                     .post(
-                        GetRecordPermissionRequestUrl(record.id.toString()),
+                        GetRecordPermissionRequestApiUrl(record.id.toString()),
                         {}
                     )
                     .pipe(
-                        //this.http.post(GetRecordPermissionRequestUrl('7172'), {}).pipe(
+                        //this.http.post(GetRecordPermissionRequestApiUrl('7172'), {}).pipe(
                         catchError(error => {
                             this.recordSB.showError(error.error.detail);
                             return [];
@@ -156,7 +156,7 @@ export class RecordsEffects {
             return action.payload;
         }),
         mergeMap((request: RecordPermissionRequest) => {
-            console.log("action");
+             console.log("action");
             return from(
                 this.http
                     .post(RECORD_PERMISSIONS_LIST_API_URL, {
