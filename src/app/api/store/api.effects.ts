@@ -91,7 +91,6 @@ import { FullGroup, RestrictedGroup } from "../models/group.model";
 import { HasPermission, Permission } from "../models/permission.model";
 import { RestrictedRlc } from "../models/rlc.model";
 import {NewUserRequest} from '../models/new_user_request.model';
-import {clearResolutionOfComponentResourcesQueue} from '@angular/core/src/metadata/resource_loading';
 
 @Injectable()
 export class ApiEffects {
