@@ -18,10 +18,16 @@
 
 <h1 mat-dialog-title>Add group members</h1>
 <div mat-dialog-content class="add-group-member__dialog-content">
-    <div *ngFor="let user of other_users; let i = index">
-        <p>{{user.name}}</p>
-        <button mat-flat-button color="primary" (click)="onAddGroupMemberClick(user)" [disabled]="is_user[i]">add</button>
+    <div *ngIf="users_to_show.length === 0; else usersToAdd">
+        <p>There are no users left you could add.</p>
     </div>
+    <ng-template #usersToAdd>
+        <div *ngFor="let user of users_to_show" class="horizontal">
+            <p class="add-group-member__add-member-name">{{user.name}}</p>
+            <button mat-flat-button color="primary" (click)="onAddGroupMemberClick(user)">add</button>
+        </div>
+    </ng-template>
+
 </div>
 
 <div mat-dialog-actions>

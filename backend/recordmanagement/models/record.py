@@ -16,6 +16,7 @@
 
 from django.db import models
 from django.db.models import Q
+
 from backend.api.models import UserProfile, Rlc
 from backend.recordmanagement.models import RecordTag
 
@@ -86,6 +87,5 @@ class Record(models.Model):
         :return: boolean, true if the user has permission
         """
         from backend.recordmanagement.models import RecordPermission
-        return self.working_on_record.filter(id=user.id).count() == 1 or RecordPermission.objects.filter(record=self,
-                                                                                                         request_from=user,
-                                                                                                         state='gr')
+        return self.working_on_record.filter(id=user.id).count() == 1 or \
+               RecordPermission.objects.filter(record=self, request_from=user, state='gr')

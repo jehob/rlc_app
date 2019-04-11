@@ -15,23 +15,29 @@
   ~ You should have received a copy of the GNU Affero General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-<div *ngIf="hasPermissions && hasPermissions.length > 0">
-    <table mat-table [dataSource]="hasPermissions">
+
+<div *ngIf="hasPermissions && hasPermissions.length > 0; else noPermissions"
+     class="has-permission-list__table-container">
+    <table #table mat-table [dataSource]="hasPermissions" [class.isMobile]="isMobile">
         <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef>id</th>
-            <td mat-cell *matCellDef="let hasPermission">
+            <td mat-cell *matCellDef="let hasPermission" class="has-permission-list__content-column">
+                <span class="mobile-label">id: </span>
                 {{ hasPermission.id }}
             </td>
         </ng-container>
         <ng-container matColumnDef="permission_name">
             <th mat-header-cell *matHeaderCellDef>permission name</th>
-            <td mat-cell *matCellDef="let hasPermission">
+            <td mat-cell *matCellDef="let hasPermission" class="has-permission-list__content-column">
+                <span class="mobile-label">permission: </span>
+
                 {{ permissionNames[hasPermission.id] }}
             </td>
         </ng-container>
         <ng-container matColumnDef="permission_for">
             <th mat-header-cell *matHeaderCellDef>permission for</th>
-            <td mat-cell *matCellDef="let hasPermission">
+            <td mat-cell *matCellDef="let hasPermission" class="has-permission-list__content-column">
+                <span class="mobile-label">for: </span>
                 <app-has-permission-side [hasPermission]="hasPermission" whichSide="for"></app-has-permission-side>
             </td>
         </ng-container>
@@ -45,7 +51,10 @@
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="columns; sticky: true"></tr>
-        <tr mat-row *matRowDef="let row; columns: columns"></tr>
+        <tr mat-row *matRowDef="let row; columns: columns" class="has-permission-list__row"></tr>
     </table>
 
 </div>
+<ng-template #noPermissions>
+    <p>There are no permissions to show.</p>
+</ng-template>

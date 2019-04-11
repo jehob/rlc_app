@@ -21,7 +21,7 @@
         <h2>Edit permission</h2>
     </mat-card-header>
     <mat-card-content>
-        <div class="vertical edit-permission__container">
+        <div class="horizontal edit-permission__container">
             <h2>Name: {{permission ? permission.name : ''}}</h2>
             <button mat-flat-button color="primary" *ngIf="canEditPermissions" (click)="onAddClick()">Add</button>
         </div>

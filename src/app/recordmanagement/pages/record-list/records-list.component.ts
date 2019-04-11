@@ -59,7 +59,6 @@ export class RecordsListComponent implements OnInit {
     ngOnInit() {
         this.records = this.recordsSandbox.getRecords().pipe(
             tap(results => {
-                console.log("i can change the results: ", results);
                 results.sort((a, b) => {
                     if (isRestrictedRecord(a) && !isRestrictedRecord(b)) {
                         return 1;

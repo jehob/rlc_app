@@ -30,7 +30,7 @@ import { RestrictedUser } from "../../models/user.model";
 export class AddGroupMemberComponent implements OnInit {
     group_members: RestrictedUser[];
     other_users: RestrictedUser[];
-    is_user: boolean[];
+    users_to_show: RestrictedUser[];
     group_id: string;
 
     constructor(
@@ -44,15 +44,14 @@ export class AddGroupMemberComponent implements OnInit {
             .getOtherUsers()
             .subscribe((other_users: RestrictedUser[]) => {
                 this.other_users = other_users;
-
-                if (this.other_users)
-                    this.is_user = new Array(this.other_users.length).fill(false);
-                this.checkIsUser();
+                this.checkUsersToShow();
             });
         this.apiSB.getSpecialGroup().subscribe((group: FullGroup) => {
-            if (group){
+            if (group) {
                 this.group_members = group.members;
                 this.group_id = group.id;
+
+                this.checkUsersToShow();
             }
         });
     }
@@ -65,10 +64,20 @@ export class AddGroupMemberComponent implements OnInit {
         this.apiSB.addGroupMember(user.id, this.group_id);
     }
 
-    checkIsUser(){
-        if (this.other_users && this.group_members)
-            this.other_users.forEach((user: RestrictedUser, index: number) => {
-               this.is_user[index] = this.group_members.filter((filterUser: RestrictedUser) => filterUser.id === user.id).length > 0;
+    checkUsersToShow() {
+        if (this.group_members && this.other_users){
+            this.users_to_show = [];
+            this.other_users.forEach((other_user: RestrictedUser) => {
+                if (
+                    this.group_members &&
+                    this.group_members.filter(
+                        (group_member: RestrictedUser) =>
+                            group_member.id === other_user.id
+                    ).length === 0
+                ) {
+                    this.users_to_show.push(other_user);
+                }
             });
+        }
     }
 }

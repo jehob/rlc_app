@@ -17,7 +17,7 @@
  ******************************************************************************/
 
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatTabsModule } from "@angular/material";
+import {MatProgressSpinnerModule, MatTabsModule} from '@angular/material';
 import { StoreModule } from "@ngrx/store";
 import { EffectsModule } from "@ngrx/effects";
 import { NgModule } from "@angular/core";
@@ -60,9 +60,10 @@ import { ActivateUserComponent } from './pages/auth/activate-user/activate-user.
         SharedModule,
         FormsModule,
         ReactiveFormsModule,
-        StoreModule.forFeature("api", apiReducer),
+        StoreModule.forFeature('api', apiReducer),
         EffectsModule.forFeature([ApiEffects]),
-        MatTabsModule
+        MatTabsModule,
+        MatProgressSpinnerModule
     ],
     declarations: [
         ProfileComponent,

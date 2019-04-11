@@ -17,16 +17,16 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 <div *ngIf="(whichSide=='for' && hasPermission.forUser) || (whichSide=='has' && hasPermission.userHas)"
-     class="vertical">
+     class="horizontal">
     <mat-icon class="has-permission-side__icon">person</mat-icon>
     <p>{{ name }}</p>
 </div>
 <div *ngIf="(whichSide=='for' && hasPermission.forGroup) || (whichSide=='has' && hasPermission.groupHas)"
-     class="vertical">
+     class="horizontal">
     <mat-icon class="has-permission-side__icon">people</mat-icon>
     <p>{{ name }}</p>
 </div>
-<div *ngIf="(whichSide=='for' && hasPermission.forRlc) || (whichSide=='has' && hasPermission.rlcHas)" class="vertical">
+<div *ngIf="(whichSide=='for' && hasPermission.forRlc) || (whichSide=='has' && hasPermission.rlcHas)" class="horizontal">
     <mat-icon class="has-permission-side__icon">all_inclusive</mat-icon>
     <p>whole rlc</p>
 </div>
