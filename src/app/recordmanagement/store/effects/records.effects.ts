@@ -1,6 +1,6 @@
 /*
  * rlcapp - record and organization management software for refugee law clinics
- * Copyright (C) 2018  Dominik Walser
+ * Copyright (C) 2019  Dominik Walser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -37,10 +37,10 @@ import {
     UPDATE_RECORD_PERMISSION_REQUEST
 } from "../actions/records.actions";
 import {
-    GetRecordDocumentUrl,
-    GetRecordpermissionRequestUrl,
-    GetSpecialRecordURL,
-    RECORD_PERMISSIONS_LIST_URL
+    GetRecordDocumentApiUrl,
+    GetRecordPermissionRequestApiUrl,
+    GetSpecialRecordApiURL,
+    RECORD_PERMISSIONS_LIST_API_URL
 } from "../../../statics/api_urls.statics";
 import { FullRecord, RestrictedRecord } from "../../models/record.model";
 import { Tag } from "../../models/tag.model";
@@ -67,16 +67,19 @@ export class RecordsEffects {
         switchMap((payload: { record: FullRecord; client: FullClient }) => {
             return from(
                 this.http
-                    .patch(GetSpecialRecordURL(payload.record.id), {
-                        record_note: payload.record.note
+                    .patch(GetSpecialRecordApiURL(payload.record.id), {
+                        record: payload.record,
+                        client: payload.client
                     })
                     .pipe(
                         catchError(error => {
+                            console.log('error at saving record', error);
                             return of({
-                                error: "error at loading special record"
+                                error: "error at saving record"
                             });
                         }),
                         mergeMap((response: any) => {
+                            console.log('saved record effect: ', response);
                             this.recordSB.successfullySavedRecord(response);
                             return [];
                         })
@@ -94,7 +97,7 @@ export class RecordsEffects {
         mergeMap((payload: { tags: Tag[]; document_id: string }) => {
             return from(
                 this.http
-                    .post(GetRecordDocumentUrl(payload.document_id), {
+                    .post(GetRecordDocumentApiUrl(payload.document_id), {
                         tag_ids: payload.tags
                     })
                     .pipe(
@@ -123,16 +126,16 @@ export class RecordsEffects {
             return action.payload;
         }),
         mergeMap((record: RestrictedRecord) => {
-            console.log("effect fired");
+            //console.log("effect fired");
             // TODO
             return from(
                 this.http
                     .post(
-                        GetRecordpermissionRequestUrl(record.id.toString()),
+                        GetRecordPermissionRequestApiUrl(record.id.toString()),
                         {}
                     )
                     .pipe(
-                        //this.http.post(GetRecordpermissionRequestUrl('7172'), {}).pipe(
+                        //this.http.post(GetRecordPermissionRequestApiUrl('7172'), {}).pipe(
                         catchError(error => {
                             this.recordSB.showError(error.error.detail);
                             return [];
@@ -156,10 +159,10 @@ export class RecordsEffects {
             return action.payload;
         }),
         mergeMap((request: RecordPermissionRequest) => {
-            console.log("action");
+             console.log("action");
             return from(
                 this.http
-                    .post(RECORD_PERMISSIONS_LIST_URL, {
+                    .post(RECORD_PERMISSIONS_LIST_API_URL, {
                         id: request.id,
                         action: "accept"
                     })
@@ -194,7 +197,7 @@ export class RecordsEffects {
             console.log("action");
             return from(
                 this.http
-                    .post(RECORD_PERMISSIONS_LIST_URL, {
+                    .post(RECORD_PERMISSIONS_LIST_API_URL, {
                         id: request.id,
                         action: "decline"
                     })

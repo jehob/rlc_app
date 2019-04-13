@@ -1,6 +1,6 @@
 /*
  * rlcapp - record and organization management software for refugee law clinics
- * Copyright (C) 2018  Dominik Walser
+ * Copyright (C) 2019  Dominik Walser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -26,7 +26,9 @@ import {
     SET_CONSULTANTS,
     SET_COUNTRY_STATES,
     SET_ORIGIN_COUNTRIES,
-    SET_POSSIBLE_CLIENTS, SET_RECORD_DOCUMENT_TAGS, SET_RECORD_PERMISSION_REQUESTS,
+    SET_POSSIBLE_CLIENTS,
+    SET_RECORD_DOCUMENT_TAGS,
+    SET_RECORD_PERMISSION_REQUESTS,
     SET_RECORD_STATES,
     SET_RECORD_TAGS,
     SET_RECORDS,
@@ -34,63 +36,59 @@ import {
     SET_SPECIAL_ORIGIN_COUNTRY,
     SET_SPECIAL_RECORD,
     SET_SPECIAL_RECORD_DOCUMENTS,
-    SET_SPECIAL_RECORD_MESSAGES, UPDATE_RECORD_PERMISSION_REQUEST
-} from './actions/records.actions';
+    SET_SPECIAL_RECORD_MESSAGES,
+    UPDATE_RECORD_PERMISSION_REQUEST
+} from "./actions/records.actions";
 import { OriginCountry } from "../models/country.model";
 import { Tag } from "../models/tag.model";
 import { FullClient } from "../models/client.model";
 import { RecordDocument } from "../models/record_document.model";
 import { RecordMessage } from "../models/record_message.model";
-import {RecordPermissionRequest} from '../models/record_permission.model';
+import { RecordPermissionRequest } from "../models/record_permission.model";
+import {getIdObjects, getObjectsByField} from '../../shared/other/reducer-helper';
+import { RestrictedUser } from "../../api/models/user.model";
+import {State} from '../../api/models/state.model';
 
 export interface RecordsState {
     special_record: {
         record: RestrictedRecord;
         client: FullClient;
         origin_country: OriginCountry;
-        record_documents: RecordDocument[];
-        record_messages: RecordMessage[];
+        record_documents: { [id: number]: RecordDocument };
+        record_messages: { [id: number]: RecordMessage };
     };
     admin: {
-        record_permission_requests: RecordPermissionRequest[]
+        record_permission_requests: { [id: number]: RecordPermissionRequest };
     };
-    records: RestrictedRecord[];
-    consultants: RestrictedRecord[];
-    origin_countries: OriginCountry[];
-    record_tags: Tag[];
-    record_document_tags: Tag[];
-    record_states: any;
-    country_states: any;
-    possible_clients: FullClient[];
+    records: { [id: number]: RestrictedRecord };
+    consultants: { [id: number]: RestrictedUser };
+    origin_countries: { [id: number]: OriginCountry };
+    record_tags: { [id: number]: Tag };
+    record_document_tags: { [id: number]: Tag };
+    record_states: State[];
+    country_states: State[];
+    possible_clients: { [id: number]: FullClient };
 }
 
-const initialState: RecordsState = {
+export const initialState: RecordsState = {
     special_record: {
         record: null,
         client: null,
         origin_country: null,
-        record_documents: [],
-        record_messages: []
+        record_documents: {},
+        record_messages: {}
     },
-    admin : {
-        record_permission_requests: []
+    admin: {
+        record_permission_requests: {}
     },
-    records: [],
-    consultants: [],
-    origin_countries: [],
-    record_tags: [],
-    record_document_tags: [],
+    records: {},
+    consultants: {},
+    origin_countries: {},
+    record_tags: {},
+    record_document_tags: {},
     record_states: [],
     country_states: [],
-    possible_clients: []
-};
-
-const getIdObjects = (array) => {
-    const obj = {};
-    array.forEach((item) => {
-        obj[item.id] = item;
-    });
-    return obj;
+    possible_clients: {}
 };
 
 export function recordsReducer(state = initialState, action: RecordsActions) {
@@ -122,37 +120,37 @@ export function recordsReducer(state = initialState, action: RecordsActions) {
         case SET_RECORDS:
             return {
                 ...state,
-                records: action.payload
+                records: getIdObjects(action.payload)
             };
         case SET_CONSULTANTS:
             return {
                 ...state,
-                consultants: action.payload
+                consultants: getIdObjects(action.payload)
             };
         case SET_ORIGIN_COUNTRIES:
             return {
                 ...state,
-                origin_countries: action.payload
+                origin_countries: getIdObjects(action.payload)
             };
         case SET_RECORD_TAGS:
             return {
                 ...state,
-                record_tags: action.payload
+                record_tags: getIdObjects(action.payload)
             };
         case SET_RECORD_STATES:
             return {
                 ...state,
-                record_states: action.payload
+                record_states: getObjectsByField(action.payload, 'abbreviation')
             };
         case SET_COUNTRY_STATES:
             return {
                 ...state,
-                country_states: action.payload
+                country_states: getObjectsByField(action.payload, 'abbreviation')
             };
         case SET_POSSIBLE_CLIENTS:
             return {
                 ...state,
-                possible_clients: action.payload
+                possible_clients: getIdObjects(action.payload)
             };
         case RESET_POSSIBLE_CLIENTS:
             return {
@@ -164,7 +162,7 @@ export function recordsReducer(state = initialState, action: RecordsActions) {
                 ...state,
                 special_record: {
                     ...state.special_record,
-                    record_documents: action.payload
+                    record_documents: getIdObjects(action.payload)
                 }
             };
         case ADD_RECORD_DOCUMENT:
@@ -172,10 +170,10 @@ export function recordsReducer(state = initialState, action: RecordsActions) {
                 ...state,
                 special_record: {
                     ...state.special_record,
-                    record_documents: [
+                    record_documents: {
                         ...state.special_record.record_documents,
-                        action.payload
-                    ]
+                        [action.payload.id]: action.payload
+                    }
                 }
             };
         case ADD_RECORD_MESSAGE:
@@ -183,10 +181,10 @@ export function recordsReducer(state = initialState, action: RecordsActions) {
                 ...state,
                 special_record: {
                     ...state.special_record,
-                    record_messages: [
+                    record_messages: {
                         ...state.special_record.record_messages,
-                        action.payload
-                    ]
+                        [action.payload.id]: action.payload
+                    }
                 }
             };
         case SET_SPECIAL_RECORD_MESSAGES:
@@ -194,14 +192,15 @@ export function recordsReducer(state = initialState, action: RecordsActions) {
                 ...state,
                 special_record: {
                     ...state.special_record,
-                    record_messages: action.payload
+                    record_messages: getIdObjects(action.payload)
                 }
             };
         case RESET_FULL_CLIENT_INFORMATION:
             return {
                 ...state,
                 special_record: {
-                    ...state.special_record,
+                    ...state.special_record, // ?
+                    record: null,
                     client: null,
                     origin_country: null,
                     record_documents: [],
@@ -211,7 +210,7 @@ export function recordsReducer(state = initialState, action: RecordsActions) {
         case SET_RECORD_DOCUMENT_TAGS:
             return {
                 ...state,
-                record_document_tags: action.payload
+                record_document_tags: getIdObjects(action.payload)
             };
         case SET_RECORD_PERMISSION_REQUESTS:
             return {

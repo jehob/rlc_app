@@ -1,5 +1,5 @@
 #  rlcapp - record and organization management software for refugee law clinics
-#  Copyright (C) 2018  Dominik Walser
+#  Copyright (C) 2019  Dominik Walser
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as
@@ -13,17 +13,20 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
-
 from django.db import models
+
 from . import UserProfile
 
 
 class Group(models.Model):
     creator = models.ForeignKey(UserProfile, related_name='group_created', on_delete=models.SET_NULL, null=True)
-    from_rlc = models.ForeignKey('Rlc', related_name='group_from_rlc', on_delete=models.SET_NULL, null=True, default=None)
+    from_rlc = models.ForeignKey('Rlc', related_name='group_from_rlc', on_delete=models.SET_NULL, null=True,
+                                 default=None)
     name = models.CharField(max_length=200, null=False)
     visible = models.BooleanField(null=False)
     group_members = models.ManyToManyField(UserProfile, related_name="group_members")
+    description = models.TextField(blank=True, null=True)
+    note = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return 'group: ' + str(self.id) + ':' + self.name + '; from ' + str(self.from_rlc)

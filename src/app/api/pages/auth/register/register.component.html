@@ -1,3 +1,21 @@
+<!--
+  ~ rlcapp - record and organization management software for refugee law clinics
+  ~ Copyright (C) 2019  Dominik Walser
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
 <div class="register__register-container rlc-box-shadow">
     <h1>Register</h1>
     <form [formGroup]="userForm" class="register__form-container" (ngSubmit)="onRegisterClick()">
@@ -18,14 +36,17 @@
         </mat-form-field>
         <mat-form-field class="register__input-item">
             <input matInput id="password" placeholder="password*" type="password" formControlName="password">
-            <mat-error *ngIf="userForm.controls['password'].errors && userForm.controls['password'].errors.weak">password must contain at least 1 special,
+            <mat-error *ngIf="userForm.controls['password'].errors && userForm.controls['password'].errors.weak">
+                password must contain at least 1 special,
                 1 upper case, 1 lower case character and a digit
             </mat-error>
-            <mat-error *ngIf="userForm.controls['password'].errors && userForm.controls['password'].errors.short">password too short
+            <mat-error *ngIf="userForm.controls['password'].errors && userForm.controls['password'].errors.short">
+                password too short
             </mat-error>
         </mat-form-field>
         <mat-form-field class="register__input-item">
-            <input matInput id="password_repeat" placeholder="confirm password*" type="password" formControlName="password_confirm">
+            <input matInput id="password_repeat" placeholder="confirm password*" type="password"
+                   formControlName="password_confirm" [errorStateMatcher]="errorStateMatcher">
             <mat-error *ngIf="userForm.errors && userForm.errors.mismatch">
                 passwords must be the same
             </mat-error>
@@ -47,6 +68,7 @@
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
-        <button class="register__btn-register" type="submit"  mat-flat-button [disabled]="!userForm.valid">Register</button>
+        <button class="register__btn-register" type="submit" mat-flat-button [disabled]="!userForm.valid">Register
+        </button>
     </form>
 </div>

@@ -1,5 +1,5 @@
 #  rlcapp - record and organization management software for refugee law clinics
-#  Copyright (C) 2018  Dominik Walser
+#  Copyright (C) 2019  Dominik Walser
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 from rest_framework import permissions
-from backend.static.permissions import PERMISSION_CAN_ADD_ORIGIN_COUNTRY
+from backend.static.permissions import PERMISSION_ADD_ORIGIN_COUNTRY_RLC
 
 
 # TODO: what to do with this?? custom permissions? 
@@ -55,7 +55,7 @@ class OriginCountry(permissions.BasePermission):
         if request.method == 'GET':
             return True
         elif request.method == 'POST':
-            return request.user.has_permission(PERMISSION_CAN_ADD_ORIGIN_COUNTRY)
+            return request.user.has_permission(PERMISSION_ADD_ORIGIN_COUNTRY_RLC)
         else:
             return False
 

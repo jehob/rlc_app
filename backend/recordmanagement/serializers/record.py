@@ -1,5 +1,5 @@
 #  rlcapp - record and organization management software for refugee law clinics
-#  Copyright (C) 2018  Dominik Walser
+#  Copyright (C) 2019  Dominik Walser
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as
@@ -13,6 +13,7 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
+
 
 from rest_framework import serializers
 from backend.recordmanagement.models import Record
@@ -43,7 +44,7 @@ class RecordNoDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Record
-        fields = ('id', 'last_contact_date', 'state',
+        fields = ('id', 'last_contact_date', 'state', 'official_note',
                   'record_token', 'working_on_record', 'tagged')
 
 

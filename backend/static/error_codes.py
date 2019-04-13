@@ -1,5 +1,5 @@
 #  rlcapp - record and organization management software for refugee law clinics
-#  Copyright (C) 2018  Dominik Walser
+#  Copyright (C) 2019  Dominik Walser
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as
@@ -102,6 +102,11 @@ ERROR__RECORD__CLIENT__NOT_EXISTING = {
     'error_code': 'record.document.tag_not_existing'
 }
 
+ERROR__RECORD__RECORD__COULD_NOT_SAVE = {
+    'error_detail': 'error at saving the record, contact admin',
+    'error_code': 'record.record.could_not_save'
+}
+
 ERROR__RECORD__PERMISSION__ALREADY_WORKING_ON = {
     'error_detail': 'the user is already working on the client',
     'error_code': 'record.permission.already_working_on'
@@ -122,7 +127,7 @@ ERROR__RECORD__PERMISSION__ID_NOT_PROVIDED = {
     'error_code': 'record.permission.id_not_provided'
 }
 
-ERROR__RECORD__PERMISSION__NO_ACTION_PROVIDED = {
+ERROR__API__NO_ACTION_PROVIDED = {
     'error_detail': 'no action in request.data provided',
     'error_code': 'record.permission.no_action_provided'
 }
@@ -135,4 +140,124 @@ ERROR__RECORD__PERMISSION__NO_VALID_ACTION_PROVIDED = {
 ERROR__RECORD__PERMISSION__NO_REQUESTS_FOUND = {
     'error_detail': 'no requests in database',
     'error_code': 'record.permission.no_requests_found'
+}
+
+ERROR__API__REGISTER__NO_RLC_PROVIDED = {
+    'error_detail': 'no rlc was provided',
+    'error_code': 'api.register.no_rlc_provided'
+}
+
+ERROR__API__USER__NOT_FOUND = {
+    'error_detail': 'specified user not found',
+    'error_code': 'api.user.user_nof_found'
+}
+
+ERROR__API__USER__ID_NOT_PROVIDED = {
+    'error_detail': 'no id provided',
+    'error_code': 'api.user.id_not_provided'
+}
+
+ERROR__API__USER__NOT_SAME_RLC = {
+    'error_detail': 'you are not from the same rlc',
+    'error_code': 'api.user.not_same_rlc'
+}
+
+ERROR__API__PERMISSION__NOT_FOUND = {
+    'error_detail': 'given permission not found',
+    'error_code': 'api.permission.not_found'
+}
+
+ERROR__API__EMAIL__NO_EMAIL_PROVIDED = {
+    'error_detail': 'no "email" provided',
+    'error_code': 'api.email.no_email_provided'
+}
+
+ERROR__API__USER__ALREADY_FORGOT_PASSWORD = {
+    'error_detail': 'already sent you an reactivation link',
+    'error_code': 'api.user.already_forgot_password'
+}
+
+ERROR__API__USER__INACTIVE = {
+    'error_detail': 'account is inactive',
+    'error_code': 'api.user.inactive'
+}
+
+ERROR__API__USER__PASSWORD_RESET_LINK_DOES_NOT_EXIST = {
+    'error_detail': 'there is no reset password link with this id',
+    'error_code': 'api.user.password_reset_link_does_not_exist'
+}
+
+ERROR__API__USER__NEW_PASSWORD_NOT_PROVIDED = {
+    'error_detail': 'no new password provided',
+    'error_code': 'api.user.new_password_not_provided'
+}
+
+ERROR__ENV__MISSING_VARIABLE = {
+    'error_detail': 'a environment variable isn\'t set',
+    'error_code': 'env.missing_variable'
+}
+
+ERROR__API__MISSING_ARGUMENT = {
+    'error_detail': 'argument missing (general error)',
+    'error_code': 'api.missing_argument'
+}
+
+ERROR__API__ID_NOT_FOUND = {
+    'error_detail': 'object with provided id not found',
+    'error_code': 'api.id_not_found'
+}
+
+ERROR__API__ACTION_NOT_VALID = {
+    'error_detail': 'provided action is not valid',
+    'error_code': 'api.action_not_valid'
+}
+
+ERROR__API__GROUP__GROUP_NOT_FOUND = {
+    'error_detail': 'no group with this id',
+    'error_code': 'api.group.not_found'
+}
+
+ERROR__API__HAS_PERMISSION__NO_ID_PROVIDED = {
+    'error_detail': 'no id for hasPermission provided',
+    'error_code': 'api.has_permission.no_id_provided'
+}
+
+ERROR__API__HAS_PERMISSION__NOT_FOUND = {
+    'error_detail': 'hasPermission not found',
+    'error_code': 'api.has_permission.not_found'
+}
+
+ERROR__API__HAS_PERMISSION__CAN_NOT_CREATE = {
+    'error_detail': 'cant create hasPermission like that',
+    'error_code': 'api.has_permission.can_not_create'
+}
+
+ERROR__API__HAS_PERMISSION__ALREADY_EXISTING = {
+    'error_detail': 'hasPermission already exists',
+    'error_code': 'api.has_permission.already_existing'
+}
+
+ERROR__API__GROUP__CAN_NOT_CREATE = {
+    'error_detail': 'cant create group, not enough data',
+    'error_code': 'api.has_permission.can_not_create'
+}
+
+ERROR__API__USER_ACTIVATION__LINK_NOT_FOUND = {
+    'error_detail': 'activation link not found',
+    'error_code': 'api.user_activation.link_not_found'
+}
+
+ERROR__API__NEW_USER_REQUEST__REQUEST_NOT_FOUND = {
+    'error_detail': 'new user request for user not found',
+    'error_code': 'api.new_user_request.request_not_found'
+}
+
+ERROR__API__NEW_USER_REQUEST__ID_NOT_PROVIDED = {
+    'error_detail': 'no new user request id provided',
+    'error_code': 'api.new_user_request.id_not_provided'
+}
+
+ERROR__API__NEW_USER_REQUEST__NO_USER_ACTIVATION_LINK = {
+    'error_detail': 'no corresponding user activation link',
+    'error_code': 'api.new_user_request.no_user_activation_link'
 }

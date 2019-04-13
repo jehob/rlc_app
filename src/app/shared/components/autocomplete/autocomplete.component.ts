@@ -1,6 +1,6 @@
 /*
  * rlcapp - record and organization management software for refugee law clinics
- * Copyright (C) 2018  Dominik Walser
+ * Copyright (C) 2019  Dominik Walser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -47,11 +47,20 @@ export class AutocompleteComponent implements OnInit, OnChanges {
     errors;
     @Input()
     setSelectedValue;
+    @Input()
+    disableAfterSetSelectedValue: boolean;
 
+    @Input()
+    noErrorIfNotInAllValues: boolean;
+
+    selectionError = null;
     filteredValues: Observable<Filterable[]>;
 
     @Output()
     selectedValueChanged = new EventEmitter();
+
+    @Input()
+    valueToShow: string;
 
     constructor() {
         this.valueForm = new FormGroup({
@@ -60,6 +69,17 @@ export class AutocompleteComponent implements OnInit, OnChanges {
     }
 
     ngOnInit() {
+        this.disableAfterSetSelectedValue =
+            this.disableAfterSetSelectedValue !== undefined;
+        this.noErrorIfNotInAllValues = !(
+            this.noErrorIfNotInAllValues !== undefined
+        );
+
+        console.log('value to show', this.valueToShow);
+        if (!this.valueToShow){
+            this.valueToShow = 'name';
+        }
+
         this.allValuesObservable.subscribe(values => {
             this.allValues = values;
             this.filteredValues = this.valueForm.controls[
@@ -77,6 +97,7 @@ export class AutocompleteComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
+        // console.log("changes", changes);
         if (changes.errors) {
             this.valueForm.controls["value"].setErrors(
                 changes.errors.currentValue
@@ -89,7 +110,9 @@ export class AutocompleteComponent implements OnInit, OnChanges {
                 this.valueForm.controls["value"].setValue(
                     changes.setSelectedValue.currentValue
                 );
-                this.valueForm.controls["value"].disable();
+                this.selectionError = null;
+                if (this.disableAfterSetSelectedValue)
+                    this.valueForm.controls["value"].disable();
             } else {
                 this.valueForm.controls["value"].setValue("");
                 this.valueForm.controls["value"].enable();
@@ -116,5 +139,24 @@ export class AutocompleteComponent implements OnInit, OnChanges {
 
     selected() {
         this.selectedValueChanged.emit(this.valueForm.controls["value"].value);
+    }
+
+    onInputChange() {
+        if (this.noErrorIfNotInAllValues) {
+            if (
+                this.allValues.filter(
+                    (toFilter: Filterable) =>
+                        toFilter.getFilterableProperty() ===
+                        this.valueForm.controls["value"].value
+                ).length === 0
+            ) {
+                this.selectionError = {
+                    notInAllValues: true
+                };
+                this.valueForm.controls["value"].setErrors({
+                    notInAllValues: true
+                });
+            }
+        }
     }
 }

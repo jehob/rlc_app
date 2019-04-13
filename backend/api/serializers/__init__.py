@@ -1,5 +1,5 @@
 #  rlcapp - record and organization management software for refugee law clinics
-#  Copyright (C) 2018  Dominik Walser
+#  Copyright (C) 2019  Dominik Walser
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as
@@ -14,9 +14,12 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-from .user import UserProfileCreatorSerializer, UserProfileSerializer, UserProfileNameSerializer
-from .group import GroupSerializer, GroupSmallSerializer
-from .rlc import RlcSerializer
-from .permission import PermissionSerializer, PermissionNameSerializer
+from .user import *
+from .group import *
+from .rlc import *
+from .permission import *
 from .has_permission import *
-
+from .forgot_password import *
+from .new_user_request import *
+from .user_activation_link import *
+from .language import *

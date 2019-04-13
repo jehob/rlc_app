@@ -1,5 +1,5 @@
 #  rlcapp - record and organization management software for refugee law clinics
-#  Copyright (C) 2018  Dominik Walser
+#  Copyright (C) 2019  Dominik Walser
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as
@@ -16,6 +16,7 @@
 
 from django.db import models
 from django.db.models import Q
+
 from backend.api.models import UserProfile, Rlc
 from backend.recordmanagement.models import RecordTag
 
@@ -33,35 +34,15 @@ class RecordQuerySet(models.QuerySet):
         # return self.exclude(Q(id__in=user.working_on_record.values_list('id', flat=True)) | Q(
         #     id__in=permissions.values_list('record_id', flat=True)))
         has_perm = self.get_full_access_records(user)
-        a = list(has_perm)
-        b = list(self)
-        c = list(self.exclude(id__in=has_perm.values_list('id', flat=True)))
-
         return self.exclude(id__in=has_perm.values_list('id', flat=True))
 
-
-class RecordManager(models.Manager):
-    def get_query_set(self):
-        return RecordQuerySet(self.model, using=self._db)
-
-    # def __getattr__(self, item, *args):
-    #     if item.startwith("_"):
-    #         raise AttributeError
-    #     return getattr(self.get_query_set(), item, *args)
-
-    def get_full_access_record(self, user):
-        # from backend.recordmanagement.models import RecordPermission
-        # permissions = RecordPermission.objects.filter(request_from=user, state='gr')
-        #
-        # return Record.objects.filter(Q(id__in=user.working_on_record.values_list('id', flat=True)) | Q(
-        #     id__in=permissions.values_list('record_id', flat=True)))
-        return self.get_query_set().get_full_access_record(user)
-
-    def getNoAccessRecords(self, user):
-        from backend.recordmanagement.models import RecordPermission
-        permissions = RecordPermission.objects.filter(request_from=user, state='gr')
-        return Record.objects.exclude(Q(id__in=user.working_on_record.values_list('id', flat=True)) | Q(
-            id__in=permissions.values_list('record_id', flat=True)))
+    def filter_by_rlc(self, rlc):
+        """
+        filters by the instance of the given rlc
+        :param rlc: instance of rlc
+        :return: filtered values
+        """
+        return self.filter(from_rlc=rlc)
 
 
 class Record(models.Model):
@@ -77,10 +58,26 @@ class Record(models.Model):
         'Client', related_name="records", on_delete=models.SET_NULL, null=True)
     first_contact_date = models.DateField(default=None, null=True)
     last_contact_date = models.DateTimeField(default=None, null=True)
+    first_consultation = models.DateTimeField(default=None, null=True)
 
     record_token = models.CharField(
         max_length=50, unique=True)
-    note = models.CharField(max_length=4096)
+    note = models.TextField(blank=True, null=True)
+    official_note = models.TextField(blank=True, null=True)
+
+    consultant_team = models.CharField(max_length=255, blank=True, null=True)
+    lawyer = models.TextField(blank=True, null=True)
+    related_persons = models.TextField(blank=True, null=True)
+    contact = models.TextField(blank=True, null=True)
+
+    bamf_token = models.CharField(max_length=255)
+    foreign_token = models.CharField(max_length=255)
+
+    first_correspondence = models.TextField(blank=True, null=True)
+    circumstances = models.TextField(blank=True, null=True)
+    next_steps = models.TextField(blank=True, null=True)
+    status_described = models.TextField(blank=True, null=True)
+    additional_facts = models.TextField(blank=True, null=True)
 
     working_on_record = models.ManyToManyField(
         UserProfile, related_name="working_on_record", blank=True)
@@ -102,10 +99,9 @@ class Record(models.Model):
     def user_has_permission(self, user):
         """
         return if the user has permission edit and view the record in full detail
-        :param user: the user to check
+        :param user: user object, the user to check
         :return: boolean, true if the user has permission
         """
         from backend.recordmanagement.models import RecordPermission
-        return self.working_on_record.filter(id=user.id).count() == 1 or RecordPermission.objects.filter(record=self,
-                                                                                                         request_from=user,
-                                                                                                         state='gr')
+        return self.working_on_record.filter(id=user.id).count() == 1 or \
+               RecordPermission.objects.filter(record=self, request_from=user, state='gr')

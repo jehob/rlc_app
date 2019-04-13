@@ -1,6 +1,6 @@
 /*
  * rlcapp - record and organization management software for refugee law clinics
- * Copyright (C) 2018  Dominik Walser
+ * Copyright (C) 2019  Dominik Walser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19,7 +19,9 @@
 import { Component, OnInit } from "@angular/core";
 import { RestrictedRecord } from "../../../models/record.model";
 import { RecordsSandboxService } from "../../../services/records-sandbox.service";
-import {Router} from '@angular/router';
+import { Router } from "@angular/router";
+import { GetRecordSearchFrontUrl } from "../../../../statics/frontend_links.statics";
+import { Tag } from "../../../models/tag.model";
 
 @Component({
     selector: "app-restricted-record-detail",
@@ -29,21 +31,25 @@ import {Router} from '@angular/router';
 export class RestrictedRecordDetailComponent implements OnInit {
     record: RestrictedRecord;
 
-    constructor(private recordSB: RecordsSandboxService, private router: Router) {}
+    constructor(
+        private recordSB: RecordsSandboxService,
+        private router: Router
+    ) {}
 
     ngOnInit() {
         this.recordSB
             .getSpecialRecord()
             .subscribe((special_record: { record: RestrictedRecord }) => {
                 if (special_record.record) this.record = special_record.record;
+                //console.log('restricted record set: ', this.record);
             });
     }
 
-    onTagClick(tag){
-        this.router.navigateByUrl(`records?search=${tag.name}`);
+    onTagClick(tag: Tag) {
+        this.router.navigateByUrl(GetRecordSearchFrontUrl(tag.name));
     }
 
-    onRequestReadPermission(){
+    onRequestReadPermission() {
         this.recordSB.startRequestReadPermission(this.record);
     }
 }

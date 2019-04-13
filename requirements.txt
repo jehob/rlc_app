@@ -3,11 +3,12 @@ boto3==1.9.39
 botocore==1.12.39
 colorama==0.3.9
 dj-database-url==0.5.0
-Django==2.1.2
+Django==2.2
 django-appconf==1.0.2
 django-heroku==0.3.1
 django-storages==1.7.1
-djangorestframework==3.7.7
+djangorestframework==3.9.2
+djangorestframework-stubs==0.3.0
 docutils==0.14
 factory-boy==2.11.1
 Faker==0.8.15
@@ -19,5 +20,6 @@ pytz==2018.3
 rcssmin==1.0.6
 rjsmin==1.0.12
 s3transfer==0.1.13
+sqlparse==0.3.0
 urllib3==1.24.1
 whitenoise==3.3.1

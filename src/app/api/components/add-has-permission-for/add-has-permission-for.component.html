@@ -1,0 +1,40 @@
+<!--
+  ~ rlcapp - record and organization management software for refugee law clinics
+  ~ Copyright (C) 2019  Dominik Walser
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<h1 mat-dialog-title>add new permission for group</h1>
+<div mat-dialog-content>
+    <app-autocomplete [allValuesObservable]="allPermissions" placeholder="permission to add"
+                      (selectedValueChanged)="onSelectedPermissionChanged($event)"
+                      [setSelectedValue]="selectedPermission"></app-autocomplete>
+    <mat-divider></mat-divider>
+    <p>permission is for</p>
+    <app-autocomplete [allValuesObservable]="allUsers" placeholder="permission for user"
+                      (selectedValueChanged)="userForChanged($event)" [setSelectedValue]="selectedForUser">
+    </app-autocomplete>
+
+    <app-autocomplete [allValuesObservable]="allGroups" placeholder="permission for group"
+                      (selectedValueChanged)="groupForChanged($event)" [setSelectedValue]="selectedForGroup">
+    </app-autocomplete>
+
+    <mat-checkbox [(ngModel)]="forRlcChecked" (change)="forRlcChanged()">permission applies to whole rlc</mat-checkbox>
+</div>
+
+<div mat-dialog-actions>
+    <button mat-flat-button color="warn" (click)="onCloseClick()">Close</button>
+    <button mat-flat-button color="primary" (click)="onAddClick()">Add</button>
+</div>

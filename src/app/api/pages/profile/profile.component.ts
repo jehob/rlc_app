@@ -1,6 +1,6 @@
 /*
  * rlcapp - record and organization management software for refugee law clinics
- * Copyright (C) 2018  Dominik Walser
+ * Copyright (C) 2019  Dominik Walser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -67,7 +67,7 @@ export class ProfileComponent implements OnInit {
     }
 
     onSaveClick() {
-        this.apiSB.patchUser(
+        this.apiSB.startPatchUser(
             new FullUser(
                 undefined,
                 this.userForm.value.email,

@@ -7,7 +7,7 @@ class ModelViewSet(mixins.CreateModelMixin,
                    GenericViewSet)
 """
 #  rlcapp - record and organization management software for refugee law clinics
-#  Copyright (C) 2018  Dominik Walser
+#  Copyright (C) 2019  Dominik Walser
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as
@@ -29,4 +29,7 @@ from .has_permission import *
 from .rlc import *
 from .other import *
 from .storage import *
-
+from .forgot_password import *
+from .new_user_request import *
+from .user_activation_link import *
+from .language import *

@@ -1,5 +1,5 @@
 #  rlcapp - record and organization management software for refugee law clinics
-#  Copyright (C) 2018  Dominik Walser
+#  Copyright (C) 2019  Dominik Walser
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as
@@ -268,7 +268,8 @@ class CreateFixtures:
         rlc.save()
         if members is not None:
             for member in members:
-                rlc.rlc_members.add(member)
+                user = UserProfile.objects.get(pk=member)
+                rlc.rlc_members.add(user)
         return rlc
 
     @staticmethod

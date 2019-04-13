@@ -1,5 +1,5 @@
 #  rlcapp - record and organization management software for refugee law clinics
-#  Copyright (C) 2018  Dominik Walser
+#  Copyright (C) 2019  Dominik Walser
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as
@@ -17,7 +17,7 @@
 from rest_framework import serializers
 
 from ..models import Group
-from .has_permission import HasPermissionOnlyPermissionForSerializer, HasPermissionOnlyHasPermissionSerializer
+from ..serializers.user import UserProfileNameSerializer
 
 
 class GroupSerializer(serializers.ModelSerializer):
@@ -27,6 +27,7 @@ class GroupSerializer(serializers.ModelSerializer):
     permission_for_group = serializers.PrimaryKeyRelatedField(
         many=True, read_only=True, required=False,
     )
+    group_members = UserProfileNameSerializer(many=True)
 
     class Meta:
         model = Group
@@ -44,3 +45,9 @@ class GroupSmallSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ('id', 'name', 'group_has_permission', 'permission_for_group', )
+
+
+class GroupRestrictedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ('id', 'name')

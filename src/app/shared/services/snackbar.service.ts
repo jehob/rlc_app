@@ -1,6 +1,6 @@
 /*
  * rlcapp - record and organization management software for refugee law clinics
- * Copyright (C) 2018  Dominik Walser
+ * Copyright (C) 2019  Dominik Walser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -34,7 +34,7 @@ export class SnackbarService {
     public showErrorSnackBar(message: string) {
         const config = new MatSnackBarConfig();
         config.panelClass = ["snackbar__error"];
-        config.duration = 2500;
+        config.duration = 2500000;
         config.verticalPosition = "top";
         this.snackBar.open(message, "", config);
     }

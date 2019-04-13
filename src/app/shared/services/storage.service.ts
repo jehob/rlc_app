@@ -1,6 +1,6 @@
 /*
  * rlcapp - record and organization management software for refugee law clinics
- * Copyright (C) 2018  Dominik Walser
+ * Copyright (C) 2019  Dominik Walser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19,9 +19,9 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import {
-    GetDownloadUrl,
-    GetUploadUrl,
-    UPLOAD_SIGNING_BASE_URL
+    GetDownloadApiUrl,
+    GetUploadApiUrl,
+    UPLOAD_SIGNING_BASE_API_URL
 } from "../../statics/api_urls.statics";
 import { SnackbarService } from "./snackbar.service";
 
@@ -39,7 +39,7 @@ export class StorageService {
     uploadFile(file: File, fileDir: string, finished?) {
         console.log('file', file);
         this.http
-            .get(GetUploadUrl(file, fileDir))
+            .get(GetUploadApiUrl(file, fileDir))
             .subscribe((response: any) => {
                 this.uploadFileDirect(file, response.data, response.url, finished);
             });
@@ -60,7 +60,7 @@ export class StorageService {
         console.log('names', file_names);
 
         this.http
-            .post(UPLOAD_SIGNING_BASE_URL, {
+            .post(UPLOAD_SIGNING_BASE_API_URL, {
                 file_names,
                 file_types,
                 file_dir
@@ -104,7 +104,7 @@ export class StorageService {
     }
 
     downloadFile(filekey: string) {
-        this.http.get(GetDownloadUrl(filekey)).subscribe((response: any) => {
+        this.http.get(GetDownloadApiUrl(filekey)).subscribe((response: any) => {
             if (!response.error) window.location.href = response.data;
             else {
                 this.snackbarService.showErrorSnackBar(

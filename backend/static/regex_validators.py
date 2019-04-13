@@ -1,5 +1,5 @@
 #  rlcapp - record and organization management software for refugee law clinics
-#  Copyright (C) 2018  Dominik Walser
+#  Copyright (C) 2019  Dominik Walser
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as
@@ -15,10 +15,19 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 from django.core.validators import RegexValidator
+import re
 
-PHONE_REGEX = '^\+{0,2}\d{9,15}$'
+PHONE_REGEX = '^\+{0,2}\d{6,15}$'
 RECORD_STORAGE_REGEX = '^rlcs\/\d+\/records\/\d+\/?$'
 
 phone_regex = RegexValidator(regex=r'{}'.format(PHONE_REGEX),
                              message="Phone number must be entered "
                                      "in the format: Up to 15 digits allowed.")
+
+
+def is_storage_folder_of_record(dir: str):
+    return bool(re.match(RECORD_STORAGE_REGEX, dir))
+
+
+def is_phone_number(phone_number: str):
+    return bool(re.match(PHONE_REGEX, phone_number.replace(' ', '')))

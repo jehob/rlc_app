@@ -1,5 +1,5 @@
 #  rlcapp - record and organization management software for refugee law clinics
-#  Copyright (C) 2018  Dominik Walser
+#  Copyright (C) 2019  Dominik Walser
 # 
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as
@@ -14,13 +14,14 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-from backend.recordmanagement.models import RecordTag, Record, OriginCountry, Client, RecordDocumentTag
-from backend.api.tests import *
-from backend.api.models import Rlc
 from datetime import date, datetime
-from backend.static.permissions import get_all_permissions
-from django.conf import settings
+
 import pytz
+from django.conf import settings
+
+from backend.api.tests import *
+from backend.recordmanagement.models import RecordTag, Record, OriginCountry, Client, RecordDocumentTag
+from backend.static.permissions import get_all_permissions
 
 
 class Fixtures:
@@ -73,6 +74,13 @@ class Fixtures:
         permissions = get_all_permissions()
         for permission in permissions:
             AddMethods.add_permission(permission)
+
+    @staticmethod
+    def create_real_permissions_no_duplicates():
+        permissions = get_all_permissions()
+        for permission in permissions:
+            if Permission.objects.filter(name=permission).count() == 0:
+                AddMethods.add_permission(permission)
 
     @staticmethod
     def create_real_tags():

@@ -1,6 +1,6 @@
 /*
  * rlcapp - record and organization management software for refugee law clinics
- * Copyright (C) 2018  Dominik Walser
+ * Copyright (C) 2019  Dominik Walser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -35,8 +35,6 @@ import { Observable } from "rxjs";
 export class CreateRecordComponent implements OnInit {
     createRecordForm: FormGroup;
     client: FullClient;
-    originCountry: OriginCountry;
-    givenOriginCountry: OriginCountry;
 
     allConsultants: Observable<RestrictedUser[]>;
     consultantErrors: any;
@@ -44,6 +42,8 @@ export class CreateRecordComponent implements OnInit {
 
     allCountries: Observable<OriginCountry[]>;
     originCountryError: any;
+    originCountry: OriginCountry;
+    givenOriginCountry: OriginCountry;
 
     allRecordTags: Observable<Tag[]>;
     recordTagErrors: any;
