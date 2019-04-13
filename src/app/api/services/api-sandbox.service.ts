@@ -68,7 +68,7 @@ export class ApiSandboxService {
         private storageService: StorageService,
     ) {}
 
-    static transformDate(date: Date) {
+    static transformDate(date: Date): string {
         return moment(date).format("YYYY-MM-DD");
     }
 

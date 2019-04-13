@@ -18,12 +18,15 @@
 
 <form [formGroup]="valueForm">
     <mat-form-field class="autocomplete__form-field">
-        <input type="text" [placeholder]="placeholder" matInput formControlName="value" [matAutocomplete]="auto">
+        <input type="text" [placeholder]="placeholder" matInput formControlName="value" [matAutocomplete]="auto" (change)="onInputChange()">
         <ng-content></ng-content>
+        <mat-error *ngIf="selectionError && selectionError.notInAllValues">
+            please select a value from the list
+        </mat-error>
         <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption [displayWith]="display"
                           (optionSelected)="selected()">
             <mat-option *ngFor="let option of filteredValues | async" [value]="option">
-                {{ option.name }}
+                {{ option[valueToShow] }}
             </mat-option>
         </mat-autocomplete>
     </mat-form-field>

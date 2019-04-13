@@ -58,10 +58,26 @@ class Record(models.Model):
         'Client', related_name="records", on_delete=models.SET_NULL, null=True)
     first_contact_date = models.DateField(default=None, null=True)
     last_contact_date = models.DateTimeField(default=None, null=True)
+    first_consultation = models.DateTimeField(default=None, null=True)
 
     record_token = models.CharField(
         max_length=50, unique=True)
-    note = models.CharField(max_length=4096)
+    note = models.TextField(blank=True, null=True)
+    official_note = models.TextField(blank=True, null=True)
+
+    consultant_team = models.CharField(max_length=255, blank=True, null=True)
+    lawyer = models.TextField(blank=True, null=True)
+    related_persons = models.TextField(blank=True, null=True)
+    contact = models.TextField(blank=True, null=True)
+
+    bamf_token = models.CharField(max_length=255)
+    foreign_token = models.CharField(max_length=255)
+
+    first_correspondence = models.TextField(blank=True, null=True)
+    circumstances = models.TextField(blank=True, null=True)
+    next_steps = models.TextField(blank=True, null=True)
+    status_described = models.TextField(blank=True, null=True)
+    additional_facts = models.TextField(blank=True, null=True)
 
     working_on_record = models.ManyToManyField(
         UserProfile, related_name="working_on_record", blank=True)

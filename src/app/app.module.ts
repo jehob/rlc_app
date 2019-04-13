@@ -40,6 +40,8 @@ import { AppSandboxService } from "./api/services/app-sandbox.service";
 import { StorageService } from "./shared/services/storage.service";
 import { SnackbarService } from "./shared/services/snackbar.service";
 
+import {MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from '@angular/material-moment-adapter';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 const reduxMiddleware = LogRocket.reduxMiddleware();
 
 export function logrocketMiddleware(reducer): ActionReducer<any, any> {
@@ -76,7 +78,11 @@ export function logrocketMiddleware(reducer): ActionReducer<any, any> {
         RecordsSandboxService,
         StorageService,
         SnackbarService,
-        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+         // {provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
+        // { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
+        {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
+        {provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS},
     ],
     bootstrap: [AppComponent]
 })

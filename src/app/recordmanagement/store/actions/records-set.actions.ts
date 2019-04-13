@@ -25,6 +25,7 @@ import { FullClient } from "../../models/client.model";
 import { Tag } from "../../models/tag.model";
 import { RecordMessage } from "../../models/record_message.model";
 import { RecordPermissionRequest } from "../../models/record_permission.model";
+import {State} from '../../../api/models/state.model';
 
 export const SET_SPECIAL_RECORD = "SET_SPECIAL_RECORD";
 export const SET_SPECIAL_CLIENT = "SET_SPECIAL_CLIENT";
@@ -93,13 +94,13 @@ export class SetRecordTags implements Action {
 export class SetRecordStates implements Action {
     readonly type = SET_RECORD_STATES;
 
-    constructor(public payload) {}
+    constructor(public payload: State[]) {}
 }
 
 export class SetCountryStates implements Action {
     readonly type = SET_COUNTRY_STATES;
 
-    constructor(public payload) {}
+    constructor(public payload: State[]) {}
 }
 
 export class SetPossibleClients implements Action {

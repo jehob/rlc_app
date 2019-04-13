@@ -1,4 +1,3 @@
-
 /*
  * rlcapp - record and organization management software for refugee law clinics
  * Copyright (C) 2019  Dominik Walser
@@ -17,18 +16,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-export const getIdObjects = (array) => {
-    const obj = {};
-    array.forEach((item) => {
-        obj[item.id] = item;
-    });
-    return obj;
-};
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-export const getObjectsByField = (array, field) => {
-    const obj = {};
-    array.forEach((item) => {
-        obj[item[field]] = item;
-    });
-    return obj;
-};
+import { UsersFieldComponent } from './users-field.component';
+
+describe('UsersFieldComponent', () => {
+  let component: UsersFieldComponent;
+  let fixture: ComponentFixture<UsersFieldComponent>;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ UsersFieldComponent ]
+    })
+    .compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(UsersFieldComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

@@ -16,28 +16,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, Input, OnInit } from "@angular/core";
+import { RestrictedUser } from "../../../api/models/user.model";
+import {Router} from '@angular/router';
+import {GetRecordSearchFrontUrl} from '../../../statics/frontend_links.statics';
 
-import { ConsultantsFieldComponent } from './consultants-field.component';
+@Component({
+    selector: "app-users-field",
+    templateUrl: "./users-field.component.html",
+    styleUrls: ["./users-field.component.scss"]
+})
+export class UsersFieldComponent implements OnInit {
+    @Input()
+    users: RestrictedUser[];
 
-describe('ConsultantsFieldComponent', () => {
-  let component: ConsultantsFieldComponent;
-  let fixture: ComponentFixture<ConsultantsFieldComponent>;
+    constructor(private router: Router) {}
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ConsultantsFieldComponent ]
-    })
-    .compileComponents();
-  }));
+    ngOnInit() {}
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ConsultantsFieldComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    onUserClick(consultant: RestrictedUser){
+        this.router.navigateByUrl(GetRecordSearchFrontUrl(consultant.name));
+    }
+}

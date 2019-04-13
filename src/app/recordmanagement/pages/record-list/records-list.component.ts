@@ -19,9 +19,11 @@
 import { Component, OnInit } from "@angular/core";
 import { RecordsSandboxService } from "../../services/records-sandbox.service";
 import { Observable } from "rxjs";
-import {isRestrictedRecord, RestrictedRecord} from '../../models/record.model';
+import {
+    isRestrictedRecord,
+    RestrictedRecord
+} from "../../models/record.model";
 import { ActivatedRoute, Router } from "@angular/router";
-import { RestrictedUser } from "../../../api/models/user.model";
 import { Tag } from "../../models/tag.model";
 import {
     GetRecordFrontUrl,
@@ -62,7 +64,10 @@ export class RecordsListComponent implements OnInit {
                 results.sort((a, b) => {
                     if (isRestrictedRecord(a) && !isRestrictedRecord(b)) {
                         return 1;
-                    } else if (!isRestrictedRecord(a) && isRestrictedRecord(b)) {
+                    } else if (
+                        !isRestrictedRecord(a) &&
+                        isRestrictedRecord(b)
+                    ) {
                         return -1;
                     }
                     return 0;

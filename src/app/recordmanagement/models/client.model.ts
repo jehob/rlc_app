@@ -54,7 +54,7 @@ export class FullClient {
             json.birthday,
             json.origin_country,
             json.note,
-            json.phone
+            json.phone_number
         );
     }
 }

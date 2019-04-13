@@ -16,25 +16,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { Component, Input, OnInit } from "@angular/core";
-import { RestrictedUser } from "../../../api/models/user.model";
-import {Router} from '@angular/router';
-import {GetRecordSearchFrontUrl} from '../../../statics/frontend_links.statics';
+import { Filterable } from "../../shared/models/filterable.model";
 
-@Component({
-    selector: "app-consultants-field",
-    templateUrl: "./consultants-field.component.html",
-    styleUrls: ["./consultants-field.component.scss"]
-})
-export class ConsultantsFieldComponent implements OnInit {
-    @Input()
-    consultants: RestrictedUser[];
+export class State implements Filterable {
+    constructor(public abbreviation: string, public full_name: string) {
+        this.abbreviation = abbreviation;
+        this.full_name = full_name;
+    }
 
-    constructor(private router: Router) {}
+    static getStatesFromJsonArray(array){
+        const states: Array<State> = [];
+        array.map(stateArray => {
+            states.push(new State(stateArray[0], stateArray[1]));
+        });
+        return states;
+    }
 
-    ngOnInit() {}
-
-    onConsultantClick(consultant: RestrictedUser){
-        this.router.navigateByUrl(GetRecordSearchFrontUrl(consultant.name));
+    getFilterableProperty() {
+        return this.full_name;
     }
 }

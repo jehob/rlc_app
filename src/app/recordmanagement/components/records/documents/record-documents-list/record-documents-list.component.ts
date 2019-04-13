@@ -27,7 +27,7 @@ import {RecordDocument} from '../../../../models/record_document.model';
 })
 export class RecordDocumentsListComponent implements OnInit {
     @Input()
-    documents: RecordDocument;
+    documents: RecordDocument[];
 
     @ViewChild("fileInput")
     fileInput: ElementRef<HTMLInputElement>;

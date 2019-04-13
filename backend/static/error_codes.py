@@ -102,6 +102,11 @@ ERROR__RECORD__CLIENT__NOT_EXISTING = {
     'error_code': 'record.document.tag_not_existing'
 }
 
+ERROR__RECORD__RECORD__COULD_NOT_SAVE = {
+    'error_detail': 'error at saving the record, contact admin',
+    'error_code': 'record.record.could_not_save'
+}
+
 ERROR__RECORD__PERMISSION__ALREADY_WORKING_ON = {
     'error_detail': 'the user is already working on the client',
     'error_code': 'record.permission.already_working_on'

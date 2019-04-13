@@ -68,15 +68,18 @@ export class RecordsEffects {
             return from(
                 this.http
                     .patch(GetSpecialRecordApiURL(payload.record.id), {
-                        record_note: payload.record.note
+                        record: payload.record,
+                        client: payload.client
                     })
                     .pipe(
                         catchError(error => {
+                            console.log('error at saving record', error);
                             return of({
-                                error: "error at loading special record"
+                                error: "error at saving record"
                             });
                         }),
                         mergeMap((response: any) => {
+                            console.log('saved record effect: ', response);
                             this.recordSB.successfullySavedRecord(response);
                             return [];
                         })

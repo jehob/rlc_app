@@ -16,7 +16,9 @@
 
 
 import os
+from datetime import datetime
 
+import pytz
 from django.db.models import Q
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -26,7 +28,7 @@ from backend.api.errors import CustomError
 from backend.api.models import UserProfile
 from backend.api.other_functions.emails import EmailSender
 from backend.recordmanagement import models, serializers
-from backend.static.error_codes import *
+from backend.static import error_codes
 from backend.static.permissions import PERMISSION_VIEW_RECORDS_FULL_DETAIL_RLC
 
 
@@ -93,12 +95,12 @@ class RecordsListViewSet(viewsets.ViewSet):
     def retrieve(self, request, pk=None):
         # TODO: deprecated?
         try:
-            record = models.Record.objects.get(pk=pk) # changed
+            record = models.Record.objects.get(pk=pk)  # changed
         except Exception as e:
-            raise CustomError(ERROR__RECORD__DOCUMENT__NOT_FOUND)
+            raise CustomError(error_codes.ERROR__RECORD__DOCUMENT__NOT_FOUND)
 
         if request.user.rlc != record.from_rlc:
-            raise CustomError(ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC)
+            raise CustomError(error_codes.ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC)
         if record.user_has_permission(request.user):
             serializer = serializers.RecordFullDetailSerializer(record)
         else:
@@ -114,7 +116,7 @@ class RecordViewSet(APIView):
             try:
                 client = models.Client.objects.get(pk=data['client_id'])
             except:
-                raise CustomError(ERROR__RECORD__CLIENT__NOT_EXISTING)
+                raise CustomError(error_codes.ERROR__RECORD__CLIENT__NOT_EXISTING)
             client.note = data['client_note']
             client.phone_number = data['client_phone_number']
             client.save()
@@ -150,10 +152,10 @@ class RecordViewSet(APIView):
         try:
             record = models.Record.objects.get(pk=id)
         except:
-            raise CustomError(ERROR__RECORD__RECORD__NOT_EXISTING)
+            raise CustomError(error_codes.ERROR__RECORD__RECORD__NOT_EXISTING)
         user = request.user
         if user.rlc != record.from_rlc and not user.is_superuser:
-            raise CustomError(ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC)
+            raise CustomError(error_codes.ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC)
 
         if record.user_has_permission(user):
             record_serializer = serializers.RecordFullDetailSerializer(record)
@@ -177,12 +179,46 @@ class RecordViewSet(APIView):
         record = models.Record.objects.get(pk=id)
         user = request.user
         if user.rlc != record.from_rlc and not user.is_superuser:
-            raise CustomError(ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC)
+            raise CustomError(error_codes.ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC)
 
         if record.user_has_permission(user):
-            if request.data['record_note']:
-                record.note = request.data['record_note']
+            record_data = request.data['record']
+            client_data = request.data['client']
+            client = record.client
+
+            try:
+                record.note = record_data['note']
+                record.contact = record_data['contact']
+                record.last_contact_date = parse_date(record_data['last_contact_date'])
+                record.state = record_data['state']
+                record.official_note = record_data['official_note']
+                record.additional_facts = record_data['additional_facts']
+                record.bamf_token = record_data['bamf_token']
+                record.foreign_token = record_data['foreign_token']
+                record.first_correspondence = record_data['first_correspondence']
+                record.circumstances = record_data['circumstances']
+                record.lawyer = record_data['lawyer']
+                record.related_persons = record_data['related_persons']
+                record.consultant_team = record_data['consultant_team']
+                record.next_steps = record_data['next_steps']
+                record.status_described = record_data['status_described']
+
+                record.tagged.clear()
+                for tag in record_data['tags']:
+                    record.tagged.add(models.RecordTag.objects.get(pk=tag['id']))
+
+                client.note = client_data['note']
+                client.name = client_data['name']
+                client.birthday = parse_date(client_data['birthday'])
+                client.origin_country = models.OriginCountry.objects.get(pk=client_data['origin_country'])
+                client.phone_number = client_data['phone_number']
+            except:
+                raise CustomError(error_codes.ERROR__RECORD__RECORD__COULD_NOT_SAVE)
+
+            record.last_edited = datetime.utcnow().replace(tzinfo=pytz.utc)
             record.save()
+            client.last_edited = datetime.utcnow().replace(tzinfo=pytz.utc)
+            client.save()
 
             for user in record.working_on_record.all():
                 if 'URL' in os.environ:
@@ -194,11 +230,20 @@ class RecordViewSet(APIView):
                                                     "RLC Intranet Notification - A record of yours was changed. Look here:" +
                                                     url)
 
-            return Response({'success': 'true'})
-        raise CustomError(ERROR__API__PERMISSION__INSUFFICIENT)
+            # return Response({'success': 'true'})
+            return Response(
+                {
+                    'record': serializers.RecordFullDetailSerializer(models.Record.objects.get(pk=record.pk)).data,
+                    'client': serializers.ClientSerializer(models.Client.objects.get(pk=client.pk)).data
+                }
+            )
+        raise CustomError(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
 
     def delete(self, request, id):
 
-
         pass
 
+
+def parse_date(date_str):
+    """Parse date from string by DATE_INPUT_FORMATS of current language"""
+    return datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S.%fZ").date()

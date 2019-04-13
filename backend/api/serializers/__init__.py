@@ -22,3 +22,4 @@ from .has_permission import *
 from .forgot_password import *
 from .new_user_request import *
 from .user_activation_link import *
+from .language import *

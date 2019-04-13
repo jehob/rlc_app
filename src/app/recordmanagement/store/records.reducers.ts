@@ -45,8 +45,9 @@ import { FullClient } from "../models/client.model";
 import { RecordDocument } from "../models/record_document.model";
 import { RecordMessage } from "../models/record_message.model";
 import { RecordPermissionRequest } from "../models/record_permission.model";
-import { getIdObjects } from "../../shared/other/reducer-helper";
+import {getIdObjects, getObjectsByField} from '../../shared/other/reducer-helper';
 import { RestrictedUser } from "../../api/models/user.model";
+import {State} from '../../api/models/state.model';
 
 export interface RecordsState {
     special_record: {
@@ -64,8 +65,8 @@ export interface RecordsState {
     origin_countries: { [id: number]: OriginCountry };
     record_tags: { [id: number]: Tag };
     record_document_tags: { [id: number]: Tag };
-    record_states: any;
-    country_states: any;
+    record_states: State[];
+    country_states: State[];
     possible_clients: { [id: number]: FullClient };
 }
 
@@ -139,12 +140,12 @@ export function recordsReducer(state = initialState, action: RecordsActions) {
         case SET_RECORD_STATES:
             return {
                 ...state,
-                record_states: action.payload
+                record_states: getObjectsByField(action.payload, 'abbreviation')
             };
         case SET_COUNTRY_STATES:
             return {
                 ...state,
-                country_states: action.payload
+                country_states: getObjectsByField(action.payload, 'abbreviation')
             };
         case SET_POSSIBLE_CLIENTS:
             return {

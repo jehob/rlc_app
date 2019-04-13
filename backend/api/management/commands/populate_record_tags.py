@@ -1,11 +1,3 @@
-""" Definition of ModelViewSet
-class ModelViewSet(mixins.CreateModelMixin,
-                   mixins.RetrieveModelMixin,
-                   mixins.UpdateModelMixin,
-                   mixins.DestroyModelMixin,
-                   mixins.ListModelMixin,
-                   GenericViewSet)
-"""
 #  rlcapp - record and organization management software for refugee law clinics
 #  Copyright (C) 2019  Dominik Walser
 #
@@ -22,14 +14,18 @@ class ModelViewSet(mixins.CreateModelMixin,
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-from .user import *
-from .group import *
-from .permission import *
-from .has_permission import *
-from .rlc import *
-from .other import *
-from .storage import *
-from .forgot_password import *
-from .new_user_request import *
-from .user_activation_link import *
-from .language import *
+from django.core.management.base import BaseCommand
+from ._factories import UserFactory, ClientFactory, RecordFactory, GroupFactory
+from backend.api.models import *
+from ._fixtures import Fixtures, AddMethods
+from backend.recordmanagement.models import *
+
+
+class Command(BaseCommand):
+    help = 'populates database with record tags'
+
+    def add_arguments(self, parser):
+        pass
+
+    def handle(self, *args, **options):
+        Fixtures.create_real_tags()

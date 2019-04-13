@@ -40,7 +40,7 @@ import {
     StartRequestingReadPermission,
     StartSavingRecord,
     StartSettingRecordDocumentTags
-} from '../store/actions/records.actions';
+} from "../store/actions/records.actions";
 import { FullClient } from "../models/client.model";
 import { OriginCountry } from "../models/country.model";
 import { RestrictedUser } from "../../api/models/user.model";
@@ -52,7 +52,11 @@ import { SnackbarService } from "../../shared/services/snackbar.service";
 import { ApiState } from "../../api/store/api.reducers";
 import { getRecordFolder } from "../../statics/storage_folders.statics";
 import { RecordPermissionRequest } from "../models/record_permission.model";
-import {GetRecordFrontUrl, RECORDS_FRONT_URL} from '../../statics/frontend_links.statics';
+import {
+    GetRecordFrontUrl,
+    RECORDS_FRONT_URL
+} from "../../statics/frontend_links.statics";
+import { State } from "../../api/models/state.model";
 
 @Injectable({
     providedIn: "root"
@@ -78,9 +82,7 @@ export class RecordsSandboxService {
         this.recordStore.dispatch(new StartLoadingRecords(searchString));
     }
 
-    getRecords(
-        asArray: boolean = true
-    ): Observable<RestrictedRecord[] | any> {
+    getRecords(asArray: boolean = true): Observable<RestrictedRecord[] | any> {
         return this.recordStore.pipe(
             select((state: any) => {
                 const values = state.records.records;
@@ -111,9 +113,7 @@ export class RecordsSandboxService {
         );
     }
 
-    getRecordTags(
-        asArray: boolean = true
-    ): Observable<Tag[] | any> {
+    getRecordTags(asArray: boolean = true): Observable<Tag[] | any> {
         return this.recordStore.pipe(
             select((state: any) => {
                 const values = state.records.record_tags;
@@ -122,12 +122,19 @@ export class RecordsSandboxService {
         );
     }
 
-    getRecordDocumentTags(
-        asArray: boolean = true
-    ): Observable<Tag[] | any> {
+    getRecordDocumentTags(asArray: boolean = true): Observable<Tag[] | any> {
         return this.recordStore.pipe(
             select((state: any) => {
                 const values = state.records.record_document_tags;
+                return asArray ? Object.values(values) : values;
+            })
+        );
+    }
+
+    getRecordStates(asArray: boolean = true): Observable<State[]> {
+        return this.recordStore.pipe(
+            select((state: any) => {
+                const values = state.records.record_states;
                 return asArray ? Object.values(values) : values;
             })
         );
@@ -168,15 +175,20 @@ export class RecordsSandboxService {
         this.recordStore
             .pipe(
                 take(1),
-                select((state: any) =>
-                    // state.records.origin_countries.find(
-                    //     country => country.id === id
-                    // )
-                    state.records.origin_countries[id]
-                )
+                select((state: any) => state.records.origin_countries[id])
             )
             .subscribe(country => (originCountry = country));
         return originCountry;
+    }
+
+    getRecordStateByAbbreviation(abbreviation: string): State {
+        let recordState: State = null;
+        this.recordStore.pipe(
+            take(1),
+            select((state: any) => state.records.record_states[abbreviation])
+        ).subscribe(recState => (recordState = recState));
+
+        return recordState;
     }
 
     loadClientPossibilities(birthday: Date) {
@@ -193,7 +205,9 @@ export class RecordsSandboxService {
         this.recordStore.dispatch(new ResetPossibleClients());
     }
 
-    getOriginCountries(asArray: boolean = true): Observable<OriginCountry[] | any> {
+    getOriginCountries(
+        asArray: boolean = true
+    ): Observable<OriginCountry[] | any> {
         return this.recordStore.pipe(
             select((state: any) => {
                 const values = state.records.origin_countries;
@@ -372,7 +386,7 @@ export class RecordsSandboxService {
         this.router.navigate([GetRecordFrontUrl(request.record)]);
     }
 
-    resetFullClientInformation(){
+    resetFullClientInformation() {
         this.recordStore.dispatch(new ResetFullClientInformation());
     }
 }

@@ -17,7 +17,7 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 <div>
-    <a *ngFor="let consultant of consultants" mat-button
+    <a *ngFor="let user of users" mat-button
        class="consultants-field__link-button"
-       (click)="this.onConsultantClick(consultant)">@{{ consultant.name }}</a>
+       (click)="this.onUserClick(user)">@{{ user.name }}</a>
 </div>

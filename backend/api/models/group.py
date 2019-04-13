@@ -25,6 +25,8 @@ class Group(models.Model):
     name = models.CharField(max_length=200, null=False)
     visible = models.BooleanField(null=False)
     group_members = models.ManyToManyField(UserProfile, related_name="group_members")
+    description = models.TextField(blank=True, null=True)
+    note = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return 'group: ' + str(self.id) + ':' + self.name + '; from ' + str(self.from_rlc)

@@ -50,10 +50,17 @@ export class AutocompleteComponent implements OnInit, OnChanges {
     @Input()
     disableAfterSetSelectedValue: boolean;
 
+    @Input()
+    noErrorIfNotInAllValues: boolean;
+
+    selectionError = null;
     filteredValues: Observable<Filterable[]>;
 
     @Output()
     selectedValueChanged = new EventEmitter();
+
+    @Input()
+    valueToShow: string;
 
     constructor() {
         this.valueForm = new FormGroup({
@@ -62,7 +69,16 @@ export class AutocompleteComponent implements OnInit, OnChanges {
     }
 
     ngOnInit() {
-        this.disableAfterSetSelectedValue = this.disableAfterSetSelectedValue !== undefined;
+        this.disableAfterSetSelectedValue =
+            this.disableAfterSetSelectedValue !== undefined;
+        this.noErrorIfNotInAllValues = !(
+            this.noErrorIfNotInAllValues !== undefined
+        );
+
+        console.log('value to show', this.valueToShow);
+        if (!this.valueToShow){
+            this.valueToShow = 'name';
+        }
 
         this.allValuesObservable.subscribe(values => {
             this.allValues = values;
@@ -81,6 +97,7 @@ export class AutocompleteComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
+        // console.log("changes", changes);
         if (changes.errors) {
             this.valueForm.controls["value"].setErrors(
                 changes.errors.currentValue
@@ -93,6 +110,7 @@ export class AutocompleteComponent implements OnInit, OnChanges {
                 this.valueForm.controls["value"].setValue(
                     changes.setSelectedValue.currentValue
                 );
+                this.selectionError = null;
                 if (this.disableAfterSetSelectedValue)
                     this.valueForm.controls["value"].disable();
             } else {
@@ -121,5 +139,24 @@ export class AutocompleteComponent implements OnInit, OnChanges {
 
     selected() {
         this.selectedValueChanged.emit(this.valueForm.controls["value"].value);
+    }
+
+    onInputChange() {
+        if (this.noErrorIfNotInAllValues) {
+            if (
+                this.allValues.filter(
+                    (toFilter: Filterable) =>
+                        toFilter.getFilterableProperty() ===
+                        this.valueForm.controls["value"].value
+                ).length === 0
+            ) {
+                this.selectionError = {
+                    notInAllValues: true
+                };
+                this.valueForm.controls["value"].setErrors({
+                    notInAllValues: true
+                });
+            }
+        }
     }
 }
