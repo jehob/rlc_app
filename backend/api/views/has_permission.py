@@ -36,9 +36,8 @@ from rest_framework.views import APIView
 from backend.api.errors import CustomError
 from backend.static import error_codes
 from backend.static.permissions import PERMISSION_MANAGE_PERMISSIONS_RLC
-from ..models import HasPermission, Group, Rlc, UserProfile
-from ..serializers import HasPermissionSerializer, GroupNameSerializer, UserProfileNameSerializer, \
-    RlcOnlyNameSerializer
+from ..models import HasPermission, Group, UserProfile
+from ..serializers import HasPermissionSerializer, GroupNameSerializer, UserProfileNameSerializer
 
 
 class HasPermissionViewSet(viewsets.ModelViewSet):
@@ -72,7 +71,8 @@ class HasPermissionViewSet(viewsets.ModelViewSet):
     #     pass
 
     def create(self, request, *args, **kwargs):
-        if not request.user.has_permission(PERMISSION_MANAGE_PERMISSIONS_RLC, for_rlc=request.user.rlc):
+        if not request.user.is_superuser and not request.user.has_permission(PERMISSION_MANAGE_PERMISSIONS_RLC,
+                                                                             for_rlc=request.user.rlc):
             raise CustomError(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
         if request.data['rlc_has_permission'] and request.user.rlc.id != request.data['rlc_has_permission'] or \
             request.data['permission_for_rlc'] and request.user.rlc.id != request.data['permission_for_rlc']:

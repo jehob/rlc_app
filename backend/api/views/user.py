@@ -14,7 +14,9 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
+import os
 from datetime import datetime
+
 import pytz
 from django.forms.models import model_to_dict
 from django.http import QueryDict
@@ -25,6 +27,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from backend.api.errors import CustomError
+from backend.api.other_functions.emails import EmailSender
 from backend.static.error_codes import *
 from backend.static.permissions import PERMISSION_VIEW_FULL_USER_DETAIL_OVERALL, \
     PERMISSION_VIEW_FULL_USER_DETAIL_RLC
@@ -117,6 +120,14 @@ class UserProfileCreatorViewSet(viewsets.ModelViewSet):
         from backend.api.models import UserActivationLink
         user_activation_link = UserActivationLink(user=user)
         user_activation_link.save()
+
+        if "URL" in os.environ:
+            url = os.environ['URL'] + "/activate_account/" + str(user_activation_link.link)
+        else:
+            url = 'no url, please contact the administrator'
+        EmailSender.send_email_notification([user.email], "RLC Intranet registration",
+                                            "RLC Intranet Notification - You created an account, please activate here: " +
+                                            url)
 
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
