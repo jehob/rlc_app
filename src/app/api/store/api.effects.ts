@@ -66,12 +66,12 @@ import {
     StartDecliningNewUserRequest,
     UPDATE_NEW_USER_REQUEST,
     START_CHECKING_USER_ACTIVATION_LINK,
-    StartCheckingUserActivationLink
+    StartCheckingUserActivationLink, START_ACTIVATING_USER, StartActivatingUser
 } from './api.actions';
 import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
 import { from, of } from "rxjs";
 import {
-    CREATE_PROFILE_API_URL, GetCheckUserActivationApiUrl,
+    CREATE_PROFILE_API_URL, GetActivateUserApiUrl, GetCheckUserActivationApiUrl,
     GetPermissionsForGroupApiURL,
     GetSpecialGroupApiURL,
     GetSpecialHasPermissionApiURL,
@@ -709,6 +709,31 @@ export class ApiEffects {
                         return [];
                     }),
                     mergeMap((response: any) => {
+                        return [];
+                    })
+                )
+            );
+        })
+    );
+
+    @Effect()
+    startActivatingUser = this.actions.pipe(
+        ofType(START_ACTIVATING_USER),
+        map((action: StartActivatingUser) => {
+            return action.payload;
+        }),
+        switchMap((link: string) => {
+            return from(
+                this.http.get(GetActivateUserApiUrl(link)).pipe(
+                    catchError(error => {
+                        console.log(error);
+                        this.snackbar.showErrorSnackBar(
+                            "error at checking user activation link: " + error.error.detail
+                        );
+                        return [];
+                    }),
+                    mergeMap((response: any) => {
+                        this.snackbar.showSuccessSnackBar("account successfully activated");
                         return [];
                     })
                 )
