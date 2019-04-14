@@ -17,16 +17,20 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 <div>
-    <h1>Files</h1>
     <div>
         <div *ngFor="let document of documents">
             <app-record-document-item [record_document]="document"></app-record-document-item>
         </div>
     </div>
-    <div (drop)="dropped($event)" class="record-documents-list__dropper" (dragover)="dragover($event)">
-        <p>drop files here to upload</p>
-        <br>
-        <button mat-flat-button color="primary" (click)="fileInput.click()">select files</button>
-        <input hidden type="file" id="your-files" #fileInput multiple (change)="selected($event)">
+    <div class="record-documents-list__dropper-container">
+        <div (drop)="dropped($event)" class="record-documents-list__dropper" (dragover)="dragover($event)">
+            <p>drop files here to upload</p>
+            <br>
+            <button mat-flat-button color="primary" (click)="fileInput.click()"
+                   >select files
+            </button>
+            <input hidden type="file" id="your-files" #fileInput multiple (change)="selected($event)">
+        </div>
     </div>
+
 </div>

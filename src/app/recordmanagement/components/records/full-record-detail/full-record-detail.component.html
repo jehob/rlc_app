@@ -16,11 +16,11 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <form [formGroup]="recordEditForm">
-    <div class="horizontal full-record-detail__header">
+    <mat-toolbar class="full-record-detail__header">
         <h1>Record: {{ record.token }}</h1>
         <div>
             <button mat-flat-button color="warn" aria-label="Back" (click)="onBackClick()" type="button"
-                    class="full-record-detail__button">
+                    class="full-record-detail__button" appGetColorOnHover>
                 Back
             </button>
             <button mat-flat-button matSuffix color="primary" aria-label="Search" type="submit"
@@ -28,144 +28,170 @@
                 Save
             </button>
         </div>
+    </mat-toolbar>
+    <div class="full-record-detail__sub-header">
+        <div class="full-record-detail__last-edited">
+            last edited: {{(record.last_edited | date)}}
+        </div>
+        <app-autocomplete [allValuesObservable]="allRecordStates" placeholder="record state"
+                          (selectedValueChanged)="onSelectedRecordStateChanged($event)"
+                          [setSelectedValue]="givenRecordState" valueToShow="full_name"
+                          class="full-record-detail__select-state">
+        </app-autocomplete>
     </div>
-    <div>
-        last edited: {{(record.last_edited | date)}}
-    </div>
-    <app-autocomplete [allValuesObservable]="allRecordStates" placeholder="record state"
-                      (selectedValueChanged)="onSelectedRecordStateChanged($event)"
-                      [setSelectedValue]="givenRecordState" valueToShow="full_name">
-    </app-autocomplete>
-    <mat-card class="full-record-detail__card">
-        <mat-card-content>
-            <h1>Client Information</h1>
-            <div class="full-record-detail__form">
 
-                <mat-form-field>
-                    <input matInput placeholder="client name" formControlName="client_name">
-                </mat-form-field>
-
-                <mat-form-field>
-                    <input matInput placeholder="client birthday" formControlName="client_birthday"
-                           [matDatepicker]="picker_client_birthday">
-                    <mat-datepicker-toggle matSuffix [for]="picker_client_birthday"></mat-datepicker-toggle>
-                    <mat-datepicker #picker_client_birthday></mat-datepicker>
-                </mat-form-field>
+    <mat-expansion-panel class="full-record-detail__card" expanded="true">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Client Information
+            </mat-panel-title>
+        </mat-expansion-panel-header>
 
 
-                <div>
-                    <app-autocomplete [allValuesObservable]="allCountries" placeholder="origin country"
-                                      (selectedValueChanged)="onSelectedOriginCountryChanged($event)"
-                                      [errors]="originCountryError"
-                                      [setSelectedValue]="givenOriginCountry" class="full_width">
-                        <mat-error *ngIf="originCountryError && originCountryError.null">
-                            please select a country
-                        </mat-error>
-                    </app-autocomplete>
-                </div>
+        <div class="full-record-detail__form">
 
-                <mat-form-field>
-                    <input matInput placeholder="client phone number" formControlName="client_phone">
-                </mat-form-field>
-                <mat-form-field>
-                    <textarea matInput type="text" placeholder="client note" formControlName="client_note"></textarea>
-                </mat-form-field>
+            <mat-form-field>
+                <input matInput placeholder="client name" formControlName="client_name">
+            </mat-form-field>
 
-                <mat-form-field>
-                    <textarea matInput type="text" placeholder="related persons" formControlName="related_persons"></textarea>
-                </mat-form-field>
+            <mat-form-field>
+                <input matInput placeholder="client birthday" formControlName="client_birthday"
+                       [matDatepicker]="picker_client_birthday">
+                <mat-datepicker-toggle matSuffix [for]="picker_client_birthday"></mat-datepicker-toggle>
+                <mat-datepicker #picker_client_birthday></mat-datepicker>
+            </mat-form-field>
 
-                <mat-form-field>
-                    <textarea matInput type="text" placeholder="further contact information" formControlName="contact"></textarea>
-                </mat-form-field>
+
+            <div>
+                <app-autocomplete [allValuesObservable]="allCountries" placeholder="origin country"
+                                  (selectedValueChanged)="onSelectedOriginCountryChanged($event)"
+                                  [errors]="originCountryError"
+                                  [setSelectedValue]="givenOriginCountry" class="full_width">
+                    <mat-error *ngIf="originCountryError && originCountryError.null">
+                        please select a country
+                    </mat-error>
+                </app-autocomplete>
             </div>
 
-        </mat-card-content>
-    </mat-card>
+            <mat-form-field>
+                <input matInput placeholder="client phone number" formControlName="client_phone">
+            </mat-form-field>
+            <mat-form-field>
+                <textarea matInput type="text" placeholder="client note"
+                          formControlName="client_note"> appAutoExpand</textarea>
+            </mat-form-field>
 
-    <mat-card class="full-record-detail__card">
-        <mat-card-content>
-            <h1>Record information</h1>
-            <div class="full-record-detail__form">
-                <mat-form-field>
-                    <textarea matInput type="text" placeholder="official note" formControlName="official_note"></textarea>
-                </mat-form-field>
-                <mat-form-field>
-                    <textarea matInput type="text" placeholder="note" formControlName="note"></textarea>
-                </mat-form-field>
+            <mat-form-field>
+                <textarea matInput type="text" placeholder="related persons"
+                          formControlName="related_persons" appAutoExpand></textarea>
+            </mat-form-field>
 
-                <mat-form-field>
-                    <input matInput placeholder="last contact date" formControlName="last_contact_date"
-                           [matDatepicker]="picker_last_contact_date">
-                    <mat-datepicker-toggle matSuffix [for]="picker_last_contact_date"></mat-datepicker-toggle>
-                    <mat-datepicker #picker_last_contact_date></mat-datepicker>
-                </mat-form-field>
+            <mat-form-field>
+                <textarea matInput type="text" placeholder="further contact information"
+                          formControlName="contact" appAutoExpand></textarea>
+            </mat-form-field>
+        </div>
+    </mat-expansion-panel>
 
-                <div>
-                    <mat-label>Consultants</mat-label>
-                    <app-users-field [users]="record.working_on_record"></app-users-field>
-                </div>
+    <mat-expansion-panel class="full-record-detail__card">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Record Information
+            </mat-panel-title>
+        </mat-expansion-panel-header>
 
-                <div>
-                    <app-chip-autocomplete [allValuesObservable]="allRecordTags" class="full_width"
-                                           placeholder="tags"
-                                           (selectedValuesChanged)="onSelectedRecordTagsChanged($event)"
-                                           [errors]="recordTagErrors"
-                                            [firstSelected]="record.tags">
-                        <mat-error *ngIf="recordTagErrors && recordTagErrors.null">
-                            at least one tag for case is required
-                        </mat-error>
-                    </app-chip-autocomplete>
-                </div>
-                <mat-form-field>
-                    <input matInput placeholder="consultant team" formControlName="consultant_team">
-                </mat-form-field>
-                <mat-form-field>
-                    <input matInput placeholder="lawyer" formControlName="lawyer">
-                </mat-form-field>
-                <mat-form-field>
-                    <input matInput placeholder="BAMF token" formControlName="bamf_token">
-                </mat-form-field>
-                <mat-form-field>
-                    <input matInput placeholder="foreign token" formControlName="foreign_token">
-                </mat-form-field>
+        <div class="full-record-detail__form">
+            <mat-form-field>
+                <textarea matInput type="text" placeholder="official note" formControlName="official_note"
+                          appAutoExpand></textarea>
+            </mat-form-field>
+            <mat-form-field>
+                <textarea matInput type="text" placeholder="note" formControlName="note" appAutoExpand></textarea>
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput placeholder="last contact date" formControlName="last_contact_date"
+                       [matDatepicker]="picker_last_contact_date">
+                <mat-datepicker-toggle matSuffix [for]="picker_last_contact_date"></mat-datepicker-toggle>
+                <mat-datepicker #picker_last_contact_date></mat-datepicker>
+            </mat-form-field>
+
+            <div>
+                <mat-label>Consultants</mat-label>
+                <app-users-field [users]="record.working_on_record"></app-users-field>
             </div>
 
-        </mat-card-content>
-    </mat-card>
-
-    <mat-card class="full-record-detail__card">
-        <mat-card-content>
-            <h1>Further record information</h1>
-            <div class="full-record-detail__form">
-                <mat-form-field>
-                    <textarea matInput type="text" placeholder="first correspondence" formControlName="first_correspondence"></textarea>
-                </mat-form-field>
-                <mat-form-field>
-                    <textarea matInput type="text" placeholder="circumstances" formControlName="circumstances"></textarea>
-                </mat-form-field>
-                <mat-form-field>
-                    <textarea matInput type="text" placeholder="next steps" formControlName="next_steps"></textarea>
-                </mat-form-field>
-                <mat-form-field>
-                    <textarea matInput type="text" placeholder="status described" formControlName="status_described"></textarea>
-                </mat-form-field>
-                <mat-form-field>
-                    <textarea matInput type="text" placeholder="additional facts" formControlName="additional_facts"></textarea>
-                </mat-form-field>
+            <div>
+                <app-chip-autocomplete [allValuesObservable]="allRecordTags" class="full_width"
+                                       placeholder="tags"
+                                       (selectedValuesChanged)="onSelectedRecordTagsChanged($event)"
+                                       [errors]="recordTagErrors"
+                                       [firstSelected]="record.tags">
+                    <mat-error *ngIf="recordTagErrors && recordTagErrors.null">
+                        at least one tag for case is required
+                    </mat-error>
+                </app-chip-autocomplete>
             </div>
-        </mat-card-content>
-    </mat-card>
+            <mat-form-field>
+                <input matInput placeholder="consultant team" formControlName="consultant_team">
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput placeholder="lawyer" formControlName="lawyer">
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput placeholder="BAMF token" formControlName="bamf_token">
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput placeholder="foreign token" formControlName="foreign_token">
+            </mat-form-field>
+        </div>
+    </mat-expansion-panel>
 
-    <mat-card class="full-record-detail__card">
-        <mat-card-content>
-            <app-record-documents-list [documents]="record_documents"></app-record-documents-list>
-        </mat-card-content>
-    </mat-card>
+    <mat-expansion-panel class="full-record-detail__card">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Further Record Information
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="full-record-detail__form">
+            <mat-form-field>
+                <textarea matInput type="text" placeholder="first correspondence"
+                          formControlName="first_correspondence" appAutoExpand></textarea>
+            </mat-form-field>
+            <mat-form-field>
+                <textarea matInput type="text" placeholder="circumstances"
+                          formControlName="circumstances" appAutoExpand></textarea>
+            </mat-form-field>
+            <mat-form-field>
+                <textarea matInput type="text" placeholder="next steps" formControlName="next_steps"
+                          appAutoExpand></textarea>
+            </mat-form-field>
+            <mat-form-field>
+                    <textarea matInput type="text" placeholder="status described"
+                              formControlName="status_described" appAutoExpand></textarea>
+            </mat-form-field>
+            <mat-form-field>
+                    <textarea matInput type="text" placeholder="additional facts"
+                              formControlName="additional_facts" appAutoExpand></textarea>
+            </mat-form-field>
+        </div>
+    </mat-expansion-panel>
 
-    <mat-card class="full-record-detail__card">
-        <mat-card-content>
-            <app-record-messages [messages]="record_messages"></app-record-messages>
-        </mat-card-content>
-    </mat-card>
+    <mat-expansion-panel class="full-record-detail__card">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Files
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-record-documents-list [documents]="record_documents"></app-record-documents-list>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel class="full-record-detail__card">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Messages
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-record-messages [messages]="record_messages"></app-record-messages>
+    </mat-expansion-panel>
 </form>

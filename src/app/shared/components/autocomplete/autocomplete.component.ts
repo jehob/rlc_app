@@ -75,7 +75,7 @@ export class AutocompleteComponent implements OnInit, OnChanges {
             this.noErrorIfNotInAllValues !== undefined
         );
 
-        console.log('value to show', this.valueToShow);
+        //console.log('value to show', this.valueToShow);
         if (!this.valueToShow){
             this.valueToShow = 'name';
         }

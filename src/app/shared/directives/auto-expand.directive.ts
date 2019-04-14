@@ -1,4 +1,4 @@
-/*!
+/*
  * rlcapp - record and organization management software for refugee law clinics
  * Copyright (C) 2019  Dominik Walser
  *
@@ -16,6 +16,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-.add-group__close-button {
-    margin-right: 10px;
+import {Directive, ElementRef, HostListener} from '@angular/core';
+
+@Directive({
+    selector: "[appAutoExpand]"
+})
+export class AutoExpandDirective {
+    constructor(private el: ElementRef) {
+
+    }
+
+    @HostListener('mousedown') onMouseDown() {
+        console.log('mousedown');
+        this.textAreaAdjust(this.el);
+    }
+
+    @HostListener('keydown') onKeyDown() {
+        console.log('keydown');
+        this.textAreaAdjust(this.el);
+    }
+
+    textAreaAdjust(o) {
+        o.nativeElement.style.height = "1px";
+        o.nativeElement.style.height = 25 + o.nativeElement.scrollHeight + "px";
+        o.nativeElement.style.overflow = "hidden";
+    }
 }

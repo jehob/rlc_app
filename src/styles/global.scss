@@ -52,3 +52,9 @@
     flex-direction: row;
     align-items: center;
 }
+
+.button-mouseover-color {
+    :hover {
+        background-color: red;
+    }
+}

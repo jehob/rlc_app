@@ -16,6 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
+@import "~src/styles/basic";
+
 .full-record-detail__form {
     display: flex;
     flex-direction: column;
@@ -33,8 +35,31 @@
 
 .full-record-detail__card {
     margin-bottom: 30px;
+    max-width: 850px;
 }
 
 .full-record-detail__header {
     justify-content: space-between;
+    //position: fixed;
+    background-color: $c-real-background;
+    max-width: 850px;
+    z-index: 1;
+
+    position: sticky;
+    position: -webkit-sticky; /* For macOS/iOS Safari */
+    top: 0; /* Sets the sticky toolbar to be on top */
+}
+
+.full-record-detail__last-edited {
+    font-size: 13px;
+    color: $c-secondary-variant;
+}
+
+.full-record-detail__select-state {
+    max-width: 60px;
+}
+
+.full-record-detail__sub-header {
+    width: 150px;
+    margin-left: 30px;
 }
