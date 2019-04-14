@@ -16,6 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-.add-has-permission-for__close-button {
-    margin-right: 15px;
+.group-details__header {
+    justify-content: space-between;
+    width: 750px;
+}
+
+.group-details__member-name {
+    width: 300px;
 }

@@ -41,7 +41,7 @@ export class RestrictedRecordDetailComponent implements OnInit {
             .getSpecialRecord()
             .subscribe((special_record: { record: RestrictedRecord }) => {
                 if (special_record.record) this.record = special_record.record;
-                //console.log('restricted record set: ', this.record);
+                console.log('restricted record set: ', this.record);
             });
     }
 

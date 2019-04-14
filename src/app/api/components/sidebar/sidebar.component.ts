@@ -29,7 +29,7 @@ import {
 } from "../../../statics/permissions.statics";
 import {
     ACCEPT_NEW_USER_REQUESTS_FRONT_URL,
-    GROUPS_FRONT_URL,
+    GROUPS_FRONT_URL, LEGAL_NOTICE_FRONT_URL,
     OWN_PROFILE_FRONT_URL,
     PERMISSIONS_FRONT_URL,
     PROFILES_FRONT_URL,
@@ -55,6 +55,8 @@ export class SidebarComponent implements OnInit {
     groupsUrl = GROUPS_FRONT_URL;
     permissionsUrl = PERMISSIONS_FRONT_URL;
     acceptNewUsersUrl = ACCEPT_NEW_USER_REQUESTS_FRONT_URL;
+
+    legalNoticeUrl = LEGAL_NOTICE_FRONT_URL;
 
     show_record_tabs = false;
     show_record_permission_request_tab = false;

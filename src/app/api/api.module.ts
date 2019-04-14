@@ -53,6 +53,8 @@ import {
     NewUserRequestRequestedPipe
 } from "../recordmanagement/pipes/new_user_request.pipe";
 import { ActivateUserComponent } from './pages/auth/activate-user/activate-user.component';
+import { LegalNoticeComponent } from './pages/legal-notice/legal-notice.component';
+import { GroupDetailsComponent } from './components/group-details/group-details.component';
 
 @NgModule({
     imports: [
@@ -90,7 +92,9 @@ import { ActivateUserComponent } from './pages/auth/activate-user/activate-user.
         NewUserRequestsComponent,
         NewUserRequestRequestedPipe,
         NewUserRequestProcessedPipe,
-        ActivateUserComponent
+        ActivateUserComponent,
+        LegalNoticeComponent,
+        GroupDetailsComponent
     ],
     entryComponents: [
         AddGroupMemberComponent,

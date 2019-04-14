@@ -86,7 +86,8 @@ class Record(models.Model):
     record_states_possible = (
         ('op', 'open'),
         ('cl', 'closed'),
-        ('wa', 'waiting')
+        ('wa', 'waiting'),
+        ('wo', 'working')
     )
 
     state = models.CharField(max_length=2, choices=record_states_possible)

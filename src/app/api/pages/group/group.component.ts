@@ -50,10 +50,14 @@ export class GroupComponent implements OnInit {
                 if (permission) this.can_edit = true;
             }
         );
-        this.apiSB.hasPermissionFromStringForOwnRlc(
+
+        this.apiSB.hasPermissionFromString(
             PERMISSION_CAN_MANAGE_GROUP,
-            permission => {
-                if (permission) this.can_edit = true;
+            hasPermission => {
+                if (hasPermission) this.can_edit = true;
+            },
+            {
+                for_group: this.id
             }
         );
     }

@@ -1,4 +1,4 @@
-/*!
+/*
  * rlcapp - record and organization management software for refugee law clinics
  * Copyright (C) 2019  Dominik Walser
  *
@@ -16,6 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-.add-has-permission-for__close-button {
-    margin-right: 15px;
+import { Component, OnInit } from "@angular/core";
+
+@Component({
+    selector: "app-legal-notice",
+    templateUrl: "./legal-notice.component.html",
+    styleUrls: ["./legal-notice.component.scss"]
+})
+export class LegalNoticeComponent implements OnInit {
+    constructor() {}
+
+    ngOnInit() {}
 }

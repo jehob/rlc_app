@@ -47,7 +47,13 @@ class GroupSmallSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'group_has_permission', 'permission_for_group', )
 
 
-class GroupRestrictedSerializer(serializers.ModelSerializer):
+class GroupNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ('id', 'name')
+
+
+class GroupShowSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ('id', 'name', 'group_members', 'description', 'note', 'visible', 'note')

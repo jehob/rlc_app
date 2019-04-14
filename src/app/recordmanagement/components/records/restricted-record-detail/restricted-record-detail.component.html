@@ -41,6 +41,9 @@
                 <mat-chip *ngFor="let tag of record.tags" (click)="this.onTagClick(tag)">{{ tag.name }}</mat-chip>
             </mat-chip-list>
         </div>
+        <mat-form-field>
+            <input matInput placeholder="official note" value="{{ record.official_note }}" disabled>
+        </mat-form-field>
     </mat-card-content>
     <button mat-flat-button color="primary" (click)="onRequestReadPermission()" class="restricted-record-detail__request-button">request read permission</button>
 </mat-card>

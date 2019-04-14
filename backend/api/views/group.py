@@ -53,7 +53,7 @@ class GroupViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if self.action == 'list':
-            return serializers.GroupRestrictedSerializer
+            return serializers.GroupNameSerializer
         else:
             return serializers.GroupSerializer
 
@@ -71,7 +71,12 @@ class GroupViewSet(viewsets.ModelViewSet):
         group = models.Group(name=request.data['name'], visible=request.data['visible'], creator=request.user,
                              from_rlc=request.user.rlc)
         group.save()
-        return Response(serializers.GroupRestrictedSerializer(group).data)
+        return Response(serializers.GroupNameSerializer(group).data)
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = serializers.GroupShowSerializer(instance)
+        return Response(serializer.data)
 
 
 class GroupMemberViewSet(APIView):

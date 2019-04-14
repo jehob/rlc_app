@@ -16,19 +16,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from "@angular/core";
+import { FullGroup } from "../../models/group.model";
+import { ApiSandboxService } from "../../services/api-sandbox.service";
 
 @Component({
-    selector: 'app-show-group',
-    templateUrl: './show-group.component.html',
-    styleUrls: ['./show-group.component.scss']
+    selector: "app-show-group",
+    templateUrl: "./show-group.component.html",
+    styleUrls: ["./show-group.component.scss"]
 })
 export class ShowGroupComponent implements OnInit {
+    group: FullGroup;
 
-    constructor() {
-    }
+    constructor(private apiSB: ApiSandboxService) {}
 
     ngOnInit() {
+        this.apiSB.getGroup().subscribe((group: FullGroup) => {
+            if (group) {
+                this.group = group;
+            }
+        });
     }
-
 }

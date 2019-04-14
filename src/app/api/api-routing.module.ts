@@ -33,6 +33,7 @@ import { PermissionListComponent } from "./pages/permission-list/permission-list
 import { EditPermissionComponent } from "./pages/edit-permission/edit-permission.component";
 import { NewUserRequestsComponent } from "./pages/new-user-requests/new-user-requests.component";
 import { ActivateUserComponent } from "./pages/auth/activate-user/activate-user.component";
+import {LegalNoticeComponent} from './pages/legal-notice/legal-notice.component';
 
 const apiRoutes: Routes = [
     {
@@ -89,7 +90,8 @@ const apiRoutes: Routes = [
     { path: "register", component: RegisterComponent },
     { path: "forgot-password", component: ForgotPasswordComponent },
     { path: "reset-password/:id", component: ResetPasswordComponent },
-    { path: "activate_account/:link", component: ActivateUserComponent }
+    { path: "activate_account/:link", component: ActivateUserComponent },
+    { path: "legal-notice", component: LegalNoticeComponent }
 ];
 
 @NgModule({

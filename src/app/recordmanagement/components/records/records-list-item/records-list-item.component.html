@@ -18,20 +18,25 @@
 
 <mat-list-item class="record-list-item__container">
     <div [ngSwitch]="fullAccess" class="record-list-item__access-indicator-container">
-        <div class="record-list-item__access-indicator record-list-item__access-indicator--full" *ngSwitchCase="true"></div>
+        <div class="record-list-item__access-indicator record-list-item__access-indicator--full"
+             *ngSwitchCase="true"></div>
         <div class="record-list-item__access-indicator" *ngSwitchCase="false"></div>
     </div>
 
     <p (click)="this.onRecordSelect()" class="record-list-item__record-token-container">{{ record.token }}</p>
 
     <div [ngSwitch]="state" class="record-list-item__state-container">
-        <div class="record-list-item__status-indicator record-list-item__status-indicator--open" *ngSwitchCase="'op'"></div>
-        <div class="record-list-item__status-indicator record-list-item__status-indicator--waiting" *ngSwitchCase="'wa'"></div>
-        <div class="record-list-item__status-indicator record-list-item__status-indicator--closed" *ngSwitchCase="'cl'"></div>
+        <div class="record-list-item__status-indicator record-list-item__status-indicator--open" *ngSwitchCase="'op'"
+             matTooltip="open"></div>
+        <div class="record-list-item__status-indicator record-list-item__status-indicator--waiting"
+             *ngSwitchCase="'wa'"></div>
+        <div class="record-list-item__status-indicator record-list-item__status-indicator--closed"
+             *ngSwitchCase="'cl'"></div>
     </div>
     <div class="record-list-item__consultants-container">
         <mat-chip-list class="mat-chip-list-stacked">
-            <mat-chip *ngFor="let consultant of record.working_on_record" selected (click)="this.onConsultantClick(consultant)">{{ consultant.name }}</mat-chip>
+            <mat-chip *ngFor="let consultant of record.working_on_record" selected
+                      (click)="this.onConsultantClick(consultant)">{{ consultant.name }}</mat-chip>
         </mat-chip-list>
     </div>
     <div class="record-list-item__tags-container">

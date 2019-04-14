@@ -15,7 +15,6 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 PERMISSION_CAN_CONSULT = 'can_consult'
-PERMISSION_ADD_ORIGIN_COUNTRY_RLC = 'add_origin_country_rlc'
 PERMISSION_VIEW_RECORDS_RLC = 'view_records_rlc'
 PERMISSION_VIEW_RECORDS_FULL_DETAIL_RLC = 'view_records_full_detail_rlc'
 PERMISSION_PERMIT_RECORD_PERMISSION_REQUESTS_RLC = 'permit_record_permission_requests_rlc'
@@ -32,7 +31,6 @@ PERMISSION_ACCEPT_NEW_USERS_RLC = 'accept_new_users_rlc'
 def get_all_permissions():
     return [
         PERMISSION_CAN_CONSULT,
-        PERMISSION_ADD_ORIGIN_COUNTRY_RLC,
         PERMISSION_VIEW_RECORDS_RLC,
         PERMISSION_VIEW_RECORDS_FULL_DETAIL_RLC,
         PERMISSION_PERMIT_RECORD_PERMISSION_REQUESTS_RLC,

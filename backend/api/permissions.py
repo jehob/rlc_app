@@ -15,7 +15,6 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 from rest_framework import permissions
-from backend.static.permissions import PERMISSION_ADD_ORIGIN_COUNTRY_RLC
 
 
 # TODO: what to do with this?? custom permissions? 
@@ -54,8 +53,6 @@ class OriginCountry(permissions.BasePermission):
             return True
         if request.method == 'GET':
             return True
-        elif request.method == 'POST':
-            return request.user.has_permission(PERMISSION_ADD_ORIGIN_COUNTRY_RLC)
         else:
             return False
 

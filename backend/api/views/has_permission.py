@@ -37,7 +37,7 @@ from backend.api.errors import CustomError
 from backend.static import error_codes
 from backend.static.permissions import PERMISSION_MANAGE_PERMISSIONS_RLC
 from ..models import HasPermission, Group, Rlc, UserProfile
-from ..serializers import HasPermissionSerializer, GroupRestrictedSerializer, UserProfileNameSerializer, \
+from ..serializers import HasPermissionSerializer, GroupNameSerializer, UserProfileNameSerializer, \
     RlcOnlyNameSerializer
 
 
@@ -97,6 +97,6 @@ class HasPermissionStaticsViewSet(APIView):
             groups = Group.objects.filter(from_rlc=response.user.rlc)
         data = {
             'users': UserProfileNameSerializer(users, many=True).data,
-            'groups': GroupRestrictedSerializer(groups, many=True).data
+            'groups': GroupNameSerializer(groups, many=True).data
         }
         return Response(data)

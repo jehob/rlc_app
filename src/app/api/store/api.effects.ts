@@ -276,6 +276,7 @@ export class ApiEffects {
                     }),
                     mergeMap((response: any) => {
                         const group = FullGroup.getFullGroupFromJson(response);
+                        console.log('response from loading group: ', response);
                         return [
                             {
                                 type: SET_SPECIAL_GROUP,

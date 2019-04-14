@@ -50,11 +50,17 @@ export class FullGroup extends RestrictedGroup {
         id: string,
         name: string,
         public creator_id: string,
-        public members: RestrictedUser[]
+        public members: RestrictedUser[],
+        public visible: boolean,
+        public description: string,
+        public note: string,
     ){
         super(id, name);
         this.creator_id = creator_id;
         this.members = members;
+        this.visible = visible;
+        this.description = description;
+        this.note = note;
     }
 
     static getFullGroupFromJson(json){
@@ -63,7 +69,10 @@ export class FullGroup extends RestrictedGroup {
                 json.id,
                 json.name,
                 json.creator,
-                json.group_members
+                json.group_members,
+                json.visible,
+                json.description,
+                json.note
             );
         return null;
     }
