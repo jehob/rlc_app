@@ -18,7 +18,7 @@ from django.core.management.base import BaseCommand
 
 from backend.api.models import *
 from backend.recordmanagement.models import *
-from backend.static.permissions import PERMISSION_MANAGE_PERMISSIONS_RLC
+from backend.static.permissions import PERMISSION_MANAGE_PERMISSIONS_RLC, PERMISSION_VIEW_PERMISSIONS_RLC
 
 
 class Command(BaseCommand):
@@ -56,12 +56,20 @@ class Command(BaseCommand):
         # self.stdout.write(options['admin_email'], ending='')
         # self.stdout.write(options['admin_password'], ending='')
         # self.stdout.write(options['rlc_name'], ending='')
+
         rlc_object = Rlc(name=options['rlc_name'])
         rlc_object.save()
+
         admin_user = UserProfile(email=options['admin_email'], rlc=rlc_object)
         admin_user.set_password(options['admin_password'])
         admin_user.save()
+
         manage_permissions_has_permission = HasPermission(
             permission=Permission.objects.filter(name=PERMISSION_MANAGE_PERMISSIONS_RLC).first(),
             user_has_permission=admin_user, permission_for_rlc=rlc_object)
         manage_permissions_has_permission.save()
+
+        view_permission_has_permission = HasPermission(
+            permission=Permission.objects.filter(name=PERMISSION_VIEW_PERMISSIONS_RLC).first(),
+            user_has_permission=admin_user, permission_for_rlc=rlc_object)
+        view_permission_has_permission.save()

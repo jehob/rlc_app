@@ -74,9 +74,9 @@ class HasPermissionViewSet(viewsets.ModelViewSet):
         if not request.user.is_superuser and not request.user.has_permission(PERMISSION_MANAGE_PERMISSIONS_RLC,
                                                                              for_rlc=request.user.rlc):
             raise CustomError(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
-        if request.data['rlc_has_permission'] and request.user.rlc.id != request.data['rlc_has_permission'] or \
-            request.data['permission_for_rlc'] and request.user.rlc.id != request.data['permission_for_rlc']:
-            raise CustomError(error_codes.ERROR__API__HAS_PERMISSION__CAN_NOT_CREATE)
+        # if request.data['rlc_has_permission'] and request.user.rlc.id != request.data['rlc_has_permission'] or \
+        #     request.data['permission_for_rlc'] and request.user.rlc.id != request.data['permission_for_rlc']:
+        #     raise CustomError(error_codes.ERROR__API__HAS_PERMISSION__CAN_NOT_CREATE)
         if HasPermission.already_existing(request.data):
             raise CustomError(error_codes.ERROR__API__HAS_PERMISSION__ALREADY_EXISTING)
 
