@@ -28,28 +28,9 @@ class Command(BaseCommand):
         parser.add_argument('args', nargs='*')
         # parser.add_argument('test', type=str)
         parser.add_argument('admin_email', type=str)
+        parser.add_argument('admin_name', type=str)
         parser.add_argument('admin_password', type=str)
         parser.add_argument('rlc_name', type=str)
-
-        # parser.add_argument('--admin-email',
-        #                     default='',
-        #                     type=str,
-        #                     help='email of admin'
-        #                     )
-        # parser.add_argument('--admin-password',
-        #                     default='qwe123',
-        #                     type=str,
-        #                     help='password of admin'
-        #                     )
-        # parser.add_argument('--rlc-name',
-        #                     default='RLC X',
-        #                     type=str,
-        #                     help='name of rlc'
-        #                     )
-
-    # def run_from_argv(self, argv):
-    #     self._argv = argv
-    #     self.execute(no_color=False)
 
     def handle(self, *args, **options):
         # self.stdout.write("test", ending='')
@@ -60,7 +41,7 @@ class Command(BaseCommand):
         rlc_object = Rlc(name=options['rlc_name'])
         rlc_object.save()
 
-        admin_user = UserProfile(email=options['admin_email'], rlc=rlc_object)
+        admin_user = UserProfile(email=options['admin_email'], rlc=rlc_object, name=options['admin_name'])
         admin_user.set_password(options['admin_password'])
         admin_user.save()
 

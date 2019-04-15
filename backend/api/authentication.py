@@ -37,7 +37,7 @@ class ExpiringTokenAuthentication(TokenAuthentication):
         utc_now = datetime.utcnow()
         utc_now = utc_now.replace(tzinfo=pytz.timezone(settings.TIME_ZONE))
 
-        if token.created < utc_now - settings.TIMEOUT_TIMEDELTA:
+        if token.created < utc_now - settings.TIMEOUT_TIMEDELTA and not token.user.is_superuser:
             token.delete()
             raise AuthenticationFailed('Token has expired')
 

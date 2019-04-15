@@ -34,7 +34,6 @@ export class GetColorOnHoverDirective {
         this.highlightedColor = this.el.nativeElement.style.color;
         this.highlightedBoxShadow = this.el.nativeElement.style.boxShadow;
 
-        console.log('box shadow: ', this.el.nativeElement.style.boxShadow);
         this.unhighlight();
     }
 

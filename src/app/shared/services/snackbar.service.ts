@@ -34,7 +34,7 @@ export class SnackbarService {
     public showErrorSnackBar(message: string) {
         const config = new MatSnackBarConfig();
         config.panelClass = ["snackbar__error"];
-        config.duration = 2500000;
+        config.duration = 3000;
         config.verticalPosition = "top";
         this.snackBar.open(message, "", config);
     }
