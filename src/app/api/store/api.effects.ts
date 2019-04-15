@@ -724,7 +724,7 @@ export class ApiEffects {
         }),
         switchMap((link: string) => {
             return from(
-                this.http.get(GetActivateUserApiUrl(link)).pipe(
+                this.http.post(GetActivateUserApiUrl(link), {}).pipe(
                     catchError(error => {
                         console.log(error);
                         this.snackbar.showErrorSnackBar(
