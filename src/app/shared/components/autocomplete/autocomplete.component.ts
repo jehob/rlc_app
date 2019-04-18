@@ -17,18 +17,19 @@
  ******************************************************************************/
 
 import {
-    Component,
+    Component, ElementRef,
     EventEmitter,
     Input,
     OnChanges,
     OnInit,
     Output,
-    SimpleChanges
-} from "@angular/core";
+    SimpleChanges, ViewChild
+} from '@angular/core';
 import { FormControl, FormGroup } from "@angular/forms";
 import { Filterable } from "../../models/filterable.model";
 import { Observable } from "rxjs";
 import { map, startWith } from "rxjs/operators";
+import {MatAutocompleteTrigger} from '@angular/material';
 
 @Component({
     selector: "app-autocomplete",
@@ -61,6 +62,9 @@ export class AutocompleteComponent implements OnInit, OnChanges {
 
     @Input()
     valueToShow: string;
+
+    //@ViewChild('autocomplete') autocompleteRef: ElementRef;
+    @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
 
     constructor() {
         this.valueForm = new FormGroup({

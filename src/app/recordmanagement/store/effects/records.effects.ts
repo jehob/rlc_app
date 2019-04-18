@@ -23,7 +23,6 @@ import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
 import { from, of } from "rxjs";
 
 import {
-    ADD_RECORD_DOCUMENT,
     START_ADMITTING_RECORD_PERMISSION_REQUEST,
     START_DECLINING_RECORD_PERMISSION_REQUEST,
     START_REQUESTING_RECORD_PERMISSION,
@@ -79,7 +78,7 @@ export class RecordsEffects {
                             });
                         }),
                         mergeMap((response: any) => {
-                            console.log('saved record effect: ', response);
+                            // console.log('saved record effect: ', response);
                             this.recordSB.successfullySavedRecord(response);
                             return [];
                         })

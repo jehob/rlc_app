@@ -23,9 +23,10 @@ import { MatSnackBar } from "@angular/material";
 import { ApiSandboxService } from "../../../services/api-sandbox.service";
 import { RestrictedRlc } from "../../../models/rlc.model";
 import {
+    dateInPastValidator,
     matchValidator,
     passwordValidator
-} from "../../../../statics/validators.statics";
+} from '../../../../statics/validators.statics';
 import { CustomErrorStateMatcher } from "../../../../statics/errror_state_matcher.statics";
 
 @Component({
@@ -63,7 +64,7 @@ export class RegisterComponent implements OnInit {
                 street: new FormControl(""),
                 postal_code: new FormControl(""),
                 city: new FormControl(""),
-                birthday: new FormControl(date),
+                birthday: new FormControl(date, [dateInPastValidator]),
                 rlc: new FormControl("", [Validators.required])
             },
             matchValidator("password", "password_confirm")
@@ -91,7 +92,7 @@ export class RegisterComponent implements OnInit {
                 name: values.name,
                 email: values.email,
                 password: values.password,
-                birthday: ApiSandboxService.transformDate(values.birthday),
+                birthday: ApiSandboxService.transformDateToString(values.birthday),
                 rlc: values.rlc
             };
             if (values.phone_number !== "")

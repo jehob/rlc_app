@@ -219,6 +219,7 @@ export class RecordsSandboxService {
     createNewRecord(
         createFormValues: any,
         client: FullClient,
+        originCountry: OriginCountry,
         consultants: RestrictedUser[],
         tags: Tag[]
     ) {
@@ -229,7 +230,7 @@ export class RecordsSandboxService {
             };
         } else {
             newRecord = {
-                client_birthday: ApiSandboxService.transformDate(
+                client_birthday: ApiSandboxService.transformDateToString(
                     createFormValues.client_birthday
                 ),
                 client_name: createFormValues.client_name
@@ -239,7 +240,7 @@ export class RecordsSandboxService {
             ...newRecord,
             client_phone_number: createFormValues.client_phone_number,
             client_note: createFormValues.client_note,
-            first_contact_date: ApiSandboxService.transformDate(
+            first_contact_date: ApiSandboxService.transformDateToString(
                 createFormValues.first_contact_date
             ),
             record_token: createFormValues.record_token,
@@ -247,7 +248,8 @@ export class RecordsSandboxService {
             consultants: consultants
                 ? consultants.map(consultant => consultant.id)
                 : "",
-            tags: tags ? tags.map(tag => tag.id) : []
+            tags: tags ? tags.map(tag => tag.id) : [],
+            origin_country: originCountry.id,
         };
 
         //console.log('new record which will be send to the backend', newRecord);

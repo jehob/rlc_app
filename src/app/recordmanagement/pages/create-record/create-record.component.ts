@@ -26,6 +26,7 @@ import { OriginCountry } from "../../models/country.model";
 import { RestrictedUser } from "../../../api/models/user.model";
 import { Tag } from "../../models/tag.model";
 import { Observable } from "rxjs";
+import {dateInPastValidator} from '../../../statics/validators.statics';
 
 @Component({
     selector: "app-add-record",
@@ -57,8 +58,8 @@ export class CreateRecordComponent implements OnInit {
         date.setFullYear(date.getFullYear() - 20);
 
         this.createRecordForm = new FormGroup({
-            first_contact_date: new FormControl(new Date()),
-            client_birthday: new FormControl("1980-03-27"), //date
+            first_contact_date: new FormControl(new Date(), dateInPastValidator),
+            client_birthday: new FormControl("1980-03-27", dateInPastValidator), //date
             client_name: new FormControl("", [Validators.required]),
             client_phone_number: new FormControl(""),
             client_note: new FormControl(""),
@@ -171,6 +172,7 @@ export class CreateRecordComponent implements OnInit {
             this.recordSB.createNewRecord(
                 this.createRecordForm.value,
                 this.client,
+                this.originCountry,
                 this.selectedConsultants,
                 this.selectedRecordTags
             );

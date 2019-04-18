@@ -93,7 +93,7 @@ class HasPermissionStaticsViewSet(APIView):
             users = UserProfile.objects.all()
             groups = Group.objects.all()
         else:
-            users = UserProfile.objects.filter(rlc=response.user.rlc)
+            users = UserProfile.objects.filter(rlc=response.user.rlc, is_active=True)
             groups = Group.objects.filter(from_rlc=response.user.rlc)
         data = {
             'users': UserProfileNameSerializer(users, many=True).data,

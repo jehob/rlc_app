@@ -34,8 +34,7 @@ class ExpiringTokenAuthentication(TokenAuthentication):
         if not token.user.is_active:
             raise AuthenticationFailed('User inactive or deleted')
 
-        utc_now = datetime.utcnow()
-        utc_now = utc_now.replace(tzinfo=pytz.timezone(settings.TIME_ZONE))
+        utc_now = datetime.utcnow().replace(tzinfo=pytz.timezone(settings.TIME_ZONE))
 
         if token.created < utc_now - settings.TIMEOUT_TIMEDELTA and not token.user.is_superuser:
             token.delete()
@@ -43,6 +42,8 @@ class ExpiringTokenAuthentication(TokenAuthentication):
 
         token.created = datetime.utcnow().replace(tzinfo=pytz.timezone(settings.TIME_ZONE))
         token.save()
+        token.user.last_login = datetime.utcnow().replace(tzinfo=pytz.timezone(settings.TIME_ZONE))
+        token.user.save()
         return token.user, token
 
 

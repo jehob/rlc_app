@@ -31,12 +31,18 @@ import {
     ResetSpecialForeignUser,
     ResetSpecialGroup,
     ResetSpecialPermission,
-    SetSpecialForeignUser, StartActivatingUser, StartAddingGroup,
+    SetSpecialForeignUser,
+    StartActivatingUser,
+    StartAddingGroup,
     StartAddingGroupMember,
-    StartAddingHasPermission, StartAdmittingNewUserRequest, StartCheckingUserActivationLink,
-    StartCreateUser, StartDecliningNewUserRequest,
+    StartAddingHasPermission,
+    StartAdmittingNewUserRequest,
+    StartCheckingUserActivationLink,
+    StartCreateUser,
+    StartDecliningNewUserRequest,
     StartLoadingGroups,
-    StartLoadingHasPermissionStatics, StartLoadingNewUserRequests,
+    StartLoadingHasPermissionStatics,
+    StartLoadingNewUserRequests,
     StartLoadingOtherUsers,
     StartLoadingRlcs,
     StartLoadingSpecialForeignUser,
@@ -46,17 +52,14 @@ import {
     StartPatchUser,
     StartRemovingGroupMember,
     StartRemovingHasPermission
-} from '../store/api.actions';
+} from "../store/api.actions";
 import { StorageService } from "../../shared/services/storage.service";
 import { SnackbarService } from "../../shared/services/snackbar.service";
 import { Observable } from "rxjs";
-import {
-    HasPermission,
-    Permission,
-} from "../models/permission.model";
+import { HasPermission, Permission } from "../models/permission.model";
 import { FullGroup, RestrictedGroup } from "../models/group.model";
 import { RestrictedRlc } from "../models/rlc.model";
-import {NewUserRequest} from '../models/new_user_request.model';
+import { NewUserRequest } from "../models/new_user_request.model";
 
 @Injectable()
 export class ApiSandboxService {
@@ -65,11 +68,19 @@ export class ApiSandboxService {
         private snackbarService: SnackbarService,
         private appStateStore: Store<AppState>,
         private apiStateStore: Store<ApiState>,
-        private storageService: StorageService,
+        private storageService: StorageService
     ) {}
 
-    static transformDate(date: Date): string {
+    static transformDateToString(date: Date | string): string {
+        if (typeof date === "string")
+            return moment(new Date(date)).format("YYYY-MM-DD");
         return moment(date).format("YYYY-MM-DD");
+    }
+
+    static transformDate(date: Date | string): Date {
+        if (typeof date === "string")
+            return new Date(moment(new Date(date)).format("YYYY-MM-DD"));
+        else return new Date(moment(date).format("YYYY-MM-DD"));
     }
 
     getUser(): Observable<FullUser> {
@@ -423,7 +434,9 @@ export class ApiSandboxService {
         this.apiStateStore.dispatch(new StartLoadingNewUserRequests());
     }
 
-    getNewUserRequests(asArray: boolean = true): Observable<NewUserRequest[]> | any {
+    getNewUserRequests(
+        asArray: boolean = true
+    ): Observable<NewUserRequest[]> | any {
         return this.apiStateStore.pipe(
             select((state: any) => {
                 const values = state.api.new_user_requests;
@@ -433,11 +446,15 @@ export class ApiSandboxService {
     }
 
     startAdmittingNewUserRequest(newUserRequest: NewUserRequest): void {
-        this.apiStateStore.dispatch(new StartAdmittingNewUserRequest(newUserRequest));
+        this.apiStateStore.dispatch(
+            new StartAdmittingNewUserRequest(newUserRequest)
+        );
     }
 
     startDecliningNewUserRequest(newUserRequest: NewUserRequest): void {
-        this.apiStateStore.dispatch(new StartDecliningNewUserRequest(newUserRequest));
+        this.apiStateStore.dispatch(
+            new StartDecliningNewUserRequest(newUserRequest)
+        );
     }
 
     startCheckingUserActivationLink(link: string): void {

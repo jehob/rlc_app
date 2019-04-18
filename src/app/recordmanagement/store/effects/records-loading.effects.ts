@@ -197,7 +197,7 @@ export class RecordsLoadingEffects {
             return from(
                 this.http
                     .post(CLIENTS_BY_BIRTHDAY_API_URL, {
-                        birthday: ApiSandboxService.transformDate(birthday)
+                        birthday: ApiSandboxService.transformDateToString(birthday)
                     })
                     .pipe(
                         catchError(error => {
@@ -239,7 +239,6 @@ export class RecordsLoadingEffects {
                         return [];
                     }),
                     mergeMap((response: any) => {
-                        console.log('response from special record loading', response);
                         if (response.record) {
                             const record: FullRecord = FullRecord.getFullRecordFromJson(
                                 response.record

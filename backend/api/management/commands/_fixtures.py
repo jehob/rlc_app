@@ -50,6 +50,57 @@ class Fixtures:
             AddMethods.add_country(country)
 
     @staticmethod
+    def create_real_origin_countries():
+        countries = [('Abchasien '), ('Afghanistan '), ('Ägypten '), ('Albanien '), ('Algerien '), ('Andorra '), (
+            'Angola '), ('Antigua und Barbuda '), ('Äquatorialguinea '), ('Argentinien '), ('Armenien '), ('Arzach '), (
+                         'Aserbaidschan '), ('Äthiopien '), ('Australien '), ('Bahamas '), (
+                         'Bahrain '), ('Bangladesch '), ('Barbados '), ('Belgien '), ('Belize '), (
+                         'Benin '), ('Bhutan '), ('Bolivien '), ('Bosnien und Herzegowina '), (
+                         'Botswana '), ('Brasilien '), ('Brunei '), ('Bulgarien '), ('Burkina Faso '), (
+                         'Burundi '), ('Chile '), ('Republik China'), ('Volksrepublik China'), (
+                         'Cookinseln'), ('Costa Rica '), ('Dänemark'), ('Deutschland '), ('Dominica '), (
+                         'Dominikanische Republik '), ('Dschibuti '), ('Ecuador '), ('El Salvador '), (
+                         'Elfenbeinküste '), ('Eritrea '), ('Estland '), ('Fidschi '), ('Finnland '), (
+                         'Frankreich'), ('Gabun '), ('Gambia '), ('Georgien'), ('Ghana '), (
+                         'Grenada '), ('Griechenland '), ('Guatemala '), ('Guinea '), (
+                         'Guinea-Bissau '), ('Guyana '), ('Haiti '), ('Honduras '), ('Indien'), (
+                         'Indonesien '), ('Irak '), ('Iran '), ('Irland '), ('Island '), ('Israel'), (
+                         'Italien '), ('Jamaika '), ('Japan '), ('Jemen '), ('Jordanien '), (
+                         'Kambodscha '), ('Kamerun '), ('Kanada '), ('Kap Verde '), ('Kasachstan '), (
+                         'Katar '), ('Kenia '), ('Kirgisistan '), ('Kiribati '), ('Kolumbien '), (
+                         'Komoren '), ('Kongo, Demokratische Republik '), ('Kongo, Republik '), (
+                         'Korea, Nord '), ('Korea, Süd '), ('Kosovo[9] '), ('Kroatien '), ('Kuba '), (
+                         'Kuwait '), ('Laos '), ('Lesotho '), ('Lettland '), ('Libanon '), (
+                         'Liberia '), ('Libyen '), ('Liechtenstein '), ('Litauen '), ('Luxemburg '), (
+                         'Madagaskar '), ('Malawi '), ('Malaysia '), ('Malediven '), ('Mali '), (
+                         'Malta '), ('Marokko'), ('Marshallinseln '), ('Mauretanien '), ('Mauritius '), (
+                         'Mexiko '), ('Mikronesien '), ('Moldau'), ('Monaco '), ('Mongolei '), (
+                         'Montenegro '), ('Mosambik '), ('Myanmar '), ('Namibia '), ('Nauru '), (
+                         'Nepal '), ('Neuseeland '), ('Nicaragua '), ('Niederlande'), ('Curaçao'), (
+                         'Sint Maarten'), ('Niger '), ('Nigeria '), ('Niue'), ('Nordmazedonien '), (
+                         'Nordzypern'), ('Norwegen'), ('Oman '), ('Österreich '), (
+                         'Osttimor / Timor-Leste '), ('Pakistan'), ('Palästina'), ('Palau '), (
+                         'Panama '), ('Papua-Neuguinea '), ('Paraguay '), ('Peru '), ('Philippinen '), (
+                         'Polen '), ('Portugal '), ('Ruanda '), ('Rumänien '), ('Russland'), (
+                         'Salomonen '), ('Sambia '), ('Samoa '), ('San Marino '), (
+                         'São Tomé und Príncipe '), ('Saudi-Arabien '), ('Schweden '), ('Schweiz '), (
+                         'Senegal '), ('Serbien'), ('Seychellen '), ('Sierra Leone '), ('Simbabwe '), (
+                         'Singapur '), ('Slowakei '), ('Slowenien '), ('Somalia'), ('Somaliland'), (
+                         'Spanien '), ('Sri Lanka '), ('St. Kitts und Nevis'), ('St. Lucia '), (
+                         'St. Vincent und die Grenadinen '), ('Südafrika '), ('Sudan '), (
+                         'Südossetien'), ('Südsudan '), ('Suriname '), ('Swasiland '), ('Syrien'), (
+                         'Tadschikistan '), ('Tansania '), ('Thailand '), ('Togo '), ('Tonga '), (
+                         'Transnistrien'), ('Trinidad und Tobago '), ('Tschad '), ('Tschechien '), (
+                         'Tunesien '), ('Türkei '), ('Turkmenistan '), ('Tuvalu '), ('Uganda '), (
+                         'Ukraine'), ('Ungarn '), ('Uruguay '), ('Usbekistan '), ('Vanuatu '), (
+                         'Vatikanstadt '), ('Venezuela '), ('Vereinigte Arabische Emirate '), (
+                         'Vereinigte Staaten'), ('Vereinigtes Königreich'), ('Vietnam '), (
+                         'Weißrussland '), ('Westsahara'), ('Zentral­afrikanische Republik '), (
+                         'Zypern'), ('Nordzypern ')]
+        for country in countries:
+            AddMethods.add_country(country)
+
+    @staticmethod
     def create_example_permissions():
         permissions = [('add_records',), ('edit_records',), ('remove_records',), ('view_records',), ('view_users',),
                        ('view_records_full_detail',), ('can_consult',)]
@@ -1588,6 +1639,8 @@ class AddMethods:
 		Returns:
 
 		"""
+        if country.__le__() == 1:
+            c = OriginCountry(name=country[0])
         if country.__len__() == 2:
             c = OriginCountry(name=country[0], state=country[1])
         elif country.__len__() == 3:

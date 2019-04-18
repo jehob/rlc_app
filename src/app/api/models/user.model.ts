@@ -127,7 +127,7 @@ export class FullUser extends RestrictedUser {
     getUpdates(updates: FullUser) {
         const changes = {};
         if (this.birthday !== updates.birthday)
-            changes["birthday"] = ApiSandboxService.transformDate(
+            changes["birthday"] = ApiSandboxService.transformDateToString(
                 updates.birthday
             );
         if (this.phone_number !== updates.phone_number)

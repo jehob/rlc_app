@@ -261,3 +261,8 @@ ERROR__API__NEW_USER_REQUEST__NO_USER_ACTIVATION_LINK = {
     'error_detail': 'no corresponding user activation link',
     'error_code': 'api.new_user_request.no_user_activation_link'
 }
+
+ERROR__RECORD__ORIGIN_COUNTRY__NOT_FOUND = {
+    'error_detail': 'origin country not found',
+    'error_code': 'record.origin_country.not_found'
+}

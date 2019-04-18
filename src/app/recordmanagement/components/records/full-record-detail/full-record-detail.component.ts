@@ -29,6 +29,7 @@ import { RecordMessage } from "../../../models/record_message.model";
 import { Tag } from "../../../models/tag.model";
 import { State } from "../../../../api/models/state.model";
 import { ApiSandboxService } from "../../../../api/services/api-sandbox.service";
+import {dateInPastValidator} from '../../../../statics/validators.statics';
 
 @Component({
     selector: "app-full-record-detail",
@@ -57,12 +58,12 @@ export class FullRecordDetailComponent implements OnInit, OnDestroy {
     constructor(private recordSB: RecordsSandboxService) {
         this.recordEditForm = new FormGroup({
             client_name: new FormControl(""),
-            client_birthday: new FormControl(""),
+            client_birthday: new FormControl("", [dateInPastValidator]),
             client_phone: new FormControl(""),
             client_note: new FormControl(""),
             note: new FormControl(""),
             official_note: new FormControl(""),
-            last_contact_date: new FormControl(""),
+            last_contact_date: new FormControl("", [dateInPastValidator]),
             state: new FormControl(""),
             consultant_team: new FormControl(""),
             lawyer: new FormControl(""),
@@ -100,9 +101,7 @@ export class FullRecordDetailComponent implements OnInit, OnDestroy {
                     record_messages: RecordMessage[];
                 }) => {
                     this.record = special_record.record;
-                    console.log("record set: ", this.record);
                     this.client = special_record.client;
-                    console.log("client set: ", this.client);
 
                     this.origin_country = special_record.origin_country;
                     this.record_documents = Object.values(
@@ -112,7 +111,8 @@ export class FullRecordDetailComponent implements OnInit, OnDestroy {
                         special_record.record_messages
                     );
 
-                    this.loadValues();
+                    if (this.client && this.record)
+                        this.loadValues();
                 }
             );
     }
@@ -216,11 +216,7 @@ export class FullRecordDetailComponent implements OnInit, OnDestroy {
     }
 
     onBackClick() {
-        // this.recordSB.goBack();
-        console.log("form:", this.recordEditForm.value);
-        console.log("record:", this.record);
-        console.log("client:", this.client);
-        console.log("origin_country:", this.origin_country);
+        this.recordSB.goBack();
     }
 
     onSelectedOriginCountryChanged(newOriginCountry: OriginCountry): void {
@@ -242,7 +238,7 @@ export class FullRecordDetailComponent implements OnInit, OnDestroy {
     }
 
     convertDate(date: string): Date {
-        return new Date(ApiSandboxService.transformDate(new Date(date)));
+        return new Date(ApiSandboxService.transformDateToString(date));
     }
 
     adjustTextAreaHeight(o) {

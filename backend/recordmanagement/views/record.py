@@ -124,11 +124,18 @@ class RecordViewSet(APIView):
             client = models.Client(name=data['client_name'], phone_number=data['client_phone_number'],
                                    birthday=data['client_birthday'], note=data['client_note'])
             client.save()
+        try:
+            origin = models.OriginCountry.objects.get(pk=data['origin_country'])
+        except:
+            raise CustomError(error_codes.ERROR__RECORD__ORIGIN_COUNTRY__NOT_FOUND)
+        client.origin_country = origin
+        client.save()
 
         record = models.Record(client_id=client.id, first_contact_date=data['first_contact_date'],
                                last_contact_date=data['first_contact_date'], record_token=data['record_token'],
                                note=data['record_note'], creator_id=request.user.id, from_rlc_id=rlc.id, state="op")
         record.save()
+
         for tag_id in data['tags']:
             record.tagged.add(models.RecordTag.objects.get(pk=tag_id))
         for user_id in data['consultants']:

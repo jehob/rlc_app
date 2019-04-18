@@ -57,9 +57,14 @@
 
 .full-record-detail__select-state {
     max-width: 60px;
+    padding: 0;
 }
 
 .full-record-detail__sub-header {
     width: 150px;
     margin-left: 30px;
+}
+
+.full-record-detail__autocomplete-container {
+    display: flex;
 }

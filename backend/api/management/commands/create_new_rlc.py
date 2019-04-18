@@ -26,21 +26,17 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('args', nargs='*')
-        # parser.add_argument('test', type=str)
-        parser.add_argument('admin_email', type=str)
-        parser.add_argument('admin_name', type=str)
-        parser.add_argument('admin_password', type=str)
-        parser.add_argument('rlc_name', type=str)
+        parser.add_argument('--admin_email', type=str)
+        parser.add_argument('--admin_name', type=str)
+        parser.add_argument('--admin_password', type=str)
+        parser.add_argument('--rlc_name', type=str)
 
     def handle(self, *args, **options):
         # self.stdout.write("test", ending='')
-        # self.stdout.write(options['admin_email'], ending='')
         # self.stdout.write(options['admin_password'], ending='')
         # self.stdout.write(options['rlc_name'], ending='')
-
         rlc_object = Rlc(name=options['rlc_name'])
         rlc_object.save()
-
         admin_user = UserProfile(email=options['admin_email'], rlc=rlc_object, name=options['admin_name'])
         admin_user.set_password(options['admin_password'])
         admin_user.save()

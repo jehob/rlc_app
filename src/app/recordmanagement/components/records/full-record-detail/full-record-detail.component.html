@@ -36,7 +36,7 @@
         <app-autocomplete [allValuesObservable]="allRecordStates" placeholder="record state"
                           (selectedValueChanged)="onSelectedRecordStateChanged($event)"
                           [setSelectedValue]="givenRecordState" valueToShow="full_name"
-                          class="full-record-detail__select-state">
+                          class="full-record-detail__select-state full_width">
         </app-autocomplete>
     </div>
 
@@ -61,16 +61,16 @@
                 <mat-datepicker #picker_client_birthday></mat-datepicker>
             </mat-form-field>
 
+            <app-autocomplete [allValuesObservable]="allCountries" placeholder="origin country"
+                              (selectedValueChanged)="onSelectedOriginCountryChanged($event)"
+                              [errors]="originCountryError"
+                              [setSelectedValue]="givenOriginCountry" class="full_width">
+                <mat-error *ngIf="originCountryError && originCountryError.null">
+                    please select a country
+                </mat-error>
+            </app-autocomplete>
+            <div class="full-record-detail__autocomplete-container">
 
-            <div>
-                <app-autocomplete [allValuesObservable]="allCountries" placeholder="origin country"
-                                  (selectedValueChanged)="onSelectedOriginCountryChanged($event)"
-                                  [errors]="originCountryError"
-                                  [setSelectedValue]="givenOriginCountry" class="full_width">
-                    <mat-error *ngIf="originCountryError && originCountryError.null">
-                        please select a country
-                    </mat-error>
-                </app-autocomplete>
             </div>
 
             <mat-form-field>

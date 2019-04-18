@@ -18,7 +18,8 @@
 
 <form [formGroup]="valueForm">
     <mat-form-field class="autocomplete__form-field">
-        <input type="text" [placeholder]="placeholder" matInput formControlName="value" [matAutocomplete]="auto" (change)="onInputChange()">
+        <input type="text" [placeholder]="placeholder" matInput formControlName="value" [matAutocomplete]="auto"
+               (change)="onInputChange()">
         <ng-content></ng-content>
         <mat-error *ngIf="selectionError && selectionError.notInAllValues">
             please select a value from the list
