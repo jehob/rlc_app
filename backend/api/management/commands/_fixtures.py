@@ -150,6 +150,15 @@ class Fixtures:
             AddMethods.add_record_tag(tag)
 
     @staticmethod
+    def create_real_document_tags():
+        tags = ['Pass', 'Passersatzpapier', 'Geburtsurkunde', 'Heiratsurkunde', 'Ankunftsnachweis', 'Duldung',
+                'Aufenthaltsgestattung', 'Aufenthaltstitel', 'Bescheid (Ablehnung)', 'Bescheid (Flüchtling)',
+                'Bescheid (subsidiärer Schutz)', 'Bescheid (Abschiebeverbote)', 'Bescheid (Sozialleistungen)',
+                'Bescheid (Arbeiten)', 'Bescheid (Wohnen)']
+        for tag in tags:
+            AddMethods.add_record_document_tag(tag)
+
+    @staticmethod
     def create_real_starting_rlcs():
         rlcs = (('RLC München', False, True),
                 ('RLC Hamburg', False, True))
@@ -1615,6 +1624,14 @@ class AddMethods:
             t = RecordTag(name=tag[0])
         elif tag.__len__() == 2:
             t = RecordTag(id=tag[0], name=tag[1])
+        else:
+            raise AttributeError
+        t.save()
+
+    @staticmethod
+    def add_record_document_tag(tag):
+        if tag.__len__() == 1:
+            t = RecordDocumentTag(name=tag[0])
         else:
             raise AttributeError
         t.save()

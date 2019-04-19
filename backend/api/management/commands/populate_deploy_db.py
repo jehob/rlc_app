@@ -26,6 +26,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         Fixtures.create_real_tags()
+        Fixtures.create_real_document_tags()
         Fixtures.create_real_origin_countries()
         Fixtures.create_real_permissions()
         # rlcs = Fixtures.create_real_starting_rlcs()

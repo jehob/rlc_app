@@ -35,6 +35,20 @@ class Command(BaseCommand):
         # self.stdout.write("test", ending='')
         # self.stdout.write(options['admin_password'], ending='')
         # self.stdout.write(options['rlc_name'], ending='')
+
+        if 'rlc_name' not in options or options['rlc_name'] is None:
+            self.stdout.write("rlc_name missing\r\n", ending='')
+            return
+        if 'admin_email' not in options or options['admin_email'] is None:
+            self.stdout.write("admin_email missing\r\n", ending='')
+            return
+        if 'admin_name' not in options or options['admin_name'] is None:
+            self.stdout.write("admin_name missing\r\n", ending='')
+            return
+        if 'admin_password' not in options or options['admin_password'] is None:
+            self.stdout.write("admin_password missing\r\n", ending='')
+            return
+
         rlc_object = Rlc(name=options['rlc_name'])
         rlc_object.save()
         admin_user = UserProfile(email=options['admin_email'], rlc=rlc_object, name=options['admin_name'])

@@ -423,6 +423,9 @@ export class ApiEffects {
                         const rlcs = RestrictedRlc.getRestrictedRlcsFromJsonArray(
                             response
                         );
+                        if (rlcs.length === 0){
+                            this.snackbar.showErrorSnackBar("unfortunately there are no rlcs until now")
+                        }
                         return [
                             {
                                 type: SET_RLCS,
