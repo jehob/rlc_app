@@ -24,7 +24,7 @@ import pytz
 from backend.recordmanagement import models, serializers
 from backend.static import error_codes
 from backend.api.errors import CustomError
-from backend.static.permissions import PERMISSION_PERMIT_RECORD_PERMISSION_REQUESTS_RLC
+from backend.static import permissions
 
 
 class RecordPermissionViewSet(viewsets.ModelViewSet):
@@ -34,6 +34,8 @@ class RecordPermissionViewSet(viewsets.ModelViewSet):
 
 class RecordPermissionRequestViewSet(APIView):
     def post(self, request, id):
+        if not request.user.has_permission(permissions.PERMISSION_VIEW_RECORDS_RLC, for_rlc=request.user.rlc):
+            raise CustomError(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
         try:
             record = models.Record.objects.get(pk=id)
         except Exception as e:
@@ -41,9 +43,8 @@ class RecordPermissionRequestViewSet(APIView):
         if record.user_has_permission(request.user):
             raise CustomError(error_codes.ERROR__RECORD__PERMISSION__ALREADY_WORKING_ON)
 
-        if models.RecordPermission.objects.filter(record=record, request_from=request.user).count() >= 1:
+        if models.RecordPermission.objects.filter(record=record, request_from=request.user, state='re').count() >= 1:
             raise CustomError(error_codes.ERROR__RECORD__PERMISSION__ALREADY_REQUESTED)
-        # TODO: check permission can_view_records?
         can_edit = False
         if 'can_edit' in request.data:
             can_edit = request.data['can_edit']
@@ -61,7 +62,7 @@ class RecordPermissionAdmitViewSet(APIView):
         :return:
         """
         user = request.user
-        if not user.has_permission(PERMISSION_PERMIT_RECORD_PERMISSION_REQUESTS_RLC, for_rlc=user.rlc):
+        if not user.has_permission(permissions.PERMISSION_PERMIT_RECORD_PERMISSION_REQUESTS_RLC, for_rlc=user.rlc):
             raise CustomError(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
         requests = models.RecordPermission.objects.filter(record__from_rlc=user.rlc)
         # if requests.count() == 0:
@@ -75,7 +76,7 @@ class RecordPermissionAdmitViewSet(APIView):
         :return:
         """
         user = request.user
-        if not user.has_permission(PERMISSION_PERMIT_RECORD_PERMISSION_REQUESTS_RLC, for_rlc=user.rlc):
+        if not user.has_permission(permissions.PERMISSION_PERMIT_RECORD_PERMISSION_REQUESTS_RLC, for_rlc=user.rlc):
             raise CustomError(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
         if 'id' not in request.data:
             raise CustomError(error_codes.ERROR__RECORD__PERMISSION__ID_NOT_PROVIDED)

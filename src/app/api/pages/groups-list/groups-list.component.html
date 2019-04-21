@@ -20,7 +20,7 @@
     <mat-card-content>
         <div class="horizontal groups-list__header">
             <h1>Groups</h1>
-            <button mat-flat-button color="primary" *ngIf="canManageGroups" (click)="onAddGroupClick()">Add group</button>
+            <button mat-flat-button color="primary" *ngIf="canAddGroup" (click)="onAddGroupClick()">Add group</button>
         </div>
 
         <div *ngIf="groups | async as catalog; else loading">

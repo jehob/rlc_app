@@ -100,6 +100,7 @@ export class RecordsLoadingEffects {
                     }),
                     mergeMap(response => {
                         const loadedRecords: Array<RestrictedRecord> = [];
+                        console.log('records loaded', response);
                         Object.values(response).map(record => {
                             if (Object.keys(record).indexOf("note") > -1) {
                                 loadedRecords.push(

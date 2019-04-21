@@ -46,7 +46,7 @@ export class AddGroupMemberComponent implements OnInit {
                 this.other_users = other_users;
                 this.checkUsersToShow();
             });
-        this.apiSB.getSpecialGroup().subscribe((group: FullGroup) => {
+        this.apiSB.getGroup().subscribe((group: FullGroup) => {
             if (group) {
                 this.group_members = group.members;
                 this.group_id = group.id;

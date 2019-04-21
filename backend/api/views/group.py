@@ -33,7 +33,7 @@ from rest_framework.views import APIView
 
 from backend.api.errors import CustomError
 from backend.static import error_codes
-from backend.static.permissions import PERMISSION_MANAGE_GROUPS_RLC
+from backend.static import permissions
 from .. import models, serializers
 
 
@@ -44,7 +44,7 @@ class GroupViewSet(viewsets.ModelViewSet):
         user = self.request.user
         if not user.is_superuser:
             # return models.Group.objects.get_groups_with_mange_rights(user)
-            if user.has_permission(PERMISSION_MANAGE_GROUPS_RLC, for_rlc=user.rlc):
+            if user.has_permission(permissions.PERMISSION_MANAGE_GROUPS_RLC, for_rlc=user.rlc):
                 return models.Group.objects.filter(from_rlc=user.rlc)
             else:
                 return models.Group.objects.filter(from_rlc=user.rlc, visible=True)
@@ -62,7 +62,9 @@ class GroupViewSet(viewsets.ModelViewSet):
         serializer.save(creator=creator)
 
     def create(self, request, *args, **kwargs):
-        if request.user.has_permission(PERMISSION_MANAGE_GROUPS_RLC):
+        if not request.user.has_permission(
+            permissions.PERMISSION_MANAGE_GROUPS_RLC, for_rlc=request.user.rlc) and not request.user.has_permission(
+            permissions.PERMISSION_ADD_GROUP_RLC, for_rlc=request.user.rlc):
             raise CustomError(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
 
         if 'name' not in request.data or 'visible' not in request.data:

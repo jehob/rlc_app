@@ -24,6 +24,7 @@ import {
     PERMISSION_CAN_MANAGE_GROUPS_RLC
 } from "../../../statics/permissions.statics";
 import { RestrictedRlc } from "../../models/rlc.model";
+import {FullGroup} from '../../models/group.model';
 
 @Component({
     selector: "app-group",
@@ -44,21 +45,28 @@ export class GroupComponent implements OnInit {
             this.id = params["id"];
             this.apiSB.startLoadingSpecialGroup(this.id);
         });
-        this.apiSB.hasPermissionFromStringForOwnRlc(
-            PERMISSION_CAN_MANAGE_GROUPS_RLC,
-            permission => {
-                if (permission) this.can_edit = true;
-            }
-        );
 
-        this.apiSB.hasPermissionFromString(
-            PERMISSION_CAN_MANAGE_GROUP,
-            hasPermission => {
-                if (hasPermission) this.can_edit = true;
-            },
-            {
-                for_group: this.id
-            }
-        );
+        this.apiSB.getGroup().subscribe((group: FullGroup) => {
+            this.apiSB.hasPermissionFromString(
+                PERMISSION_CAN_MANAGE_GROUP,
+                hasPermission => {
+                    if (hasPermission) {
+                        this.can_edit = true;
+                    }
+                },
+                {
+                    for_group: this.id
+                }
+            );
+
+            this.apiSB.hasPermissionFromStringForOwnRlc(
+                PERMISSION_CAN_MANAGE_GROUPS_RLC,
+                permission => {
+                    if (permission) {
+                        this.can_edit = true;
+                    }
+                }
+            );
+        });
     }
 }

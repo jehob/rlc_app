@@ -19,6 +19,7 @@ from django.db.models import Q
 
 from backend.api.models import UserProfile, Rlc
 from backend.recordmanagement.models import RecordTag
+from backend.static import permissions
 
 
 class RecordQuerySet(models.QuerySet):
@@ -105,4 +106,5 @@ class Record(models.Model):
         """
         from backend.recordmanagement.models import RecordPermission
         return self.working_on_record.filter(id=user.id).count() == 1 or \
-               RecordPermission.objects.filter(record=self, request_from=user, state='gr')
+               RecordPermission.objects.filter(record=self, request_from=user, state='gr') or \
+               user.has_permission(permissions.PERMISSION_VIEW_RECORDS_FULL_DETAIL_RLC, for_rlc=user.rlc)

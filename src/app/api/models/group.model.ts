@@ -69,7 +69,8 @@ export class FullGroup extends RestrictedGroup {
                 json.id,
                 json.name,
                 json.creator,
-                json.group_members,
+                // json.group_members,
+                RestrictedUser.getRestrictedUsersFromJsonArray(json.group_members),
                 json.visible,
                 json.description,
                 json.note

@@ -22,7 +22,7 @@ import { Observable } from "rxjs";
 import { RestrictedGroup } from "../../models/group.model";
 import { Router } from "@angular/router";
 import { GetGroupFrontUrl } from "../../../statics/frontend_links.statics";
-import { PERMISSION_CAN_MANAGE_GROUPS_RLC } from "../../../statics/permissions.statics";
+import {PERMISSION_CAN_ADD_GROUP_RLC, PERMISSION_CAN_MANAGE_GROUPS_RLC} from '../../../statics/permissions.statics';
 import { MatDialog } from "@angular/material";
 import {AddGroupComponent} from '../../components/add-group/add-group.component';
 
@@ -34,7 +34,7 @@ import {AddGroupComponent} from '../../components/add-group/add-group.component'
 export class GroupsListComponent implements OnInit {
     groups: Observable<RestrictedGroup[]>;
 
-    canManageGroups = false;
+    canAddGroup = false;
 
     constructor(
         private apiSB: ApiSandboxService,
@@ -49,7 +49,15 @@ export class GroupsListComponent implements OnInit {
         this.apiSB.hasPermissionFromStringForOwnRlc(
             PERMISSION_CAN_MANAGE_GROUPS_RLC,
             hasPermission => {
-                this.canManageGroups = hasPermission;
+                if (hasPermission)
+                    this.canAddGroup = hasPermission;
+            }
+        );
+        this.apiSB.hasPermissionFromStringForOwnRlc(
+            PERMISSION_CAN_ADD_GROUP_RLC,
+            hasPermission => {
+                if (hasPermission)
+                    this.canAddGroup = hasPermission;
             }
         );
     }
@@ -59,7 +67,7 @@ export class GroupsListComponent implements OnInit {
     }
 
     onAddGroupClick() {
-        if (this.canManageGroups) {
+        if (this.canAddGroup) {
             this.dialog.open(AddGroupComponent);
         } else {
             this.apiSB.showErrorSnackBar("no permission to add new group");

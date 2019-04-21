@@ -292,12 +292,6 @@ export class ApiSandboxService {
         this.apiStateStore.dispatch(new StartLoadingSpecialGroup(id));
     }
 
-    getSpecialGroup(): Observable<FullGroup> {
-        return this.apiStateStore.pipe(
-            select((state: any) => state.api.special_group)
-        );
-    }
-
     resetSpecialGroup(): void {
         return this.apiStateStore.dispatch(new ResetSpecialGroup());
     }

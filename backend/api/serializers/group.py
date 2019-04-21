@@ -54,6 +54,8 @@ class GroupNameSerializer(serializers.ModelSerializer):
 
 
 class GroupShowSerializer(serializers.ModelSerializer):
+    group_members = UserProfileNameSerializer(many=True)
+
     class Meta:
         model = Group
         fields = ('id', 'name', 'group_members', 'description', 'note', 'visible', 'note')

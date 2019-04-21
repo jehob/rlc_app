@@ -26,7 +26,7 @@ import {
     dateInPastValidator,
     matchValidator,
     passwordValidator
-} from '../../../../statics/validators.statics';
+} from "../../../../statics/validators.statics";
 import { CustomErrorStateMatcher } from "../../../../statics/errror_state_matcher.statics";
 
 @Component({
@@ -44,10 +44,13 @@ export class RegisterComponent implements OnInit {
         private snackBar: MatSnackBar,
         private apiSB: ApiSandboxService
     ) {
+
+    }
+
+    ngOnInit() {
         this.apiSB.startLoadingRlcs();
         const date = new Date();
         date.setFullYear(date.getFullYear() - 20);
-
         this.userForm = new FormGroup(
             {
                 email: new FormControl("", [
@@ -71,12 +74,10 @@ export class RegisterComponent implements OnInit {
         );
 
         this.apiSB.getAllRlcs().subscribe((rlcs: RestrictedRlc[]) => {
-            this.allRlcs = rlcs;
+            if (rlcs) {
+                this.allRlcs = rlcs;
+            }
         });
-    }
-
-    ngOnInit() {
-
     }
 
     onRegisterClick() {
@@ -92,7 +93,9 @@ export class RegisterComponent implements OnInit {
                 name: values.name,
                 email: values.email,
                 password: values.password,
-                birthday: ApiSandboxService.transformDateToString(values.birthday),
+                birthday: ApiSandboxService.transformDateToString(
+                    values.birthday
+                ),
                 rlc: values.rlc
             };
             if (values.phone_number !== "")
