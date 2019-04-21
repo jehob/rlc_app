@@ -150,8 +150,6 @@ export class ApiEffects {
             return from(
                 this.http.post(CREATE_PROFILE_API_URL, user).pipe(
                     catchError(error => {
-                        console.log("1");
-                        console.log(error);
                         this.snackbar.showErrorSnackBar("error at register");
                         return [];
                     }),
@@ -212,7 +210,6 @@ export class ApiEffects {
                         return [];
                     }),
                     mergeMap((response: any) => {
-                        //console.log(response);
                         const users = RestrictedUser.getRestrictedUsersFromJsonArray(
                             response
                         );
@@ -276,7 +273,6 @@ export class ApiEffects {
                     }),
                     mergeMap((response: any) => {
                         const group = FullGroup.getFullGroupFromJson(response);
-                        console.log('response from loading group: ', response);
                         return [
                             {
                                 type: SET_SPECIAL_GROUP,
@@ -382,15 +378,12 @@ export class ApiEffects {
                         return [];
                     }),
                     mergeMap((response: any) => {
-                        console.log("'special' permission", response);
                         const permission = Permission.getPermissionFromJson(
                             response
                         );
                         const hasPermissions = HasPermission.getPermissionsFromJsonArray(
                             response.has_permissions
                         );
-                        console.log("permission read: ", permission);
-                        console.log("permission read: ", hasPermissions);
                         return [
                             {
                                 type: SET_SPECIAL_PERMISSION,
@@ -455,7 +448,6 @@ export class ApiEffects {
                         return [];
                     }),
                     mergeMap((response: any) => {
-                        console.log("response: ", response);
                         return [
                             {
                                 type: REMOVE_SINGLE_HAS_PERMISSION,
@@ -485,10 +477,6 @@ export class ApiEffects {
                         return [];
                     }),
                     mergeMap((response: any) => {
-                        console.log(
-                            "response from creating hasPermission: ",
-                            response
-                        );
                         const hasPermission = HasPermission.getHasPermissionFromJson(
                             response
                         );
@@ -648,9 +636,7 @@ export class ApiEffects {
                         return [];
                     }),
                     mergeMap((response: any) => {
-                        console.log("response from accepting user request: ", response);
                         const request = NewUserRequest.getNewUserRequestFromJson(response);
-                        console.log('request from accepting user', request);
                         return [
                             {
                                 type: UPDATE_NEW_USER_REQUEST,
@@ -680,9 +666,7 @@ export class ApiEffects {
                         return [];
                     }),
                     mergeMap((response: any) => {
-                        console.log("response from declining user request: ", response);
                         const request = NewUserRequest.getNewUserRequestFromJson(response);
-                        console.log('request from declining user', request);
                         return [
                             {
                                 type: UPDATE_NEW_USER_REQUEST,

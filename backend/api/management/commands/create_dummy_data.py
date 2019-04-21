@@ -38,11 +38,13 @@ class Command(BaseCommand):
         self.create_groups(rlc, main_user, users)
         clients = self.get_and_create_clients()
         consultant_group = apimodels.Group.objects.filter(name='Berater', from_rlc=rlc).first()
-        records = self.get_and_create_records(clients, list(consultant_group.group_members.all()), rlc)
+        consultants = list(consultant_group.group_members.all())
+        self.get_and_create_records(clients, consultants, rlc)
+        self.create_the_best_record_ever(main_user, clients, consultants, rlc)
 
     def get_and_create_dummy_user(self, rlc):
         user = apimodels.UserProfile(name='Mr Dummy', email='dummy@rlcm.de', phone_number='01666666666',
-                                  street='Dummyweg 12', city='Dummycity', postal_code='00000', rlc=rlc)
+                                     street='Dummyweg 12', city='Dummycity', postal_code='00000', rlc=rlc)
         user.birthday = AddMethods.generate_date((1995, 1, 1))
         user.set_password('qwe123')
         user.save()
@@ -154,7 +156,7 @@ class Command(BaseCommand):
         new_users = []
         for user in users:
             new_user = apimodels.UserProfile(email=user[0], name=user[1], phone_number=user[3], street=user[4],
-                                          city=user[5], postal_code=user[6], rlc=rlc)
+                                             city=user[5], postal_code=user[6], rlc=rlc)
             new_user.birthday = AddMethods.generate_date(user[2])
             new_user.save()
             new_users.append(new_user)
@@ -162,7 +164,7 @@ class Command(BaseCommand):
 
     def create_groups(self, rlc, main_user, users):
         consultants = apimodels.Group(creator=main_user, from_rlc=rlc, name='Berater', visible=False,
-                                   description='all consultants', note='only add consultants')
+                                      description='all consultants', note='only add consultants')
         consultants.save()
         consultants.group_members.add(users[0])
         consultants.group_members.add(users[1])
@@ -178,7 +180,7 @@ class Command(BaseCommand):
         self.add_permission_to_group(consultants, rlc, permissions.PERMISSION_VIEW_RECORDS_RLC)
 
         ag1 = apimodels.Group(creator=users[0], from_rlc=rlc, name='AG Datenschutz', visible=True, description='DSGVO',
-                           note='bitte mithelfen')
+                              note='bitte mithelfen')
         ag1.save()
         ag1.group_members.add(users[1])
         ag1.group_members.add(users[2])
@@ -186,7 +188,7 @@ class Command(BaseCommand):
         ag1.save()
 
         admins = apimodels.Group(creator=main_user, from_rlc=rlc, name='Administratoren', visible=False,
-                              description='haben alle Berechtigungen', note='IT ressort')
+                                 description='haben alle Berechtigungen', note='IT ressort')
         admins.save()
         admins.group_members.add(users[0])
         admins.group_members.add(main_user)
@@ -204,7 +206,7 @@ class Command(BaseCommand):
 
     def add_permission_to_group(self, group, rlc, permission_name):
         has_permission = apimodels.HasPermission(group_has_permission=group, permission_for_rlc=rlc,
-                                              permission=self.get_permission(permission_name))
+                                                 permission=self.get_permission(permission_name))
         has_permission.save()
 
     def get_and_create_clients(self):
@@ -433,7 +435,20 @@ class Command(BaseCommand):
         ]
         records_in_db = []
         for rec in records:
-            records_in_db.append(self.get_and_create_record(rec, rlc))
+            # records_in_db.append(self.get_and_create_record(rec, rlc))
+            record = models.Record(from_rlc=rlc, creator=rec[0], client=rec[3], record_token=rec[6],
+                                   official_note=rec[7], state=rec[8])
+            record.created_on = AddMethods.generate_date(rec[1])
+            record.first_contact_date = AddMethods.generate_date(rec[4])
+            record.last_edited = AddMethods.generate_datetime(rec[2])
+            record.last_contact_date = AddMethods.generate_datetime(rec[5])
+            record.save()
+            for user in rec[9]:
+                record.working_on_record.add(user)
+            for tag in rec[10]:
+                record.tagged.add(tag)
+            record.save()
+            records_in_db.append(record)
         return records_in_db
 
     def get_and_create_client(self, client):
@@ -445,29 +460,89 @@ class Command(BaseCommand):
         cl.save()
         return cl
 
-    def get_and_create_record(self, record_data, rlc):
-        record = models.Record(from_rlc=rlc, creator=record_data[0], client=record_data[3], record_token=record_data[6],
-                               official_note=record_data[7], state=record_data[8])
-        record.created_on = AddMethods.generate_date(record_data[1])
-        record.first_contact_date = AddMethods.generate_date(record_data[4])
-        record.last_edited = AddMethods.generate_datetime(record_data[2])
-        record.last_contact_date = AddMethods.generate_datetime(record_data[5])
-        record.save()
-        for user in record_data[9]:
-            record.working_on_record.add(user)
-        for tag in record_data[10]:
-            record.tagged.add(tag)
-        record.save()
-        return record
+    # def get_and_create_record(self, rec, rlc):
+    #     record = models.Record(from_rlc=rlc, creator=rec[0], client=rec[3], record_token=rec[6],
+    #                            official_note=rec[7], state=rec[8])
+    #     record.created_on = AddMethods.generate_date(rec[1])
+    #     record.first_contact_date = AddMethods.generate_date(rec[4])
+    #     record.last_edited = AddMethods.generate_datetime(rec[2])
+    #     record.last_contact_date = AddMethods.generate_datetime(rec[5])
+    #     record.save()
+    #     for user in rec[9]:
+    #         record.working_on_record.add(user)
+    #     for tag in rec[10]:
+    #         record.tagged.add(tag)
+    #     record.save()
+    #     return record
 
-        # random.choice[consultants],  # creator id
-        # (2018, 7, 12),  # created
-        # (2018, 8, 29, 13, 54, 0, 0),  # las edited
-        # clients[0],  # client
-        # (2018, 7, 10),  # first contact
-        # (2018, 8, 14, 17, 30, 0, 0),  # last contact
-        # 'AZ-123/18',  # record token
-        # 'informationen zum asylrecht',
-        # 'cl',  # status, cl wa op
-        # [consultants[0], consultants[1]],  # working on
-        # [tags[0], tags[1]]  # tags
+    def create_the_best_record_ever(self, main_user, clients, consultants, rlc):
+        tags = list(models.RecordTag.objects.all())
+        record = models.Record(from_rlc=rlc, creator=main_user, client=clients[0], record_token='AZ-001/18',
+                               official_note='best record ever', state='op')
+
+        record.created_on = AddMethods.generate_date((2018, 1, 3))
+        record.first_contact_date = AddMethods.generate_date((2018, 1, 3))
+        record.last_edited = AddMethods.generate_datetime((2019, 3, 11, 9, 32, 21, 0))
+        record.last_contact_date = AddMethods.generate_datetime((2019, 2, 28, 17, 33, 0, 0))
+        record.first_consultation = AddMethods.generate_datetime((2018, 1, 2, 23, 55, 0, 0))
+        record.note = 'Mandant moechte dass wir ihn vor Gericht vertreten. Das duerfen wir aber nicht. #RDG'
+        record.consultant_team = 'Taskforce 417'
+        record.lawyer = 'RA Guenther-Klaus, Kiesweg 3'
+        record.related_persons = 'Sozialarbeiter Apfel (Direkt in der Unterkunft)'
+        record.contact = 'Mail: asksk1@bmw.de,\n Telefon: 0800 444 55 444'
+        record.bamf_token = 'QRS-232/2018'
+        record.foreign_token = 'Vor Gericht: FA93932-1320'
+        record.first_correspondence = 'Hallo Liebes Team der RLC,\n ich habe folgendes Problem.\nKoennt ihr mir ' \
+                                      'helfen?\n Vielen Dank'
+        record.circumstances = 'Kam ueber die Balkanroute, Bruder auf dem Weg verloren, wenig Kontakt zu Familie.'
+        record.next_steps = 'Klae einreichen und gewinnen!'
+        record.status_described = 'Auf Antwort wartend, anschliessend weitere Bearbeitung.'
+        record.additional_facts = 'Hat noch nie ne Schweinshaxe gegessen.'
+
+        record.save()
+        record.working_on_record.add(consultants[0], main_user)
+        record.tagged.add(tags[0], tags[1])
+        record.save()
+
+        document1 = models.RecordDocument(name="7_1_19__pass.jpg", creator=main_user, record=record, file_size=123123)
+        document1.created_on = AddMethods.generate_date((2019, 1, 7))
+        document1.save()
+        document1.tagged.add(models.RecordDocumentTag.objects.get(name='Pass'))
+
+        document2 = models.RecordDocument(name="3_10_18__geburtsurkunde.pdf", creator=main_user, record=record,
+                                          file_size=488383)
+        document2.created_on = AddMethods.generate_date((2018, 10, 3))
+        document2.save()
+        document2.tagged.add(models.RecordDocumentTag.objects.get(name='Geburtsurkunde'))
+
+        document3 = models.RecordDocument(name="3_12_18__Ablehnungbescheid.pdf", creator=main_user, record=record,
+                                          file_size=343433)
+        document3.created_on = AddMethods.generate_date((2018, 12, 3))
+        document3.save()
+        document3.tagged.add(models.RecordDocumentTag.objects.get(name='Bescheid (Ablehnung)'))
+
+        document4 = models.RecordDocument(name="1_1_19__Klageschrift.docx", creator=main_user, record=record,
+                                          file_size=444444)
+        document4.save()
+        document4.created_on = AddMethods.generate_date((2019, 1, 1))
+
+        message = models.RecordMessage(sender=main_user, record=record,
+                                       message='Bitte dringend die Kontaktdaten des Mandanten eintragen.')
+        message.save()
+        message.created_on = AddMethods.generate_datetime((2019, 3, 11, 10, 12, 21, 0))
+        message.save()
+        message = models.RecordMessage(sender=consultants[0], record=record,
+                                       message='Ist erledigt! Koennen wir uns morgen treffen um das zu besprechen?')
+        message.save()
+        message.created_on = AddMethods.generate_datetime((2019, 3, 12, 9, 32, 21, 0))
+        message.save()
+        message = models.RecordMessage(sender=main_user, record=record,
+                                       message='Klar, einfach direkt in der Mittagspause in der Mensa.')
+        message.save()
+        message.created_on = AddMethods.generate_datetime((2019, 3, 12, 14, 7, 21, 0))
+        message.save()
+        message = models.RecordMessage(sender=consultants[0], record=record,
+                                       message='Gut, jetzt faellt mir aber auch nichts mehr ein.')
+        message.save()
+        message.created_on = AddMethods.generate_datetime((2019, 3, 13, 18, 7, 21, 0))
+        message.save()

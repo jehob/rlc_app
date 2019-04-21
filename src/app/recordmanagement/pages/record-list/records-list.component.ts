@@ -39,6 +39,7 @@ import { tap } from "rxjs/internal/operators/tap";
 export class RecordsListComponent implements OnInit {
     timeout = 400;
     records: Observable<RestrictedRecord[]>;
+    fullAccess: boolean[];
     columns = ["access", "token", "state", "consultants", "tags"];
     value = "";
     timer = null;
@@ -72,6 +73,12 @@ export class RecordsListComponent implements OnInit {
                     }
                     return 0;
                 });
+                this.fullAccess = new Array(results.length).fill(false);
+                results.forEach((record: RestrictedRecord, index) => {
+                    if (!isRestrictedRecord(record)){
+                        this.fullAccess[index] = true;
+                    }
+                })
             })
         );
     }

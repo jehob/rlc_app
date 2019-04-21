@@ -25,7 +25,6 @@ import { RecordsRoutingModule } from "./records-routing.module";
 import { RecordsListComponent } from "./pages/record-list/records-list.component";
 import { recordsReducer } from "./store/records.reducers";
 import { RecordsEffects } from "./store/effects/records.effects";
-import { RecordsListItemComponent } from "./components/records/records-list-item/records-list-item.component";
 import { CreateRecordComponent } from "./pages/create-record/create-record.component";
 import { SelectClientDialogComponent } from "./components/select-client-dialog/select-client-dialog.component";
 import { RecordsSandboxService } from "./services/records-sandbox.service";
@@ -62,7 +61,6 @@ import {
     ],
     declarations: [
         RecordsListComponent,
-        RecordsListItemComponent,
         CreateRecordComponent,
         SelectClientDialogComponent,
         RecordComponent,
