@@ -17,7 +17,7 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 <h1 mat-dialog-title>add new permission for group</h1>
-<div mat-dialog-content>
+<div mat-dialog-content class="add-has-permission-for__dialog-content">
     <app-autocomplete [allValuesObservable]="allPermissions" placeholder="permission to add"
                       (selectedValueChanged)="onSelectedPermissionChanged($event)"
                       [setSelectedValue]="selectedPermission"></app-autocomplete>

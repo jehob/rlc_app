@@ -19,3 +19,9 @@
 .add-group__close-button {
     margin-right: 10px;
 }
+
+.add-group__container {
+    display: flex;
+    flex-direction: column;
+    height: 100px;
+}
