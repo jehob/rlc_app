@@ -51,7 +51,7 @@ class GetRlcsViewSet(APIView):
     permission_classes = ()
 
     def get(self, request):
-        rlcs = Rlc.objects.all()
+        rlcs = Rlc.objects.all().exclude(name='Dummy RLC')
         serialized = RlcOnlyNameSerializer(rlcs, many=True).data
         return Response(serialized)
 

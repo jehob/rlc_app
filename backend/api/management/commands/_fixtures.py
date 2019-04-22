@@ -69,7 +69,7 @@ class Fixtures:
                          'Kambodscha',), ('Kamerun',), ('Kanada',), ('Kap Verde',), ('Kasachstan',), (
                          'Katar',), ('Kenia',), ('Kirgisistan',), ('Kiribati',), ('Kolumbien',), (
                          'Komoren',), ('Kongo, Demokratische Republik',), ('Kongo, Republik',), (
-                         'Korea, Nord',), ('Korea, Süd',), ('Kosovo[9]',), ('Kroatien',), ('Kuba',), (
+                         'Nordkorea',), ('Südkorea',), ('Kosovo',), ('Kroatien',), ('Kuba',), (
                          'Kuwait',), ('Laos',), ('Lesotho',), ('Lettland',), ('Libanon',), (
                          'Liberia',), ('Libyen',), ('Liechtenstein',), ('Litauen',), ('Luxemburg',), (
                          'Madagaskar',), ('Malawi',), ('Malaysia',), ('Malediven',), ('Mali',), (
