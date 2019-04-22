@@ -23,6 +23,8 @@ import { RestrictedUser } from "../../models/user.model";
 import { RestrictedGroup } from "../../models/group.model";
 import { RestrictedRlc } from "../../models/rlc.model";
 import { Observable } from "rxjs";
+import {tap} from 'rxjs/internal/operators/tap';
+import {alphabeticalSorterByField} from '../../../shared/other/sorter-helper';
 
 @Component({
     selector: "app-add-has-permission",
@@ -51,8 +53,12 @@ export class AddHasPermissionComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.allUsers = this.apiSB.getOtherUsers();
-        this.allGroups = this.apiSB.getGroups();
+        this.allUsers = this.apiSB.getOtherUsers().pipe(tap(results => {
+            alphabeticalSorterByField(results, 'name')
+        }));
+        this.allGroups = this.apiSB.getGroups().pipe(tap(results => {
+            alphabeticalSorterByField(results, 'name')
+        }));
 
         this.apiSB.getRlc().subscribe((rlc: RestrictedRlc) => {
             this.ownRlc = rlc;

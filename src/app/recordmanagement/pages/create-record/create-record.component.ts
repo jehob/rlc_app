@@ -17,7 +17,7 @@
  ******************************************************************************/
 
 import { Component, OnInit } from "@angular/core";
-import {FormControl, FormGroup,  Validators} from '@angular/forms';
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { RecordsSandboxService } from "../../services/records-sandbox.service";
 import { MatDialog } from "@angular/material";
 import { SelectClientDialogComponent } from "../../components/select-client-dialog/select-client-dialog.component";
@@ -26,7 +26,9 @@ import { OriginCountry } from "../../models/country.model";
 import { RestrictedUser } from "../../../api/models/user.model";
 import { Tag } from "../../models/tag.model";
 import { Observable } from "rxjs";
-import {dateInPastValidator} from '../../../statics/validators.statics';
+import { dateInPastValidator } from "../../../statics/validators.statics";
+import { tap } from "rxjs/internal/operators/tap";
+import { alphabeticalSorterByField } from "../../../shared/other/sorter-helper";
 
 @Component({
     selector: "app-add-record",
@@ -58,7 +60,10 @@ export class CreateRecordComponent implements OnInit {
         date.setFullYear(date.getFullYear() - 20);
 
         this.createRecordForm = new FormGroup({
-            first_contact_date: new FormControl(new Date(), dateInPastValidator),
+            first_contact_date: new FormControl(
+                new Date(),
+                dateInPastValidator
+            ),
             client_birthday: new FormControl("1980-03-27", dateInPastValidator), //date
             client_name: new FormControl("", [Validators.required]),
             client_phone_number: new FormControl(""),
@@ -69,9 +74,17 @@ export class CreateRecordComponent implements OnInit {
 
         this.onClientBirthdayChanges();
 
-        this.allConsultants = this.recordSB.getConsultants();
+        this.allConsultants = this.recordSB.getConsultants().pipe(
+            tap(results => {
+                alphabeticalSorterByField(results, "name");
+            })
+        );
         this.allCountries = this.recordSB.getOriginCountries();
-        this.allRecordTags = this.recordSB.getRecordTags();
+        this.allRecordTags = this.recordSB.getRecordTags().pipe(
+            tap(results => {
+                alphabeticalSorterByField(results, "name");
+            })
+        );
     }
 
     ngOnInit() {}

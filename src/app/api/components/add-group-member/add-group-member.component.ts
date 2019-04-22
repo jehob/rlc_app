@@ -21,6 +21,7 @@ import { MatDialogRef } from "@angular/material";
 import { ApiSandboxService } from "../../services/api-sandbox.service";
 import { FullGroup } from "../../models/group.model";
 import { RestrictedUser } from "../../models/user.model";
+import {alphabeticalSorterByField} from '../../../shared/other/sorter-helper';
 
 @Component({
     selector: "app-add-group-member",
@@ -43,6 +44,7 @@ export class AddGroupMemberComponent implements OnInit {
         this.apiSB
             .getOtherUsers()
             .subscribe((other_users: RestrictedUser[]) => {
+                alphabeticalSorterByField(other_users, 'name');
                 this.other_users = other_users;
                 this.checkUsersToShow();
             });

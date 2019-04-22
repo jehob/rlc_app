@@ -29,7 +29,9 @@ import { RecordMessage } from "../../../models/record_message.model";
 import { Tag } from "../../../models/tag.model";
 import { State } from "../../../../api/models/state.model";
 import { ApiSandboxService } from "../../../../api/services/api-sandbox.service";
-import {dateInPastValidator} from '../../../../statics/validators.statics';
+import { dateInPastValidator } from "../../../../statics/validators.statics";
+import { alphabeticalSorterByField } from "../../../../shared/other/sorter-helper";
+import { tap } from "rxjs/internal/operators/tap";
 
 @Component({
     selector: "app-full-record-detail",
@@ -85,7 +87,11 @@ export class FullRecordDetailComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.allCountries = this.recordSB.getOriginCountries();
-        this.allRecordTags = this.recordSB.getRecordTags();
+        this.allRecordTags = this.recordSB.getRecordTags().pipe(
+            tap(results => {
+                alphabeticalSorterByField(results, "name");
+            })
+        );
         this.allRecordStates = this.recordSB.getRecordStates();
 
         // there but not changeable
@@ -111,8 +117,7 @@ export class FullRecordDetailComponent implements OnInit, OnDestroy {
                         special_record.record_messages
                     );
 
-                    if (this.client && this.record)
-                        this.loadValues();
+                    if (this.client && this.record) this.loadValues();
                 }
             );
     }
