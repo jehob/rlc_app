@@ -66,7 +66,8 @@ export class RecordsAddEffects {
             return from(
                 this.http.post(CREATE_RECORD_API_URL, newRecord).pipe(
                     catchError(error => {
-                        return of({ error: "error at creating new record" });
+                        this.recordSB.showError('error at creating new record: ' + error.error.detail);
+                        return [];
                     }),
                     mergeMap(response => {
                         this.recordSB.successfullyCreatedRecord(response);
@@ -92,10 +93,8 @@ export class RecordsAddEffects {
                     )
                     .pipe(
                         catchError(error => {
-                            console.log(error);
-                            return of({
-                                error: "error at creating a record document"
-                            });
+                            this.recordSB.showError('error at creating new record document: ' + error.error.detail);
+                            return [];
                         }),
                         mergeMap(response => {
                             const document = RecordDocument.getRecordDocumentFromJson(
@@ -136,10 +135,8 @@ export class RecordsAddEffects {
                     })
                     .pipe(
                         catchError(error => {
-                            console.log(error);
-                            return of({
-                                error: "error at adding a record message"
-                            });
+                            this.recordSB.showError('error at creating new record message: ' + error.error.detail);
+                            return [];
                         }),
                         mergeMap((response: { error }) => {
                             if (response.error) {

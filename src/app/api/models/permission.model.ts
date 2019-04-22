@@ -157,10 +157,7 @@ export class HasPermission {
                         Number(permission_for.for_rlc)
                     );
                 } else {
-                    console.log(
-                        "error, permission_for cannot apply to multiple permission holders"
-                    );
-                    return false;
+                    throw new Error("error, permission_for cannot apply to multiple permission holders");
                 }
             }
         );

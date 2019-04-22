@@ -27,14 +27,14 @@ class EmailSender:
         :param text: the email content itself
         :return:
         """
-        from_email = 'do-not-reply@rlc-app.de'
+        from_email = 'do-not-reply@rlc-intranet.de'
         msg = EmailMultiAlternatives(subject, text, from_email, email_addresses)
         msg.send()
         # send_mail(subject, text, 'notification@rlcm.de', email_addresses, fail_silently=False)
 
     @staticmethod
     def send_html_email(email_addresses, subject: str, html_content: str, text_alternative: str):
-        from_email = 'do-not-reply@rlc-app.de'
+        from_email = 'do-not-reply@rlc-intranet.de'
         msg = EmailMultiAlternatives(subject, text_alternative, from_email, email_addresses)
         msg.attach_alternative(html_content, "text/html")
         msg.send()

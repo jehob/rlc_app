@@ -19,6 +19,9 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Actions, Effect, ofType } from "@ngrx/effects";
+import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
+import { from, of } from "rxjs";
+
 import {
     START_CREATE_USER,
     StartCreateUser,
@@ -31,7 +34,6 @@ import {
     START_LOADING_SPECIAL_FOREIGN_USER,
     SET_SPECIAL_FOREIGN_USER,
     START_LOADING_GROUPS,
-    StartLoadingGroups,
     SET_GROUPS,
     START_LOADING_SPECIAL_GROUP,
     StartLoadingSpecialGroup,
@@ -68,8 +70,6 @@ import {
     START_CHECKING_USER_ACTIVATION_LINK,
     StartCheckingUserActivationLink, START_ACTIVATING_USER, StartActivatingUser
 } from './api.actions';
-import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
-import { from, of } from "rxjs";
 import {
     CREATE_PROFILE_API_URL, GetActivateUserApiUrl, GetCheckUserActivationApiUrl,
     GetPermissionsForGroupApiURL,
@@ -146,16 +146,13 @@ export class ApiEffects {
             return action.payload;
         }),
         switchMap((user: any) => {
-            console.log("user start create");
             return from(
                 this.http.post(CREATE_PROFILE_API_URL, user).pipe(
                     catchError(error => {
-                        this.snackbar.showErrorSnackBar("error at register");
+                        this.snackbar.showErrorSnackBar("error at register" + error.error.detail);
                         return [];
                     }),
                     mergeMap((response: any) => {
-                        console.log("2");
-
                         if (!response.error) {
                             this.apiSB.showSuccessSnackBar(
                                 "successfully created account"
@@ -230,9 +227,8 @@ export class ApiEffects {
             return from(
                 this.http.get(GetSpecialProfileApiURL(id)).pipe(
                     catchError(error => {
-                        console.log(error);
                         this.snackbar.showErrorSnackBar(
-                            "error at loading user"
+                            `error at loading user: ${error.error.detail}`
                         );
                         return [];
                     }),
@@ -416,8 +412,10 @@ export class ApiEffects {
                         const rlcs = RestrictedRlc.getRestrictedRlcsFromJsonArray(
                             response
                         );
-                        if (rlcs.length === 0){
-                            this.snackbar.showErrorSnackBar("unfortunately there are no rlcs until now")
+                        if (rlcs.length === 0) {
+                            this.snackbar.showErrorSnackBar(
+                                "unfortunately there are no rlcs until now"
+                            );
                         }
                         return [
                             {
@@ -570,7 +568,6 @@ export class ApiEffects {
             return from(
                 this.http.post(GROUPS_API_URL, newGroup).pipe(
                     catchError(error => {
-                        console.log(error);
                         this.snackbar.showErrorSnackBar(
                             "error at adding new group: " + error.error.detail
                         );
@@ -599,14 +596,16 @@ export class ApiEffects {
             return from(
                 this.http.get(NEW_USER_REQUEST_API_URL).pipe(
                     catchError(error => {
-                        console.log(error);
                         this.snackbar.showErrorSnackBar(
-                            "error at loading new user requests: " + error.error.detail
+                            "error at loading new user requests: " +
+                                error.error.detail
                         );
                         return [];
                     }),
                     mergeMap((response: any) => {
-                        const requests = NewUserRequest.getNewUserRequestFromJsonArray(response);
+                        const requests = NewUserRequest.getNewUserRequestFromJsonArray(
+                            response
+                        );
                         return [
                             {
                                 type: SET_NEW_USER_REQUESTS,
@@ -627,24 +626,31 @@ export class ApiEffects {
         }),
         switchMap((newUserRequest: NewUserRequest) => {
             return from(
-                this.http.post(NEW_USER_REQUEST_ADMIT_API_URL, {id: newUserRequest.id, action: 'accept'}).pipe(
-                    catchError(error => {
-                        console.log(error);
-                        this.snackbar.showErrorSnackBar(
-                            "error at accepting new user request: " + error.error.detail
-                        );
-                        return [];
-                    }),
-                    mergeMap((response: any) => {
-                        const request = NewUserRequest.getNewUserRequestFromJson(response);
-                        return [
-                            {
-                                type: UPDATE_NEW_USER_REQUEST,
-                                payload: request
-                            }
-                        ];
+                this.http
+                    .post(NEW_USER_REQUEST_ADMIT_API_URL, {
+                        id: newUserRequest.id,
+                        action: "accept"
                     })
-                )
+                    .pipe(
+                        catchError(error => {
+                            this.snackbar.showErrorSnackBar(
+                                "error at accepting new user request: " +
+                                    error.error.detail
+                            );
+                            return [];
+                        }),
+                        mergeMap((response: any) => {
+                            const request = NewUserRequest.getNewUserRequestFromJson(
+                                response
+                            );
+                            return [
+                                {
+                                    type: UPDATE_NEW_USER_REQUEST,
+                                    payload: request
+                                }
+                            ];
+                        })
+                    )
             );
         })
     );
@@ -657,24 +663,31 @@ export class ApiEffects {
         }),
         switchMap((newUserRequest: NewUserRequest) => {
             return from(
-                this.http.post(NEW_USER_REQUEST_ADMIT_API_URL, {id: newUserRequest.id, action: 'decline'}).pipe(
-                    catchError(error => {
-                        console.log(error);
-                        this.snackbar.showErrorSnackBar(
-                            "error at accepting new user request: " + error.error.detail
-                        );
-                        return [];
-                    }),
-                    mergeMap((response: any) => {
-                        const request = NewUserRequest.getNewUserRequestFromJson(response);
-                        return [
-                            {
-                                type: UPDATE_NEW_USER_REQUEST,
-                                payload: request
-                            }
-                        ];
+                this.http
+                    .post(NEW_USER_REQUEST_ADMIT_API_URL, {
+                        id: newUserRequest.id,
+                        action: "decline"
                     })
-                )
+                    .pipe(
+                        catchError(error => {
+                            this.snackbar.showErrorSnackBar(
+                                "error at accepting new user request: " +
+                                    error.error.detail
+                            );
+                            return [];
+                        }),
+                        mergeMap((response: any) => {
+                            const request = NewUserRequest.getNewUserRequestFromJson(
+                                response
+                            );
+                            return [
+                                {
+                                    type: UPDATE_NEW_USER_REQUEST,
+                                    payload: request
+                                }
+                            ];
+                        })
+                    )
             );
         })
     );
@@ -689,9 +702,9 @@ export class ApiEffects {
             return from(
                 this.http.get(GetCheckUserActivationApiUrl(link)).pipe(
                     catchError(error => {
-                        console.log(error);
                         this.snackbar.showErrorSnackBar(
-                            "error at checking user activation link: " + error.error.detail
+                            "error at checking user activation link: " +
+                                error.error.detail
                         );
                         return [];
                     }),
@@ -713,14 +726,16 @@ export class ApiEffects {
             return from(
                 this.http.post(GetActivateUserApiUrl(link), {}).pipe(
                     catchError(error => {
-                        console.log(error);
                         this.snackbar.showErrorSnackBar(
-                            "error at checking user activation link: " + error.error.detail
+                            "error at checking user activation link: " +
+                                error.error.detail
                         );
                         return [];
                     }),
                     mergeMap((response: any) => {
-                        this.snackbar.showSuccessSnackBar("account successfully activated");
+                        this.snackbar.showSuccessSnackBar(
+                            "account successfully activated"
+                        );
                         return [];
                     })
                 )

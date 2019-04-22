@@ -40,7 +40,6 @@ export class ResetPasswordComponent implements OnInit {
         private appSB: AppSandboxService,
         private route: ActivatedRoute
     ) {
-        console.log("reset password component here");
         this.resetPasswordForm = new FormGroup(
             {
                 new_password: new FormControl("", [

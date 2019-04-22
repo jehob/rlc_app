@@ -37,7 +37,6 @@ export class StorageService {
     ) {}
 
     uploadFile(file: File, fileDir: string, finished?) {
-        console.log('file', file);
         this.http
             .get(GetUploadApiUrl(file, fileDir))
             .subscribe((response: any) => {
@@ -46,7 +45,6 @@ export class StorageService {
     }
 
     uploadFiles(files: File[], file_dir: string, finished?) {
-        // console.log('files', files);
         this.filesToUpload = files.length;
         this.filesUploaded = 0;
         this.filesUploadFinished = finished ? finished : null;
@@ -57,7 +55,6 @@ export class StorageService {
             file_names.push(file.name);
             file_types.push(file.type);
         }
-        console.log('names', file_names);
 
         this.http
             .post(UPLOAD_SIGNING_BASE_API_URL, {
@@ -96,7 +93,6 @@ export class StorageService {
         v4form.append("file", file);
 
         this.http.post(s3Data.url, v4form).subscribe((response: any) => {
-            //console.log("posting response:", response);
             if (!response) {
                 callbackFn();
             }

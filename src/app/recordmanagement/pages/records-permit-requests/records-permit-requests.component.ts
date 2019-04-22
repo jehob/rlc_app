@@ -40,7 +40,6 @@ export class RecordsPermitRequestsComponent implements OnInit {
     }
 
     permitRequest(request: RecordPermissionRequest){
-        //console.log('request to accept:', request);
         this.recordSB.admitRecordPermissionRequest(request);
     }
 

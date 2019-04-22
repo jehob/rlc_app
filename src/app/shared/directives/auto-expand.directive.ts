@@ -16,23 +16,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import {Directive, ElementRef, HostListener} from '@angular/core';
+import { Directive, ElementRef, HostListener } from "@angular/core";
 
 @Directive({
     selector: "[appAutoExpand]"
 })
 export class AutoExpandDirective {
-    constructor(private el: ElementRef) {
+    constructor(private el: ElementRef) {}
 
-    }
-
-    @HostListener('mousedown') onMouseDown() {
-        console.log('mousedown');
+    @HostListener("mousedown")
+    onMouseDown() {
         this.textAreaAdjust(this.el);
     }
 
-    @HostListener('keydown') onKeyDown() {
-        console.log('keydown');
+    @HostListener("keydown")
+    onKeyDown() {
         this.textAreaAdjust(this.el);
     }
 

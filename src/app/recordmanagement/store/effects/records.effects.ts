@@ -72,13 +72,12 @@ export class RecordsEffects {
                     })
                     .pipe(
                         catchError(error => {
-                            console.log('error at saving record', error);
-                            return of({
-                                error: "error at saving record"
-                            });
+                            this.recordSB.showError(
+                                `error at loading records: ${error.error.detail}`
+                            );
+                            return [];
                         }),
                         mergeMap((response: any) => {
-                            // console.log('saved record effect: ', response);
                             this.recordSB.successfullySavedRecord(response);
                             return [];
                         })
@@ -101,10 +100,10 @@ export class RecordsEffects {
                     })
                     .pipe(
                         catchError(error => {
-                            console.log(error);
-                            return of({
-                                error: "error at adding a record message"
-                            });
+                            this.recordSB.showError(
+                                `error at loading records: ${error.error.detail}`
+                            );
+                            return [];
                         }),
                         mergeMap((response: { error }) => {
                             if (response.error) {
@@ -125,8 +124,6 @@ export class RecordsEffects {
             return action.payload;
         }),
         mergeMap((record: RestrictedRecord) => {
-            //console.log("effect fired");
-            // TODO
             return from(
                 this.http
                     .post(
@@ -134,9 +131,8 @@ export class RecordsEffects {
                         {}
                     )
                     .pipe(
-                        //this.http.post(GetRecordPermissionRequestApiUrl('7172'), {}).pipe(
                         catchError(error => {
-                            this.recordSB.showError(error.error.detail);
+                            this.recordSB.showError(`error at requesting record permission: ${error.error.detail}`);
                             return [];
                         }),
                         mergeMap((response: { error }) => {
@@ -158,7 +154,6 @@ export class RecordsEffects {
             return action.payload;
         }),
         mergeMap((request: RecordPermissionRequest) => {
-             console.log("action");
             return from(
                 this.http
                     .post(RECORD_PERMISSIONS_LIST_API_URL, {
@@ -167,7 +162,7 @@ export class RecordsEffects {
                     })
                     .pipe(
                         catchError(error => {
-                            this.recordSB.showError(error.error.detail);
+                            this.recordSB.showError(`error at admitting record permission request: ${error.error.detail}`);
                             return [];
                         }),
                         mergeMap((response: { error }) => {
@@ -193,7 +188,6 @@ export class RecordsEffects {
             return action.payload;
         }),
         mergeMap((request: RecordPermissionRequest) => {
-            console.log("action");
             return from(
                 this.http
                     .post(RECORD_PERMISSIONS_LIST_API_URL, {
@@ -202,7 +196,7 @@ export class RecordsEffects {
                     })
                     .pipe(
                         catchError(error => {
-                            this.recordSB.showError(error.error.detail);
+                            this.recordSB.showError(`error at declining record permission request: ${error.error.detail}`);
                             return [];
                         }),
                         mergeMap((response: { error }) => {

@@ -156,8 +156,6 @@ export class CreateRecordComponent implements OnInit {
     }
 
     onAddRecordClick() {
-        // console.log("onAddRecordClick");
-        // console.log(this.selectedConsultants);
         let invalid = false;
         if (!this.selectedRecordTags || this.selectedRecordTags.length < 1) {
             this.recordTagErrors = { null: "true" };

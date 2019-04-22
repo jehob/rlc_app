@@ -79,7 +79,6 @@ export class AddHasPermissionForComponent implements OnInit {
     }
 
     onSelectedPermissionChanged(selectedPermission: Permission): void {
-        console.log("new selected permission", selectedPermission);
         this.selectedPermission = selectedPermission;
     }
 

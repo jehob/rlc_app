@@ -63,7 +63,6 @@ export class AutocompleteComponent implements OnInit, OnChanges {
     @Input()
     valueToShow: string;
 
-    //@ViewChild('autocomplete') autocompleteRef: ElementRef;
     @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
 
     constructor() {
@@ -79,7 +78,6 @@ export class AutocompleteComponent implements OnInit, OnChanges {
             this.noErrorIfNotInAllValues !== undefined
         );
 
-        //console.log('value to show', this.valueToShow);
         if (!this.valueToShow){
             this.valueToShow = 'name';
         }
@@ -101,7 +99,6 @@ export class AutocompleteComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        // console.log("changes", changes);
         if (changes.errors) {
             this.valueForm.controls["value"].setErrors(
                 changes.errors.currentValue
@@ -125,7 +122,6 @@ export class AutocompleteComponent implements OnInit, OnChanges {
     }
 
     display(filterable?: Filterable) {
-        //console.log('display function');
         return filterable ? filterable.getFilterableProperty() : undefined;
     }
 

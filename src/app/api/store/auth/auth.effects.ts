@@ -30,19 +30,24 @@ import {
     TRY_LOGIN,
     TryLogin,
     FORGOT_PASSWORD,
-    ForgotPassword, RESET_PASSWORD, ResetPassword
-} from './auth.actions';
+    ForgotPassword,
+    RESET_PASSWORD,
+    ResetPassword
+} from "./auth.actions";
 import LogRocket from "logrocket";
 import {
-    FORGOT_PASSWORD_API_URL, GetResetPasswordApiUrl,
+    FORGOT_PASSWORD_API_URL,
+    GetResetPasswordApiUrl,
     LOGIN_API_URL
-} from '../../../statics/api_urls.statics';
+} from "../../../statics/api_urls.statics";
 import {
     SET_ALL_PERMISSIONS,
     SET_RLC,
     SET_USER,
-    SET_USER_PERMISSIONS, SET_USER_RECORD_STATES, SET_USER_STATES
-} from '../api.actions';
+    SET_USER_PERMISSIONS,
+    SET_USER_RECORD_STATES,
+    SET_USER_STATES
+} from "../api.actions";
 import { AuthGuardService } from "../../services/auth-guard.service";
 import { FullUser } from "../../models/user.model";
 import { RecordsSandboxService } from "../../../recordmanagement/services/records-sandbox.service";
@@ -52,7 +57,7 @@ import { RestrictedRlc } from "../../models/rlc.model";
 import { AppSandboxService } from "../../services/app-sandbox.service";
 import { RecordPermissionRequest } from "../../../recordmanagement/models/record_permission.model";
 import { UPDATE_RECORD_PERMISSION_REQUEST } from "../../../recordmanagement/store/actions/records.actions";
-import {LOGIN_FRONT_URL} from '../../../statics/frontend_links.statics';
+import { LOGIN_FRONT_URL } from "../../../statics/frontend_links.statics";
 
 @Injectable()
 export class AuthEffects {
@@ -76,8 +81,9 @@ export class AuthEffects {
             return from(
                 this.http.post(LOGIN_API_URL, authData).pipe(
                     catchError(error => {
-                        console.log("error", error);
-                        this.apiSB.showErrorSnackBar(`Login not successfull: ${error.error.detail}`);
+                        this.apiSB.showErrorSnackBar(
+                            `Login not successfull: ${error.error.detail}`
+                        );
                         return [];
                     }),
                     mergeMap(
@@ -92,7 +98,6 @@ export class AuthEffects {
                             user_states: any;
                             user_record_states;
                         }) => {
-                            //console.log('successfull login');
                             localStorage.setItem("token", response.token);
                             if (this.guard.lastVisitedUrl)
                                 this.router.navigate([
@@ -148,13 +153,13 @@ export class AuthEffects {
                     .post(FORGOT_PASSWORD_API_URL, { email: payload.email })
                     .pipe(
                         catchError(error => {
-                            console.log('error', error);
                             this.recordSB.showError(error.error.detail);
                             return [];
                         }),
-                        mergeMap((response) => {
-                            console.log('response: ', response);
-                            this.apiSB.showSuccessSnackBar("a reactivation email was sent to the given email address");
+                        mergeMap(response => {
+                            this.apiSB.showSuccessSnackBar(
+                                "a reactivation email was sent to the given email address"
+                            );
                             this.router.navigate([LOGIN_FRONT_URL]);
                             return [];
                         })
@@ -169,18 +174,18 @@ export class AuthEffects {
         map((action: ResetPassword) => {
             return action.payload;
         }),
-        mergeMap((payload: { new_password: string, link_id: string }) => {
+        mergeMap((payload: { new_password: string; link_id: string }) => {
             return from(
                 this.http
-                    .post(GetResetPasswordApiUrl(payload.link_id), { new_password: payload.new_password })
+                    .post(GetResetPasswordApiUrl(payload.link_id), {
+                        new_password: payload.new_password
+                    })
                     .pipe(
                         catchError(error => {
-                            console.log('error', error);
                             this.recordSB.showError(error.error.detail);
                             return [];
                         }),
-                        mergeMap((response) => {
-                            console.log('response: ', response);
+                        mergeMap(response => {
                             this.apiSB.showSuccessSnackBar("password resetted");
                             this.router.navigate([LOGIN_FRONT_URL]);
                             return [];

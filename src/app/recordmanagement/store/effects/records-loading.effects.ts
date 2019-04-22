@@ -303,7 +303,6 @@ export class RecordsLoadingEffects {
             return from(
                 this.http.get(RECORD_PERMISSIONS_LIST_API_URL).pipe(
                     catchError(error => {
-                        console.log(error);
                         this.snackbarService.showErrorSnackBar(
                             `error at loading record permission list: ${
                                 error.error.detail

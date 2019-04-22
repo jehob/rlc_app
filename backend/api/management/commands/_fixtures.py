@@ -154,7 +154,11 @@ class Fixtures:
         tags = [('Pass',), ('Passersatzpapier',), ('Geburtsurkunde',), ('Heiratsurkunde',), ('Ankunftsnachweis',),
                 ('Duldung',), ('Aufenthaltsgestattung',), ('Aufenthaltstitel',), ('Bescheid (Ablehnung)',),
                 ('Bescheid (Flüchtling)',), ('Bescheid (subsidiärer Schutz)',), ('Bescheid (Abschiebeverbote)',),
-                ('Bescheid (Sozialleistungen)',), ('Bescheid (Arbeiten)',), ('Bescheid (Wohnen)',)]
+                ('Bescheid (Sozialleistungen)',), ('Bescheid (Arbeiten)',), ('Bescheid (Wohnen)',),
+                ('Widerspruch',), ('Antwortschreiben',), ('Erwiderung',), ('Sachstandsanfrage',), ('Klageschrift',),
+                ('Akteneinsicht',), ('Anfrage',), ('Terminvereinbarung',), ('Attest',), ('Verschwiegenheitserklärung',),
+                ('Datenschutzerklärung',), ('Erklärung',), ('Vertrag',), ('Antrag',), ('Zeugnis',),
+                ('Zertifikat',), ('Vollmacht',)]
         for tag in tags:
             AddMethods.add_record_document_tag(tag)
 

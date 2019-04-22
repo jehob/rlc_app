@@ -252,7 +252,6 @@ export class RecordsSandboxService {
             origin_country: originCountry.id,
         };
 
-        //console.log('new record which will be send to the backend', newRecord);
         this.recordStore.dispatch(new StartAddingNewRecord(newRecord));
     }
 
