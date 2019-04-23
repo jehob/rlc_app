@@ -18,11 +18,13 @@
 
 import { Component, OnInit } from "@angular/core";
 import { Observable } from "rxjs";
-import {Router} from '@angular/router';
+import { Router } from "@angular/router";
+import { tap } from "rxjs/internal/operators/tap";
 
 import { RestrictedUser } from "../../models/user.model";
 import { ApiSandboxService } from "../../services/api-sandbox.service";
-import {GetProfileFrontUrl} from '../../../statics/frontend_links.statics';
+import { GetProfileFrontUrl } from "../../../statics/frontend_links.statics";
+import {alphabeticalSorterByField} from '../../../shared/other/sorter-helper';
 
 @Component({
     selector: "app-profiles-list",
@@ -36,10 +38,16 @@ export class ProfilesListComponent implements OnInit {
 
     ngOnInit() {
         this.apiSB.startLoadingOtherUsers();
-        this.otherUsers = this.apiSB.getOtherUsers();
+
+        this.otherUsers = this.apiSB.getOtherUsers().pipe(
+            tap(results => {
+                alphabeticalSorterByField(results, 'name');
+            })
+        );
     }
 
-    onUserClick(user: RestrictedUser){
+
+    onUserClick(user: RestrictedUser) {
         this.router.navigateByUrl(GetProfileFrontUrl(user));
     }
 }

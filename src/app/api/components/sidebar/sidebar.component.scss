@@ -42,11 +42,13 @@
     list-style-type: none;
     padding-left: 0;
     margin: 0;
+    overflow: scroll;
+    height: calc(100% - 175px);
 }
 .drawer-navigation li {
     margin: 5px;
-    height: 48px;
-    line-height: 48px;
+    height: 40px;
+    line-height: 40px;
     border-radius: 5px
 }
 .drawer-navigation li a {
@@ -74,7 +76,7 @@ mat-icon{
 
 .sidebar__nav-holder {
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     justify-content: space-between;
     height: 100%;
 }

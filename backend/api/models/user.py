@@ -121,6 +121,9 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']  # email already in there, other are default
 
+    # class Meta:
+    #     ordering = ['name']
+
     def get_full_name(self):
         return self.name
 

@@ -135,12 +135,12 @@ class Fixtures:
 
     @staticmethod
     def create_real_tags():
-        tags = [('Familiennachzug',), ('Dublin III',), ('Arbeitserlaubnis',), ('Flüchtlingseigenschaft',),
+        tags = [('Familiennachzug',), ('Dublin IV',), ('Arbeitserlaubnis',), ('Flüchtlingseigenschaft',),
                 ('subsidiärer Schutz',), ('Eheschließung',), ('Verlobung',),
                 ('illegale Ausreise aus dem Bundesgebiet',), ('Untertauchen',), ('Kinder anerkennen',), ('Ausbildung',),
                 ('Geburt ',), ('Eines Kindes im Asylverfahren',), ('Duldung',), ('Ausbildungsduldung',), ('Visum',),
                 ('Anhörung',), ('Wechsel der Unterkunft',), ('Wohnsitzauflage',), ('Folgeantrag',), ('Zweitantrag',),
-                ('Unterbringung im Asylverfahren',), ('Widerruf und Rücknahme der Asylberechtigung',),
+                ('Unterbringung im Asylverfahren',), ('Widerruf der Asylberechtigung',), ('Rücknahme der Asyberechtigung',),
                 ('Passbeschaffung',), ('Mitwirkungspflichten',), ('Nichtbetreiben des Verfahrens',),
                 ('Krankheit im Asylverfahren',), ('Familienasyl',), ('UmF',),
                 ('Familienzusammenführung nach Dublin III',), ('Negativbescheid',), ('Relocation',), ('Resettlement',),

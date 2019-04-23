@@ -21,5 +21,5 @@ rcssmin==1.0.6
 rjsmin==1.0.12
 s3transfer==0.1.13
 sqlparse==0.3.0
-urllib3==1.24.1
+urllib3==1.24.2
 whitenoise==3.3.1
