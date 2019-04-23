@@ -1,6 +1,6 @@
 /*
  * rlcapp - record and organization management software for refugee law clinics
- * Copyright (C) 2018  Dominik Walser
+ * Copyright (C) 2019  Dominik Walser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -41,8 +41,6 @@ export class RecordDocumentItemComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log('document arrived', this.record_document);
-        console.log('tagged', this.record_document.tags);
         this.selectedTags = this.record_document.tags;
     }
 
@@ -52,7 +50,6 @@ export class RecordDocumentItemComponent implements OnInit {
     }
 
     selectedDocumentTagsChanged(selectedTags: Tag[]){
-        console.log('changed', selectedTags);
         this.recordSB.startSettingDocumentTags(selectedTags, this.record_document.id.toString());
     }
 }

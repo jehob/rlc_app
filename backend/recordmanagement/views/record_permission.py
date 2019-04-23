@@ -1,5 +1,5 @@
 #  rlcapp - record and organization management software for refugee law clinics
-#  Copyright (C) 2018  Dominik Walser
+#  Copyright (C) 2019  Dominik Walser
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as
@@ -14,6 +14,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
+
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -23,7 +24,7 @@ import pytz
 from backend.recordmanagement import models, serializers
 from backend.static import error_codes
 from backend.api.errors import CustomError
-from backend.static.permissions import PERMISSION_CAN_PERMIT_RECORD_PERMISSION_REQUESTS
+from backend.static import permissions
 
 
 class RecordPermissionViewSet(viewsets.ModelViewSet):
@@ -33,6 +34,8 @@ class RecordPermissionViewSet(viewsets.ModelViewSet):
 
 class RecordPermissionRequestViewSet(APIView):
     def post(self, request, id):
+        if not request.user.has_permission(permissions.PERMISSION_VIEW_RECORDS_RLC, for_rlc=request.user.rlc):
+            raise CustomError(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
         try:
             record = models.Record.objects.get(pk=id)
         except Exception as e:
@@ -40,9 +43,8 @@ class RecordPermissionRequestViewSet(APIView):
         if record.user_has_permission(request.user):
             raise CustomError(error_codes.ERROR__RECORD__PERMISSION__ALREADY_WORKING_ON)
 
-        if models.RecordPermission.objects.filter(record=record, request_from=request.user).count() >= 1:
+        if models.RecordPermission.objects.filter(record=record, request_from=request.user, state='re').count() >= 1:
             raise CustomError(error_codes.ERROR__RECORD__PERMISSION__ALREADY_REQUESTED)
-        # TODO: check permission can_view_records?
         can_edit = False
         if 'can_edit' in request.data:
             can_edit = request.data['can_edit']
@@ -60,11 +62,11 @@ class RecordPermissionAdmitViewSet(APIView):
         :return:
         """
         user = request.user
-        if not user.has_permission(PERMISSION_CAN_PERMIT_RECORD_PERMISSION_REQUESTS, for_rlc=user.rlc):
+        if not user.has_permission(permissions.PERMISSION_PERMIT_RECORD_PERMISSION_REQUESTS_RLC, for_rlc=user.rlc):
             raise CustomError(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
         requests = models.RecordPermission.objects.filter(record__from_rlc=user.rlc)
-        if requests.count() == 0:
-            raise CustomError(error_codes)
+        # if requests.count() == 0:
+        #     raise CustomError(error_codes)
         return Response(serializers.RecordPermissionSerializer(requests, many=True).data)
 
     def post(self, request):
@@ -74,7 +76,7 @@ class RecordPermissionAdmitViewSet(APIView):
         :return:
         """
         user = request.user
-        if not user.has_permission(PERMISSION_CAN_PERMIT_RECORD_PERMISSION_REQUESTS, for_rlc=user.rlc):
+        if not user.has_permission(permissions.PERMISSION_PERMIT_RECORD_PERMISSION_REQUESTS_RLC, for_rlc=user.rlc):
             raise CustomError(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
         if 'id' not in request.data:
             raise CustomError(error_codes.ERROR__RECORD__PERMISSION__ID_NOT_PROVIDED)
@@ -84,7 +86,7 @@ class RecordPermissionAdmitViewSet(APIView):
             raise CustomError(error_codes.ERROR__RECORD__PERMISSION__ID_NOT_FOUND)
 
         if 'action' not in request.data:
-            raise CustomError(error_codes.ERROR__RECORD__PERMISSION__NO_ACTION_PROVIDED)
+            raise CustomError(error_codes.ERROR__API__NO_ACTION_PROVIDED)
         action = request.data['action']
         if action != 'accept' and action != 'decline':
             raise CustomError(error_codes.ERROR__RECORD__PERMISSION__NO_VALID_ACTION_PROVIDED)

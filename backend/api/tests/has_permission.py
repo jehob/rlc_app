@@ -1,5 +1,5 @@
 #  rlcapp - record and organization management software for refugee law clinics
-#  Copyright (C) 2018  Dominik Walser
+#  Copyright (C) 2019  Dominik Walser
 # 
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as
@@ -111,7 +111,7 @@ class HasPermissionTests(TransactionTestCase):
             'group_has_permission': self.group1.id,
             'permission_for_group': self.group1.id
         }
-        self.client.post(self.base_url, to_post)
+        response = self.client.post(self.base_url, to_post)
         response = self.client.post(self.base_url, to_post)
         after = HasPermission.objects.count()
 

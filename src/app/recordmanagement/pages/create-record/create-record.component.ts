@@ -1,6 +1,6 @@
 /*
  * rlcapp - record and organization management software for refugee law clinics
- * Copyright (C) 2018  Dominik Walser
+ * Copyright (C) 2019  Dominik Walser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -17,7 +17,7 @@
  ******************************************************************************/
 
 import { Component, OnInit } from "@angular/core";
-import {FormControl, FormGroup,  Validators} from '@angular/forms';
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { RecordsSandboxService } from "../../services/records-sandbox.service";
 import { MatDialog } from "@angular/material";
 import { SelectClientDialogComponent } from "../../components/select-client-dialog/select-client-dialog.component";
@@ -26,6 +26,9 @@ import { OriginCountry } from "../../models/country.model";
 import { RestrictedUser } from "../../../api/models/user.model";
 import { Tag } from "../../models/tag.model";
 import { Observable } from "rxjs";
+import { dateInPastValidator } from "../../../statics/validators.statics";
+import { tap } from "rxjs/internal/operators/tap";
+import { alphabeticalSorterByField } from "../../../shared/other/sorter-helper";
 
 @Component({
     selector: "app-add-record",
@@ -35,8 +38,6 @@ import { Observable } from "rxjs";
 export class CreateRecordComponent implements OnInit {
     createRecordForm: FormGroup;
     client: FullClient;
-    originCountry: OriginCountry;
-    givenOriginCountry: OriginCountry;
 
     allConsultants: Observable<RestrictedUser[]>;
     consultantErrors: any;
@@ -44,6 +45,8 @@ export class CreateRecordComponent implements OnInit {
 
     allCountries: Observable<OriginCountry[]>;
     originCountryError: any;
+    originCountry: OriginCountry;
+    givenOriginCountry: OriginCountry;
 
     allRecordTags: Observable<Tag[]>;
     recordTagErrors: any;
@@ -57,8 +60,11 @@ export class CreateRecordComponent implements OnInit {
         date.setFullYear(date.getFullYear() - 20);
 
         this.createRecordForm = new FormGroup({
-            first_contact_date: new FormControl(new Date()),
-            client_birthday: new FormControl("1980-03-27"), //date
+            first_contact_date: new FormControl(
+                new Date(),
+                dateInPastValidator
+            ),
+            client_birthday: new FormControl("1980-03-27", dateInPastValidator), //date
             client_name: new FormControl("", [Validators.required]),
             client_phone_number: new FormControl(""),
             client_note: new FormControl(""),
@@ -68,9 +74,17 @@ export class CreateRecordComponent implements OnInit {
 
         this.onClientBirthdayChanges();
 
-        this.allConsultants = this.recordSB.getConsultants();
+        this.allConsultants = this.recordSB.getConsultants().pipe(
+            tap(results => {
+                alphabeticalSorterByField(results, "name");
+            })
+        );
         this.allCountries = this.recordSB.getOriginCountries();
-        this.allRecordTags = this.recordSB.getRecordTags();
+        this.allRecordTags = this.recordSB.getRecordTags().pipe(
+            tap(results => {
+                alphabeticalSorterByField(results, "name");
+            })
+        );
     }
 
     ngOnInit() {}
@@ -155,8 +169,6 @@ export class CreateRecordComponent implements OnInit {
     }
 
     onAddRecordClick() {
-        // console.log("onAddRecordClick");
-        // console.log(this.selectedConsultants);
         let invalid = false;
         if (!this.selectedRecordTags || this.selectedRecordTags.length < 1) {
             this.recordTagErrors = { null: "true" };
@@ -171,6 +183,7 @@ export class CreateRecordComponent implements OnInit {
             this.recordSB.createNewRecord(
                 this.createRecordForm.value,
                 this.client,
+                this.originCountry,
                 this.selectedConsultants,
                 this.selectedRecordTags
             );

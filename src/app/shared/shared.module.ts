@@ -1,6 +1,6 @@
 /*
  * rlcapp - record and organization management software for refugee law clinics
- * Copyright (C) 2018  Dominik Walser
+ * Copyright (C) 2019  Dominik Walser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -16,12 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { NgModule } from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { ChipAutocompleteComponent } from "./components/chip-autocomplete/chip-autocomplete.component";
-import { CustomMaterialModule } from "../custom-material.module";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { AutocompleteComponent } from "./components/autocomplete/autocomplete.component";
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {ChipAutocompleteComponent} from './components/chip-autocomplete/chip-autocomplete.component';
+import {CustomMaterialModule} from '../custom-material.module';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {AutocompleteComponent} from './components/autocomplete/autocomplete.component';
+import {GetColorOnHoverDirective} from './directives/get-color-on-hover.directive';
+import { AutoExpandDirective } from './directives/auto-expand.directive';
 
 @NgModule({
     imports: [
@@ -30,12 +32,15 @@ import { AutocompleteComponent } from "./components/autocomplete/autocomplete.co
         FormsModule,
         ReactiveFormsModule,
     ],
-    declarations: [ChipAutocompleteComponent, AutocompleteComponent],
+    declarations: [ChipAutocompleteComponent, AutocompleteComponent, GetColorOnHoverDirective, AutoExpandDirective],
     exports: [
         CommonModule,
         CustomMaterialModule,
         ChipAutocompleteComponent,
         AutocompleteComponent,
+        GetColorOnHoverDirective,
+        AutoExpandDirective
     ]
 })
-export class SharedModule {}
+export class SharedModule {
+}

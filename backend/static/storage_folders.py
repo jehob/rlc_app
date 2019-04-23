@@ -1,5 +1,5 @@
 #  rlcapp - record and organization management software for refugee law clinics
-#  Copyright (C) 2018  Dominik Walser
+#  Copyright (C) 2019  Dominik Walser
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as
@@ -14,20 +14,14 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-import re
-from backend.static.regex_validators import RECORD_STORAGE_REGEX
 from backend.recordmanagement.models import Record
-from backend.static.error_codes import ERROR__RECORD__RECORD__NOT_EXISTING, ERROR__API__PERMISSION__INSUFFICIENT
+from backend.static.regex_validators import is_storage_folder_of_record
 
 STORAGE_FOLDER_PROFILE_PICTURES = "profile_pictures/"
 
 
 def get_storage_folder_record_document(rlc_id, record_id):
     return 'rlcs/' + str(rlc_id) + '/records/' + str(record_id) + '/'
-
-
-def is_storage_folder_of_record(dir):
-    return bool(re.match(RECORD_STORAGE_REGEX, dir))
 
 
 def user_has_permission(file_dir, user):

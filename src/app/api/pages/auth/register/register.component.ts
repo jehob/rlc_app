@@ -1,6 +1,6 @@
 /*
  * rlcapp - record and organization management software for refugee law clinics
- * Copyright (C) 2018  Dominik Walser
+ * Copyright (C) 2019  Dominik Walser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -17,16 +17,17 @@
  ******************************************************************************/
 
 import { Component, OnInit } from "@angular/core";
-import {
-    AbstractControl,
-    FormControl,
-    FormGroup,
-    ValidatorFn,
-    Validators
-} from "@angular/forms";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+
 import { MatSnackBar } from "@angular/material";
 import { ApiSandboxService } from "../../../services/api-sandbox.service";
 import { RestrictedRlc } from "../../../models/rlc.model";
+import {
+    dateInPastValidator,
+    matchValidator,
+    passwordValidator
+} from "../../../../statics/validators.statics";
+import { CustomErrorStateMatcher } from "../../../../statics/errror_state_matcher.statics";
 
 @Component({
     selector: "app-register",
@@ -34,16 +35,22 @@ import { RestrictedRlc } from "../../../models/rlc.model";
     styleUrls: ["./register.component.scss"]
 })
 export class RegisterComponent implements OnInit {
+    // TODO: refactor this
     userForm: FormGroup;
     allRlcs: RestrictedRlc[] = [];
+    errorStateMatcher = new CustomErrorStateMatcher();
 
     constructor(
         private snackBar: MatSnackBar,
         private apiSB: ApiSandboxService
     ) {
+
+    }
+
+    ngOnInit() {
+        this.apiSB.startLoadingRlcs();
         const date = new Date();
         date.setFullYear(date.getFullYear() - 20);
-
         this.userForm = new FormGroup(
             {
                 email: new FormControl("", [
@@ -53,27 +60,25 @@ export class RegisterComponent implements OnInit {
                 name: new FormControl("", Validators.required),
                 password: new FormControl("", [
                     Validators.required,
-                    this.passwordValidator()
+                    passwordValidator
                 ]),
                 password_confirm: new FormControl("", [Validators.required]),
                 phone_number: new FormControl(""),
                 street: new FormControl(""),
                 postal_code: new FormControl(""),
                 city: new FormControl(""),
-                birthday: new FormControl(date),
+                birthday: new FormControl(date, [dateInPastValidator]),
                 rlc: new FormControl("", [Validators.required])
             },
-            this.passwordMatchValidator
+            matchValidator("password", "password_confirm")
         );
 
-        this.apiSB.getAllRlcs().subscribe((response: any) => {
-            this.allRlcs = RestrictedRlc.getRestrictedRlcsFromJsonArray(
-                response
-            );
+        this.apiSB.getAllRlcs().subscribe((rlcs: RestrictedRlc[]) => {
+            if (rlcs) {
+                this.allRlcs = rlcs;
+            }
         });
     }
-
-    ngOnInit() {}
 
     onRegisterClick() {
         if (this.userForm.errors && this.userForm.errors.mismatch) {
@@ -88,7 +93,9 @@ export class RegisterComponent implements OnInit {
                 name: values.name,
                 email: values.email,
                 password: values.password,
-                birthday: ApiSandboxService.transformDate(values.birthday),
+                birthday: ApiSandboxService.transformDateToString(
+                    values.birthday
+                ),
                 rlc: values.rlc
             };
             if (values.phone_number !== "")
@@ -98,31 +105,7 @@ export class RegisterComponent implements OnInit {
                 user["postal_code"] = values.postal_code;
             if (values.city !== "") user["city"] = values.city;
 
-
             this.apiSB.registerUser(user);
         }
-    }
-
-    passwordMatchValidator(g: FormGroup) {
-        return g.get("password").value === g.get("password_confirm").value
-            ? null
-            : { mismatch: true };
-    }
-
-    passwordValidator(): ValidatorFn {
-        return (control: AbstractControl): { [key: string]: any } | null => {
-            const password: string = control.value;
-            const hasNumber = /\d/.test(password);
-            const hasUpper = /[A-Z]/.test(password);
-            const hasLower = /[a-z]/.test(password);
-            const hasSpecial = /[$@!%*?&+=#'"`\/<>,.^()[\]\\|{}]/.test(
-                password
-            );
-            const length = password.length >= 9;
-            if (!hasNumber || !hasUpper || !hasLower || !hasSpecial)
-                return { weak: "true" };
-            else if (!length) return { short: "true" };
-            return null;
-        };
     }
 }

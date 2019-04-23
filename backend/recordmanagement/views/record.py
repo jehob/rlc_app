@@ -1,5 +1,5 @@
 #  rlcapp - record and organization management software for refugee law clinics
-#  Copyright (C) 2018  Dominik Walser
+#  Copyright (C) 2019  Dominik Walser
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as
@@ -14,19 +14,22 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
+
+import os
+from datetime import datetime
+
+import pytz
+from django.db.models import Q
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import status
-from django.db.models import Q
-import os
 
-from backend.recordmanagement import models, serializers
+from backend.api.errors import CustomError
 from backend.api.models import UserProfile
 from backend.api.other_functions.emails import EmailSender
-from backend.static.permissions import PERMISSION_VIEW_RECORDS_FULL_DETAIL
-from backend.static.error_codes import *
-from backend.api.errors import CustomError
+from backend.recordmanagement import models, serializers
+from backend.static import error_codes
+from backend.static.permissions import PERMISSION_VIEW_RECORDS_FULL_DETAIL_RLC
 
 
 class RecordsListViewSet(viewsets.ViewSet):
@@ -44,20 +47,21 @@ class RecordsListViewSet(viewsets.ViewSet):
             for part in parts:
                 consultants = UserProfile.objects.filter(name__icontains=part)
                 entries = entries.filter(
-                    Q(tagged__name__icontains=part) | Q(note__icontains=part) | Q(working_on_record__in=consultants)).distinct()
+                    Q(tagged__name__icontains=part) | Q(note__icontains=part) | Q(
+                        working_on_record__in=consultants)).distinct()
             serializer = serializers.RecordFullDetailSerializer(entries, many=True)
             return Response(serializer.data)
 
-        entries = models.Record.objects.filter(from_rlc=user.rlc)
-        # entries = models.Record.objects.filter_by_rlc(user.rlc)
+        # entries = models.Record.objects.filter(from_rlc=user.rlc)
+        entries = models.Record.objects.filter_by_rlc(user.rlc)
         for part in parts:
             consultants = UserProfile.objects.filter(name__icontains=part)
             entries = entries.filter(
-                Q(tagged__name__icontains=part) | Q(note__icontains=part) | Q(working_on_record__in=consultants)).distinct()
-        # entries = entries.filter_by_search_parts(parts)
+                Q(tagged__name__icontains=part) | Q(note__icontains=part) | Q(
+                    working_on_record__in=consultants)).distinct()
 
         records = []
-        if user.has_permission(PERMISSION_VIEW_RECORDS_FULL_DETAIL, for_rlc=user.rlc):
+        if user.has_permission(PERMISSION_VIEW_RECORDS_FULL_DETAIL_RLC, for_rlc=user.rlc):
             queryset = entries
             serializer = serializers.RecordFullDetailSerializer(queryset, many=True)
             records += serializer.data
@@ -66,11 +70,7 @@ class RecordsListViewSet(viewsets.ViewSet):
             serializer = serializers.RecordFullDetailSerializer(queryset, many=True)
             records += serializer.data
 
-            # queryset = entries.exclude(
-            #     id__in=user.working_on_record.values_list('id', flat=True)).distinct()
-            a = list(entries)
             queryset = entries.get_no_access_records(user)
-            b = list(queryset)
             serializer = serializers.RecordNoDetailSerializer(queryset, many=True)
             records += serializer.data
         return Response(records)
@@ -93,13 +93,14 @@ class RecordsListViewSet(viewsets.ViewSet):
         return Response(serializers.RecordFullDetailSerializer(record).data)
 
     def retrieve(self, request, pk=None):
+        # TODO: deprecated?
         try:
-            record = models.Record.objects.get(pk=id)
+            record = models.Record.objects.get(pk=pk)  # changed
         except Exception as e:
-            raise CustomError(ERROR__RECORD__DOCUMENT__NOT_FOUND)
+            raise CustomError(error_codes.ERROR__RECORD__DOCUMENT__NOT_FOUND)
 
         if request.user.rlc != record.from_rlc:
-            raise CustomError(ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC)
+            raise CustomError(error_codes.ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC)
         if record.user_has_permission(request.user):
             serializer = serializers.RecordFullDetailSerializer(record)
         else:
@@ -115,7 +116,7 @@ class RecordViewSet(APIView):
             try:
                 client = models.Client.objects.get(pk=data['client_id'])
             except:
-                raise CustomError(ERROR__RECORD__CLIENT__NOT_EXISTING)
+                raise CustomError(error_codes.ERROR__RECORD__CLIENT__NOT_EXISTING)
             client.note = data['client_note']
             client.phone_number = data['client_phone_number']
             client.save()
@@ -123,11 +124,18 @@ class RecordViewSet(APIView):
             client = models.Client(name=data['client_name'], phone_number=data['client_phone_number'],
                                    birthday=data['client_birthday'], note=data['client_note'])
             client.save()
+        try:
+            origin = models.OriginCountry.objects.get(pk=data['origin_country'])
+        except:
+            raise CustomError(error_codes.ERROR__RECORD__ORIGIN_COUNTRY__NOT_FOUND)
+        client.origin_country = origin
+        client.save()
 
         record = models.Record(client_id=client.id, first_contact_date=data['first_contact_date'],
                                last_contact_date=data['first_contact_date'], record_token=data['record_token'],
                                note=data['record_note'], creator_id=request.user.id, from_rlc_id=rlc.id, state="op")
         record.save()
+
         for tag_id in data['tags']:
             record.tagged.add(models.RecordTag.objects.get(pk=tag_id))
         for user_id in data['consultants']:
@@ -141,17 +149,20 @@ class RecordViewSet(APIView):
             else:
                 url = 'no url, please contact the administrator'
 
-            EmailSender.send_email_notification((actual_consultant.email,), "New Record",
+            EmailSender.send_email_notification([actual_consultant.email], "New Record",
                                                 "RLC Intranet Notification - Your were assigned as a consultant for a new record. Look here:" +
                                                 url)
 
         return Response(serializers.RecordFullDetailSerializer(record).data)
 
     def get(self, request, id):
-        record = models.Record.objects.get(pk=id)
+        try:
+            record = models.Record.objects.get(pk=id)
+        except:
+            raise CustomError(error_codes.ERROR__RECORD__RECORD__NOT_EXISTING)
         user = request.user
         if user.rlc != record.from_rlc and not user.is_superuser:
-            raise CustomError(ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC)
+            raise CustomError(error_codes.ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC)
 
         if record.user_has_permission(user):
             record_serializer = serializers.RecordFullDetailSerializer(record)
@@ -175,12 +186,46 @@ class RecordViewSet(APIView):
         record = models.Record.objects.get(pk=id)
         user = request.user
         if user.rlc != record.from_rlc and not user.is_superuser:
-            raise CustomError(ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC)
+            raise CustomError(error_codes.ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC)
 
         if record.user_has_permission(user):
-            if request.data['record_note']:
-                record.note = request.data['record_note']
+            record_data = request.data['record']
+            client_data = request.data['client']
+            client = record.client
+
+            try:
+                record.note = record_data['note']
+                record.contact = record_data['contact']
+                record.last_contact_date = parse_date(record_data['last_contact_date'])
+                record.state = record_data['state']
+                record.official_note = record_data['official_note']
+                record.additional_facts = record_data['additional_facts']
+                record.bamf_token = record_data['bamf_token']
+                record.foreign_token = record_data['foreign_token']
+                record.first_correspondence = record_data['first_correspondence']
+                record.circumstances = record_data['circumstances']
+                record.lawyer = record_data['lawyer']
+                record.related_persons = record_data['related_persons']
+                record.consultant_team = record_data['consultant_team']
+                record.next_steps = record_data['next_steps']
+                record.status_described = record_data['status_described']
+
+                record.tagged.clear()
+                for tag in record_data['tags']:
+                    record.tagged.add(models.RecordTag.objects.get(pk=tag['id']))
+
+                client.note = client_data['note']
+                client.name = client_data['name']
+                client.birthday = parse_date(client_data['birthday'])
+                client.origin_country = models.OriginCountry.objects.get(pk=client_data['origin_country'])
+                client.phone_number = client_data['phone_number']
+            except:
+                raise CustomError(error_codes.ERROR__RECORD__RECORD__COULD_NOT_SAVE)
+
+            record.last_edited = datetime.utcnow().replace(tzinfo=pytz.utc)
             record.save()
+            client.last_edited = datetime.utcnow().replace(tzinfo=pytz.utc)
+            client.save()
 
             for user in record.working_on_record.all():
                 if 'URL' in os.environ:
@@ -188,9 +233,24 @@ class RecordViewSet(APIView):
                 else:
                     url = 'no url, please contact the administrator'
 
-                EmailSender.send_email_notification((user.email,), "Patched Record",
+                EmailSender.send_email_notification([user.email], "Patched Record",
                                                     "RLC Intranet Notification - A record of yours was changed. Look here:" +
                                                     url)
 
-            return Response({'success': 'true'})
-        raise CustomError(ERROR__API__PERMISSION__INSUFFICIENT)
+            # return Response({'success': 'true'})
+            return Response(
+                {
+                    'record': serializers.RecordFullDetailSerializer(models.Record.objects.get(pk=record.pk)).data,
+                    'client': serializers.ClientSerializer(models.Client.objects.get(pk=client.pk)).data
+                }
+            )
+        raise CustomError(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
+
+    def delete(self, request, id):
+
+        pass
+
+
+def parse_date(date_str):
+    """Parse date from string by DATE_INPUT_FORMATS of current language"""
+    return datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S.%fZ").date()

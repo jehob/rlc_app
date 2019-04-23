@@ -1,5 +1,5 @@
 #  rlcapp - record and organization management software for refugee law clinics
-#  Copyright (C) 2018  Dominik Walser
+#  Copyright (C) 2019  Dominik Walser
 # 
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as
@@ -14,13 +14,14 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-from backend.recordmanagement.models import RecordTag, Record, OriginCountry, Client, RecordDocumentTag
-from backend.api.tests import *
-from backend.api.models import Rlc
 from datetime import date, datetime
-from backend.static.permissions import get_all_permissions
-from django.conf import settings
+
 import pytz
+from django.conf import settings
+
+from backend.api.tests import *
+from backend.recordmanagement.models import RecordTag, Record, OriginCountry, Client, RecordDocumentTag
+from backend.static.permissions import get_all_permissions
 
 
 class Fixtures:
@@ -45,6 +46,57 @@ class Fixtures:
         countries = [('Botswana', 'st'), ('Ghana', 'ot'), ('Nigeria', 'so'),
                      ('Turkey', 'so'), ('Sahara', 'ot'), ('Ukraine', 'st'),
                      ('Syria', 'ot')]
+        for country in countries:
+            AddMethods.add_country(country)
+
+    @staticmethod
+    def create_real_origin_countries():
+        countries = [('Abchasien',), ('Afghanistan',), ('Ägypten',), ('Albanien',), ('Algerien',), ('Andorra',), (
+            'Angola',), ('Antigua und Barbuda',), ('Äquatorialguinea',), ('Argentinien',), ('Armenien',), ('Arzach',), (
+                         'Aserbaidschan',), ('Äthiopien',), ('Australien',), ('Bahamas',), (
+                         'Bahrain',), ('Bangladesch',), ('Barbados',), ('Belgien',), ('Belize',), (
+                         'Benin',), ('Bhutan',), ('Bolivien',), ('Bosnien und Herzegowina',), (
+                         'Botswana',), ('Brasilien',), ('Brunei',), ('Bulgarien',), ('Burkina Faso',), (
+                         'Burundi',), ('Chile',), ('Republik China',), ('Volksrepublik China',), (
+                         'Cookinseln',), ('Costa Rica',), ('Dänemark',), ('Deutschland',), ('Dominica',), (
+                         'Dominikanische Republik',), ('Dschibuti',), ('Ecuador',), ('El Salvador',), (
+                         'Elfenbeinküste',), ('Eritrea',), ('Estland',), ('Fidschi',), ('Finnland',), (
+                         'Frankreich',), ('Gabun',), ('Gambia',), ('Georgien',), ('Ghana',), (
+                         'Grenada',), ('Griechenland',), ('Guatemala',), ('Guinea',), (
+                         'Guinea-Bissau',), ('Guyana',), ('Haiti',), ('Honduras',), ('Indien',), (
+                         'Indonesien',), ('Irak',), ('Iran',), ('Irland',), ('Island',), ('Israel',), (
+                         'Italien',), ('Jamaika',), ('Japan',), ('Jemen',), ('Jordanien',), (
+                         'Kambodscha',), ('Kamerun',), ('Kanada',), ('Kap Verde',), ('Kasachstan',), (
+                         'Katar',), ('Kenia',), ('Kirgisistan',), ('Kiribati',), ('Kolumbien',), (
+                         'Komoren',), ('Kongo, Demokratische Republik',), ('Kongo, Republik',), (
+                         'Nordkorea',), ('Südkorea',), ('Kosovo',), ('Kroatien',), ('Kuba',), (
+                         'Kuwait',), ('Laos',), ('Lesotho',), ('Lettland',), ('Libanon',), (
+                         'Liberia',), ('Libyen',), ('Liechtenstein',), ('Litauen',), ('Luxemburg',), (
+                         'Madagaskar',), ('Malawi',), ('Malaysia',), ('Malediven',), ('Mali',), (
+                         'Malta',), ('Marokko',), ('Marshallinseln',), ('Mauretanien',), ('Mauritius',), (
+                         'Mexiko',), ('Mikronesien',), ('Moldau',), ('Monaco',), ('Mongolei',), (
+                         'Montenegro',), ('Mosambik',), ('Myanmar',), ('Namibia',), ('Nauru',), (
+                         'Nepal',), ('Neuseeland',), ('Nicaragua',), ('Niederlande',), ('Curaçao',), (
+                         'Sint Maarten',), ('Niger',), ('Nigeria',), ('Niue',), ('Nordmazedonien',), (
+                         'Nordzypern',), ('Norwegen',), ('Oman',), ('Österreich',), (
+                         'Osttimor / Timor-Leste',), ('Pakistan',), ('Palästina',), ('Palau',), (
+                         'Panama',), ('Papua-Neuguinea',), ('Paraguay',), ('Peru',), ('Philippinen',), (
+                         'Polen',), ('Portugal',), ('Ruanda',), ('Rumänien',), ('Russland',), (
+                         'Salomonen',), ('Sambia',), ('Samoa',), ('San Marino',), (
+                         'São Tomé und Príncipe',), ('Saudi-Arabien',), ('Schweden',), ('Schweiz',), (
+                         'Senegal',), ('Serbien',), ('Seychellen',), ('Sierra Leone',), ('Simbabwe',), (
+                         'Singapur',), ('Slowakei',), ('Slowenien',), ('Somalia',), ('Somaliland',), (
+                         'Spanien',), ('Sri Lanka',), ('St. Kitts und Nevis',), ('St. Lucia',), (
+                         'St. Vincent und die Grenadinen',), ('Südafrika',), ('Sudan',), (
+                         'Südossetien',), ('Südsudan',), ('Suriname',), ('Swasiland',), ('Syrien',), (
+                         'Tadschikistan',), ('Tansania',), ('Thailand',), ('Togo',), ('Tonga',), (
+                         'Transnistrien',), ('Trinidad und Tobago',), ('Tschad',), ('Tschechien',), (
+                         'Tunesien',), ('Türkei',), ('Turkmenistan',), ('Tuvalu',), ('Uganda',), (
+                         'Ukraine',), ('Ungarn',), ('Uruguay',), ('Usbekistan',), ('Vanuatu',), (
+                         'Vatikanstadt',), ('Venezuela',), ('Vereinigte Arabische Emirate',), (
+                         'Vereinigte Staaten',), ('Vereinigtes Königreich',), ('Vietnam',), (
+                         'Weißrussland',), ('Westsahara',), ('Zentral­afrikanische Republik',), (
+                         'Zypern',)]
         for country in countries:
             AddMethods.add_country(country)
 
@@ -75,13 +127,20 @@ class Fixtures:
             AddMethods.add_permission(permission)
 
     @staticmethod
+    def create_real_permissions_no_duplicates():
+        permissions = get_all_permissions()
+        for permission in permissions:
+            if Permission.objects.filter(name=permission).count() == 0:
+                AddMethods.add_permission(permission)
+
+    @staticmethod
     def create_real_tags():
-        tags = [('Familiennachzug',), ('Dublin III',), ('Arbeitserlaubnis',), ('Flüchtlingseigenschaft',),
+        tags = [('Familiennachzug',), ('Dublin IV',), ('Arbeitserlaubnis',), ('Flüchtlingseigenschaft',),
                 ('subsidiärer Schutz',), ('Eheschließung',), ('Verlobung',),
                 ('illegale Ausreise aus dem Bundesgebiet',), ('Untertauchen',), ('Kinder anerkennen',), ('Ausbildung',),
                 ('Geburt ',), ('Eines Kindes im Asylverfahren',), ('Duldung',), ('Ausbildungsduldung',), ('Visum',),
                 ('Anhörung',), ('Wechsel der Unterkunft',), ('Wohnsitzauflage',), ('Folgeantrag',), ('Zweitantrag',),
-                ('Unterbringung im Asylverfahren',), ('Widerruf und Rücknahme der Asylberechtigung',),
+                ('Unterbringung im Asylverfahren',), ('Widerruf der Asylberechtigung',), ('Rücknahme der Asyberechtigung',),
                 ('Passbeschaffung',), ('Mitwirkungspflichten',), ('Nichtbetreiben des Verfahrens',),
                 ('Krankheit im Asylverfahren',), ('Familienasyl',), ('UmF',),
                 ('Familienzusammenführung nach Dublin III',), ('Negativbescheid',), ('Relocation',), ('Resettlement',),
@@ -89,6 +148,19 @@ class Fixtures:
                 ('Untätigkeitsklage',), ('Studium',)]
         for tag in tags:
             AddMethods.add_record_tag(tag)
+
+    @staticmethod
+    def create_real_document_tags():
+        tags = [('Pass',), ('Passersatzpapier',), ('Geburtsurkunde',), ('Heiratsurkunde',), ('Ankunftsnachweis',),
+                ('Duldung',), ('Aufenthaltsgestattung',), ('Aufenthaltstitel',), ('Bescheid (Ablehnung)',),
+                ('Bescheid (Flüchtling)',), ('Bescheid (subsidiärer Schutz)',), ('Bescheid (Abschiebeverbote)',),
+                ('Bescheid (Sozialleistungen)',), ('Bescheid (Arbeiten)',), ('Bescheid (Wohnen)',),
+                ('Widerspruch',), ('Antwortschreiben',), ('Erwiderung',), ('Sachstandsanfrage',), ('Klageschrift',),
+                ('Akteneinsicht',), ('Anfrage',), ('Terminvereinbarung',), ('Attest',), ('Verschwiegenheitserklärung',),
+                ('Datenschutzerklärung',), ('Erklärung',), ('Vertrag',), ('Antrag',), ('Zeugnis',),
+                ('Zertifikat',), ('Vollmacht',)]
+        for tag in tags:
+            AddMethods.add_record_document_tag(tag)
 
     @staticmethod
     def create_real_starting_rlcs():
@@ -513,14 +585,14 @@ class Fixtures:
 
         clients = [
             (
-                5001,
-                (2018, 7, 12),
-                (2018, 8, 28, 21, 3, 0, 0),
-                'Bibi Aisha',
-                'auf Flucht von Ehemann getrennt worden',
-                '01793456542',
-                (1990, 5, 1),
-                2002
+                5001,  # id
+                (2018, 7, 12),  # created_on
+                (2018, 8, 28, 21, 3, 0, 0),  # last_edited
+                'Bibi Aisha',  # name
+                'auf Flucht von Ehemann getrennt worden',  # note
+                '01793456542',  # phone number
+                (1990, 5, 1),  # birthday
+                2002  # origin country id
             ),
             (
                 5002,
@@ -1580,7 +1652,9 @@ class AddMethods:
 		Returns:
 
 		"""
-        if country.__len__() == 2:
+        if country.__len__() == 1:
+            c = OriginCountry(name=country[0])
+        elif country.__len__() == 2:
             c = OriginCountry(name=country[0], state=country[1])
         elif country.__len__() == 3:
             c = OriginCountry(id=country[0], name=country[1], state=country[2])

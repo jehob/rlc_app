@@ -1,5 +1,5 @@
 #  rlcapp - record and organization management software for refugee law clinics
-#  Copyright (C) 2018  Dominik Walser
+#  Copyright (C) 2019  Dominik Walser
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as
@@ -13,6 +13,7 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
+
 
 from django.db import models
 from datetime import timedelta
@@ -34,4 +35,8 @@ class Rlc(models.Model):
         return 'rlc: ' + str(self.id) + ':' + self.name
 
     def get_consultants(self):
+        """
+        gets all user from rlc with permission to consult
+        :return:
+        """
         return UserProfile.objects.get_users_with_special_permission(PERMISSION_CAN_CONSULT, for_rlc=self.id)

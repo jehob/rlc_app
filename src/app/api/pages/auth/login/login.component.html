@@ -1,6 +1,6 @@
 <!--
   ~ rlcapp - record and organization management software for refugee law clinics
-  ~ Copyright (C) 2018  Dominik Walser
+  ~ Copyright (C) 2019  Dominik Walser
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU Affero General Public License as
@@ -38,6 +38,7 @@
                     <input matInput placeholder="Password" i18n-placeholder="@@login_password" type="password"
                            formControlName="password" (keyup.enter)="onLogInClick()">
                 </mat-form-field>
+                <p class="is_link login__forgot-password is_clickable" (click)="onForgotPasswordClick()">Forgot Password?</p>
             </form>
         </div>
         <div class="action-holder">

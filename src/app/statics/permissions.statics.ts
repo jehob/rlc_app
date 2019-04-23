@@ -1,6 +1,6 @@
 /*
  * rlcapp - record and organization management software for refugee law clinics
- * Copyright (C) 2018  Dominik Walser
+ * Copyright (C) 2019  Dominik Walser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -17,5 +17,11 @@
  ******************************************************************************/
 
 export const PERMISSION_CAN_CONSULT = 'can_consult';
-export const PERMISSION_CAN_VIEW_RECORDS = 'can_view_records';
-export const PERMISSION_CAN_PERMIT_RECORD_PERMISSION_REQUESTS = 'can_permit_record_permission_requests';
+export const PERMISSION_CAN_VIEW_RECORDS = 'view_records_rlc';
+export const PERMISSION_CAN_PERMIT_RECORD_PERMISSION_REQUESTS = 'permit_record_permission_requests_rlc';
+export const PERMISSION_CAN_MANAGE_GROUPS_RLC = 'manage_groups_rlc';
+export const PERMISSION_CAN_MANAGE_GROUP = 'manage_group';
+export const PERMISSION_CAN_ADD_GROUP_RLC = 'add_group_rlc';
+export const PERMISSION_CAN_VIEW_PERMISSIONS_RLC = 'view_permissions_rlc';
+export const PERMISSION_CAN_MANAGE_PERMISSIONS_RLC = 'manage_permissions_rlc';
+export const PERMISSION_ACCEPT_NEW_USERS_RLC = 'accept_new_users_rlc';

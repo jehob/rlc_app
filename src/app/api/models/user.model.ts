@@ -1,6 +1,6 @@
 /*
  * rlcapp - record and organization management software for refugee law clinics
- * Copyright (C) 2018  Dominik Walser
+ * Copyright (C) 2019  Dominik Walser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -45,7 +45,46 @@ export class RestrictedUser implements Filterable {
     }
 }
 
+export class ForeignUser extends RestrictedUser{
+    /**
+     * ForeignUser represents a user from the own rlc but not the user himself -> contact information,
+     * RestrictedUser < foreign < full
+     */
+    constructor(
+        id: string = "",
+        public email: string = "",
+        name: string = "",
+        public phone_number: string = ""
+    ) {
+        super(id, name);
+        this.email = email;
+        this.phone_number = phone_number;
+    }
+
+    static getForeignUserFromJson(json) {
+        if (json)
+            return new ForeignUser(
+                json.id,
+                json.email,
+                json.name,
+                json.phone_number
+            );
+        return null;
+    }
+}
+
 export class FullUser extends RestrictedUser {
+    /**
+     * FullUser represents the user itself with FULL information
+     * @param id
+     * @param email
+     * @param name
+     * @param birthday
+     * @param phone_number
+     * @param street
+     * @param city
+     * @param postal_code
+     */
     constructor(
         id: string = "",
         public email: string = "",
@@ -88,7 +127,7 @@ export class FullUser extends RestrictedUser {
     getUpdates(updates: FullUser) {
         const changes = {};
         if (this.birthday !== updates.birthday)
-            changes["birthday"] = ApiSandboxService.transformDate(
+            changes["birthday"] = ApiSandboxService.transformDateToString(
                 updates.birthday
             );
         if (this.phone_number !== updates.phone_number)

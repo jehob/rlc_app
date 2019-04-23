@@ -1,6 +1,6 @@
 <!--
   ~ rlcapp - record and organization management software for refugee law clinics
-  ~ Copyright (C) 2018  Dominik Walser
+  ~ Copyright (C) 2019  Dominik Walser
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU Affero General Public License as
@@ -17,16 +17,20 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 <div>
-    <h1>Files</h1>
     <div>
         <div *ngFor="let document of documents">
             <app-record-document-item [record_document]="document"></app-record-document-item>
         </div>
     </div>
-    <div (drop)="dropped($event)" class="record-documents-list__dropper" (dragover)="dragover($event)">
-        <p>drop files here to upload</p>
-        <br>
-        <button mat-flat-button color="primary" (click)="fileInput.click()">select files</button>
-        <input hidden type="file" id="your-files" #fileInput multiple (change)="selected($event)">
+    <div class="record-documents-list__dropper-container">
+        <div (drop)="dropped($event)" class="record-documents-list__dropper" (dragover)="dragover($event)">
+            <p>drop files here to upload</p>
+            <br>
+            <button mat-flat-button color="primary" (click)="fileInput.click()"
+                   >select files
+            </button>
+            <input hidden type="file" id="your-files" #fileInput multiple (change)="selected($event)">
+        </div>
     </div>
+
 </div>

@@ -1,5 +1,5 @@
 #  rlcapp - record and organization management software for refugee law clinics
-#  Copyright (C) 2018  Dominik Walser
+#  Copyright (C) 2019  Dominik Walser
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as
@@ -22,7 +22,7 @@ from ..serializers.rlc import RlcSerializer
 
 
 class RlcViewSet(viewsets.ModelViewSet):
-    queryset = Rlc.objects.all()
+    queryset = Rlc.objects.exclude(name='Dummy RLC')
     serializer_class = RlcSerializer
 
     def perform_create(self, serializer):

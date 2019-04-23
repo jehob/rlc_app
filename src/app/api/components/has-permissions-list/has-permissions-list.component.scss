@@ -1,0 +1,78 @@
+/*!
+ * rlcapp - record and organization management software for refugee law clinics
+ * Copyright (C) 2019  Dominik Walser
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>
+ ******************************************************************************/
+
+.has-permission-list__table-container {
+    //overflow: auto;
+    display: flex;
+    flex-direction: column;
+    //max-height: 500px;
+    //min-width: 300px;
+}
+
+.mat-table {
+    overflow: auto;
+    max-height: 500px;
+}
+
+.mobile-label {
+    display: none;
+}
+
+.has-permission-list__content-column {
+    margin: 5px;
+    padding-right: 15px;
+}
+
+
+
+@media(max-width: 600px) {
+    .mat-cell:first-of-type {
+        padding-left: 0;
+    }
+
+    td.mat-cell{
+        border-bottom-style: none;
+    }
+
+    .mobile-label {
+        width: 80px;
+        display: inline-block;
+        font-weight: bold;
+    }
+
+    .mat-header-row {
+        display: none;
+    }
+
+    .mat-row {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 8px 24px;
+        border-bottom-style: solid;
+        border-bottom-color: grey;
+        border-bottom-width: 1px;
+    }
+
+    .has-permission-list__row {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 8px 24px;
+        height: auto;
+     }
+}

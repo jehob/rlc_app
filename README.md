@@ -4,7 +4,7 @@ Application for record and association management of refugee law clinics in germ
 Contact Dominik Walser (jehob) for more information (dominik.walser@rlcm.de).
 
 rlcapp - record and organization management software for refugee law clinics
-Copyright (C) 2018  Dominik Walser
+Copyright (C) 2019  Dominik Walser
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as

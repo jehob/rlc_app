@@ -1,6 +1,6 @@
 /*
  * rlcapp - record and organization management software for refugee law clinics
- * Copyright (C) 2018  Dominik Walser
+ * Copyright (C) 2019  Dominik Walser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -27,7 +27,7 @@ import {RecordDocument} from '../../../../models/record_document.model';
 })
 export class RecordDocumentsListComponent implements OnInit {
     @Input()
-    documents: RecordDocument;
+    documents: RecordDocument[];
 
     @ViewChild("fileInput")
     fileInput: ElementRef<HTMLInputElement>;
@@ -46,7 +46,6 @@ export class RecordDocumentsListComponent implements OnInit {
 
     selected($event){
         event.preventDefault();
-        //console.log($event);
         const files = Array.from(this.fileInput.nativeElement.files);
         this.recordSB.uploadRecordDocuments(files);
     }

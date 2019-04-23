@@ -1,6 +1,6 @@
 /*
  * rlcapp - record and organization management software for refugee law clinics
- * Copyright (C) 2018  Dominik Walser
+ * Copyright (C) 2019  Dominik Walser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -21,15 +21,17 @@ import { AppState } from "../../store/app.reducers";
 import { select, Store } from "@ngrx/store";
 import { take } from "rxjs/operators";
 import {
+    ForgotPassword,
     Logout,
-    ReloadStaticInformation,
+    ReloadStaticInformation, ResetPassword,
     SetToken,
     TryLogin
-} from "../store/auth/auth.actions";
+} from '../store/auth/auth.actions';
 import { Router } from "@angular/router";
 import { RecordsSandboxService } from "../../recordmanagement/services/records-sandbox.service";
 import {Observable} from 'rxjs';
 import {AuthState} from '../store/auth/auth.reducers';
+import {LOGIN_FRONT_URL} from '../../statics/frontend_links.statics';
 
 @Injectable()
 export class AppSandboxService {
@@ -54,7 +56,7 @@ export class AppSandboxService {
     logout() {
         localStorage.clear();
         this.store.dispatch(new Logout());
-        this.router.navigate(["login"]);
+        this.router.navigate([LOGIN_FRONT_URL]);
     }
 
     login(username: string, password: string) {
@@ -77,5 +79,14 @@ export class AppSandboxService {
     saveLocation(){
         this.savedLocation = this.router.url;
     }
+
+    forgotPassword(email: string): void {
+        this.store.dispatch(new ForgotPassword({email}));
+    }
+
+    resetPassword(new_password: string, link_id: string): void {
+        this.store.dispatch(new ResetPassword({new_password, link_id}));
+    }
+
 
 }

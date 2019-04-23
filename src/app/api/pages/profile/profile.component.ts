@@ -1,6 +1,6 @@
 /*
  * rlcapp - record and organization management software for refugee law clinics
- * Copyright (C) 2018  Dominik Walser
+ * Copyright (C) 2019  Dominik Walser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -21,6 +21,7 @@ import { FullUser } from "../../models/user.model";
 import { ApiSandboxService } from "../../services/api-sandbox.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { take } from "rxjs/operators";
+import { dateInPastValidator } from "../../../statics/validators.statics";
 
 @Component({
     selector: "app-profile",
@@ -60,14 +61,16 @@ export class ProfileComponent implements OnInit {
                         street: new FormControl(user.street),
                         postal_code: new FormControl(user.postal_code),
                         city: new FormControl(user.city),
-                        birthday: new FormControl(user.birthday)
+                        birthday: new FormControl(user.birthday, [
+                            dateInPastValidator
+                        ])
                     });
                 }
             });
     }
 
     onSaveClick() {
-        this.apiSB.patchUser(
+        this.apiSB.startPatchUser(
             new FullUser(
                 undefined,
                 this.userForm.value.email,
@@ -79,12 +82,5 @@ export class ProfileComponent implements OnInit {
                 this.userForm.value.postal_code
             )
         );
-    }
-
-    onUploadClick() {
-        //console.log(this.fileInput.nativeElement.files);
-        const file = this.fileInput.nativeElement.files[0];
-        this.apiSB.uploadProfilePicture(file);
-        //this.apiSB.downloadSingleFile('aaa');
     }
 }

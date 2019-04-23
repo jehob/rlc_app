@@ -1,6 +1,6 @@
 /*!
  * rlcapp - record and organization management software for refugee law clinics
- * Copyright (C) 2018  Dominik Walser
+ * Copyright (C) 2019  Dominik Walser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -17,6 +17,7 @@
  ******************************************************************************/
 
 .autocomplete__form-field {
-    width: calc(100% - 30px);
-    padding-left: 10px;
+    //width: calc(100% - 30px);
+    width: 100%;
+    //padding-left: 10px;
 }

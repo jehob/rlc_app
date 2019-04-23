@@ -1,5 +1,5 @@
 #  rlcapp - record and organization management software for refugee law clinics
-#  Copyright (C) 2018  Dominik Walser
+#  Copyright (C) 2019  Dominik Walser
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as
@@ -34,7 +34,7 @@ class CustomError(APIException):
             if 'error_detail' in detail:
                 self.detail = detail['error_detail']
             if 'error_code' in detail:
-                self.code = detail['error_code']
+                self.default_code = detail['error_code']
         elif detail is not None:
             self.detail = {'detail': force_text(detail)}
         else:

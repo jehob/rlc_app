@@ -1,6 +1,6 @@
 /*
  * rlcapp - record and organization management software for refugee law clinics
- * Copyright (C) 2018  Dominik Walser
+ * Copyright (C) 2019  Dominik Walser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -25,7 +25,6 @@ import { RecordsRoutingModule } from "./records-routing.module";
 import { RecordsListComponent } from "./pages/record-list/records-list.component";
 import { recordsReducer } from "./store/records.reducers";
 import { RecordsEffects } from "./store/effects/records.effects";
-import { RecordsListItemComponent } from "./components/records/records-list-item/records-list-item.component";
 import { CreateRecordComponent } from "./pages/create-record/create-record.component";
 import { SelectClientDialogComponent } from "./components/select-client-dialog/select-client-dialog.component";
 import { RecordsSandboxService } from "./services/records-sandbox.service";
@@ -33,7 +32,7 @@ import { SharedModule } from "../shared/shared.module";
 import { RecordComponent } from "./pages/record/record.component";
 import { FullRecordDetailComponent } from "./components/records/full-record-detail/full-record-detail.component";
 import { RestrictedRecordDetailComponent } from "./components/records/restricted-record-detail/restricted-record-detail.component";
-import { ConsultantsFieldComponent } from "./components/consultants-field/consultants-field.component";
+import { UsersFieldComponent } from "./components/users-field/users-field.component";
 import { RecordDocumentsListComponent } from "./components/records/documents/record-documents-list/record-documents-list.component";
 import { RecordMessagesComponent } from "./components/records/messages/record-messages/record-messages.component";
 import { RecordMessageItemComponent } from "./components/records/messages/record-message-item/record-message-item.component";
@@ -62,13 +61,12 @@ import {
     ],
     declarations: [
         RecordsListComponent,
-        RecordsListItemComponent,
         CreateRecordComponent,
         SelectClientDialogComponent,
         RecordComponent,
         FullRecordDetailComponent,
         RestrictedRecordDetailComponent,
-        ConsultantsFieldComponent,
+        UsersFieldComponent,
         RecordDocumentsListComponent,
         RecordMessagesComponent,
         RecordMessageItemComponent,
@@ -78,7 +76,9 @@ import {
         RecordPermissionsRequestedPipe,
         RecordPermissionsProcessedPipe
     ],
-    entryComponents: [SelectClientDialogComponent]
+    entryComponents: [SelectClientDialogComponent],
+     providers: [
+     ]
 })
 export class RecordsModule {
     constructor(private recordSB: RecordsSandboxService) {

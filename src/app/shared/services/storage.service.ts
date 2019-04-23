@@ -1,6 +1,6 @@
 /*
  * rlcapp - record and organization management software for refugee law clinics
- * Copyright (C) 2018  Dominik Walser
+ * Copyright (C) 2019  Dominik Walser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19,9 +19,9 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import {
-    GetDownloadUrl,
-    GetUploadUrl,
-    UPLOAD_SIGNING_BASE_URL
+    GetDownloadApiUrl,
+    GetUploadApiUrl,
+    UPLOAD_SIGNING_BASE_API_URL
 } from "../../statics/api_urls.statics";
 import { SnackbarService } from "./snackbar.service";
 
@@ -37,16 +37,14 @@ export class StorageService {
     ) {}
 
     uploadFile(file: File, fileDir: string, finished?) {
-        console.log('file', file);
         this.http
-            .get(GetUploadUrl(file, fileDir))
+            .get(GetUploadApiUrl(file, fileDir))
             .subscribe((response: any) => {
                 this.uploadFileDirect(file, response.data, response.url, finished);
             });
     }
 
     uploadFiles(files: File[], file_dir: string, finished?) {
-        // console.log('files', files);
         this.filesToUpload = files.length;
         this.filesUploaded = 0;
         this.filesUploadFinished = finished ? finished : null;
@@ -57,10 +55,9 @@ export class StorageService {
             file_names.push(file.name);
             file_types.push(file.type);
         }
-        console.log('names', file_names);
 
         this.http
-            .post(UPLOAD_SIGNING_BASE_URL, {
+            .post(UPLOAD_SIGNING_BASE_API_URL, {
                 file_names,
                 file_types,
                 file_dir
@@ -96,7 +93,6 @@ export class StorageService {
         v4form.append("file", file);
 
         this.http.post(s3Data.url, v4form).subscribe((response: any) => {
-            //console.log("posting response:", response);
             if (!response) {
                 callbackFn();
             }
@@ -104,7 +100,7 @@ export class StorageService {
     }
 
     downloadFile(filekey: string) {
-        this.http.get(GetDownloadUrl(filekey)).subscribe((response: any) => {
+        this.http.get(GetDownloadApiUrl(filekey)).subscribe((response: any) => {
             if (!response.error) window.location.href = response.data;
             else {
                 this.snackbarService.showErrorSnackBar(

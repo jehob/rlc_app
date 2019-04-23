@@ -1,29 +1,68 @@
+<!--
+  ~ rlcapp - record and organization management software for refugee law clinics
+  ~ Copyright (C) 2019  Dominik Walser
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
 <div class="drawer-header">
     <a (click)='showProfile()'><img src="../../../../../static/images/empty-profile.png" alt="Profile"></a>
     <span><a routerLink="/profile">{{ name }}</a></span>
     <span><a routerLink="/profile">{{ email }}</a></span>
 </div>
 <mat-divider></mat-divider>
-<nav class="drawer-navigation-container">
+<div class="sidebar__nav-holder">
     <ul class="drawer-navigation">
-        <li routerLinkActive="active" *ngIf="record_enabled" routerLink="/records"
+        <li routerLinkActive="active" *ngIf="show_record_tabs" [routerLink]="recordsUrl"
             [routerLinkActiveOptions]="{exact:true}"><a i18n="sidebar navigation for routing@@sidebar_records">
             <mat-icon>folder</mat-icon>
             Records</a></li>
-        <li routerLink="/records/add" *ngIf="record_enabled" routerLinkActive="active"
+        <li [routerLink]="recordsAddUrl" *ngIf="show_record_tabs" routerLinkActive="active"
             [routerLinkActiveOptions]="{exact:true}"><a i18n="sidebar navigation for routing@@sidebar_records">
             <mat-icon>create_new_folder</mat-icon>
             Create record</a></li>
-        <li routerLinkActive="active" routerLink="/profiles"><a i18n="sidebar navigation for routing@@sidebar_records">
-            <mat-icon>people</mat-icon>
+        <li routerLinkActive="active" [routerLink]="profilesUrl"><a
+            i18n="sidebar navigation for routing@@sidebar_records">
+            <mat-icon>people_outline</mat-icon>
             Profiles</a></li>
-        <li routerLink="/records/permit_requests" *ngIf="can_permit_requests" routerLinkActive="active"
+        <li [routerLink]="recordsPermitRequestsUrl" *ngIf="show_record_permission_request_tab"
+            routerLinkActive="active"
             [routerLinkActiveOptions]="{exact:true}"><a i18n="sidebar navigation for routing@@sidebar_permit">
             <mat-icon>offline_pin</mat-icon>
             Permit requests</a></li>
+        <li [routerLink]="groupsUrl" routerLinkActive="active"
+            [routerLinkActiveOptions]="{exact:true}"><a i18n="sidebar navigation for routing@@sidebar_permit">
+            <mat-icon>group</mat-icon>
+            Groups</a></li>
+        <li [routerLink]="permissionsUrl" routerLinkActive="active"
+            [routerLinkActiveOptions]="{exact:true}"><a i18n="sidebar navigation for routing@@sidebar_permit">
+            <mat-icon>vpn_key</mat-icon>
+            Permissions</a></li>
+        <li [routerLink]="acceptNewUsersUrl" *ngIf="show_accept_new_user_requests_tab" routerLinkActive="active"
+            [routerLinkActiveOptions]="{exact:true}"><a i18n="sidebar navigation for routing@@sidebar_permit">
+            <mat-icon>person_add</mat-icon>
+            new users</a></li>
         <mat-divider></mat-divider>
         <li><a (click)="logout()">
             <mat-icon>power_settings_new</mat-icon>
             Logout</a></li>
     </ul>
-</nav>
+    <div class="sidebar__other-links">
+        <ul>
+            <li class="is_clickable sidebar__other-links__items"
+                [routerLink]="legalNoticeUrl">legal notice
+            </li>
+        </ul>
+    </div>
+</div>

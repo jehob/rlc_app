@@ -1,6 +1,6 @@
 /*
  * rlcapp - record and organization management software for refugee law clinics
- * Copyright (C) 2018  Dominik Walser
+ * Copyright (C) 2019  Dominik Walser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,28 +24,32 @@ import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
 
 import { AppSandboxService } from "../../../api/services/app-sandbox.service";
 import {
-    START_LOADING_CLIENT_POSSIBILITIES, START_LOADING_RECORD_PERMISSION_REQUESTS,
+    START_LOADING_CLIENT_POSSIBILITIES,
+    START_LOADING_RECORD_PERMISSION_REQUESTS,
     START_LOADING_RECORD_STATICS,
     START_LOADING_RECORDS,
     START_LOADING_SPECIAL_RECORD,
-    StartLoadingClientPossibilities, StartLoadingRecordPermissionRequests,
+    StartLoadingClientPossibilities,
+    StartLoadingRecordPermissionRequests,
     StartLoadingRecords,
     StartLoadingSpecialRecord
-} from '../actions/records-start.actions';
+} from "../actions/records-start.actions";
 import {
-    CLIENTS_BY_BIRTHDAY_URL,
-    GetRecordsSearchURL,
-    GetSpecialRecordURL, RECORD_PERMISSIONS_LIST_URL,
-    RECORDS_STATICS_URL,
-    RECORDS_URL
-} from '../../../statics/api_urls.statics';
+    CLIENTS_BY_BIRTHDAY_API_URL,
+    GetRecordsSearchApiURL,
+    GetSpecialRecordApiURL,
+    RECORD_PERMISSIONS_LIST_API_URL,
+    RECORDS_STATICS_API_URL,
+    RECORDS_API_URL
+} from "../../../statics/api_urls.statics";
 import { FullRecord, RestrictedRecord } from "../../models/record.model";
 import {
     SET_CONSULTANTS,
     SET_COUNTRY_STATES,
     SET_ORIGIN_COUNTRIES,
     SET_POSSIBLE_CLIENTS,
-    SET_RECORD_DOCUMENT_TAGS, SET_RECORD_PERMISSION_REQUESTS,
+    SET_RECORD_DOCUMENT_TAGS,
+    SET_RECORD_PERMISSION_REQUESTS,
     SET_RECORD_STATES,
     SET_RECORD_TAGS,
     SET_RECORDS,
@@ -54,7 +58,7 @@ import {
     SET_SPECIAL_RECORD,
     SET_SPECIAL_RECORD_DOCUMENTS,
     SET_SPECIAL_RECORD_MESSAGES
-} from '../actions/records-set.actions';
+} from "../actions/records-set.actions";
 import { RestrictedUser } from "../../../api/models/user.model";
 import { OriginCountry } from "../../models/country.model";
 import { Tag } from "../../models/tag.model";
@@ -63,14 +67,17 @@ import { FullClient } from "../../models/client.model";
 import { RecordDocument } from "../../models/record_document.model";
 import { RecordMessage } from "../../models/record_message.model";
 import { RESET_FULL_CLIENT_INFORMATION } from "../actions/records.actions";
-import {RecordPermissionRequest} from '../../models/record_permission.model';
+import { RecordPermissionRequest } from "../../models/record_permission.model";
+import { SnackbarService } from "../../../shared/services/snackbar.service";
+import {State} from '../../../api/models/state.model';
 
 @Injectable()
 export class RecordsLoadingEffects {
     constructor(
         private actions: Actions,
         private http: HttpClient,
-        private appSB: AppSandboxService
+        private appSB: AppSandboxService,
+        private snackbarService: SnackbarService
     ) {}
 
     @Effect()
@@ -81,17 +88,20 @@ export class RecordsLoadingEffects {
         }),
         switchMap((searchString: string) => {
             const url = searchString
-                ? GetRecordsSearchURL(searchString)
-                : RECORDS_URL;
+                ? GetRecordsSearchApiURL(searchString)
+                : RECORDS_API_URL;
             return from(
                 this.http.get(url).pipe(
                     catchError(error => {
-                        return of({ error: "error at loading records" });
+                        this.snackbarService.showErrorSnackBar(
+                            `error at loading records: ${error.error.detail}`
+                        );
+                        return [];
                     }),
                     mergeMap(response => {
                         const loadedRecords: Array<RestrictedRecord> = [];
                         Object.values(response).map(record => {
-                            if (Object.keys(record).indexOf('note') > -1) {
+                            if (Object.keys(record).indexOf("note") > -1) {
                                 loadedRecords.push(
                                     FullRecord.getFullRecordFromJson(record)
                                 );
@@ -116,11 +126,14 @@ export class RecordsLoadingEffects {
         switchMap(() => {
             if (this.appSB.isAuthenticated()) {
                 return from(
-                    this.http.get(RECORDS_STATICS_URL).pipe(
+                    this.http.get(RECORDS_STATICS_API_URL).pipe(
                         catchError(error => {
-                            return of({
-                                error: "error at loading record statics"
-                            });
+                            this.snackbarService.showErrorSnackBar(
+                                `error at loading record statics: ${
+                                    error.error.detail
+                                }`
+                            );
+                            return [];
                         }),
                         mergeMap(
                             (response: {
@@ -158,11 +171,11 @@ export class RecordsLoadingEffects {
                                     },
                                     {
                                         type: SET_RECORD_STATES,
-                                        payload: response.record_states
+                                        payload: State.getStatesFromJsonArray(response.record_states)
                                     },
                                     {
                                         type: SET_COUNTRY_STATES,
-                                        payload: response.country_states
+                                        payload: State.getStatesFromJsonArray(response.country_states)
                                     }
                                 ];
                             }
@@ -183,14 +196,17 @@ export class RecordsLoadingEffects {
         switchMap((birthday: Date) => {
             return from(
                 this.http
-                    .post(CLIENTS_BY_BIRTHDAY_URL, {
-                        birthday: ApiSandboxService.transformDate(birthday)
+                    .post(CLIENTS_BY_BIRTHDAY_API_URL, {
+                        birthday: ApiSandboxService.transformDateToString(birthday)
                     })
                     .pipe(
                         catchError(error => {
-                            return of({
-                                error: "error at loading client possibilities"
-                            });
+                            this.snackbarService.showErrorSnackBar(
+                                `error at loading client possibilities: ${
+                                    error.error.detail
+                                }`
+                            );
+                            return [];
                         }),
                         mergeMap(response => {
                             const clients = FullClient.getFullClientsFromJsonArray(
@@ -213,54 +229,58 @@ export class RecordsLoadingEffects {
         }),
         switchMap((id: string) => {
             return from(
-                this.http.get(GetSpecialRecordURL(id)).pipe(
+                this.http.get(GetSpecialRecordApiURL(id)).pipe(
                     catchError(error => {
-                        return of({ error: "error at loading special record" });
+                        this.snackbarService.showErrorSnackBar(
+                            `error at loading special record: ${
+                                error.error.detail
+                            }`
+                        );
+                        return [];
                     }),
                     mergeMap((response: any) => {
                         if (response.record) {
-                            const arr = [];
                             const record: FullRecord = FullRecord.getFullRecordFromJson(
                                 response.record
                             );
-                            arr.push({
-                                type: SET_SPECIAL_RECORD,
-                                payload: record
-                            });
-
                             const client: FullClient = FullClient.getFullClientFromJson(
                                 response.client
                             );
-                            arr.push({
-                                type: SET_SPECIAL_CLIENT,
-                                payload: client
-                            });
 
                             const originCountry: OriginCountry = OriginCountry.getOriginCountryFromJson(
                                 response.origin_country
                             );
-                            arr.push({
-                                type: SET_SPECIAL_ORIGIN_COUNTRY,
-                                payload: originCountry
-                            });
 
                             const record_documents = RecordDocument.getRecordDocumentsFromJsonArray(
                                 response.record_documents
                             );
-                            arr.push({
-                                type: SET_SPECIAL_RECORD_DOCUMENTS,
-                                payload: record_documents
-                            });
 
                             const record_messages = RecordMessage.getRecordMessagesFromJsonArray(
                                 response.record_messages
                             );
-                            arr.push({
-                                type: SET_SPECIAL_RECORD_MESSAGES,
-                                payload: record_messages
-                            });
 
-                            return arr;
+                            return [
+                                {
+                                    type: SET_SPECIAL_RECORD,
+                                    payload: record
+                                },
+                                {
+                                    type: SET_SPECIAL_CLIENT,
+                                    payload: client
+                                },
+                                {
+                                    type: SET_SPECIAL_ORIGIN_COUNTRY,
+                                    payload: originCountry
+                                },
+                                {
+                                    type: SET_SPECIAL_RECORD_DOCUMENTS,
+                                    payload: record_documents
+                                },
+                                {
+                                    type: SET_SPECIAL_RECORD_MESSAGES,
+                                    payload: record_messages
+                                }
+                            ];
                         } else {
                             const record = RestrictedRecord.getRestrictedRecordFromJson(
                                 response
@@ -281,24 +301,26 @@ export class RecordsLoadingEffects {
         ofType(START_LOADING_RECORD_PERMISSION_REQUESTS),
         switchMap(() => {
             return from(
-                this.http
-                    .get(RECORD_PERMISSIONS_LIST_URL)
-                    .pipe(
-                        catchError(error => {
-                            return [];
-                            return of({
-                                error: "error at loading record permissions list"
-                            });
-                        }),
-                        mergeMap(response => {
-                            return [
-                                {
-                                    type: SET_RECORD_PERMISSION_REQUESTS,
-                                    payload: RecordPermissionRequest.getRecordPermissionRequestsFromJsonArray(response)
-                                }
-                            ];
-                        })
-                    )
+                this.http.get(RECORD_PERMISSIONS_LIST_API_URL).pipe(
+                    catchError(error => {
+                        this.snackbarService.showErrorSnackBar(
+                            `error at loading record permission list: ${
+                                error.error.detail
+                            }`
+                        );
+                        return [];
+                    }),
+                    mergeMap(response => {
+                        return [
+                            {
+                                type: SET_RECORD_PERMISSION_REQUESTS,
+                                payload: RecordPermissionRequest.getRecordPermissionRequestsFromJsonArray(
+                                    response
+                                )
+                            }
+                        ];
+                    })
+                )
             );
         })
     );

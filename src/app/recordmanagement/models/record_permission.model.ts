@@ -1,7 +1,6 @@
-
 /*
  * rlcapp - record and organization management software for refugee law clinics
- * Copyright (C) 2018  Dominik Walser
+ * Copyright (C) 2019  Dominik Walser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -17,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import {RestrictedUser} from '../../api/models/user.model';
+import { RestrictedUser } from "../../api/models/user.model";
 
 export class RecordPermissionRequest {
     constructor(
@@ -40,15 +39,21 @@ export class RecordPermissionRequest {
         this.state = state;
     }
 
-    static getRecordPermissionRequestsFromJsonArray(jsonArray){
+    static getRecordPermissionRequestsFromJsonArray(
+        jsonArray
+    ): RecordPermissionRequest[] {
         const recordPermissions: RecordPermissionRequest[] = [];
         Object.values(jsonArray).map(jsonRecordPermission => {
-            recordPermissions.push(RecordPermissionRequest.getRecordPermissionRequestFromJson(jsonRecordPermission));
+            recordPermissions.push(
+                RecordPermissionRequest.getRecordPermissionRequestFromJson(
+                    jsonRecordPermission
+                )
+            );
         });
         return recordPermissions;
     }
 
-    static getRecordPermissionRequestFromJson(json){
+    static getRecordPermissionRequestFromJson(json): RecordPermissionRequest {
         return new RecordPermissionRequest(
             json.id,
             RestrictedUser.getRestrictedUserFromJson(json.request_from),
@@ -56,8 +61,8 @@ export class RecordPermissionRequest {
             json.record,
             new Date(json.requested),
             new Date(json.processed_on),
-            json.can_edit === 'true',
+            json.can_edit === "true",
             json.state
-        )
+        );
     }
 }

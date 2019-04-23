@@ -1,0 +1,55 @@
+<!--
+  ~ rlcapp - record and organization management software for refugee law clinics
+  ~ Copyright (C) 2019  Dominik Walser
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<div *ngIf="group">
+    <h2>Description</h2>
+    <p>{{ group.description ? group.description : 'there is no description' }}</p>
+    <h2>Note</h2>
+    <p>{{ group.note ? group.note : 'there is no note' }}</p>
+    <div class="horizontal group-details__header">
+        <h1>Members</h1>
+        <button matSuffix mat-flat-button color="primary" (click)="onAddGroupMemberClick()" *ngIf="editGroupMembers">add
+        </button>
+    </div>
+    <div *ngIf="(group.members).length === 0; else membersTable">
+        <p>There are no group members.</p>
+    </div>
+    <ng-template #membersTable>
+        <table mat-table [dataSource]="group.members">
+            <ng-container matColumnDef="member">
+                <th mat-header-cell *matHeaderCellDef>Member</th>
+                <td mat-cell *matCellDef="let member" class="group-details__member-name">
+                    {{ member.name }}
+
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="remove" *ngIf="editGroupMembers">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let member">
+                    <button matSuffix mat-flat-button color="warn" (click)="onRemoveGroupMemberClick(member.id)"
+                            appGetColorOnHover>remove
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="memberColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: memberColumns;"></tr>
+        </table>
+    </ng-template>
+</div>
+

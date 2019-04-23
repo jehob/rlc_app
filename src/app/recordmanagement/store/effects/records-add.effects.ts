@@ -1,6 +1,6 @@
 /*
  * rlcapp - record and organization management software for refugee law clinics
- * Copyright (C) 2018  Dominik Walser
+ * Copyright (C) 2019  Dominik Walser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -35,9 +35,9 @@ import {
     StartAddingNewRecordMessage
 } from "../actions/records-start.actions";
 import {
-    CREATE_RECORD_URL,
-    GetAddRecordMessageUrl,
-    GetCreateRecordDocumentUrl
+    CREATE_RECORD_API_URL,
+    GetAddRecordMessageApiUrl,
+    GetCreateRecordDocumentApiUrl
 } from "../../../statics/api_urls.statics";
 import { RecordDocument } from "../../models/record_document.model";
 import {
@@ -64,9 +64,10 @@ export class RecordsAddEffects {
         }),
         switchMap((newRecord: any) => {
             return from(
-                this.http.post(CREATE_RECORD_URL, newRecord).pipe(
+                this.http.post(CREATE_RECORD_API_URL, newRecord).pipe(
                     catchError(error => {
-                        return of({ error: "error at creating new record" });
+                        this.recordSB.showError('error at creating new record: ' + error.error.detail);
+                        return [];
                     }),
                     mergeMap(response => {
                         this.recordSB.successfullyCreatedRecord(response);
@@ -87,15 +88,13 @@ export class RecordsAddEffects {
             return from(
                 this.http
                     .post(
-                        GetCreateRecordDocumentUrl(newDocument.record_id),
+                        GetCreateRecordDocumentApiUrl(newDocument.record_id),
                         newDocument
                     )
                     .pipe(
                         catchError(error => {
-                            console.log(error);
-                            return of({
-                                error: "error at creating a record document"
-                            });
+                            this.recordSB.showError('error at creating new record document: ' + error.error.detail);
+                            return [];
                         }),
                         mergeMap(response => {
                             const document = RecordDocument.getRecordDocumentFromJson(
@@ -131,15 +130,13 @@ export class RecordsAddEffects {
                 .unsubscribe();
             return from(
                 this.http
-                    .post(GetAddRecordMessageUrl(record_id), {
+                    .post(GetAddRecordMessageApiUrl(record_id), {
                         message: newMessage
                     })
                     .pipe(
                         catchError(error => {
-                            console.log(error);
-                            return of({
-                                error: "error at adding a record message"
-                            });
+                            this.recordSB.showError('error at creating new record message: ' + error.error.detail);
+                            return [];
                         }),
                         mergeMap((response: { error }) => {
                             if (response.error) {

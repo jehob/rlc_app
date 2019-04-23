@@ -1,6 +1,6 @@
 /*
  * rlcapp - record and organization management software for refugee law clinics
- * Copyright (C) 2018  Dominik Walser
+ * Copyright (C) 2019  Dominik Walser
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -17,13 +17,23 @@
  ******************************************************************************/
 
 import { RouterModule, Routes } from "@angular/router";
-import { AuthGuardService } from "./services/auth-guard.service";
 import { NgModule } from "@angular/core";
+import { AuthGuardService } from "./services/auth-guard.service";
 import { ProfileComponent } from "./pages/profile/profile.component";
 import { DashboardComponent } from "./pages/Dashboard/dashboard.component";
 import { LoginComponent } from "./pages/auth/login/login.component";
-import {RegisterComponent} from './pages/auth/register/register.component';
-import {ProfilesListComponent} from './pages/profiles-list/profiles-list.component';
+import { RegisterComponent } from "./pages/auth/register/register.component";
+import { ProfilesListComponent } from "./pages/profiles-list/profiles-list.component";
+import { ForeignProfileComponent } from "./pages/foreign-profile/foreign-profile.component";
+import { ForgotPasswordComponent } from "./pages/auth/forgot-password/forgot-password.component";
+import { ResetPasswordComponent } from "./pages/auth/reset-password/reset-password.component";
+import { GroupsListComponent } from "./pages/groups-list/groups-list.component";
+import { GroupComponent } from "./pages/group/group.component";
+import { PermissionListComponent } from "./pages/permission-list/permission-list.component";
+import { EditPermissionComponent } from "./pages/edit-permission/edit-permission.component";
+import { NewUserRequestsComponent } from "./pages/new-user-requests/new-user-requests.component";
+import { ActivateUserComponent } from "./pages/auth/activate-user/activate-user.component";
+import {LegalNoticeComponent} from './pages/legal-notice/legal-notice.component';
 
 const apiRoutes: Routes = [
     {
@@ -33,6 +43,7 @@ const apiRoutes: Routes = [
     },
     {
         path: "profiles",
+        pathMatch: "full",
         component: ProfilesListComponent,
         canActivate: [AuthGuardService]
     },
@@ -42,8 +53,45 @@ const apiRoutes: Routes = [
         component: DashboardComponent,
         canActivate: [AuthGuardService]
     },
+    {
+        path: "profiles/:id",
+        component: ForeignProfileComponent,
+        canActivate: [AuthGuardService]
+    },
+    {
+        path: "groups",
+        pathMatch: "full",
+        component: GroupsListComponent,
+        canActivate: [AuthGuardService]
+    },
+    {
+        path: "groups/:id",
+        component: GroupComponent,
+        canActivate: [AuthGuardService]
+    },
+    {
+        path: "permissions",
+        pathMatch: "full",
+        component: PermissionListComponent,
+        canActivate: [AuthGuardService]
+    },
+    {
+        path: "permissions/:id",
+        component: EditPermissionComponent,
+        canActivate: [AuthGuardService]
+    },
+    {
+        path: "new_user_requests",
+        component: NewUserRequestsComponent,
+        canActivate: [AuthGuardService]
+    },
+    // without access control
     { path: "login", component: LoginComponent },
-    { path: "register", component: RegisterComponent}
+    { path: "register", component: RegisterComponent },
+    { path: "forgot-password", component: ForgotPasswordComponent },
+    { path: "reset-password/:id", component: ResetPasswordComponent },
+    { path: "activate_account/:link", component: ActivateUserComponent },
+    { path: "legal-notice", component: LegalNoticeComponent }
 ];
 
 @NgModule({

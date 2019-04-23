@@ -1,5 +1,5 @@
 #  rlcapp - record and organization management software for refugee law clinics
-#  Copyright (C) 2018  Dominik Walser
+#  Copyright (C) 2019  Dominik Walser
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as
@@ -47,6 +47,12 @@ class UserProfileSerializer(serializers.ModelSerializer):
                 'write_only': True
             }
         }
+
+
+class UserProfileForeignSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.UserProfile
+        fields = ('id', 'name', 'email', 'name', 'phone_number')
 
 
 class UserProfileNameSerializer(serializers.ModelSerializer):

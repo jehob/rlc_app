@@ -1,5 +1,5 @@
 #  rlcapp - record and organization management software for refugee law clinics
-#  Copyright (C) 2018  Dominik Walser
+#  Copyright (C) 2019  Dominik Walser
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as
@@ -14,12 +14,13 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
-from django.core.validators import RegexValidator
+from django.db import models
 
-from . import HasPermission, Permission
+from backend.api.errors import CustomError
+from backend.static.error_codes import ERROR__API__PERMISSION__NOT_FOUND
 from backend.static.regex_validators import phone_regex
+from . import HasPermission, Permission
 
 
 class UserProfileManager(BaseUserManager):
@@ -108,16 +109,20 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         ('ex', 'exam'),
         ('ab', 'abroad')
     )
+    user_state = models.CharField(max_length=2, choices=user_states_possible)
 
     user_record_states_possible = (
         ('ac', 'accepting'),
         ('na', 'not accepting'),
         ('de', 'depends')
     )
+    user_record_state = models.CharField(max_length=2, choices=user_record_states_possible)
 
-    # in bearbeitung, abgeschlossen,
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']  # email already in there, other are default
+
+    # class Meta:
+    #     ordering = ['name']
 
     def get_full_name(self):
         return self.name
@@ -193,6 +198,9 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
                                             permission_for_rlc_id=for_rlc).count() >= 1
 
     def has_as_rlc_member_permission(self, permission, for_user=None, for_group=None, for_rlc=None):
+        if not self.rlc:
+            return False
+
         return HasPermission.objects.filter(rlc_has_permission_id=self.rlc.id, permission_id=permission,
                                             permission_for_user_id=for_user,
                                             permission_for_group_id=for_group,
@@ -211,9 +219,14 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
             False if the user doesnt have the permission
         """
         if isinstance(permission, str):
-            permission = Permission.objects.get(name=permission).id
+            try:
+                permission = Permission.objects.get(name=permission).id
+            except Exception as e:
+                raise CustomError(ERROR__API__PERMISSION__NOT_FOUND)
         if for_user is not None and for_group is not None and for_rlc is not None:
             raise AttributeError()
+
         return self.has_as_user_permission(permission, for_user, for_group, for_rlc) or \
                self.has_as_group_member_permission(permission, for_user, for_group, for_rlc) or \
-               self.has_as_rlc_member_permission(permission, for_user, for_group, for_rlc)
+               self.has_as_rlc_member_permission(permission, for_user, for_group, for_rlc) or \
+               self.is_superuser
