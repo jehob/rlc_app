@@ -17,12 +17,12 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 <div *ngIf="(whichSide=='for' && hasPermission.forUser) || (whichSide=='has' && hasPermission.userHas)"
-     class="horizontal">
+     class="horizonta is_clickable" (click)="onUserClick()">
     <mat-icon class="has-permission-side__icon">person</mat-icon>
     <p>{{ name }}</p>
 </div>
 <div *ngIf="(whichSide=='for' && hasPermission.forGroup) || (whichSide=='has' && hasPermission.groupHas)"
-     class="horizontal">
+     class="horizontal is_clickable" (click)="onGroupClick()">
     <mat-icon class="has-permission-side__icon">people</mat-icon>
     <p>{{ name }}</p>
 </div>

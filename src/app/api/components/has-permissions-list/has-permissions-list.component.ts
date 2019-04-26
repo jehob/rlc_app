@@ -24,6 +24,8 @@ import {RestrictedRlc} from '../../models/rlc.model';
 import {ApiSandboxService} from '../../services/api-sandbox.service';
 import {PERMISSION_CAN_MANAGE_PERMISSIONS_RLC} from '../../../statics/permissions.statics';
 import has = Reflect.has;
+import {Router} from '@angular/router';
+import {GetPermissionFrontUrl} from '../../../statics/frontend_links.statics';
 
 @Component({
     selector: "app-has-permissions-list",
@@ -43,7 +45,7 @@ export class HasPermissionsListComponent implements OnInit, OnChanges {
 
     canEditPermissions = false;
 
-    constructor(private apiSB: ApiSandboxService) {}
+    constructor(private apiSB: ApiSandboxService, private router: Router) {}
 
     ngOnInit() {
         if (!this.hasPermissions || this.hasPermissions.length === 0)
@@ -63,5 +65,9 @@ export class HasPermissionsListComponent implements OnInit, OnChanges {
 
     onRemoveClick(hasPermission: HasPermission): void {
         this.apiSB.startRemovingHasPermission(hasPermission.id);
+    }
+
+    onHasPermissionNameClick(hasPermission: HasPermission): void  {
+        this.router.navigateByUrl(GetPermissionFrontUrl(hasPermission.permission_id));
     }
 }

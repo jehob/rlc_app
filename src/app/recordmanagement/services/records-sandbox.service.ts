@@ -381,11 +381,11 @@ export class RecordsSandboxService {
         );
     }
 
-    navigateToRecordOfRecordPermissionRequest(
-        request: RecordPermissionRequest
-    ) {
-        this.router.navigate([GetRecordFrontUrl(request.record)]);
-    }
+    // navigateToRecordOfRecordPermissionRequest(
+    //     request: RecordPermissionRequest
+    // ) {
+    //     this.router.navigate([GetRecordFrontUrl(request.record)]);
+    // }
 
     resetFullClientInformation() {
         this.recordStore.dispatch(new ResetFullClientInformation());

@@ -40,11 +40,11 @@ export class LoginComponent implements OnInit {
         }
 
         this.loginForm = new FormGroup({
-            email: new FormControl("", [
+            email: new FormControl("dummy@rlcm.de", [
                 Validators.required,
                 Validators.email
             ]),
-            password: new FormControl("", [Validators.required])
+            password: new FormControl("qwe123", [Validators.required])
         });
     }
 

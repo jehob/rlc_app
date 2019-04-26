@@ -58,6 +58,7 @@ import { AppSandboxService } from "../../services/app-sandbox.service";
 import { RecordPermissionRequest } from "../../../recordmanagement/models/record_permission.model";
 import { UPDATE_RECORD_PERMISSION_REQUEST } from "../../../recordmanagement/store/actions/records.actions";
 import { LOGIN_FRONT_URL } from "../../../statics/frontend_links.statics";
+import {State} from '../../models/state.model';
 
 @Injectable()
 export class AuthEffects {
@@ -233,11 +234,11 @@ export class AuthEffects {
             },
             {
                 type: SET_USER_STATES,
-                payload: response.user_states
+                payload: State.getStatesFromJsonArray(response.user_states)
             },
             {
                 type: SET_USER_RECORD_STATES,
-                payload: response.user_record_states
+                payload: State.getStatesFromJsonArray(response.user_record_states)
             }
         ];
     }

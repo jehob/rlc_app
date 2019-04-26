@@ -42,7 +42,7 @@ import {
 } from './api.actions';
 import { HasPermission, Permission } from "../models/permission.model";
 import { RestrictedRlc } from "../models/rlc.model";
-import { getIdObjects } from "../../shared/other/reducer-helper";
+import {getIdObjects, getObjectsByField} from '../../shared/other/reducer-helper';
 import { FullGroup, RestrictedGroup } from "../models/group.model";
 import { NewUserRequest } from "../models/new_user_request.model";
 
@@ -115,12 +115,12 @@ export function apiReducer(state = initialState, action: ApiActions) {
         case SET_USER_STATES:
             return {
                 ...state,
-                user_states: action.payload
+                user_states: getObjectsByField(action.payload, 'abbreviation')
             };
         case SET_USER_RECORD_STATES:
             return {
                 ...state,
-                user_record_states: action.payload
+                user_record_states: getObjectsByField(action.payload, 'abbreviation')
             };
         case SET_GROUPS:
             return {

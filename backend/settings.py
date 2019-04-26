@@ -96,6 +96,7 @@ if 'ON_HEROKU' in os.environ:
     TIMEOUT_TIMEDELTA = timedelta(minutes=10)
 else:
     TIMEOUT_TIMEDELTA = timedelta(weeks=10)
+    # TIMEOUT_TIMEDELTA = timedelta(seconds=5)
 
 
 # Templates

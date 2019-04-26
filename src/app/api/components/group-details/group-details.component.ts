@@ -21,6 +21,9 @@ import { ApiSandboxService } from "../../services/api-sandbox.service";
 import { FullGroup } from "../../models/group.model";
 import { AddGroupMemberComponent } from "../add-group-member/add-group-member.component";
 import { MatDialog } from "@angular/material";
+import {Router} from '@angular/router';
+import {GetProfileFrontUrl} from '../../../statics/frontend_links.statics';
+import {RestrictedUser} from '../../models/user.model';
 
 @Component({
     selector: "app-group-details",
@@ -36,7 +39,7 @@ export class GroupDetailsComponent implements OnInit {
     @Input()
     group: FullGroup;
 
-    constructor(private apiSB: ApiSandboxService, public dialog: MatDialog) {}
+    constructor(private apiSB: ApiSandboxService, public dialog: MatDialog, private router: Router) {}
 
     ngOnInit() {
         this.editGroupMembers = (this.editGroupMembers !== undefined);
@@ -54,5 +57,9 @@ export class GroupDetailsComponent implements OnInit {
 
     onAddGroupMemberClick() {
         this.dialog.open(AddGroupMemberComponent);
+    }
+
+    onUserClick(user: RestrictedUser){
+        this.router.navigateByUrl(GetProfileFrontUrl(user));
     }
 }
