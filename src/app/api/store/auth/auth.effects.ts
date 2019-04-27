@@ -210,6 +210,7 @@ export class AuthEffects {
             LogRocket.identify(response.user.id);
             // keep this console.log
             console.log("identified: ", response.user.id);
+
         }
         return [
             {

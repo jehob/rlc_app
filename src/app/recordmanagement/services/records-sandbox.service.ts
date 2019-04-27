@@ -266,7 +266,7 @@ export class RecordsSandboxService {
         // do more
     }
 
-    saveRecord(record: FullRecord, client: FullClient) {
+    startSavingRecord(record: FullRecord, client: FullClient) {
         this.recordStore.dispatch(new StartSavingRecord({ record, client }));
     }
 
@@ -380,12 +380,6 @@ export class RecordsSandboxService {
             new StartDecliningRecordPermissionRequest(request)
         );
     }
-
-    // navigateToRecordOfRecordPermissionRequest(
-    //     request: RecordPermissionRequest
-    // ) {
-    //     this.router.navigate([GetRecordFrontUrl(request.record)]);
-    // }
 
     resetFullClientInformation() {
         this.recordStore.dispatch(new ResetFullClientInformation());

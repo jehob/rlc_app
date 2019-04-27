@@ -21,16 +21,14 @@
     <mat-card-header>
         <div class="profile__avatar-container">
             <img class="profile__img-avatar" src="../../../../../static/images/empty-profile.png" alt="Avater">
-            <span class="profile__caption">{{ name }}</span>
+            <span class="profile__caption">{{ user ? user.name : '' }}</span>
         </div>
     </mat-card-header>
 
     <mat-card-content>
         <div class="profile__form-container">
             <form [formGroup]="userForm" class="profile__form-container">
-                <mat-form-field>
-                    <input matInput placeholder="Email" formControlName="email">
-                </mat-form-field>
+                <p>Email: {{ user ? user.email : ''}}</p>
                 <mat-form-field>
                     <input matInput placeholder="Tel. No." formControlName="phone_number">
                 </mat-form-field>
@@ -48,6 +46,14 @@
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
+                <app-autocomplete [allValuesObservable]="allUserStates" placeholder="user state"
+                                  [setSelectedValue]="selectedUserState" valueToShow="full_name"
+                                  (selectedValueChanged)="onSelectedUserStateChanged($event)">
+                </app-autocomplete>
+                <app-autocomplete [allValuesObservable]="allUserRecordStates" placeholder="user record state"
+                                  [setSelectedValue]="selectedUserRecordState" valueToShow="full_name"
+                                  (selectedValueChanged)="onSelectedUserRecordStateChanged($event)">
+                </app-autocomplete>
             </form>
 
         </div>
@@ -55,6 +61,8 @@
     <!--<input #fileInput type="file" id="file_input"/>-->
     <!--<button mat-flat-button (click)="onUploadClick()">Save Pic</button>-->
     <mat-card-actions>
-        <button class="profile__btn-save-changes" mat-flat-button [disabled]="!userForm.valid" (click)="onSaveClick()">Save</button>
+        <button class="profile__btn-save-changes" mat-flat-button [disabled]="!userForm.valid" (click)="onSaveClick()">
+            Save
+        </button>
     </mat-card-actions>
 </mat-card>

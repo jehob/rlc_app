@@ -30,6 +30,7 @@ from backend.api.other_functions.emails import EmailSender
 from backend.recordmanagement import models, serializers
 from backend.static import error_codes
 from backend.static.permissions import PERMISSION_VIEW_RECORDS_FULL_DETAIL_RLC
+from backend.static.date_utils import parse_date
 
 
 class RecordsListViewSet(viewsets.ViewSet):
@@ -249,8 +250,3 @@ class RecordViewSet(APIView):
     def delete(self, request, id):
 
         pass
-
-
-def parse_date(date_str):
-    """Parse date from string by DATE_INPUT_FORMATS of current language"""
-    return datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S.%fZ").date()

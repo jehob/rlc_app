@@ -32,9 +32,9 @@ from backend.static.error_codes import *
 from backend.static.permissions import PERMISSION_VIEW_FULL_USER_DETAIL_OVERALL, \
     PERMISSION_VIEW_FULL_USER_DETAIL_RLC
 from ..models import UserProfile, Permission, Rlc
-from ..permissions import UpdateOwnProfile
 from ..serializers import UserProfileSerializer, UserProfileCreatorSerializer, UserProfileNameSerializer, RlcSerializer, \
     UserProfileForeignSerializer
+from backend.static.date_utils import parse_date
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
@@ -42,7 +42,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 
     serializer_class = UserProfileSerializer
     queryset = UserProfile.objects.all()
-    permission_classes = (UpdateOwnProfile, IsAuthenticated)
+    permission_classes = (IsAuthenticated, )
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name', 'email',)
 
@@ -83,6 +83,25 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             else:
                 serializer = UserProfileForeignSerializer(user)
         return Response(serializer.data)
+
+    def update(self, request, *args, **kwargs):
+        try:
+            user_id = request.data['id']
+            user = UserProfile.objects.get(pk=user_id)
+        except:
+            raise CustomError(ERROR__API__ID_NOT_FOUND)
+        if request.user != user:
+            raise CustomError(ERROR__API__PERMISSION__INSUFFICIENT)
+        data = request.data
+        user.birthday = parse_date(data['birthday'])
+        user.postal_code = data['postal_code']
+        user.street = data['street']
+        user.city = data['city']
+        user.phone_number = data['phone_number']
+        user.user_state = data['user_state']
+        user.user_record_state = data['user_record_state']
+        user.save()
+        return Response(UserProfileSerializer(user).data)
 
 
 class UserProfileCreatorViewSet(viewsets.ModelViewSet):

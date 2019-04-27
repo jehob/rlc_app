@@ -77,6 +77,7 @@ export const UPDATE_NEW_USER_REQUEST = "UPDATE_NEW_USER_REQUEST";
 export const START_CHECKING_USER_ACTIVATION_LINK =
     "START_CHECKING_USER_ACTIVATION_LINK";
 export const START_ACTIVATING_USER = "START_ACTIVATING_USER";
+export const START_SAVING_USER = "START_SAVING_USER";
 
 export class AddGroup implements Action {
     readonly type = ADD_GROUP;
@@ -310,6 +311,12 @@ export class StartActivatingUser implements Action {
     constructor(public payload: string) {}
 }
 
+export class StartSavingUser implements Action {
+    readonly type = START_SAVING_USER;
+
+    constructor(public payload: FullUser){}
+}
+
 export type ApiActions =
     | AddGroup
     | AddSingleHasPermission
@@ -352,4 +359,5 @@ export type ApiActions =
     | StartPatchUser
     | StartRemovingGroupMember
     | StartRemovingHasPermission
+    | StartSavingUser
     | UpdateNewUserRequest;
