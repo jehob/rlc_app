@@ -15,6 +15,7 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 from django.core.mail import EmailMultiAlternatives
+from django.template import loader
 
 
 class EmailSender:
@@ -38,3 +39,14 @@ class EmailSender:
         msg = EmailMultiAlternatives(subject, text_alternative, from_email, email_addresses)
         msg.attach_alternative(html_content, "text/html")
         msg.send()
+
+    @staticmethod
+    def send_user_activation_email(user, link):
+        html_message = loader.render_to_string(
+            'email_templates/activate_account.html',
+            {
+                'url': link
+            }
+        )
+        alternative_text = "RLC Intranet - Activate your account here: " + link
+        EmailSender.send_html_email([user.email], "RLC Intranet registration", html_message, alternative_text)

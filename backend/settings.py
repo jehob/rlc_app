@@ -120,7 +120,7 @@ else:
     TEMPLATES = [
         {
             'BACKEND': 'django.template.backends.django.DjangoTemplates',
-            'DIRS': ['static/dev'],
+            'DIRS': ['static/dev', 'static'],
             'APP_DIRS': True,
             'OPTIONS': {
                 'context_processors': [

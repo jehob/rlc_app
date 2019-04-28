@@ -49,7 +49,8 @@ export class ProfileComponent implements OnInit {
             street: new FormControl(""),
             postal_code: new FormControl(""),
             city: new FormControl(""),
-            birthday: new FormControl("")
+            birthday: new FormControl(""),
+            user_state: new FormControl("")
         });
     }
 
@@ -78,6 +79,10 @@ export class ProfileComponent implements OnInit {
             .getUserStateByAbbreviation(this.user.user_state)
             .subscribe((user_state: State) => {
                 this.selectedUserState = user_state;
+                if (user_state)
+                    this.userForm.controls["user_state"].setValue(
+                        user_state.full_name
+                    );
             });
         this.apiSB
             .getUserRecordStateByAbbreviation(this.user.user_record_state)
