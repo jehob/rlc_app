@@ -25,9 +25,10 @@ from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from backend.api.errors import CustomError
-from backend.api.other_functions.emails import EmailSender
+from backend.static.emails import EmailSender
 from backend.static.error_codes import *
 from backend.static.permissions import PERMISSION_VIEW_FULL_USER_DETAIL_OVERALL, \
     PERMISSION_VIEW_FULL_USER_DETAIL_RLC
@@ -35,6 +36,7 @@ from ..models import UserProfile, Permission, Rlc
 from ..serializers import UserProfileSerializer, UserProfileCreatorSerializer, UserProfileNameSerializer, RlcSerializer, \
     UserProfileForeignSerializer
 from backend.static.date_utils import parse_date
+from backend.static.frontend_links import FrontendLinks
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
@@ -140,13 +142,7 @@ class UserProfileCreatorViewSet(viewsets.ModelViewSet):
         user_activation_link = UserActivationLink(user=user)
         user_activation_link.save()
 
-        if "URL" in os.environ:
-            url = os.environ['URL'] + "/activate_account/" + str(user_activation_link.link)
-        else:
-            url = 'no url, please contact the administrator'
-        EmailSender.send_email_notification([user.email], "RLC Intranet registration",
-                                            "RLC Intranet Notification - You created an account, please activate here: " +
-                                            url)
+        EmailSender.send_user_activation_email(user, FrontendLinks.get_user_activation_link(user_activation_link))
 
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
@@ -228,3 +224,9 @@ class LoginViewSet(viewsets.ViewSet):
             raise CustomError(ERROR__API__USER__NOT_FOUND)
         if not user.is_active:
             raise CustomError(ERROR__API__USER__INACTIVE)
+
+
+class LogoutViewSet(APIView):
+    def post(self, request):
+        Token.objects.filter(user=request.user).delete()
+        return Response()

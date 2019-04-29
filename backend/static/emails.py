@@ -16,6 +16,7 @@
 
 from django.core.mail import EmailMultiAlternatives
 from django.template import loader
+from backend.static.frontend_links import FrontendLinks
 
 
 class EmailSender:
@@ -49,4 +50,21 @@ class EmailSender:
             }
         )
         alternative_text = "RLC Intranet - Activate your account here: " + link
-        EmailSender.send_html_email([user.email], "RLC Intranet registration", html_message, alternative_text)
+        subject = "RLC Intranet registration"
+        EmailSender.send_html_email([user.email], subject, html_message, alternative_text)
+
+    @staticmethod
+    def send_record_new_message_notification_email(record):
+        emails = record.get_notification_emails()
+        link = FrontendLinks.get_record_link(record)
+        html_message = loader.render_to_string(
+            'email_templates/new_record_message.html',
+            {
+                'url': link,
+                'record_token': record.record_token
+            }
+        )
+        alternative_text = "RLC Intranet - New message in record: " + link
+        subject = 'RLC Intranet - New Message'
+        EmailSender.send_html_email(emails, subject, html_message, alternative_text)
+

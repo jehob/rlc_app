@@ -108,3 +108,13 @@ class Record(models.Model):
         return self.working_on_record.filter(id=user.id).count() == 1 or \
                RecordPermission.objects.filter(record=self, request_from=user, state='gr') or \
                user.has_permission(permissions.PERMISSION_VIEW_RECORDS_FULL_DETAIL_RLC, for_rlc=user.rlc)
+
+    def get_notification_emails(self):
+        from backend.recordmanagement.models import RecordPermission
+        emails = []
+        for user in list(self.working_on_record.all()):
+            emails.append(user.email)
+        for permission_request in list(RecordPermission.objects.filter(record=self, state='gr')):
+            emails.append(permission_request.request_from.email)
+        return emails
+

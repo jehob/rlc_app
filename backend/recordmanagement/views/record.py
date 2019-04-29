@@ -26,11 +26,12 @@ from rest_framework.views import APIView
 
 from backend.api.errors import CustomError
 from backend.api.models import UserProfile
-from backend.api.other_functions.emails import EmailSender
+from backend.static.emails import EmailSender
 from backend.recordmanagement import models, serializers
 from backend.static import error_codes
 from backend.static.permissions import PERMISSION_VIEW_RECORDS_FULL_DETAIL_RLC
 from backend.static.date_utils import parse_date
+from backend.static.frontend_links import FrontendLinks
 
 
 class RecordsListViewSet(viewsets.ViewSet):
@@ -189,63 +190,59 @@ class RecordViewSet(APIView):
         if user.rlc != record.from_rlc and not user.is_superuser:
             raise CustomError(error_codes.ERROR__RECORD__RETRIEVE_RECORD__WRONG_RLC)
 
-        if record.user_has_permission(user):
-            record_data = request.data['record']
-            client_data = request.data['client']
-            client = record.client
+        if not record.user_has_permission(user):
+            raise CustomError(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
 
-            try:
-                record.note = record_data['note']
-                record.contact = record_data['contact']
-                record.last_contact_date = parse_date(record_data['last_contact_date'])
-                record.state = record_data['state']
-                record.official_note = record_data['official_note']
-                record.additional_facts = record_data['additional_facts']
-                record.bamf_token = record_data['bamf_token']
-                record.foreign_token = record_data['foreign_token']
-                record.first_correspondence = record_data['first_correspondence']
-                record.circumstances = record_data['circumstances']
-                record.lawyer = record_data['lawyer']
-                record.related_persons = record_data['related_persons']
-                record.consultant_team = record_data['consultant_team']
-                record.next_steps = record_data['next_steps']
-                record.status_described = record_data['status_described']
+        record_data = request.data['record']
+        client_data = request.data['client']
+        client = record.client
 
-                record.tagged.clear()
-                for tag in record_data['tags']:
-                    record.tagged.add(models.RecordTag.objects.get(pk=tag['id']))
+        try:
+            record.note = record_data['note']
+            record.contact = record_data['contact']
+            record.last_contact_date = parse_date(record_data['last_contact_date'])
+            record.state = record_data['state']
+            record.official_note = record_data['official_note']
+            record.additional_facts = record_data['additional_facts']
+            record.bamf_token = record_data['bamf_token']
+            record.foreign_token = record_data['foreign_token']
+            record.first_correspondence = record_data['first_correspondence']
+            record.circumstances = record_data['circumstances']
+            record.lawyer = record_data['lawyer']
+            record.related_persons = record_data['related_persons']
+            record.consultant_team = record_data['consultant_team']
+            record.next_steps = record_data['next_steps']
+            record.status_described = record_data['status_described']
 
-                client.note = client_data['note']
-                client.name = client_data['name']
-                client.birthday = parse_date(client_data['birthday'])
-                client.origin_country = models.OriginCountry.objects.get(pk=client_data['origin_country'])
-                client.phone_number = client_data['phone_number']
-            except:
-                raise CustomError(error_codes.ERROR__RECORD__RECORD__COULD_NOT_SAVE)
+            record.tagged.clear()
+            for tag in record_data['tags']:
+                record.tagged.add(models.RecordTag.objects.get(pk=tag['id']))
 
-            record.last_edited = datetime.utcnow().replace(tzinfo=pytz.utc)
-            record.save()
-            client.last_edited = datetime.utcnow().replace(tzinfo=pytz.utc)
-            client.save()
+            client.note = client_data['note']
+            client.name = client_data['name']
+            client.birthday = parse_date(client_data['birthday'])
+            client.origin_country = models.OriginCountry.objects.get(pk=client_data['origin_country'])
+            client.phone_number = client_data['phone_number']
+        except:
+            raise CustomError(error_codes.ERROR__RECORD__RECORD__COULD_NOT_SAVE)
 
-            for user in record.working_on_record.all():
-                if 'URL' in os.environ:
-                    url = os.environ['URL'] + "records/" + str(record.id)
-                else:
-                    url = 'no url, please contact the administrator'
+        record.last_edited = datetime.utcnow().replace(tzinfo=pytz.utc)
+        record.save()
+        client.last_edited = datetime.utcnow().replace(tzinfo=pytz.utc)
+        client.save()
 
-                EmailSender.send_email_notification([user.email], "Patched Record",
-                                                    "RLC Intranet Notification - A record of yours was changed. Look here:" +
-                                                    url)
+        record_url = FrontendLinks.get_record_link(record)
+        for user in record.working_on_record.all():
+            EmailSender.send_email_notification([user.email], "Patched Record",
+                                                "RLC Intranet Notification - A record of yours was changed. Look here:" +
+                                                record_url)
 
-            # return Response({'success': 'true'})
-            return Response(
-                {
-                    'record': serializers.RecordFullDetailSerializer(models.Record.objects.get(pk=record.pk)).data,
-                    'client': serializers.ClientSerializer(models.Client.objects.get(pk=client.pk)).data
-                }
-            )
-        raise CustomError(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
+        return Response(
+            {
+                'record': serializers.RecordFullDetailSerializer(models.Record.objects.get(pk=record.pk)).data,
+                'client': serializers.ClientSerializer(models.Client.objects.get(pk=client.pk)).data
+            }
+        )
 
     def delete(self, request, id):
 

@@ -19,7 +19,7 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from backend.api.errors import CustomError
-from backend.api.other_functions.emails import EmailSender
+from backend.static.emails import EmailSender
 from backend.static.env_getter import get_website_base_url
 from backend.static.error_codes import *
 from ..models import UserProfile, ForgotPasswordLinks

@@ -32,13 +32,17 @@ import {
     FORGOT_PASSWORD,
     ForgotPassword,
     RESET_PASSWORD,
-    ResetPassword
+    ResetPassword,
+    START_LOGGING_OUT,
+    LOGOUT,
+    StartLoggingOut
 } from "./auth.actions";
 import LogRocket from "logrocket";
 import {
     FORGOT_PASSWORD_API_URL,
     GetResetPasswordApiUrl,
-    LOGIN_API_URL
+    LOGIN_API_URL,
+    LOGOUT_API_URL
 } from "../../../statics/api_urls.statics";
 import {
     SET_ALL_PERMISSIONS,
@@ -58,7 +62,7 @@ import { AppSandboxService } from "../../services/app-sandbox.service";
 import { RecordPermissionRequest } from "../../../recordmanagement/models/record_permission.model";
 import { UPDATE_RECORD_PERMISSION_REQUEST } from "../../../recordmanagement/store/actions/records.actions";
 import { LOGIN_FRONT_URL } from "../../../statics/frontend_links.statics";
-import {State} from '../../models/state.model';
+import { State } from "../../models/state.model";
 
 @Injectable()
 export class AuthEffects {
@@ -196,6 +200,34 @@ export class AuthEffects {
         })
     );
 
+    @Effect()
+    startLoggingOut = this.actions.pipe(
+        ofType(START_LOGGING_OUT),
+        mergeMap(() => {
+            return from(
+                this.http.post(LOGOUT_API_URL, {}).pipe(
+                    catchError(error => {
+                        this.recordSB.showError(error.error.detail);
+                        this.logoutStatics();
+                        return [
+                            {
+                                type: LOGOUT
+                            }
+                        ];
+                    }),
+                    mergeMap(response => {
+                        this.logoutStatics();
+                        return [
+                            {
+                                type: LOGOUT
+                            }
+                        ];
+                    })
+                )
+            );
+        })
+    );
+
     static getStaticInformation(response: {
         user: any;
         all_permissions: any;
@@ -210,7 +242,6 @@ export class AuthEffects {
             LogRocket.identify(response.user.id);
             // keep this console.log
             console.log("identified: ", response.user.id);
-
         }
         return [
             {
@@ -239,8 +270,15 @@ export class AuthEffects {
             },
             {
                 type: SET_USER_RECORD_STATES,
-                payload: State.getStatesFromJsonArray(response.user_record_states)
+                payload: State.getStatesFromJsonArray(
+                    response.user_record_states
+                )
             }
         ];
+    }
+
+    logoutStatics() {
+        localStorage.clear();
+        this.router.navigate([LOGIN_FRONT_URL]);
     }
 }
