@@ -61,7 +61,14 @@
                             class="records-permit-requests__to-process-column__header">State
                         </th>
                         <td mat-cell *matCellDef="let recordPermissionRequest">
-                            <p>{{ recordPermissionRequest.state }}</p>
+                            <div [ngSwitch]="recordPermissionRequest.state">
+                                <div class="circle-indicator circle-indicator__green"
+                                     *ngSwitchCase="'gr'" matTooltip="granted"></div>
+                                <div class="circle-indicator circle-indicator__red"
+                                     *ngSwitchCase="'de'" matTooltip="declined"></div>
+                                <div class="circle-indicator circle-indicator__orange"
+                                     *ngSwitchCase="'re'" matTooltip="requested"></div>
+                            </div>
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="accept">
@@ -123,7 +130,14 @@
                             class="records-permit-requests__to-process-column__header">State
                         </th>
                         <td mat-cell *matCellDef="let recordPermissionRequest">
-                            <p>{{ recordPermissionRequest.state }}</p>
+                            <div [ngSwitch]="recordPermissionRequest.state">
+                                <div class="circle-indicator circle-indicator__green"
+                                     *ngSwitchCase="'gr'" matTooltip="granted"></div>
+                                <div class="circle-indicator circle-indicator__red"
+                                     *ngSwitchCase="'de'" matTooltip="declined"></div>
+                                <div class="circle-indicator circle-indicator__orange"
+                                     *ngSwitchCase="'re'" matTooltip="requested"></div>
+                            </div>
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="processor">

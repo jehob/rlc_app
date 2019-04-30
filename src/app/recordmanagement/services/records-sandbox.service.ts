@@ -26,7 +26,7 @@ import { Observable } from "rxjs";
 import { RecordsState } from "../store/records.reducers";
 import {
     ResetFullClientInformation,
-    ResetPossibleClients,
+    ResetPossibleClients, SetSpecialRecordRequestState,
     StartAddingNewRecord,
     StartAddingNewRecordDocument,
     StartAddingNewRecordMessage,
@@ -40,7 +40,7 @@ import {
     StartRequestingReadPermission,
     StartSavingRecord,
     StartSettingRecordDocumentTags
-} from "../store/actions/records.actions";
+} from '../store/actions/records.actions';
 import { FullClient } from "../models/client.model";
 import { OriginCountry } from "../models/country.model";
 import { RestrictedUser } from "../../api/models/user.model";
@@ -341,6 +341,7 @@ export class RecordsSandboxService {
         this.recordStore.dispatch(
             new StartRequestingReadPermission(restrictedRecord)
         );
+        this.recordStore.dispatch(new SetSpecialRecordRequestState('re'));
     }
 
     startLoadingRecordPermissionRequests() {
@@ -383,5 +384,14 @@ export class RecordsSandboxService {
 
     resetFullClientInformation() {
         this.recordStore.dispatch(new ResetFullClientInformation());
+    }
+
+    getSpecialRecordRequestState(): Observable<string> {
+        return this.recordStore.pipe(
+            select(
+                (state: any) =>
+                    state.records.special_record.request_state
+            )
+        );
     }
 }

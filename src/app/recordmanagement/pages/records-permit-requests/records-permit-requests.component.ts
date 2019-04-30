@@ -67,7 +67,6 @@ export class RecordsPermitRequestsComponent implements OnInit {
     }
 
     onRequestClick(request: RecordPermissionRequest) {
-        // this.recordSB.navigateToRecordOfRecordPermissionRequest(request);
         this.router.navigateByUrl(GetRecordFrontUrl(request.record));
     }
 

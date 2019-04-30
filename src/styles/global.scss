@@ -29,12 +29,12 @@
 }
 
 .snackbar__error {
-    background: #A81810 !important;
+    background: #a81810 !important;
     color: white !important;
     vertical-align: center;
 }
 
-.is_clickable{
+.is_clickable {
     cursor: pointer;
 }
 
@@ -57,4 +57,25 @@
     :hover {
         background-color: red;
     }
+}
+
+.circle-indicator {
+    border-radius: 25px;
+    min-height: 10px;
+    min-width: 10px;
+    max-height: 10px;
+    max-width: 10px;
+}
+
+.circle-indicator__green {
+    background-color: green;
+}
+.circle-indicator__red {
+    background-color: red;
+}
+.circle-indicator__grey {
+    background-color: grey;
+}
+.circle-indicator__orange {
+    background-color: orange;
 }

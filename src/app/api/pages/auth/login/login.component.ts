@@ -19,8 +19,13 @@
 import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import {AppSandboxService} from '../../../services/app-sandbox.service';
-import {FORGOT_PASSWORD_FRONT_URL, MAIN_PAGE_FRONT_URL, REGISTER_FRONT_URL} from '../../../../statics/frontend_links.statics';
+import { isDevMode } from "@angular/core";
+import { AppSandboxService } from "../../../services/app-sandbox.service";
+import {
+    FORGOT_PASSWORD_FRONT_URL,
+    MAIN_PAGE_FRONT_URL,
+    REGISTER_FRONT_URL
+} from "../../../../statics/frontend_links.statics";
 
 @Component({
     selector: "app-login",
@@ -40,26 +45,30 @@ export class LoginComponent implements OnInit {
         }
 
         this.loginForm = new FormGroup({
-            email: new FormControl("dummy@rlcm.de", [
-                Validators.required,
-                Validators.email
-            ]),
-            password: new FormControl("qwe123", [Validators.required])
+            email: new FormControl("", [Validators.required, Validators.email]),
+            password: new FormControl("", [Validators.required])
         });
+        if (isDevMode()) {
+            this.loginForm.controls["email"].setValue("dummy@rlcm.de");
+            this.loginForm.controls["password"].setValue("qwe123");
+        }
     }
 
     ngOnInit() {}
 
     onLogInClick() {
         if (this.loginForm.valid)
-            this.appSB.login(this.loginForm.value.email, this.loginForm.value.password);
+            this.appSB.login(
+                this.loginForm.value.email,
+                this.loginForm.value.password
+            );
     }
 
     onRegisterClick() {
         this.router.navigate([REGISTER_FRONT_URL]);
     }
 
-    onForgotPasswordClick(){
+    onForgotPasswordClick() {
         this.router.navigate([FORGOT_PASSWORD_FRONT_URL]);
     }
 }

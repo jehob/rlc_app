@@ -26,12 +26,12 @@ from rest_framework.views import APIView
 
 from backend.api.errors import CustomError
 from backend.api.models import UserProfile
-from backend.static.emails import EmailSender
 from backend.recordmanagement import models, serializers
 from backend.static import error_codes
-from backend.static.permissions import PERMISSION_VIEW_RECORDS_FULL_DETAIL_RLC
 from backend.static.date_utils import parse_date
+from backend.static.emails import EmailSender
 from backend.static.frontend_links import FrontendLinks
+from backend.static.permissions import PERMISSION_VIEW_RECORDS_FULL_DETAIL_RLC
 
 
 class RecordsListViewSet(viewsets.ViewSet):
@@ -182,7 +182,16 @@ class RecordViewSet(APIView):
             })
         else:
             serializer = serializers.RecordNoDetailSerializer(record)
-            return Response(serializer.data)
+            permission_request = models.RecordPermission.objects.filter(record=record, request_from=user, state='re').first()
+
+            if not permission_request:
+                state = 'nr'
+            else:
+                state = permission_request.state
+            return Response({
+                'record': serializer.data,
+                'request_state': state
+            })
 
     def patch(self, request, id):
         record = models.Record.objects.get(pk=id)

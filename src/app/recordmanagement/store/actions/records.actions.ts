@@ -28,6 +28,7 @@ import {RecordPermissionRequest} from '../../models/record_permission.model';
 
 export const RESET_FULL_CLIENT_INFORMATION = "RESET_FULL_CLIENT_INFORMATION";
 export const RESET_POSSIBLE_CLIENTS = "RESET_POSSIBLE_CLIENTS";
+export const RESET_SPECIAL_RECORD_REQUEST_STATE = "RESET_SPECIAL_RECORD_REQUEST_STATE";
 
 export const ADD_RECORD_DOCUMENT = "ADD_RECORD_DOCUMENT";
 export const ADD_RECORD_MESSAGE = "ADD_RECORD_MESSAGE";
@@ -60,6 +61,10 @@ export class UpdateRecordPermissionRequest implements Action {
     constructor(public payload: RecordPermissionRequest){}
 }
 
+export class ResetSpecialRecordRequestState implements Action {
+    readonly type = RESET_SPECIAL_RECORD_REQUEST_STATE;
+}
+
 export type RecordsActions =
     | ResetPossibleClients
     | AddRecordDocument
@@ -67,4 +72,5 @@ export type RecordsActions =
     | ResetFullClientInformation
     | RecordsSetActions
     | RecordStartActions
-    | UpdateRecordPermissionRequest;
+    | UpdateRecordPermissionRequest
+    | ResetSpecialRecordRequestState;

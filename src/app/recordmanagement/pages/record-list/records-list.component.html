@@ -51,11 +51,11 @@
                     <th mat-header-cell *matHeaderCellDef>state</th>
                     <td mat-cell *matCellDef="let record">
                         <div [ngSwitch]="record.state">
-                            <div class="record-list-item__status-indicator record-list-item__status-indicator--open"
+                            <div class="circle-indicator circle-indicator__green"
                                  *ngSwitchCase="'op'" matTooltip="open"></div>
-                            <div class="record-list-item__status-indicator record-list-item__status-indicator--waiting"
+                            <div class="circle-indicator circle-indicator__orange"
                                  *ngSwitchCase="'wa'" matTooltip="waiting"></div>
-                            <div class="record-list-item__status-indicator record-list-item__status-indicator--closed"
+                            <div class="circle-indicator circle-indicator__grey"
                                  *ngSwitchCase="'cl'" matTooltip="closed"></div>
                         </div>
                     </td>
