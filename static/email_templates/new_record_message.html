@@ -16,17 +16,16 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<div *ngIf="(whichSide=='for' && hasPermission.forUser) || (whichSide=='has' && hasPermission.userHas)"
-     class="horizonta is_clickable" (click)="onUserClick()">
-    <mat-icon class="has-permission-side__icon">person</mat-icon>
-    <p>{{ name }}</p>
-</div>
-<div *ngIf="(whichSide=='for' && hasPermission.forGroup) || (whichSide=='has' && hasPermission.groupHas)"
-     class="horizontal is_clickable" (click)="onGroupClick()">
-    <mat-icon class="has-permission-side__icon">people</mat-icon>
-    <p>{{ name }}</p>
-</div>
-<div *ngIf="(whichSide=='for' && hasPermission.forRlc) || (whichSide=='has' && hasPermission.rlcHas)" class="horizontal">
-    <mat-icon class="has-permission-side__icon">all_inclusive</mat-icon>
-    <p>whole rlc</p>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title></title>
+</head>
+<body>
+<h1>RLC - Intranet notification</h1>
+<h2>New message in one of your records</h2>
+<p>There is a new message in record: {{record_token}}</p>
+<p>To get to the record click the following link: {{ url }}</p>
+<p>Have a nice day!</p>
+</body>
+</html>

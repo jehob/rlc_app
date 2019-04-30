@@ -266,3 +266,4 @@ ERROR__RECORD__ORIGIN_COUNTRY__NOT_FOUND = {
     'error_detail': 'origin country not found',
     'error_code': 'record.origin_country.not_found'
 }
+

@@ -68,7 +68,7 @@ import {
     StartDecliningNewUserRequest,
     UPDATE_NEW_USER_REQUEST,
     START_CHECKING_USER_ACTIVATION_LINK,
-    StartCheckingUserActivationLink, START_ACTIVATING_USER, StartActivatingUser
+    StartCheckingUserActivationLink, START_ACTIVATING_USER, StartActivatingUser, START_SAVING_USER, StartSavingUser
 } from './api.actions';
 import {
     CREATE_PROFILE_API_URL, GetActivateUserApiUrl, GetCheckUserActivationApiUrl,
@@ -735,6 +735,33 @@ export class ApiEffects {
                     mergeMap((response: any) => {
                         this.snackbar.showSuccessSnackBar(
                             "account successfully activated"
+                        );
+                        return [];
+                    })
+                )
+            );
+        })
+    );
+
+    @Effect()
+    startSavingUser = this.actions.pipe(
+        ofType(START_SAVING_USER),
+        map((action: StartSavingUser) => {
+            return action.payload;
+        }),
+        switchMap((user: FullUser) => {
+            return from(
+                this.http.patch(GetSpecialProfileApiURL(user.id), user).pipe(
+                    catchError(error => {
+                        this.snackbar.showErrorSnackBar(
+                            "error at saving user: " +
+                            error.error.detail
+                        );
+                        return [];
+                    }),
+                    mergeMap((response: any) => {
+                        this.snackbar.showSuccessSnackBar(
+                            "successfully saved profile"
                         );
                         return [];
                     })

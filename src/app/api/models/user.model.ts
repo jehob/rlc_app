@@ -84,6 +84,8 @@ export class FullUser extends RestrictedUser {
      * @param street
      * @param city
      * @param postal_code
+     * @param user_state
+     * @param user_record_state
      */
     constructor(
         id: string = "",
@@ -93,7 +95,9 @@ export class FullUser extends RestrictedUser {
         public phone_number: string = "",
         public street: string = "",
         public city: string = "",
-        public postal_code: string = ""
+        public postal_code: string = "",
+        public user_state: string = '',
+        public user_record_state: string = ''
     ) {
         super(id, name);
         this.email = email;
@@ -102,6 +106,8 @@ export class FullUser extends RestrictedUser {
         this.street = street;
         this.city = city;
         this.postal_code = postal_code;
+        this.user_state = user_state;
+        this.user_record_state = user_record_state;
     }
 
     static getFullUserFromJson(json) {
@@ -114,7 +120,9 @@ export class FullUser extends RestrictedUser {
                 json.phone_number,
                 json.street,
                 json.city,
-                json.postal_code
+                json.postal_code,
+                json.user_state,
+                json.user_record_state
             );
         return null;
     }

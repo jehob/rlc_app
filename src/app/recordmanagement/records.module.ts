@@ -40,7 +40,6 @@ import { RecordDocumentItemComponent } from "./components/records/documents/reco
 import { RecordsAddEffects } from "./store/effects/records-add.effects";
 import { RecordsLoadingEffects } from "./store/effects/records-loading.effects";
 import { RecordsPermitRequestsComponent } from "./pages/records-permit-requests/records-permit-requests.component";
-import { RecordPermissionRequestItemComponent } from "./components/admin/record-permission-request-item/record-permission-request-item.component";
 import {
     RecordPermissionsProcessedPipe,
     RecordPermissionsRequestedPipe
@@ -72,7 +71,6 @@ import {
         RecordMessageItemComponent,
         RecordDocumentItemComponent,
         RecordsPermitRequestsComponent,
-        RecordPermissionRequestItemComponent,
         RecordPermissionsRequestedPipe,
         RecordPermissionsProcessedPipe
     ],

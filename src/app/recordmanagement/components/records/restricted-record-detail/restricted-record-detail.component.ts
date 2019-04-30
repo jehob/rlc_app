@@ -30,6 +30,7 @@ import { Tag } from "../../../models/tag.model";
 })
 export class RestrictedRecordDetailComponent implements OnInit {
     record: RestrictedRecord;
+    request_state = 'nr';
 
     constructor(
         private recordSB: RecordsSandboxService,
@@ -42,6 +43,10 @@ export class RestrictedRecordDetailComponent implements OnInit {
             .subscribe((special_record: { record: RestrictedRecord }) => {
                 if (special_record.record) this.record = special_record.record;
             });
+        this.recordSB.getSpecialRecordRequestState().subscribe((state: string) => {
+            if (state)
+                this.request_state = state;
+        })
     }
 
     onTagClick(tag: Tag) {

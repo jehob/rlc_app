@@ -20,6 +20,9 @@ import { Component, OnInit } from "@angular/core";
 import {ApiSandboxService} from '../../services/api-sandbox.service';
 import {NewUserRequest} from '../../models/new_user_request.model';
 import {Observable} from 'rxjs';
+import {RestrictedUser} from '../../models/user.model';
+import {Router} from '@angular/router';
+import {GetProfileFrontUrl} from '../../../statics/frontend_links.statics';
 
 @Component({
     selector: "app-new-user-requests",
@@ -30,7 +33,7 @@ export class NewUserRequestsComponent implements OnInit {
     newUserRequests: Observable<NewUserRequest[]>;
     processedColumns = ['id', 'from', 'processor', 'processed_date', 'state'];
 
-    constructor(private apiSB: ApiSandboxService) {}
+    constructor(private apiSB: ApiSandboxService, private router: Router) {}
 
     ngOnInit() {
         this.apiSB.startLoadingNewUserRequests();
@@ -45,5 +48,9 @@ export class NewUserRequestsComponent implements OnInit {
     onDeclineClick(event, request: NewUserRequest): void {
         event.stopPropagation();
         this.apiSB.startDecliningNewUserRequest(request);
+    }
+
+    onUserClick(user: RestrictedUser): void {
+        this.router.navigateByUrl(GetProfileFrontUrl(user));
     }
 }

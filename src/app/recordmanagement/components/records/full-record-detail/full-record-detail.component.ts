@@ -217,7 +217,7 @@ export class FullRecordDetailComponent implements OnInit, OnDestroy {
         this.client.origin_country = this.origin_country.id;
         this.client.phone_number = this.recordEditForm.value["client_phone"];
 
-        this.recordSB.saveRecord(this.record, this.client);
+        this.recordSB.startSavingRecord(this.record, this.client);
     }
 
     onBackClick() {
