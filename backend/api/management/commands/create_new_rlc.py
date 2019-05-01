@@ -64,3 +64,5 @@ class Command(BaseCommand):
             permission=Permission.objects.filter(name=PERMISSION_VIEW_PERMISSIONS_RLC).first(),
             user_has_permission=admin_user, permission_for_rlc=rlc_object)
         view_permission_has_permission.save()
+
+

@@ -28,6 +28,7 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 from rest_framework.views import APIView
 from rest_framework.response import Response
+import os
 
 from backend.static.emails import EmailSender
 from ..models.rlc import Rlc
@@ -42,7 +43,8 @@ class SendEmailViewSet(APIView):
             email = request.data['email']
         else:
             raise CustomError(ERROR__API__EMAIL__NO_EMAIL_PROVIDED)
-        EmailSender.send_email_notification([email], 'SYSTEM NOTIFICATION', 'There was a change')
+        # EmailSender.send_email_notification([email], 'SYSTEM NOTIFICATION', 'There was a change')
+        EmailSender.test_send(email)
         return Response()
 
 
@@ -51,7 +53,10 @@ class GetRlcsViewSet(APIView):
     permission_classes = ()
 
     def get(self, request):
-        rlcs = Rlc.objects.all().exclude(name='Dummy RLC')
+        if 'ON_HEROKU' in os.environ:
+            rlcs = Rlc.objects.all().exclude(name='Dummy RLC')
+        else:
+            rlcs = Rlc.objects.all()
         serialized = RlcOnlyNameSerializer(rlcs, many=True).data
         return Response(serialized)
 

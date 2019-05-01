@@ -149,7 +149,8 @@ export class ApiEffects {
             return from(
                 this.http.post(CREATE_PROFILE_API_URL, user).pipe(
                     catchError(error => {
-                        this.snackbar.showErrorSnackBar("error at register" + error.error.detail);
+                        console.log('error at register, ', error);
+                        this.snackbar.showErrorSnackBar("error at register: " + error.error.detail);
                         return [];
                     }),
                     mergeMap((response: any) => {
