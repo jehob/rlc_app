@@ -139,7 +139,18 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 if 'ON_HEROKU' in os.environ:
     # heroku database
-    if 'ON_DEV' in os.environ:
+    if 'ON_DEPLOY' in os.environ:
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': os.environ['DB_NAME'],  # database
+                'USER': os.environ['DB_USER'],  # user
+                'PASSWORD': os.environ['DB_PASSWORD'],  # password
+                'HOST': os.environ['DB_HOST'],  # part of uri, after @ before :, or host
+                'PORT': os.environ['DB_PORT'],  # port
+            }
+        }
+    elif 'ON_DEV' in os.environ:
         DATABASES = {
             'default': {
                 'ENGINE': 'django.db.backends.postgresql',
@@ -182,7 +193,7 @@ django_heroku.settings(locals())
 AUTH_USER_MODEL = 'api.UserProfile'
 
 # email
-if 'ON_HEROKU' in os.environ:
+if 'ON_HEROKU' in os.environ or 'EMAIL_HOST' in os.environ:
     EMAIL_HOST = os.environ['EMAIL_HOST']
     EMAIL_PORT = os.environ['EMAIL_PORT']
     EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
@@ -240,13 +251,3 @@ if 'ON_HEROKU' in os.environ and os.environ['ON_HEROKU']:
     COMPRESS_URL = STATIC_URL
 else:
     STATIC_URL = '/static/'
-
-# if 'ON_HEROKU' in os.environ:
-#     # STATICFILES_DIRS = [
-#     #     os.path.join(BASE_DIR, 'static'),
-#     # ]
-#     STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
-#     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-# else:
-#     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

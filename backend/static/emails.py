@@ -17,6 +17,7 @@
 from django.core.mail import EmailMultiAlternatives
 from django.template import loader
 from backend.static.frontend_links import FrontendLinks
+from backend.static.env_getter import get_env_variable
 
 
 class EmailSender:
@@ -29,14 +30,14 @@ class EmailSender:
         :param text: the email content itself
         :return:
         """
-        from_email = 'do-not-reply@rlc-intranet.de'
+        from_email = get_env_variable('EMAIL_ADDRESS')
         msg = EmailMultiAlternatives(subject, text, from_email, email_addresses)
         msg.send()
         # send_mail(subject, text, 'notification@rlcm.de', email_addresses, fail_silently=False)
 
     @staticmethod
     def send_html_email(email_addresses, subject: str, html_content: str, text_alternative: str):
-        from_email = 'do-not-reply@rlc-intranet.de'
+        from_email = get_env_variable('EMAIL_ADDRESS')
         msg = EmailMultiAlternatives(subject, text_alternative, from_email, email_addresses)
         msg.attach_alternative(html_content, "text/html")
         msg.send()
@@ -68,3 +69,14 @@ class EmailSender:
         subject = 'RLC Intranet - New Message'
         EmailSender.send_html_email(emails, subject, html_message, alternative_text)
 
+    @staticmethod
+    def test_send(email):
+        html_message = loader.render_to_string(
+            'email_templates/activate_account.html',
+            {
+                'url': 'asdasd'
+            }
+        )
+        alternative_text = "RLC Intranet - Activate your account here: " + 'asdasd'
+        subject = "RLC Intranet registration"
+        EmailSender.send_html_email([email], subject, html_message, alternative_text)

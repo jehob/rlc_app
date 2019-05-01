@@ -204,11 +204,11 @@ export class AuthEffects {
     startLoggingOut = this.actions.pipe(
         ofType(START_LOGGING_OUT),
         mergeMap(() => {
+            this.logoutStatics();
             return from(
                 this.http.post(LOGOUT_API_URL, {}).pipe(
                     catchError(error => {
                         this.recordSB.showError(error.error.detail);
-                        this.logoutStatics();
                         return [
                             {
                                 type: LOGOUT
@@ -216,7 +216,6 @@ export class AuthEffects {
                         ];
                     }),
                     mergeMap(response => {
-                        this.logoutStatics();
                         return [
                             {
                                 type: LOGOUT
