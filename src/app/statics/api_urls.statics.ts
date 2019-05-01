@@ -34,6 +34,7 @@ export const HAS_PERMISSION_API_URL = "api/has_permission/";
 export const HAS_PERMISSIONS_STATICS_API_URL = "api/has_permission_statics/";
 export const NEW_USER_REQUEST_API_URL = "api/new_user_request/";
 export const NEW_USER_REQUEST_ADMIT_API_URL = "api/new_user_request_admit/";
+export const LOGOUT_API_URL = 'api/logout/';
 
 const CHECK_USER_ACTIVATION_API_URL = "api/check_user_activation_link/";
 const ACTIVATE_USER_ACTIVATION_API_URL = "api/activate_user_activation_link/";

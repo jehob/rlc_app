@@ -133,20 +133,20 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return 'user: ' + str(self.id) + ':' + self.email
 
-    def get_as_user_permissions(self):
+    def __get_as_user_permissions(self):
         """
         Returns: all HasPermissions the user itself has as list
         """
         return list(HasPermission.objects.filter(user_has_permission=self.pk))
 
-    def get_as_group_member_permissions(self):
+    def __get_as_group_member_permissions(self):
         """
         Returns: all HasPermissions the groups in which the user is member of have as list
         """
         groups = [groups['id'] for groups in list(self.group_members.values('id'))]
         return list(HasPermission.objects.filter(group_has_permission_id__in=groups))
 
-    def get_as_rlc_member_permissions(self):
+    def __get_as_rlc_member_permissions(self):
         """
         Returns: all HasPermissions the groups in which the user is member of have as list
         """
@@ -159,10 +159,10 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         """
         if self.is_superuser:
             return HasPermission.objects.all()
-        return self.get_as_user_permissions() + self.get_as_group_member_permissions() + \
-               self.get_as_rlc_member_permissions()
+        return self.__get_as_user_permissions() + self.__get_as_group_member_permissions() + \
+               self.__get_as_rlc_member_permissions()
 
-    def get_as_user_special_permissions(self, permission_id):
+    def __get_as_user_special_permissions(self, permission_id):
         """
         Args:
             permission_id: (int) permissionId with the queryset is filtered
@@ -171,33 +171,33 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         """
         return list(HasPermission.objects.filter(user_has_permission=self.pk, permission_id=permission_id))
 
-    def get_as_group_member_special_permissions(self, permission):
+    def __get_as_group_member_special_permissions(self, permission):
         groups = [groups['id'] for groups in list(self.group_members.values('id'))]
         return list(HasPermission.objects.filter(group_has_permission_id__in=groups, permission_id=permission))
 
-    def get_as_rlc_member_special_permissions(self, permission):
+    def __get_as_rlc_member_special_permissions(self, permission):
         return list(HasPermission.objects.filter(rlc_has_permission_id=self.rlc.id, permission_id=permission))
 
     def get_overall_special_permissions(self, permission):
         if isinstance(permission, str):
             permission = Permission.objects.get(name=permission).id
-        return self.get_as_user_special_permissions(permission) + self.get_as_group_member_special_permissions(
-            permission) + self.get_as_rlc_member_special_permissions(permission)
+        return self.__get_as_user_special_permissions(permission) + self.__get_as_group_member_special_permissions(
+            permission) + self.__get_as_rlc_member_special_permissions(permission)
 
-    def has_as_user_permission(self, permission, for_user=None, for_group=None, for_rlc=None):
+    def __has_as_user_permission(self, permission, for_user=None, for_group=None, for_rlc=None):
         return HasPermission.objects.filter(user_has_permission=self.pk, permission_id=permission,
                                             permission_for_user_id=for_user,
                                             permission_for_group_id=for_group,
                                             permission_for_rlc_id=for_rlc).count() >= 1
 
-    def has_as_group_member_permission(self, permission, for_user=None, for_group=None, for_rlc=None):
+    def __has_as_group_member_permission(self, permission, for_user=None, for_group=None, for_rlc=None):
         groups = [groups['id'] for groups in list(self.group_members.values('id'))]
         return HasPermission.objects.filter(group_has_permission_id__in=groups, permission_id=permission,
                                             permission_for_user_id=for_user,
                                             permission_for_group_id=for_group,
                                             permission_for_rlc_id=for_rlc).count() >= 1
 
-    def has_as_rlc_member_permission(self, permission, for_user=None, for_group=None, for_rlc=None):
+    def __has_as_rlc_member_permission(self, permission, for_user=None, for_group=None, for_rlc=None):
         if not self.rlc:
             return False
 
@@ -226,7 +226,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         if for_user is not None and for_group is not None and for_rlc is not None:
             raise AttributeError()
 
-        return self.has_as_user_permission(permission, for_user, for_group, for_rlc) or \
-               self.has_as_group_member_permission(permission, for_user, for_group, for_rlc) or \
-               self.has_as_rlc_member_permission(permission, for_user, for_group, for_rlc) or \
+        return self.__has_as_user_permission(permission, for_user, for_group, for_rlc) or \
+               self.__has_as_group_member_permission(permission, for_user, for_group, for_rlc) or \
+               self.__has_as_rlc_member_permission(permission, for_user, for_group, for_rlc) or \
                self.is_superuser

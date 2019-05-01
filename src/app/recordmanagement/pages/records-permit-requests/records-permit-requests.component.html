@@ -33,7 +33,8 @@
                             class="records-permit-requests__to-process-column__header">Requestor
                         </th>
                         <td mat-cell *matCellDef="let recordPermissionRequest"
-                            class="records-permit-requests__to-process-column__content">
+                            (click)="onUserClick(recordPermissionRequest.request_from)"
+                            class="records-permit-requests__to-process-column__content is_clickable">
                             <p>{{ recordPermissionRequest.request_from.name }}</p>
                         </td>
                     </ng-container>
@@ -42,7 +43,7 @@
                             class="records-permit-requests__to-process-column__header">Record
                         </th>
                         <td mat-cell *matCellDef="let recordPermissionRequest"
-                            (click)="gotoRecord(recordPermissionRequest)" class="is_clickable">
+                            (click)="onRequestClick(recordPermissionRequest)" class="is_clickable">
                             <p>{{ recordPermissionRequest.record }}</p>
                         </td>
                     </ng-container>
@@ -60,7 +61,14 @@
                             class="records-permit-requests__to-process-column__header">State
                         </th>
                         <td mat-cell *matCellDef="let recordPermissionRequest">
-                            <p>{{ recordPermissionRequest.state }}</p>
+                            <div [ngSwitch]="recordPermissionRequest.state">
+                                <div class="circle-indicator circle-indicator__green"
+                                     *ngSwitchCase="'gr'" matTooltip="granted"></div>
+                                <div class="circle-indicator circle-indicator__red"
+                                     *ngSwitchCase="'de'" matTooltip="declined"></div>
+                                <div class="circle-indicator circle-indicator__orange"
+                                     *ngSwitchCase="'re'" matTooltip="requested"></div>
+                            </div>
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="accept">
@@ -94,7 +102,8 @@
                             class="records-permit-requests__to-process-column__header">Requestor
                         </th>
                         <td mat-cell *matCellDef="let recordPermissionRequest"
-                            class="records-permit-requests__to-process-column__content">
+                            (click)="onUserClick(recordPermissionRequest.request_from)"
+                            class="records-permit-requests__to-process-column__content is_clickable">
                             <p>{{ recordPermissionRequest.request_from.name }}</p>
                         </td>
                     </ng-container>
@@ -103,7 +112,7 @@
                             class="records-permit-requests__to-process-column__header">Record
                         </th>
                         <td mat-cell *matCellDef="let recordPermissionRequest"
-                            (click)="gotoRecord(recordPermissionRequest)" class="is_clickable">
+                            (click)="onRequestClick(recordPermissionRequest)" class="is_clickable">
                             <p>{{ recordPermissionRequest.record }}</p>
                         </td>
                     </ng-container>
@@ -121,7 +130,14 @@
                             class="records-permit-requests__to-process-column__header">State
                         </th>
                         <td mat-cell *matCellDef="let recordPermissionRequest">
-                            <p>{{ recordPermissionRequest.state }}</p>
+                            <div [ngSwitch]="recordPermissionRequest.state">
+                                <div class="circle-indicator circle-indicator__green"
+                                     *ngSwitchCase="'gr'" matTooltip="granted"></div>
+                                <div class="circle-indicator circle-indicator__red"
+                                     *ngSwitchCase="'de'" matTooltip="declined"></div>
+                                <div class="circle-indicator circle-indicator__orange"
+                                     *ngSwitchCase="'re'" matTooltip="requested"></div>
+                            </div>
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="processor">
@@ -129,7 +145,8 @@
                             class="records-permit-requests__to-process-column__header">Processor
                         </th>
                         <td mat-cell *matCellDef="let recordPermissionRequest"
-                            class="records-permit-requests__to-process-column__content">
+                            (click)="onUserClick(recordPermissionRequest.request_processed)"
+                            class="records-permit-requests__to-process-column__content is_clickable">
                             <p>{{ recordPermissionRequest.request_processed.name }}</p>
                         </td>
                     </ng-container>

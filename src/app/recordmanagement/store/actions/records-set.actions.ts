@@ -41,6 +41,7 @@ export const SET_RECORD_TAGS = "SET_RECORD_TAGS";
 export const SET_POSSIBLE_CLIENTS = "SET_POSSIBLE_CLIENTS";
 export const SET_RECORD_DOCUMENT_TAGS = "SET_RECORD_DOCUMENT_TAGS";
 export const SET_RECORD_PERMISSION_REQUESTS = "SET_RECORD_PERMISSION_REQUESTS";
+export const SET_SPECIAL_RECORD_REQUEST_STATE = "SET_SPECIAL_RECORD_REQUEST_STATE";
 
 
 export class SetRecords implements Action {
@@ -127,6 +128,12 @@ export class SetRecordPermissionRequests implements Action {
     constructor(public payload: RecordPermissionRequest[]) {}
 }
 
+export class SetSpecialRecordRequestState implements Action {
+    readonly type = SET_SPECIAL_RECORD_REQUEST_STATE;
+
+    constructor(public payload: string) {}
+}
+
 export type RecordsSetActions =
     | SetRecords
     | SetConsultants
@@ -141,4 +148,5 @@ export type RecordsSetActions =
     | SetSpecialRecordDocuments
     | SetRecordMessages
     | SetRecordDocumentTags
-    | SetRecordPermissionRequests;
+    | SetRecordPermissionRequests
+    | SetSpecialRecordRequestState;

@@ -96,6 +96,7 @@ if 'ON_HEROKU' in os.environ:
     TIMEOUT_TIMEDELTA = timedelta(minutes=10)
 else:
     TIMEOUT_TIMEDELTA = timedelta(weeks=10)
+    # TIMEOUT_TIMEDELTA = timedelta(seconds=5)
 
 
 # Templates
@@ -119,7 +120,7 @@ else:
     TEMPLATES = [
         {
             'BACKEND': 'django.template.backends.django.DjangoTemplates',
-            'DIRS': ['static/dev'],
+            'DIRS': ['static/dev', 'static'],
             'APP_DIRS': True,
             'OPTIONS': {
                 'context_processors': [

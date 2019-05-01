@@ -29,7 +29,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from ..other_functions.emails import EmailSender
+from backend.static.emails import EmailSender
 from ..models.rlc import Rlc
 from ..serializers.rlc import RlcOnlyNameSerializer
 from backend.api.errors import CustomError

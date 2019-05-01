@@ -64,7 +64,7 @@ export class CreateRecordComponent implements OnInit {
                 new Date(),
                 dateInPastValidator
             ),
-            client_birthday: new FormControl("1980-03-27", dateInPastValidator), //date
+            client_birthday: new FormControl(date, dateInPastValidator),
             client_name: new FormControl("", [Validators.required]),
             client_phone_number: new FormControl(""),
             client_note: new FormControl(""),
@@ -79,7 +79,11 @@ export class CreateRecordComponent implements OnInit {
                 alphabeticalSorterByField(results, "name");
             })
         );
-        this.allCountries = this.recordSB.getOriginCountries();
+        this.allCountries = this.recordSB.getOriginCountries().pipe(
+            tap(results => {
+                alphabeticalSorterByField(results, 'name');
+            })
+        );
         this.allRecordTags = this.recordSB.getRecordTags().pipe(
             tap(results => {
                 alphabeticalSorterByField(results, "name");

@@ -75,26 +75,6 @@ table {
     margin: 2px;
 }
 
-.record-list-item__status-indicator {
-    border-radius: 25px;
-    min-height: 10px;
-    min-width: 10px;
-    max-height: 10px;
-    max-width: 10px;
-}
-
-.record-list-item__status-indicator--open{
-    background-color: green;
-}
-
-.record-list-item__status-indicator--waiting{
-    background-color: orange;
-}
-
-.record-list-item__status-indicator--closed {
-    background-color: grey;
-}
-
 .record-list-item__access-indicator {
     min-width: 4px;
     min-height: 17px;

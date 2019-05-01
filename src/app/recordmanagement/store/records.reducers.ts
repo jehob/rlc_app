@@ -22,7 +22,7 @@ import {
     ADD_RECORD_MESSAGE,
     RecordsActions,
     RESET_FULL_CLIENT_INFORMATION,
-    RESET_POSSIBLE_CLIENTS,
+    RESET_POSSIBLE_CLIENTS, RESET_SPECIAL_RECORD_REQUEST_STATE,
     SET_CONSULTANTS,
     SET_COUNTRY_STATES,
     SET_ORIGIN_COUNTRIES,
@@ -36,9 +36,9 @@ import {
     SET_SPECIAL_ORIGIN_COUNTRY,
     SET_SPECIAL_RECORD,
     SET_SPECIAL_RECORD_DOCUMENTS,
-    SET_SPECIAL_RECORD_MESSAGES,
+    SET_SPECIAL_RECORD_MESSAGES, SET_SPECIAL_RECORD_REQUEST_STATE,
     UPDATE_RECORD_PERMISSION_REQUEST
-} from "./actions/records.actions";
+} from './actions/records.actions';
 import { OriginCountry } from "../models/country.model";
 import { Tag } from "../models/tag.model";
 import { FullClient } from "../models/client.model";
@@ -56,6 +56,7 @@ export interface RecordsState {
         origin_country: OriginCountry;
         record_documents: { [id: number]: RecordDocument };
         record_messages: { [id: number]: RecordMessage };
+        request_state: string;
     };
     admin: {
         record_permission_requests: { [id: number]: RecordPermissionRequest };
@@ -76,7 +77,8 @@ export const initialState: RecordsState = {
         client: null,
         origin_country: null,
         record_documents: {},
-        record_messages: {}
+        record_messages: {},
+        request_state: null,
     },
     admin: {
         record_permission_requests: {}
@@ -229,6 +231,22 @@ export function recordsReducer(state = initialState, action: RecordsActions) {
                         ...state.admin.record_permission_requests,
                         [action.payload.id]: action.payload
                     }
+                }
+            };
+        case SET_SPECIAL_RECORD_REQUEST_STATE:
+            return {
+                ...state,
+                special_record: {
+                    ...state.special_record,
+                    request_state: action.payload
+                }
+            };
+        case RESET_SPECIAL_RECORD_REQUEST_STATE:
+            return {
+                ...state,
+                special_record: {
+                    ...state.special_record,
+                    request_state: null
                 }
             };
         default:

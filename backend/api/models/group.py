@@ -14,8 +14,25 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 from django.db import models
+from django.db.models import Q
 
 from . import UserProfile
+from backend.static import permissions
+
+
+class GroupQuerySet(models.QuerySet):
+    def get_visible_groups_for_user(self, user):
+        from backend.api.models import Group
+        if user.has_permission(permissions.PERMISSION_MANAGE_GROUPS_RLC, for_rlc=user.rlc):
+            return self.filter(from_rlc=user.rlc)
+        else:
+            invisible = list(Group.objects.filter(from_rlc=user.rlc, visible=False))
+            permitted = []
+            for gr in invisible:
+                if user.has_permission(permissions.PERMISSION_MANAGE_GROUP, for_group=gr):
+                    permitted.append(gr.id)
+
+            return self.filter(Q(from_rlc=user.rlc, visible=True) | Q(id__in=permitted))
 
 
 class Group(models.Model):
@@ -27,6 +44,8 @@ class Group(models.Model):
     group_members = models.ManyToManyField(UserProfile, related_name="group_members")
     description = models.TextField(blank=True, null=True)
     note = models.TextField(blank=True, null=True)
+
+    objects = GroupQuerySet.as_manager()
 
     def __str__(self):
         return 'group: ' + str(self.id) + ':' + self.name + '; from ' + str(self.from_rlc)

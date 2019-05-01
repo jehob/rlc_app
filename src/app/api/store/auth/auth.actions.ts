@@ -24,6 +24,7 @@ export const SET_TOKEN = "SET_TOKEN";
 export const LOGOUT = "LOGOUT";
 export const FORGOT_PASSWORD = "FORGOT_PASSWORD";
 export const RESET_PASSWORD = "RESET_PASSWORD";
+export const START_LOGGING_OUT = "START_LOGGING_OUT";
 
 export class TryLogin implements Action {
     readonly type = TRY_LOGIN;
@@ -57,10 +58,15 @@ export class ResetPassword implements Action {
     constructor(public payload: { new_password: string, link_id: string }) {}
 }
 
+export class StartLoggingOut implements Action {
+    readonly type = START_LOGGING_OUT;
+}
+
 export type AuthActions =
     | TryLogin
     | ReloadStaticInformation
     | SetToken
     | Logout
     | ResetPassword
-    | ForgotPassword;
+    | ForgotPassword
+    | StartLoggingOut;

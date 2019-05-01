@@ -24,7 +24,7 @@ import {
     ForgotPassword,
     Logout,
     ReloadStaticInformation, ResetPassword,
-    SetToken,
+    SetToken, StartLoggingOut,
     TryLogin
 } from '../store/auth/auth.actions';
 import { Router } from "@angular/router";
@@ -55,7 +55,7 @@ export class AppSandboxService {
 
     logout() {
         localStorage.clear();
-        this.store.dispatch(new Logout());
+        this.store.dispatch(new StartLoggingOut());
         this.router.navigate([LOGIN_FRONT_URL]);
     }
 

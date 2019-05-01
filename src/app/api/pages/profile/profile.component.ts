@@ -22,6 +22,8 @@ import { ApiSandboxService } from "../../services/api-sandbox.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { take } from "rxjs/operators";
 import { dateInPastValidator } from "../../../statics/validators.statics";
+import { State } from "../../models/state.model";
+import { Observable } from "rxjs";
 
 @Component({
     selector: "app-profile",
@@ -30,7 +32,13 @@ import { dateInPastValidator } from "../../../statics/validators.statics";
 })
 export class ProfileComponent implements OnInit {
     userForm: FormGroup;
-    name = "";
+    allUserStates: Observable<State[]>;
+    selectedUserState: State;
+    selUserState: Observable<State>;
+    allUserRecordStates: Observable<State[]>;
+    selectedUserRecordState: State;
+    user: FullUser;
+
     @ViewChild("fileInput")
     fileInput: ElementRef<HTMLInputElement>;
 
@@ -41,7 +49,8 @@ export class ProfileComponent implements OnInit {
             street: new FormControl(""),
             postal_code: new FormControl(""),
             city: new FormControl(""),
-            birthday: new FormControl("")
+            birthday: new FormControl(""),
+            user_state: new FormControl("")
         });
     }
 
@@ -51,36 +60,60 @@ export class ProfileComponent implements OnInit {
             .pipe(take(2))
             .subscribe((user: FullUser) => {
                 if (user) {
-                    this.name = user.name;
-                    this.userForm = new FormGroup({
-                        email: new FormControl(user.email, Validators.required),
-                        phone_number: new FormControl(user.phone_number, [
-                            Validators.maxLength(15),
-                            Validators.minLength(9)
-                        ]),
-                        street: new FormControl(user.street),
-                        postal_code: new FormControl(user.postal_code),
-                        city: new FormControl(user.city),
-                        birthday: new FormControl(user.birthday, [
-                            dateInPastValidator
-                        ])
-                    });
+                    this.user = user;
+                    this.setValues();
                 }
+            });
+        this.allUserStates = this.apiSB.getUserStates();
+        this.allUserRecordStates = this.apiSB.getUserRecordStates();
+    }
+
+    setValues(): void {
+        this.userForm.controls["phone_number"].setValue(this.user.phone_number);
+        this.userForm.controls["street"].setValue(this.user.street);
+        this.userForm.controls["postal_code"].setValue(this.user.postal_code);
+        this.userForm.controls["city"].setValue(this.user.city);
+        this.userForm.controls["birthday"].setValue(this.user.birthday);
+
+        this.apiSB
+            .getUserStateByAbbreviation(this.user.user_state)
+            .subscribe((user_state: State) => {
+                this.selectedUserState = user_state;
+                if (user_state)
+                    this.userForm.controls["user_state"].setValue(
+                        user_state.full_name
+                    );
+            });
+        this.apiSB
+            .getUserRecordStateByAbbreviation(this.user.user_record_state)
+            .subscribe((user_record_state: State) => {
+                this.selectedUserRecordState = user_record_state;
             });
     }
 
+    loadValuesToUser(): void {
+        this.user.phone_number = this.userForm.value["phone_number"];
+        this.user.street = this.userForm.value["street"];
+        this.user.postal_code = this.userForm.value["postal_code"];
+        this.user.phone_number = this.userForm.value["phone_number"];
+        this.user.city = this.userForm.value["city"];
+        this.user.birthday = new Date(this.userForm.value["birthday"]);
+        if (this.selectedUserState)
+            this.user.user_state = this.selectedUserState.abbreviation;
+        if (this.selectedUserRecordState)
+            this.user.user_record_state = this.selectedUserRecordState.abbreviation;
+    }
+
     onSaveClick() {
-        this.apiSB.startPatchUser(
-            new FullUser(
-                undefined,
-                this.userForm.value.email,
-                undefined,
-                new Date(this.userForm.value.birthday),
-                this.userForm.value.phone_number,
-                this.userForm.value.street,
-                this.userForm.value.city,
-                this.userForm.value.postal_code
-            )
-        );
+        this.loadValuesToUser();
+        this.apiSB.startSavingUser(this.user);
+    }
+
+    onSelectedUserStateChanged(newSelectedState: State): void {
+        this.selectedUserState = newSelectedState;
+    }
+
+    onSelectedUserRecordStateChanged(newSelectedState: State): void {
+        this.selectedUserRecordState = newSelectedState;
     }
 }

@@ -24,7 +24,8 @@
                 <p>Client information</p>
                 <div class="create-record__containers">
                     <mat-form-field class="create-record__item">
-                        <input matInput [matDatepicker]="picker" placeholder="birthday" formControlName="client_birthday"
+                        <input matInput [matDatepicker]="picker" placeholder="birthday"
+                               formControlName="client_birthday"
                                (click)="picker.open()">
                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                         <mat-datepicker #picker></mat-datepicker>
@@ -35,7 +36,7 @@
                         <input type="text" matInput formControlName="client_name" placeholder="client name">
                     </mat-form-field>
                 </div>
-                <div class="create-record__containers">
+                <div class="create-record__containers create-record__origin-country">
                     <app-autocomplete [allValuesObservable]="allCountries" placeholder="origin country"
                                       (selectedValueChanged)="selectedCountryChanged($event)"
                                       [errors]="originCountryError"
@@ -107,7 +108,8 @@
         </form>
     </mat-card-content>
     <mat-card-actions>
-        <button mat-flat-button color="primary"  type="submit" [disabled]="!createRecordForm.valid" class="create-record__button" (click)="onAddRecordClick()">
+        <button mat-flat-button color="primary" type="submit" [disabled]="!createRecordForm.valid"
+                class="create-record__button" (click)="onAddRecordClick()">
             Add record
         </button>
     </mat-card-actions>

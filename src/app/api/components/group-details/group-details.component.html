@@ -33,7 +33,7 @@
         <table mat-table [dataSource]="group.members">
             <ng-container matColumnDef="member">
                 <th mat-header-cell *matHeaderCellDef>Member</th>
-                <td mat-cell *matCellDef="let member" class="group-details__member-name">
+                <td mat-cell *matCellDef="let member" class="group-details__member-name is_clickable" (click)="onUserClick(member)">
                     {{ member.name }}
 
                 </td>

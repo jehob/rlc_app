@@ -16,10 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import {Component, Input, OnInit} from '@angular/core';
-import {HasPermission} from '../../models/permission.model';
-import {ApiSandboxService} from '../../services/api-sandbox.service';
-import {RestrictedUser} from '../../models/user.model';
+import { Component, Input, OnInit } from "@angular/core";
+import { HasPermission } from "../../models/permission.model";
+import { ApiSandboxService } from "../../services/api-sandbox.service";
+import { RestrictedUser } from "../../models/user.model";
+import { Router } from "@angular/router";
+import {RestrictedGroup} from '../../models/group.model';
+import {GetGroupFrontUrl, GetProfileFrontUrl} from '../../../statics/frontend_links.statics';
 
 @Component({
     selector: "app-has-permission-side",
@@ -35,26 +38,53 @@ export class HasPermissionSideComponent implements OnInit {
 
     name: string;
 
-    constructor(private apiSB: ApiSandboxService) {}
+    constructor(private apiSB: ApiSandboxService, private router: Router) {}
 
     ngOnInit() {
         if (!this.hasPermission)
-            throw new Error('HasPermissionSide-Error: no haspermission given');
-        if (!this.whichSide || (this.whichSide !== 'has' && this.whichSide !== 'for'))
-            throw new Error('HasPermissionSide-Error: whichSide has to be set and equals "has" or "for"');
+            throw new Error("HasPermissionSide-Error: no haspermission given");
+        if (
+            !this.whichSide ||
+            (this.whichSide !== "has" && this.whichSide !== "for")
+        )
+            throw new Error(
+                'HasPermissionSide-Error: whichSide has to be set and equals "has" or "for"'
+            );
 
-        if (this.whichSide === 'has'){
-            if (this.hasPermission.userHas){
-                this.name = this.apiSB.getOtherUserById(this.hasPermission.userHas).name;
-            } else if (this.hasPermission.groupHas){
-                this.name = this.apiSB.getGroupById(this.hasPermission.groupHas).name;
+        if (this.whichSide === "has") {
+            if (this.hasPermission.userHas) {
+                this.name = this.apiSB.getOtherUserById(
+                    this.hasPermission.userHas
+                ).name;
+            } else if (this.hasPermission.groupHas) {
+                this.name = this.apiSB.getGroupById(
+                    this.hasPermission.groupHas
+                ).name;
             }
-        } else if (this.whichSide === 'for'){
-            if (this.hasPermission.forUser){
-                this.name = this.apiSB.getOtherUserById(this.hasPermission.forUser).name;
-            } else if (this.hasPermission.forGroup){
-                this.name = this.apiSB.getGroupById(this.hasPermission.forGroup).name;
+        } else if (this.whichSide === "for") {
+            if (this.hasPermission.forUser) {
+                this.name = this.apiSB.getOtherUserById(
+                    this.hasPermission.forUser
+                ).name;
+            } else if (this.hasPermission.forGroup) {
+                this.name = this.apiSB.getGroupById(
+                    this.hasPermission.forGroup
+                ).name;
             }
         }
+    }
+
+    onUserClick(): void {
+        if (this.whichSide === 'for')
+            this.router.navigateByUrl(GetProfileFrontUrl(this.hasPermission.forUser));
+        else
+            this.router.navigateByUrl(GetProfileFrontUrl(this.hasPermission.userHas));
+    }
+
+    onGroupClick(): void {
+        if (this.whichSide === 'for')
+            this.router.navigateByUrl(GetGroupFrontUrl(this.hasPermission.forGroup));
+        else
+            this.router.navigateByUrl(GetGroupFrontUrl(this.hasPermission.groupHas));
     }
 }

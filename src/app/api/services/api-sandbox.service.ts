@@ -51,8 +51,8 @@ import {
     StartLoadingSpecialPermission,
     StartPatchUser,
     StartRemovingGroupMember,
-    StartRemovingHasPermission
-} from "../store/api.actions";
+    StartRemovingHasPermission, StartSavingUser
+} from '../store/api.actions';
 import { StorageService } from "../../shared/services/storage.service";
 import { SnackbarService } from "../../shared/services/snackbar.service";
 import { Observable } from "rxjs";
@@ -60,6 +60,7 @@ import { HasPermission, Permission } from "../models/permission.model";
 import { FullGroup, RestrictedGroup } from "../models/group.model";
 import { RestrictedRlc } from "../models/rlc.model";
 import { NewUserRequest } from "../models/new_user_request.model";
+import { State } from "../models/state.model";
 
 @Injectable()
 export class ApiSandboxService {
@@ -207,6 +208,10 @@ export class ApiSandboxService {
                 userUpdates: userFromStore.getUpdates(user)
             })
         );
+    }
+
+    startSavingUser(user: FullUser){
+        this.apiStateStore.dispatch(new StartSavingUser(user));
     }
 
     registerUser(user: any) {
@@ -457,5 +462,31 @@ export class ApiSandboxService {
 
     startActivatingUser(link: string): void {
         this.apiStateStore.dispatch(new StartActivatingUser(link));
+    }
+
+    getUserStates(asArray: boolean = true): Observable<State[]> {
+        return this.apiStateStore.pipe(
+            select((state: any) => {
+                const values = state.api.user_states;
+                return asArray ? Object.values(values) : values;
+            })
+        );
+    }
+
+    getUserRecordStates(asArray: boolean = true): Observable<State[]> {
+        return this.apiStateStore.pipe(
+            select((state: any) => {
+                const values = state.api.user_record_states;
+                return asArray ? Object.values(values) : values;
+            })
+        );
+    }
+
+    getUserStateByAbbreviation(abb: string): Observable<State> {
+        return this.apiStateStore.pipe(select((state: any) => state.api.user_states[abb]));
+    }
+
+    getUserRecordStateByAbbreviation(abb: string): Observable<State> {
+        return this.apiStateStore.pipe(select((state: any) => state.api.user_record_states[abb]));
     }
 }

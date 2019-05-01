@@ -273,7 +273,7 @@ class UsersTests(TransactionTestCase):
         self.fixtures_has_permissions()
 
         user1 = UserProfile.objects.get(pk=62)
-        user1_perms = user1.get_as_user_permissions()
+        user1_perms = user1.__get_as_user_permissions()
 
         UsersTests.checkArrays(self, [i.id for i in user1_perms], [1, 9])
 

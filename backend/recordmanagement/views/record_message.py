@@ -22,6 +22,7 @@ from rest_framework.response import Response
 from backend.recordmanagement import models, serializers
 from backend.static import error_codes
 from backend.api.errors import CustomError
+from backend.static.emails import EmailSender
 
 
 class RecordMessageViewSet(viewsets.ModelViewSet):
@@ -45,6 +46,8 @@ class RecordMessageByRecordViewSet(APIView):
 
         record_message = models.RecordMessage(sender=request.user, message=message, record=record)
         record_message.save()
+
+        EmailSender.send_record_new_message_notification_email(record)
         return Response(serializers.RecordMessageSerializer(record_message).data)
 
     def get(self, request, id):

@@ -57,8 +57,8 @@ import {
     SET_SPECIAL_ORIGIN_COUNTRY,
     SET_SPECIAL_RECORD,
     SET_SPECIAL_RECORD_DOCUMENTS,
-    SET_SPECIAL_RECORD_MESSAGES
-} from "../actions/records-set.actions";
+    SET_SPECIAL_RECORD_MESSAGES, SET_SPECIAL_RECORD_REQUEST_STATE
+} from '../actions/records-set.actions';
 import { RestrictedUser } from "../../../api/models/user.model";
 import { OriginCountry } from "../../models/country.model";
 import { Tag } from "../../models/tag.model";
@@ -239,7 +239,7 @@ export class RecordsLoadingEffects {
                         return [];
                     }),
                     mergeMap((response: any) => {
-                        if (response.record) {
+                        if (response.client) {
                             const record: FullRecord = FullRecord.getFullRecordFromJson(
                                 response.record
                             );
@@ -282,12 +282,14 @@ export class RecordsLoadingEffects {
                                 }
                             ];
                         } else {
+                            console.log('response', response);
                             const record = RestrictedRecord.getRestrictedRecordFromJson(
-                                response
+                                response.record
                             );
                             return [
                                 { type: SET_SPECIAL_RECORD, payload: record },
-                                { type: RESET_FULL_CLIENT_INFORMATION }
+                                { type: RESET_FULL_CLIENT_INFORMATION },
+                                { type: SET_SPECIAL_RECORD_REQUEST_STATE, payload: response.request_state }
                             ];
                         }
                     })

@@ -44,10 +44,11 @@ class GroupViewSet(viewsets.ModelViewSet):
         user = self.request.user
         if not user.is_superuser:
             # return models.Group.objects.get_groups_with_mange_rights(user)
-            if user.has_permission(permissions.PERMISSION_MANAGE_GROUPS_RLC, for_rlc=user.rlc):
-                return models.Group.objects.filter(from_rlc=user.rlc)
-            else:
-                return models.Group.objects.filter(from_rlc=user.rlc, visible=True)
+            return models.Group.objects.get_visible_groups_for_user(user)
+            # if user.has_permission(permissions.PERMISSION_MANAGE_GROUPS_RLC, for_rlc=user.rlc):
+            #     return models.Group.objects.filter(from_rlc=user.rlc)
+            # else:
+            #     return models.Group.objects.filter(from_rlc=user.rlc, visible=True)
         else:
             return models.Group.objects.all()
 
