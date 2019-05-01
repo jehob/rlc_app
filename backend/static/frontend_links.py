@@ -14,24 +14,15 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-import os
 
-from backend.api.errors import CustomError
-from backend.static import error_codes
+from backend.static import env_getter
 
 
 class FrontendLinks:
     @staticmethod
-    def get_url():
-        if "URL" in os.environ:
-            return os.environ['URL']
-        else:
-            raise CustomError(error_codes.ERROR__ENV__MISSING_VARIABLE)
-
-    @staticmethod
     def get_record_link(record):
-        return FrontendLinks.get_url() + "records/" + str(record.id)
+        return env_getter.get_website_base_url() + "records/" + str(record.id)
 
     @staticmethod
     def get_user_activation_link(activation_link):
-        return FrontendLinks.get_url() + "activate_account/" + str(activation_link.link)
+        return env_getter.get_website_base_url() + "activate_account/" + str(activation_link.link)

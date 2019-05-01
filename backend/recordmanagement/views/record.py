@@ -146,11 +146,7 @@ class RecordViewSet(APIView):
 
         for user_id in data['consultants']:
             actual_consultant = UserProfile.objects.get(pk=user_id)
-            if "URL" in os.environ:
-                url = os.environ['URL'] + "/records/" + str(record.id)
-            else:
-                url = 'no url, please contact the administrator'
-
+            url = FrontendLinks.get_record_link(record)
             EmailSender.send_email_notification([actual_consultant.email], "New Record",
                                                 "RLC Intranet Notification - Your were assigned as a consultant for a new record. Look here:" +
                                                 url)

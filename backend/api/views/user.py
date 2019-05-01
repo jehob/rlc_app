@@ -120,6 +120,11 @@ class UserProfileCreatorViewSet(viewsets.ModelViewSet):
             data = dict(request.data)
         if 'rlc' in data:
             del data['rlc']
+
+        # Check if email already in use
+        if UserProfile.objects.filter(email=request.data['email']).count() > 0:
+            raise CustomError(ERROR__API__EMAIL__ALREADY_IN_USE)
+
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)

@@ -20,7 +20,7 @@ from backend.api.errors import CustomError
 
 
 def get_website_base_url():
-    return get_env_variable('WEBSITE_URL')
+    return get_env_variable('URL')
 
 
 def get_env_variable(variable_name):

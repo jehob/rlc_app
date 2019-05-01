@@ -267,3 +267,7 @@ ERROR__RECORD__ORIGIN_COUNTRY__NOT_FOUND = {
     'error_code': 'record.origin_country.not_found'
 }
 
+ERROR__API__EMAIL__ALREADY_IN_USE = {
+    'error_detail': 'email already in use',
+    'error_code': 'api.email.already_in_use'
+}
