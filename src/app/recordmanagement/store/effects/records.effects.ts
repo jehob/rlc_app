@@ -73,7 +73,7 @@ export class RecordsEffects {
                     .pipe(
                         catchError(error => {
                             this.recordSB.showError(
-                                `error at loading records: ${error.error.detail}`
+                                `error at saving records: ${error.error.detail}`
                             );
                             return [];
                         }),

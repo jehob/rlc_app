@@ -49,4 +49,5 @@ urlpatterns = [
     url(r'activate_user_activation_link/(?P<id>.+)/$', views.UserActivationLinkViewSet.as_view()),
     url(r'new_user_request_admit/', views.NewUserRequestAdmitViewSet.as_view()),
     url(r'logout/', views.LogoutViewSet.as_view()),
+    url(r'inactive_users/', views.InactiveUsersViewSet.as_view()),
 ]

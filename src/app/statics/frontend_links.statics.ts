@@ -33,7 +33,8 @@ export const RECORDS_PERMIT_REQUEST_FRONT_URL = "records/permit_requests";
 export const GROUPS_FRONT_URL = "groups";
 export const PERMISSIONS_FRONT_URL = "permissions";
 export const ACCEPT_NEW_USER_REQUESTS_FRONT_URL = "new_user_requests";
-export const LEGAL_NOTICE_FRONT_URL = "legal-notice";
+export const LEGAL_NOTICE_FRONT_URL = "legal_notice";
+export const INACTIVE_USERS_FRONT_URL = "inactive_users";
 
 export const GetProfileFrontUrl = (profile: RestrictedUser | string): string => {
     if (profile instanceof RestrictedUser)

@@ -32,7 +32,7 @@ import {
     ResetSpecialGroup,
     ResetSpecialPermission,
     SetSpecialForeignUser,
-    StartActivatingUser,
+    StartAcceptingUser, StartActivatingInactiveUser,
     StartAddingGroup,
     StartAddingGroupMember,
     StartAddingHasPermission,
@@ -41,7 +41,7 @@ import {
     StartCreateUser,
     StartDecliningNewUserRequest,
     StartLoadingGroups,
-    StartLoadingHasPermissionStatics,
+    StartLoadingHasPermissionStatics, StartLoadingInactiveUsers,
     StartLoadingNewUserRequests,
     StartLoadingOtherUsers,
     StartLoadingRlcs,
@@ -191,23 +191,6 @@ export class ApiSandboxService {
                 // }
             })
             .unsubscribe();
-    }
-
-    startPatchUser(user: FullUser) {
-        let userFromStore: FullUser = null;
-        this.apiStateStore
-            .pipe(select((state: any) => state.api.user))
-            .pipe(take(1))
-            .subscribe((loadedUser: FullUser) => {
-                userFromStore = loadedUser;
-            });
-        const id = userFromStore.id;
-        this.apiStateStore.dispatch(
-            new StartPatchUser({
-                id,
-                userUpdates: userFromStore.getUpdates(user)
-            })
-        );
     }
 
     startSavingUser(user: FullUser){
@@ -460,8 +443,8 @@ export class ApiSandboxService {
         this.apiStateStore.dispatch(new StartCheckingUserActivationLink(link));
     }
 
-    startActivatingUser(link: string): void {
-        this.apiStateStore.dispatch(new StartActivatingUser(link));
+    startAcceptingUser(link: string): void {
+        this.apiStateStore.dispatch(new StartAcceptingUser(link));
     }
 
     getUserStates(asArray: boolean = true): Observable<State[]> {
@@ -488,5 +471,22 @@ export class ApiSandboxService {
 
     getUserRecordStateByAbbreviation(abb: string): Observable<State> {
         return this.apiStateStore.pipe(select((state: any) => state.api.user_record_states[abb]));
+    }
+
+    startLoadingInactiveUsers(): void {
+        this.apiStateStore.dispatch(new StartLoadingInactiveUsers());
+    }
+
+    getInactiveUsers(asArray: boolean = true): Observable<FullUser[]> {
+        return this.apiStateStore.pipe(
+            select((state: any) => {
+                const values = state.api.inactive_users;
+                return asArray ? Object.values(values) : values;
+            })
+        );
+    }
+
+    startActivatingInactiveUser(user: FullUser): void {
+        this.apiStateStore.dispatch(new StartActivatingInactiveUser(user.id));
     }
 }

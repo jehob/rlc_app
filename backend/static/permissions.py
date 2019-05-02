@@ -26,6 +26,7 @@ PERMISSION_ADD_GROUP_RLC = 'add_group_rlc'
 PERMISSION_VIEW_PERMISSIONS_RLC = 'view_permissions_rlc'
 PERMISSION_MANAGE_PERMISSIONS_RLC = 'manage_permissions_rlc'
 PERMISSION_ACCEPT_NEW_USERS_RLC = 'accept_new_users_rlc'
+PERMISSION_ACTIVATE_INACTIVE_USERS_RLC = 'activate_inactive_users_rlc'
 
 
 def get_all_permissions():
@@ -41,5 +42,6 @@ def get_all_permissions():
         PERMISSION_ADD_GROUP_RLC,
         PERMISSION_VIEW_PERMISSIONS_RLC,
         PERMISSION_MANAGE_PERMISSIONS_RLC,
-        PERMISSION_ACCEPT_NEW_USERS_RLC
+        PERMISSION_ACCEPT_NEW_USERS_RLC,
+        PERMISSION_ACTIVATE_INACTIVE_USERS_RLC
     ]

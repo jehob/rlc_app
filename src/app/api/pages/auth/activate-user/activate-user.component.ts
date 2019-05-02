@@ -42,6 +42,6 @@ export class ActivateUserComponent implements OnInit {
     }
 
     onActivateClick() {
-        this.apiSB.startActivatingUser(this.activationLink);
+        this.apiSB.startAcceptingUser(this.activationLink);
     }
 }

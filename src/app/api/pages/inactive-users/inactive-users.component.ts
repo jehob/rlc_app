@@ -1,4 +1,4 @@
-/*!
+/*
  * rlcapp - record and organization management software for refugee law clinics
  * Copyright (C) 2019  Dominik Walser
  *
@@ -15,37 +15,34 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
-@import '~src/styles/basic';
 
-.record-document-item__expansion-panel-content {
-    display: flex;
-    flex-direction: column;
-}
+import { Component, OnInit } from "@angular/core";
+import {ApiSandboxService} from '../../services/api-sandbox.service';
+import {Observable} from 'rxjs';
+import {FullUser} from '../../models/user.model';
 
-.record-document-item__expansion-panel-header {
-    height: 30px;
-    background: $c-secondary;
-    //border: solid $c-secondary;
-}
+@Component({
+    selector: "app-inactive-users",
+    templateUrl: "./inactive-users.component.html",
+    styleUrls: ["./inactive-users.component.scss"]
+})
+export class InactiveUsersComponent implements OnInit {
+    inactive_users: Observable<FullUser[]>;
 
-.mat-expansion-panel-header {
-    height: 30px;
-}
+    columns = [
+        'name',
+        'email',
+        'activate'
+    ];
 
-.record-document-item__download-icon {
-    margin-right: 20px;
-}
+    constructor(private apiSB: ApiSandboxService) {}
 
-.record-document-item__tags {
-    margin-left: 18px;
-    background: $c-primary;
-    color: $c-on-primary;
-    border-radius: 5px;
-    padding: 5px;
-}
+    ngOnInit() {
+        this.apiSB.startLoadingInactiveUsers();
+        this.inactive_users = this.apiSB.getInactiveUsers();
+    }
 
-.record-document-item__date {
-    //text-align: center;
-    margin-top: 5px;
-    margin-right: 5px;
+    onActivateUser(user: FullUser): void {
+        this.apiSB.startActivatingInactiveUser(user);
+    }
 }

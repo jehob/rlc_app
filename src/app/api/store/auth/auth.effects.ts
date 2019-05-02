@@ -227,6 +227,15 @@ export class AuthEffects {
         })
     );
 
+    @Effect()
+    logoutEffect = this.actions.pipe(
+        ofType(LOGOUT),
+        mergeMap(() => {
+            this.router.navigate([LOGIN_FRONT_URL]);
+            return [];
+        })
+    );
+
     static getStaticInformation(response: {
         user: any;
         all_permissions: any;

@@ -25,3 +25,4 @@ export const PERMISSION_CAN_ADD_GROUP_RLC = 'add_group_rlc';
 export const PERMISSION_CAN_VIEW_PERMISSIONS_RLC = 'view_permissions_rlc';
 export const PERMISSION_CAN_MANAGE_PERMISSIONS_RLC = 'manage_permissions_rlc';
 export const PERMISSION_ACCEPT_NEW_USERS_RLC = 'accept_new_users_rlc';
+export const PERMISSION_ACTIVATE_INACTIVE_USERS = 'activate_inactive_users_rlc';
