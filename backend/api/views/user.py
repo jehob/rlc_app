@@ -14,7 +14,6 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-import os
 from datetime import datetime
 
 import pytz
@@ -28,15 +27,14 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from backend.api.errors import CustomError
+from backend.static import permissions
+from backend.static.date_utils import parse_date
 from backend.static.emails import EmailSender
 from backend.static.error_codes import *
-from backend.static.permissions import PERMISSION_VIEW_FULL_USER_DETAIL_OVERALL, \
-    PERMISSION_VIEW_FULL_USER_DETAIL_RLC
+from backend.static.frontend_links import FrontendLinks
 from ..models import UserProfile, Permission, Rlc
 from ..serializers import UserProfileSerializer, UserProfileCreatorSerializer, UserProfileNameSerializer, RlcSerializer, \
     UserProfileForeignSerializer
-from backend.static.date_utils import parse_date
-from backend.static.frontend_links import FrontendLinks
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
@@ -44,7 +42,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 
     serializer_class = UserProfileSerializer
     queryset = UserProfile.objects.all()
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name', 'email',)
 
@@ -75,12 +73,13 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             raise CustomError(ERROR__API__USER__NOT_FOUND)
 
         if request.user.rlc != user.rlc:
-            if request.user.is_superuser or request.user.has_permission(PERMISSION_VIEW_FULL_USER_DETAIL_OVERALL):
+            if request.user.is_superuser or request.user.has_permission(
+                permissions.PERMISSION_VIEW_FULL_USER_DETAIL_OVERALL):
                 serializer = UserProfileSerializer(user)
             else:
                 raise CustomError(ERROR__API__USER__NOT_SAME_RLC)
         else:
-            if request.user.has_permission(PERMISSION_VIEW_FULL_USER_DETAIL_RLC):
+            if request.user.has_permission(permissions.PERMISSION_VIEW_FULL_USER_DETAIL_RLC):
                 serializer = UserProfileSerializer(user)
             else:
                 serializer = UserProfileForeignSerializer(user)
@@ -171,6 +170,7 @@ class LoginViewSet(viewsets.ViewSet):
         token, information and permissions of user
         all possible permissions, country states, countries, clients, record states, consultants
         """
+        request.data['username'] = request.data['username'].lower()
         serializer = self.serializer_class(data=request.data)
         LoginViewSet.check_if_user_active(request.data['username'])
         if serializer.is_valid():
@@ -204,7 +204,7 @@ class LoginViewSet(viewsets.ViewSet):
 
     @staticmethod
     def get_statics(user):
-        user_permissions = [model_to_dict(perm) for perm in user.get_overall_permissions()]
+        user_permissions = [model_to_dict(perm) for perm in user.get_all_user_permissions()]
         overall_permissions = [model_to_dict(permission) for permission in Permission.objects.all()]
         user_states_possible = UserProfile.user_states_possible
         user_record_states_possible = UserProfile.user_record_states_possible
@@ -235,3 +235,27 @@ class LogoutViewSet(APIView):
     def post(self, request):
         Token.objects.filter(user=request.user).delete()
         return Response()
+
+
+class InactiveUsersViewSet(APIView):
+    def get(self, request):
+        if not request.user.has_permission(permissions.PERMISSION_ACTIVATE_INACTIVE_USERS_RLC,
+                                           for_rlc=request.user.rlc):
+            raise CustomError(ERROR__API__PERMISSION__INSUFFICIENT)
+        inactive_users = UserProfile.objects.filter(rlc=request.user.rlc, is_active=False)
+        return Response(UserProfileSerializer(inactive_users, many=True).data)
+
+    def post(self, request):
+        if not request.user.has_permission(permissions.PERMISSION_ACTIVATE_INACTIVE_USERS_RLC,
+                                           for_rlc=request.user.rlc):
+            raise CustomError(ERROR__API__PERMISSION__INSUFFICIENT)
+        # method and user_id
+        if request.data['method'] == 'activate':
+            try:
+                user = UserProfile.objects.get(pk=request.data['user_id'])
+            except:
+                raise CustomError(ERROR__API__USER__NOT_FOUND)
+            user.is_active = True
+            user.save()
+            return Response(UserProfileSerializer(user).data)
+        raise CustomError(ERROR__API__ACTION_NOT_VALID)

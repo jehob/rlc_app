@@ -32,5 +32,5 @@ class ClientsViewSet(viewsets.ModelViewSet):
 
 class GetClientsFromBirthday(APIView):
     def post(self, request):
-        clients = models.Client.objects.filter(birthday=request.data['birthday'])
+        clients = models.Client.objects.filter(birthday=request.data['birthday'], from_rlc=request.user.rlc)
         return Response(serializers.ClientSerializer(clients, many=True).data)

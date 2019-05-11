@@ -15,37 +15,3 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
-@import '~src/styles/basic';
-
-.record-document-item__expansion-panel-content {
-    display: flex;
-    flex-direction: column;
-}
-
-.record-document-item__expansion-panel-header {
-    height: 30px;
-    background: $c-secondary;
-    //border: solid $c-secondary;
-}
-
-.mat-expansion-panel-header {
-    height: 30px;
-}
-
-.record-document-item__download-icon {
-    margin-right: 20px;
-}
-
-.record-document-item__tags {
-    margin-left: 18px;
-    background: $c-primary;
-    color: $c-on-primary;
-    border-radius: 5px;
-    padding: 5px;
-}
-
-.record-document-item__date {
-    //text-align: center;
-    margin-top: 5px;
-    margin-right: 5px;
-}

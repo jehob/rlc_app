@@ -16,20 +16,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { Component, OnInit } from "@angular/core";
+import {Component, OnInit} from '@angular/core';
 import { Router } from "@angular/router";
 import { AppSandboxService } from "../../services/app-sandbox.service";
 import { FullUser } from "../../models/user.model";
 import { ApiSandboxService } from "../../services/api-sandbox.service";
 import {
-    PERMISSION_ACCEPT_NEW_USERS_RLC,
+    PERMISSION_ACCEPT_NEW_USERS_RLC, PERMISSION_ACTIVATE_INACTIVE_USERS,
     PERMISSION_CAN_PERMIT_RECORD_PERMISSION_REQUESTS,
     PERMISSION_CAN_VIEW_PERMISSIONS_RLC,
     PERMISSION_CAN_VIEW_RECORDS
-} from "../../../statics/permissions.statics";
+} from '../../../statics/permissions.statics';
 import {
     ACCEPT_NEW_USER_REQUESTS_FRONT_URL,
-    GROUPS_FRONT_URL, LEGAL_NOTICE_FRONT_URL,
+    GROUPS_FRONT_URL, INACTIVE_USERS_FRONT_URL, LEGAL_NOTICE_FRONT_URL,
     OWN_PROFILE_FRONT_URL,
     PERMISSIONS_FRONT_URL,
     PROFILES_FRONT_URL,
@@ -47,6 +47,8 @@ export class SidebarComponent implements OnInit {
     active = false;
     name = "";
     email = "";
+    timer = null;
+    checkPermissionInterval = 15000;
 
     recordsUrl = RECORDS_FRONT_URL;
     recordsAddUrl = RECORDS_ADD_FRONT_URL;
@@ -55,6 +57,7 @@ export class SidebarComponent implements OnInit {
     groupsUrl = GROUPS_FRONT_URL;
     permissionsUrl = PERMISSIONS_FRONT_URL;
     acceptNewUsersUrl = ACCEPT_NEW_USER_REQUESTS_FRONT_URL;
+    inactiveUsersUrl = INACTIVE_USERS_FRONT_URL;
 
     legalNoticeUrl = LEGAL_NOTICE_FRONT_URL;
 
@@ -62,6 +65,7 @@ export class SidebarComponent implements OnInit {
     show_record_permission_request_tab = false;
     show_permissions_tab = false;
     show_accept_new_user_requests_tab = false;
+    show_inactive_users_tab = false;
 
     constructor(
         private router: Router,
@@ -98,13 +102,25 @@ export class SidebarComponent implements OnInit {
             }
         );
 
+        this.apiSB.hasPermissionFromStringForOwnRlc(
+            PERMISSION_ACTIVATE_INACTIVE_USERS,
+            hasPermission => {
+                this.show_inactive_users_tab = hasPermission;
+            }
+        );
+
         this.apiSB.getUser().subscribe((user: FullUser) => {
             this.name = user ? user.name : "";
             this.email = user ? user.email : "";
         });
+
+        this.timer = setInterval(() => {
+            this.apiSB.startCheckingUserHasPermissions();
+        }, this.checkPermissionInterval)
     }
 
     logout() {
+        clearInterval(this.timer);
         this.appSB.logout();
     }
 

@@ -21,14 +21,14 @@ import {
     ADD_GROUP,
     ADD_SINGLE_HAS_PERMISSION,
     ApiActions,
-    REMOVE_ACTUAL_HAS_PERMISSIONS,
-    REMOVE_SINGLE_HAS_PERMISSION,
+    REMOVE_ACTUAL_HAS_PERMISSIONS, REMOVE_INACTIVE_USER,
+    REMOVE_SINGLE_HAS_PERMISSION, RESET_INACTIVE_USERS,
     RESET_SPECIAL_FOREIGN_USER,
     RESET_SPECIAL_GROUP,
     RESET_SPECIAL_PERMISSION,
     SET_ACTUAL_HAS_PERMISSIONS,
     SET_ALL_PERMISSIONS,
-    SET_GROUPS, SET_NEW_USER_REQUESTS,
+    SET_GROUPS, SET_INACTIVE_USERS, SET_NEW_USER_REQUESTS,
     SET_OTHER_USERS,
     SET_RLC,
     SET_RLCS,
@@ -61,6 +61,7 @@ export interface ApiState {
     special_permission: Permission;
     rlcs: { [id: number]: RestrictedRlc };
     new_user_requests: { [id: number]: NewUserRequest };
+    inactive_users: { [id: number]: FullUser };
 }
 
 const initialState: ApiState = {
@@ -77,93 +78,19 @@ const initialState: ApiState = {
     user_record_states: [],
     special_permission: null,
     rlcs: {},
-    new_user_requests: {}
+    new_user_requests: {},
+    inactive_users: {}
 };
 
 export function apiReducer(state = initialState, action: ApiActions) {
     switch (action.type) {
-        case SET_USER:
+        case ADD_GROUP:
             return {
                 ...state,
-                user: action.payload
-            };
-        case SET_OTHER_USERS:
-            return {
-                ...state,
-                other_users: getIdObjects(action.payload)
-            };
-        case SET_ALL_PERMISSIONS:
-            return {
-                ...state,
-                all_permissions: getIdObjects(action.payload)
-            };
-        case SET_USER_PERMISSIONS:
-            return {
-                ...state,
-                user_permissions: getIdObjects(action.payload)
-            };
-        case SET_RLC:
-            return {
-                ...state,
-                rlc: action.payload
-            };
-        case SET_SPECIAL_FOREIGN_USER:
-            return {
-                ...state,
-                foreign_user: action.payload
-            };
-        case SET_USER_STATES:
-            return {
-                ...state,
-                user_states: getObjectsByField(action.payload, 'abbreviation')
-            };
-        case SET_USER_RECORD_STATES:
-            return {
-                ...state,
-                user_record_states: getObjectsByField(action.payload, 'abbreviation')
-            };
-        case SET_GROUPS:
-            return {
-                ...state,
-                groups: getIdObjects(action.payload)
-            };
-        case RESET_SPECIAL_FOREIGN_USER:
-            return {
-                ...state,
-                foreign_user: null
-            };
-        case SET_SPECIAL_GROUP:
-            return {
-                ...state,
-                special_group: action.payload
-            };
-        case RESET_SPECIAL_GROUP:
-            return {
-                ...state,
-                special_group: null
-            };
-        case SET_SPECIAL_PERMISSION:
-            return {
-                ...state,
-                special_permission: action.payload
-            };
-        case RESET_SPECIAL_PERMISSION:
-            return {
-                ...state,
-                special_permission: null
-            };
-        case SET_RLCS:
-            return {
-                ...state,
-                rlcs: getIdObjects(action.payload)
-            };
-        case REMOVE_SINGLE_HAS_PERMISSION:
-            const hasPermissions = state.actual_has_permissions;
-            delete hasPermissions[action.payload];
-
-            return {
-                ...state,
-                actual_has_permissions: hasPermissions
+                groups: {
+                    ...state.groups,
+                    [action.payload.id]: action.payload
+                }
             };
         case ADD_SINGLE_HAS_PERMISSION:
             const hasPerm: HasPermission = action.payload;
@@ -174,28 +101,121 @@ export function apiReducer(state = initialState, action: ApiActions) {
                     [hasPerm.id]: hasPerm
                 }
             };
-        case SET_ACTUAL_HAS_PERMISSIONS:
-            return {
-                ...state,
-                actual_has_permissions: getIdObjects(action.payload)
-            };
         case REMOVE_ACTUAL_HAS_PERMISSIONS:
             return {
                 ...state,
                 actual_has_permissions: {}
             };
-        case ADD_GROUP:
+        case REMOVE_SINGLE_HAS_PERMISSION:
+            const hasPermissions = state.actual_has_permissions;
+            delete hasPermissions[action.payload];
+
             return {
                 ...state,
-                groups: {
-                    ...state.groups,
-                    [action.payload.id]: action.payload
-                }
+                actual_has_permissions: hasPermissions
+            };
+        case REMOVE_INACTIVE_USER:
+            const inactive_users = state.inactive_users;
+            delete inactive_users[action.payload];
+
+            return {
+                ...state,
+                inactive_users: inactive_users
+            };
+        case RESET_INACTIVE_USERS:
+            return {
+                ...state,
+                inactive_users: {}
+            };
+        case RESET_SPECIAL_FOREIGN_USER:
+            return {
+                ...state,
+                foreign_user: null
+            };
+        case RESET_SPECIAL_GROUP:
+            return {
+                ...state,
+                special_group: null
+            };
+        case RESET_SPECIAL_PERMISSION:
+            return {
+                ...state,
+                special_permission: null
+            };
+        case SET_ACTUAL_HAS_PERMISSIONS:
+            return {
+                ...state,
+                actual_has_permissions: getIdObjects(action.payload)
+            };
+        case SET_ALL_PERMISSIONS:
+            return {
+                ...state,
+                all_permissions: getIdObjects(action.payload)
+            };
+        case SET_GROUPS:
+            return {
+                ...state,
+                groups: getIdObjects(action.payload)
+            };
+        case SET_INACTIVE_USERS:
+            return {
+                ...state,
+                inactive_users: getIdObjects(action.payload)
             };
         case SET_NEW_USER_REQUESTS:
             return {
                 ...state,
                 new_user_requests: getIdObjects(action.payload)
+            };
+        case SET_OTHER_USERS:
+            return {
+                ...state,
+                other_users: getIdObjects(action.payload)
+            };
+        case SET_RLC:
+            return {
+                ...state,
+                rlc: action.payload
+            };
+        case SET_RLCS:
+            return {
+                ...state,
+                rlcs: getIdObjects(action.payload)
+            };
+        case SET_SPECIAL_FOREIGN_USER:
+            return {
+                ...state,
+                foreign_user: action.payload
+            };
+        case SET_SPECIAL_GROUP:
+            return {
+                ...state,
+                special_group: action.payload
+            };
+        case SET_SPECIAL_PERMISSION:
+            return {
+                ...state,
+                special_permission: action.payload
+            };
+        case SET_USER:
+            return {
+                ...state,
+                user: action.payload
+            };
+        case SET_USER_PERMISSIONS:
+            return {
+                ...state,
+                user_permissions: getIdObjects(action.payload)
+            };
+        case SET_USER_RECORD_STATES:
+            return {
+                ...state,
+                user_record_states: getObjectsByField(action.payload, 'abbreviation')
+            };
+        case SET_USER_STATES:
+            return {
+                ...state,
+                user_states: getObjectsByField(action.payload, 'abbreviation')
             };
         case UPDATE_NEW_USER_REQUEST:
             return {

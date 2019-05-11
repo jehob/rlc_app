@@ -27,6 +27,8 @@ export const ADD_GROUP = "ADD_GROUP";
 export const ADD_SINGLE_HAS_PERMISSION = "ADD_SINGLE_HAS_PERMISSION";
 export const REMOVE_ACTUAL_HAS_PERMISSIONS = "REMOVE_ACTUAL_HAS_PERMISSIONS";
 export const REMOVE_SINGLE_HAS_PERMISSION = "REMOVE_SINGLE_HAS_PERMISSION";
+export const REMOVE_INACTIVE_USER = "REMOVE_INACTIVE_USER";
+export const RESET_INACTIVE_USERS = "RESET_INACTIVE_USERS";
 export const RESET_SPECIAL_FOREIGN_USER = "RESET_SPECIAL_FOREIGN_USER";
 export const RESET_SPECIAL_GROUP = "RESET_SPECIAL_GROUP";
 export const RESET_SPECIAL_GROUP_HAS_PERMISSIONS =
@@ -35,6 +37,7 @@ export const RESET_SPECIAL_PERMISSION = "RESET_SPECIAL_PERMISSION";
 export const SET_ACTUAL_HAS_PERMISSIONS = "SET_ACTUAL_HAS_PERMISSIONS";
 export const SET_ALL_PERMISSIONS = "SET_ALL_PERMISSIONS";
 export const SET_GROUPS = "SET_GROUPS";
+export const SET_INACTIVE_USERS = "SET_INACTIVE_USERS";
 export const SET_NEW_USER_REQUESTS = "SET_NEW_USER_REQUESTS";
 export const SET_OTHER_USERS = "SET_OTHER_USERS";
 export const SET_RLC = "SET_RLC";
@@ -48,17 +51,22 @@ export const SET_USER = "SET_USER";
 export const SET_USER_PERMISSIONS = "SET_USER_PERMISSIONS";
 export const SET_USER_RECORD_STATES = "SET_USER_RECORD_STATES";
 export const SET_USER_STATES = "SET_USER_STATES";
+export const START_ACCEPTING_USER = "START_ACCEPTING_USER";
 export const START_ADDING_GROUP = "START_ADDING_GROUP";
 export const START_ADDING_GROUP_MEMBER = "START_ADDING_GROUP_MEMBER";
 export const START_ADDING_HAS_PERMISSION = "START_ADDING_HAS_PERMISSION";
 export const START_ADMITTING_NEW_USER_REQUEST =
     "START_ADMITTING_NEW_USER_REQUEST";
+export const START_CHECKING_USER_ACTIVATION_LINK =
+    "START_CHECKING_USER_ACTIVATION_LINK";
+export const START_CHECKING_USER_HAS_PERMISSIONS = "START_CHECKING_USER_HAS_PERMISSIONS";
 export const START_CREATE_USER = "START_CREATE_USER";
 export const START_DECLINING_NEW_USER_REQUEST =
     "START_DECLINING_NEW_USER_REQUEST";
 export const START_LOADING_GROUPS = "START_LOADING_GROUPS";
 export const START_LOADING_HAS_PERMISSION_STATICS =
     "START_LOADING_HAS_PERMISSION_STATICS";
+export const START_LOADING_INACTIVE_USERS = "START_LOADING_INACTIVE_USERS";
 export const START_LOADING_NEW_USER_REQUESTS =
     "START_LOADING_NEW_USER_REQUESTS";
 export const START_LOADING_OTHER_USERS = "START_LOADING_OTHER_USERS";
@@ -73,11 +81,9 @@ export const START_LOADING_SPECIAL_PERMISSION =
 export const START_PATCH_USER = "START_PATCH_USER";
 export const START_REMOVING_GROUP_MEMBER = "START_REMOVING_GROUP_MEMBER";
 export const START_REMOVING_HAS_PERMISSION = "START_REMOVING_HAS_PERMISSION";
-export const UPDATE_NEW_USER_REQUEST = "UPDATE_NEW_USER_REQUEST";
-export const START_CHECKING_USER_ACTIVATION_LINK =
-    "START_CHECKING_USER_ACTIVATION_LINK";
-export const START_ACTIVATING_USER = "START_ACTIVATING_USER";
+export const START_ACTIVATING_INACTIVE_USER = "START_ACTIVATING_INACTIVE_USER";
 export const START_SAVING_USER = "START_SAVING_USER";
+export const UPDATE_NEW_USER_REQUEST = "UPDATE_NEW_USER_REQUEST";
 
 export class AddGroup implements Action {
     readonly type = ADD_GROUP;
@@ -100,6 +106,9 @@ export class RemoveSingleHasPermission implements Action {
     constructor(public payload: string) {}
 }
 
+export class ResetInactiveUsers implements Action {
+    readonly type = RESET_INACTIVE_USERS;
+}
 export class ResetSpecialForeignUser implements Action {
     readonly type = RESET_SPECIAL_FOREIGN_USER;
 }
@@ -128,6 +137,12 @@ export class SetGroups implements Action {
     readonly type = SET_GROUPS;
 
     constructor(public payload: RestrictedGroup[]) {}
+}
+
+export class SetInactiveUsers implements Action {
+    readonly type = SET_INACTIVE_USERS;
+
+    constructor(public payload: FullUser[]) {}
 }
 
 export class SetNewUserRequests implements Action {
@@ -195,6 +210,12 @@ export class SetUserStates implements Action {
     constructor(public payload: any) {}
 }
 
+export class StartAcceptingUser implements Action {
+    readonly type = START_ACCEPTING_USER;
+
+    constructor(public payload: string) {}
+}
+
 export class StartAddingGroup implements Action {
     readonly type = START_ADDING_GROUP;
 
@@ -219,6 +240,12 @@ export class StartAdmittingNewUserRequest implements Action {
     constructor(public payload: NewUserRequest) {}
 }
 
+export class StartCheckingUserActivationLink implements Action {
+    readonly type = START_CHECKING_USER_ACTIVATION_LINK;
+
+    constructor(public payload: string) {}
+}
+
 export class StartCreateUser implements Action {
     readonly type = START_CREATE_USER;
 
@@ -231,18 +258,16 @@ export class StartDecliningNewUserRequest implements Action {
     constructor(public payload: NewUserRequest) {}
 }
 
-export class UpdateNewUserRequest implements Action {
-    readonly type = UPDATE_NEW_USER_REQUEST;
-
-    constructor(public payload: NewUserRequest) {}
-}
-
 export class StartLoadingGroups implements Action {
     readonly type = START_LOADING_GROUPS;
 }
 
 export class StartLoadingHasPermissionStatics implements Action {
     readonly type = START_LOADING_HAS_PERMISSION_STATICS;
+}
+
+export class StartLoadingInactiveUsers implements Action {
+    readonly type = START_LOADING_INACTIVE_USERS;
 }
 
 export class StartLoadingNewUserRequests implements Action {
@@ -299,22 +324,32 @@ export class StartRemovingHasPermission implements Action {
     constructor(public payload: string) {}
 }
 
-export class StartCheckingUserActivationLink implements Action {
-    readonly type = START_CHECKING_USER_ACTIVATION_LINK;
-
-    constructor(public payload: string) {}
-}
-
-export class StartActivatingUser implements Action {
-    readonly type = START_ACTIVATING_USER;
-
-    constructor(public payload: string) {}
-}
-
 export class StartSavingUser implements Action {
     readonly type = START_SAVING_USER;
 
-    constructor(public payload: FullUser){}
+    constructor(public payload: FullUser) {}
+}
+
+export class UpdateNewUserRequest implements Action {
+    readonly type = UPDATE_NEW_USER_REQUEST;
+
+    constructor(public payload: NewUserRequest) {}
+}
+
+export class RemoveInactiveUser implements Action {
+    readonly type = REMOVE_INACTIVE_USER;
+
+    constructor(public payload: string) {}
+}
+
+export class StartActivatingInactiveUser implements Action {
+    readonly type = START_ACTIVATING_INACTIVE_USER;
+
+    constructor(public payload: string) {}
+}
+
+export class StartCheckingUserHasPermissions implements Action {
+    readonly type = START_CHECKING_USER_HAS_PERMISSIONS;
 }
 
 export type ApiActions =
@@ -322,12 +357,15 @@ export type ApiActions =
     | AddSingleHasPermission
     | RemoveActualHasPermissions
     | RemoveSingleHasPermission
+    | RemoveInactiveUser
+    | ResetInactiveUsers
     | ResetSpecialForeignUser
     | ResetSpecialGroup
     | ResetSpecialPermission
     | SetActualHasPermissions
     | SetAllPermissions
     | SetGroups
+    | SetInactiveUsers
     | SetNewUserRequests
     | SetOtherUsers
     | SetRlc
@@ -339,16 +377,18 @@ export type ApiActions =
     | SetUserPermissions
     | SetUserRecordStates
     | SetUserStates
-    | StartActivatingUser
+    | StartAcceptingUser
     | StartAddingGroup
     | StartAddingGroupMember
     | StartAddingHasPermission
     | StartAdmittingNewUserRequest
+    | StartActivatingInactiveUser
     | StartCheckingUserActivationLink
     | StartCreateUser
     | StartDecliningNewUserRequest
     | StartLoadingGroups
     | StartLoadingHasPermissionStatics
+    | StartLoadingInactiveUsers
     | StartLoadingNewUserRequests
     | StartLoadingOtherUsers
     | StartLoadingRlcs
@@ -360,4 +400,5 @@ export type ApiActions =
     | StartRemovingGroupMember
     | StartRemovingHasPermission
     | StartSavingUser
-    | UpdateNewUserRequest;
+    | UpdateNewUserRequest
+    | StartCheckingUserHasPermissions;

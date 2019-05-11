@@ -34,6 +34,7 @@ import { EditPermissionComponent } from "./pages/edit-permission/edit-permission
 import { NewUserRequestsComponent } from "./pages/new-user-requests/new-user-requests.component";
 import { ActivateUserComponent } from "./pages/auth/activate-user/activate-user.component";
 import {LegalNoticeComponent} from './pages/legal-notice/legal-notice.component';
+import {InactiveUsersComponent} from './pages/inactive-users/inactive-users.component';
 
 const apiRoutes: Routes = [
     {
@@ -85,13 +86,18 @@ const apiRoutes: Routes = [
         component: NewUserRequestsComponent,
         canActivate: [AuthGuardService]
     },
+    {
+        path: "inactive_users",
+        component: InactiveUsersComponent,
+        canActivate: [AuthGuardService]
+    },
     // without access control
     { path: "login", component: LoginComponent },
     { path: "register", component: RegisterComponent },
     { path: "forgot-password", component: ForgotPasswordComponent },
     { path: "reset-password/:id", component: ResetPasswordComponent },
     { path: "activate_account/:link", component: ActivateUserComponent },
-    { path: "legal-notice", component: LegalNoticeComponent }
+    { path: "legal_notice", component: LegalNoticeComponent }
 ];
 
 @NgModule({
