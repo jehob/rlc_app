@@ -470,6 +470,9 @@ export class ApiEffects {
                             {
                                 type: REMOVE_SINGLE_HAS_PERMISSION,
                                 payload: id
+                            },
+                            {
+                                type: START_CHECKING_USER_HAS_PERMISSIONS
                             }
                         ];
                     })
@@ -502,6 +505,9 @@ export class ApiEffects {
                             {
                                 type: ADD_SINGLE_HAS_PERMISSION,
                                 payload: hasPermission
+                            },
+                            {
+                                type: START_CHECKING_USER_HAS_PERMISSIONS
                             }
                         ];
                     })

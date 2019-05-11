@@ -22,7 +22,7 @@ import { AppSandboxService } from "../../services/app-sandbox.service";
 import { FullUser } from "../../models/user.model";
 import { ApiSandboxService } from "../../services/api-sandbox.service";
 import {
-    PERMISSION_ACCEPT_NEW_USERS_RLC, PERMISSION_ACTIVATE_INACTIVE_USERS,
+    PERMISSION_ACCEPT_NEW_USERS_RLC, PERMISSION_ACTIVATE_INACTIVE_USERS, PERMISSION_CAN_ADD_RECORD_RLC,
     PERMISSION_CAN_PERMIT_RECORD_PERMISSION_REQUESTS,
     PERMISSION_CAN_VIEW_PERMISSIONS_RLC,
     PERMISSION_CAN_VIEW_RECORDS
@@ -61,7 +61,8 @@ export class SidebarComponent implements OnInit {
 
     legalNoticeUrl = LEGAL_NOTICE_FRONT_URL;
 
-    show_record_tabs = false;
+    show_record_tab = false;
+    show_add_record_tab = false;
     show_record_permission_request_tab = false;
     show_permissions_tab = false;
     show_accept_new_user_requests_tab = false;
@@ -77,7 +78,14 @@ export class SidebarComponent implements OnInit {
         this.apiSB.hasPermissionFromStringForOwnRlc(
             PERMISSION_CAN_VIEW_RECORDS,
             hasPermission => {
-                this.show_record_tabs = hasPermission;
+                this.show_record_tab = hasPermission;
+            }
+        );
+
+        this.apiSB.hasPermissionFromStringForOwnRlc(
+            PERMISSION_CAN_ADD_RECORD_RLC,
+            hasPermission => {
+                this.show_add_record_tab = hasPermission;
             }
         );
 
