@@ -44,7 +44,7 @@ export class AddHasPermissionComponent implements OnInit {
 
     ownRlc: RestrictedRlc;
     hasRlcChecked = false;
-    forRlcChecked = false;
+    forRlcChecked = true;
 
     constructor(
         private apiSB: ApiSandboxService,

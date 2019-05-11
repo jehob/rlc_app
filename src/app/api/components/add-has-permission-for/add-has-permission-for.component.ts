@@ -44,7 +44,7 @@ export class AddHasPermissionForComponent implements OnInit {
     selectedForGroup: RestrictedGroup = null;
 
     ownRlc: RestrictedRlc;
-    forRlcChecked = false;
+    forRlcChecked = true;
 
     constructor(
         private apiSB: ApiSandboxService,
