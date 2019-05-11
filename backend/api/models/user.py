@@ -152,7 +152,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         """
         return list(HasPermission.objects.filter(rlc_has_permission_id=self.rlc.id))
 
-    def get_overall_permissions(self):
+    def get_all_user_permissions(self):
         """
         Returns: all HasPermissions which the user has direct and
                     indirect (through membership in a group or rlc) as list

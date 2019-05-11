@@ -59,6 +59,7 @@ export const START_ADMITTING_NEW_USER_REQUEST =
     "START_ADMITTING_NEW_USER_REQUEST";
 export const START_CHECKING_USER_ACTIVATION_LINK =
     "START_CHECKING_USER_ACTIVATION_LINK";
+export const START_CHECKING_USER_HAS_PERMISSIONS = "START_CHECKING_USER_HAS_PERMISSIONS";
 export const START_CREATE_USER = "START_CREATE_USER";
 export const START_DECLINING_NEW_USER_REQUEST =
     "START_DECLINING_NEW_USER_REQUEST";
@@ -347,6 +348,10 @@ export class StartActivatingInactiveUser implements Action {
     constructor(public payload: string) {}
 }
 
+export class StartCheckingUserHasPermissions implements Action {
+    readonly type = START_CHECKING_USER_HAS_PERMISSIONS;
+}
+
 export type ApiActions =
     | AddGroup
     | AddSingleHasPermission
@@ -395,4 +400,5 @@ export type ApiActions =
     | StartRemovingGroupMember
     | StartRemovingHasPermission
     | StartSavingUser
-    | UpdateNewUserRequest;
+    | UpdateNewUserRequest
+    | StartCheckingUserHasPermissions;

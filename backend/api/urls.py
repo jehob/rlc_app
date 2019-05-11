@@ -50,4 +50,5 @@ urlpatterns = [
     url(r'new_user_request_admit/', views.NewUserRequestAdmitViewSet.as_view()),
     url(r'logout/', views.LogoutViewSet.as_view()),
     url(r'inactive_users/', views.InactiveUsersViewSet.as_view()),
+    url(r'user_has_permissions/', views.UserHasPermissionsViewSet.as_view()),
 ]

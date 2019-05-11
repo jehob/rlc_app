@@ -204,7 +204,7 @@ class LoginViewSet(viewsets.ViewSet):
 
     @staticmethod
     def get_statics(user):
-        user_permissions = [model_to_dict(perm) for perm in user.get_overall_permissions()]
+        user_permissions = [model_to_dict(perm) for perm in user.get_all_user_permissions()]
         overall_permissions = [model_to_dict(permission) for permission in Permission.objects.all()]
         user_states_possible = UserProfile.user_states_possible
         user_record_states_possible = UserProfile.user_record_states_possible

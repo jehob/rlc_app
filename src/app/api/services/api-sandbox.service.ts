@@ -37,7 +37,7 @@ import {
     StartAddingGroupMember,
     StartAddingHasPermission,
     StartAdmittingNewUserRequest,
-    StartCheckingUserActivationLink,
+    StartCheckingUserActivationLink, StartCheckingUserHasPermissions,
     StartCreateUser,
     StartDecliningNewUserRequest,
     StartLoadingGroups,
@@ -488,5 +488,9 @@ export class ApiSandboxService {
 
     startActivatingInactiveUser(user: FullUser): void {
         this.apiStateStore.dispatch(new StartActivatingInactiveUser(user.id));
+    }
+
+    startCheckingUserHasPermissions(): void {
+        this.apiStateStore.dispatch(new StartCheckingUserHasPermissions());
     }
 }

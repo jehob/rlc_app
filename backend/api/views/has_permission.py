@@ -19,6 +19,7 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.forms.models import model_to_dict
 
 from backend.api.errors import CustomError
 from backend.static import error_codes
@@ -87,3 +88,11 @@ class HasPermissionStaticsViewSet(APIView):
             'groups': GroupNameSerializer(groups, many=True).data
         }
         return Response(data)
+
+
+class UserHasPermissionsViewSet(APIView):
+    def get(self, request):
+        user_permissions = [model_to_dict(perm) for perm in request.user.get_all_user_permissions()]
+        return Response({
+            'user_permissions': user_permissions
+        })

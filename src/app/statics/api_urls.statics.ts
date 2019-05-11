@@ -36,6 +36,7 @@ export const NEW_USER_REQUEST_API_URL = "api/new_user_request/";
 export const NEW_USER_REQUEST_ADMIT_API_URL = "api/new_user_request_admit/";
 export const LOGOUT_API_URL = 'api/logout/';
 export const INACTIVE_USERS_API_URL = 'api/inactive_users/';
+export const USER_HAS_PERMISSIONS_API_URL = 'api/user_has_permissions/';
 
 const CHECK_USER_ACTIVATION_API_URL = "api/check_user_activation_link/";
 const ACTIVATE_USER_ACTIVATION_API_URL = "api/activate_user_activation_link/";

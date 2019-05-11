@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { Component, OnInit } from "@angular/core";
+import {Component, OnInit} from '@angular/core';
 import { Router } from "@angular/router";
 import { AppSandboxService } from "../../services/app-sandbox.service";
 import { FullUser } from "../../models/user.model";
@@ -47,6 +47,8 @@ export class SidebarComponent implements OnInit {
     active = false;
     name = "";
     email = "";
+    timer = null;
+    checkPermissionInterval = 15000;
 
     recordsUrl = RECORDS_FRONT_URL;
     recordsAddUrl = RECORDS_ADD_FRONT_URL;
@@ -111,9 +113,15 @@ export class SidebarComponent implements OnInit {
             this.name = user ? user.name : "";
             this.email = user ? user.email : "";
         });
+
+        this.timer = setInterval(() => {
+            console.log('timer fired');
+            this.apiSB.startCheckingUserHasPermissions();
+        }, this.checkPermissionInterval)
     }
 
     logout() {
+        clearInterval(this.timer);
         this.appSB.logout();
     }
 

@@ -77,7 +77,9 @@ import {
     SET_INACTIVE_USERS,
     START_ACTIVATING_INACTIVE_USER,
     StartActivatingInactiveUser,
-    REMOVE_INACTIVE_USER
+    REMOVE_INACTIVE_USER,
+    START_CHECKING_USER_HAS_PERMISSIONS,
+    SET_USER_PERMISSIONS
 } from "./api.actions";
 import {
     CREATE_PROFILE_API_URL,
@@ -96,7 +98,8 @@ import {
     NEW_USER_REQUEST_ADMIT_API_URL,
     NEW_USER_REQUEST_API_URL,
     PROFILES_API_URL,
-    RLCS_API_URL
+    RLCS_API_URL,
+    USER_HAS_PERMISSIONS_API_URL
 } from "../../statics/api_urls.statics";
 import { ApiSandboxService } from "../services/api-sandbox.service";
 import { ForeignUser, FullUser, RestrictedUser } from "../models/user.model";
@@ -849,6 +852,36 @@ export class ApiEffects {
                             ];
                         })
                     )
+            );
+        })
+    );
+
+    @Effect()
+    startCheckingUserHasPermissions = this.actions.pipe(
+        ofType(START_CHECKING_USER_HAS_PERMISSIONS),
+        switchMap(() => {
+            return from(
+                this.http.get(USER_HAS_PERMISSIONS_API_URL).pipe(
+                    catchError(error => {
+                        this.snackbar.showErrorSnackBar(
+                            "error at checking user permissions: " +
+                                error.error.detail
+                        );
+                        return [];
+                    }),
+                    mergeMap((response: any) => {
+                        console.log('permissions checked', response);
+                        const user_permissions = HasPermission.getPermissionsFromJsonArray(
+                            response.user_permissions
+                        );
+                        return [
+                            {
+                                type: SET_USER_PERMISSIONS,
+                                payload: user_permissions
+                            }
+                        ];
+                    })
+                )
             );
         })
     );
