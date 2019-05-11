@@ -840,10 +840,7 @@ export class ApiEffects {
                             return [];
                         }),
                         mergeMap((response: any) => {
-                            console.log(
-                                "response from activating inactive user",
-                                response
-                            );
+
                             return [
                                 {
                                     type: REMOVE_INACTIVE_USER,
@@ -870,7 +867,6 @@ export class ApiEffects {
                         return [];
                     }),
                     mergeMap((response: any) => {
-                        console.log('permissions checked', response);
                         const user_permissions = HasPermission.getPermissionsFromJsonArray(
                             response.user_permissions
                         );

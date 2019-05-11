@@ -115,7 +115,6 @@ export class SidebarComponent implements OnInit {
         });
 
         this.timer = setInterval(() => {
-            console.log('timer fired');
             this.apiSB.startCheckingUserHasPermissions();
         }, this.checkPermissionInterval)
     }

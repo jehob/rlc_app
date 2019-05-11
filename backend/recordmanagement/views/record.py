@@ -127,7 +127,7 @@ class RecordViewSet(APIView):
             client.save()
         else:
             client = models.Client(name=data['client_name'], phone_number=data['client_phone_number'],
-                                   birthday=data['client_birthday'], note=data['client_note'])
+                                   birthday=data['client_birthday'], note=data['client_note'], from_rlc=rlc)
             client.save()
         try:
             origin = models.OriginCountry.objects.get(pk=data['origin_country'])

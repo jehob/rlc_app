@@ -17,9 +17,11 @@
 
 from django.db import models
 from backend.api.models.user import phone_regex
+from backend.api.models import Rlc
 
 
 class Client(models.Model):
+    from_rlc = models.ForeignKey(Rlc, related_name='client_from_rlc', on_delete=models.SET_NULL, null=True)
     created_on = models.DateField(auto_now_add=True)
     last_edited = models.DateTimeField(auto_now_add=True)
 
