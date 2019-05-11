@@ -32,16 +32,19 @@ import {
     ResetSpecialGroup,
     ResetSpecialPermission,
     SetSpecialForeignUser,
-    StartActivatingUser,
+    StartAcceptingUser,
+    StartActivatingInactiveUser,
     StartAddingGroup,
     StartAddingGroupMember,
     StartAddingHasPermission,
     StartAdmittingNewUserRequest,
     StartCheckingUserActivationLink,
+    StartCheckingUserHasPermissions,
     StartCreateUser,
     StartDecliningNewUserRequest,
     StartLoadingGroups,
     StartLoadingHasPermissionStatics,
+    StartLoadingInactiveUsers,
     StartLoadingNewUserRequests,
     StartLoadingOtherUsers,
     StartLoadingRlcs,
@@ -51,8 +54,9 @@ import {
     StartLoadingSpecialPermission,
     StartPatchUser,
     StartRemovingGroupMember,
-    StartRemovingHasPermission, StartSavingUser
-} from '../store/api.actions';
+    StartRemovingHasPermission,
+    StartSavingUser
+} from "../store/api.actions";
 import { StorageService } from "../../shared/services/storage.service";
 import { SnackbarService } from "../../shared/services/snackbar.service";
 import { Observable } from "rxjs";
@@ -138,27 +142,25 @@ export class ApiSandboxService {
         /*
         checks if the user has permission and returns to subscriberCallback true or false
          */
-        this.getAllPermissions()
-            .subscribe((all_permissions: Permission[]) => {
-                if (all_permissions.length > 0) {
-                    try {
-                        const id = Number(
-                            all_permissions.filter(
-                                single_permission =>
-                                    single_permission.name === permission
-                            )[0].id
-                        );
-                        this.hasPermissionFromId(
-                            id,
-                            subscriberCallback,
-                            permission_for
-                        );
-                    } catch (e) {
-                        subscriberCallback(false);
-                    }
+        this.getAllPermissions().subscribe((all_permissions: Permission[]) => {
+            if (all_permissions.length > 0) {
+                try {
+                    const id = Number(
+                        all_permissions.filter(
+                            single_permission =>
+                                single_permission.name === permission
+                        )[0].id
+                    );
+                    this.hasPermissionFromId(
+                        id,
+                        subscriberCallback,
+                        permission_for
+                    );
+                } catch (e) {
+                    subscriberCallback(false);
                 }
-            })
-            .unsubscribe();
+            }
+        });
     }
 
     hasPermissionFromId(
@@ -171,7 +173,6 @@ export class ApiSandboxService {
          */
         this.getUserPermissions()
             .subscribe((user_permissions: HasPermission[]) => {
-                // const a: boolean = HasPermission.checkPermissionMet(user_permissions, permission, permission_for);
                 subscriberCallback(
                     HasPermission.checkPermissionMet(
                         user_permissions,
@@ -179,38 +180,11 @@ export class ApiSandboxService {
                         permission_for
                     )
                 );
-
-                // const result: HasPermission[] = user_permissions.filter(
-                //     (hasPermission: HasPermission) =>
-                //         Number(hasPermission.permission_id) === permission
-                // );
-                // if (result.length === 0) {
-                //     subscriberCallback(false);
-                // } else {
-                //     subscriberCallback(true);
-                // }
             })
             .unsubscribe();
     }
 
-    startPatchUser(user: FullUser) {
-        let userFromStore: FullUser = null;
-        this.apiStateStore
-            .pipe(select((state: any) => state.api.user))
-            .pipe(take(1))
-            .subscribe((loadedUser: FullUser) => {
-                userFromStore = loadedUser;
-            });
-        const id = userFromStore.id;
-        this.apiStateStore.dispatch(
-            new StartPatchUser({
-                id,
-                userUpdates: userFromStore.getUpdates(user)
-            })
-        );
-    }
-
-    startSavingUser(user: FullUser){
+    startSavingUser(user: FullUser) {
         this.apiStateStore.dispatch(new StartSavingUser(user));
     }
 
@@ -460,8 +434,8 @@ export class ApiSandboxService {
         this.apiStateStore.dispatch(new StartCheckingUserActivationLink(link));
     }
 
-    startActivatingUser(link: string): void {
-        this.apiStateStore.dispatch(new StartActivatingUser(link));
+    startAcceptingUser(link: string): void {
+        this.apiStateStore.dispatch(new StartAcceptingUser(link));
     }
 
     getUserStates(asArray: boolean = true): Observable<State[]> {
@@ -483,10 +457,35 @@ export class ApiSandboxService {
     }
 
     getUserStateByAbbreviation(abb: string): Observable<State> {
-        return this.apiStateStore.pipe(select((state: any) => state.api.user_states[abb]));
+        return this.apiStateStore.pipe(
+            select((state: any) => state.api.user_states[abb])
+        );
     }
 
     getUserRecordStateByAbbreviation(abb: string): Observable<State> {
-        return this.apiStateStore.pipe(select((state: any) => state.api.user_record_states[abb]));
+        return this.apiStateStore.pipe(
+            select((state: any) => state.api.user_record_states[abb])
+        );
+    }
+
+    startLoadingInactiveUsers(): void {
+        this.apiStateStore.dispatch(new StartLoadingInactiveUsers());
+    }
+
+    getInactiveUsers(asArray: boolean = true): Observable<FullUser[]> {
+        return this.apiStateStore.pipe(
+            select((state: any) => {
+                const values = state.api.inactive_users;
+                return asArray ? Object.values(values) : values;
+            })
+        );
+    }
+
+    startActivatingInactiveUser(user: FullUser): void {
+        this.apiStateStore.dispatch(new StartActivatingInactiveUser(user.id));
+    }
+
+    startCheckingUserHasPermissions(): void {
+        this.apiStateStore.dispatch(new StartCheckingUserHasPermissions());
     }
 }

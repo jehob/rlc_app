@@ -68,10 +68,23 @@ import {
     StartDecliningNewUserRequest,
     UPDATE_NEW_USER_REQUEST,
     START_CHECKING_USER_ACTIVATION_LINK,
-    StartCheckingUserActivationLink, START_ACTIVATING_USER, StartActivatingUser, START_SAVING_USER, StartSavingUser
-} from './api.actions';
+    StartCheckingUserActivationLink,
+    START_ACCEPTING_USER,
+    StartAcceptingUser,
+    START_SAVING_USER,
+    StartSavingUser,
+    START_LOADING_INACTIVE_USERS,
+    SET_INACTIVE_USERS,
+    START_ACTIVATING_INACTIVE_USER,
+    StartActivatingInactiveUser,
+    REMOVE_INACTIVE_USER,
+    START_CHECKING_USER_HAS_PERMISSIONS,
+    SET_USER_PERMISSIONS
+} from "./api.actions";
 import {
-    CREATE_PROFILE_API_URL, GetActivateUserApiUrl, GetCheckUserActivationApiUrl,
+    CREATE_PROFILE_API_URL,
+    GetActivateUserApiUrl,
+    GetCheckUserActivationApiUrl,
     GetPermissionsForGroupApiURL,
     GetSpecialGroupApiURL,
     GetSpecialHasPermissionApiURL,
@@ -80,17 +93,21 @@ import {
     GROUP_MEMBER_API_URL,
     GROUPS_API_URL,
     HAS_PERMISSION_API_URL,
-    HAS_PERMISSIONS_STATICS_API_URL, NEW_USER_REQUEST_ADMIT_API_URL, NEW_USER_REQUEST_API_URL,
+    HAS_PERMISSIONS_STATICS_API_URL,
+    INACTIVE_USERS_API_URL,
+    NEW_USER_REQUEST_ADMIT_API_URL,
+    NEW_USER_REQUEST_API_URL,
     PROFILES_API_URL,
-    RLCS_API_URL
-} from '../../statics/api_urls.statics';
+    RLCS_API_URL,
+    USER_HAS_PERMISSIONS_API_URL
+} from "../../statics/api_urls.statics";
 import { ApiSandboxService } from "../services/api-sandbox.service";
 import { ForeignUser, FullUser, RestrictedUser } from "../models/user.model";
 import { SnackbarService } from "../../shared/services/snackbar.service";
 import { FullGroup, RestrictedGroup } from "../models/group.model";
 import { HasPermission, Permission } from "../models/permission.model";
 import { RestrictedRlc } from "../models/rlc.model";
-import {NewUserRequest} from '../models/new_user_request.model';
+import { NewUserRequest } from "../models/new_user_request.model";
 
 @Injectable()
 export class ApiEffects {
@@ -149,8 +166,10 @@ export class ApiEffects {
             return from(
                 this.http.post(CREATE_PROFILE_API_URL, user).pipe(
                     catchError(error => {
-                        console.log('error at register, ', error);
-                        this.snackbar.showErrorSnackBar("error at register: " + error.error.detail);
+                        console.log("error at register, ", error);
+                        this.snackbar.showErrorSnackBar(
+                            "error at register: " + error.error.detail
+                        );
                         return [];
                     }),
                     mergeMap((response: any) => {
@@ -451,6 +470,9 @@ export class ApiEffects {
                             {
                                 type: REMOVE_SINGLE_HAS_PERMISSION,
                                 payload: id
+                            },
+                            {
+                                type: START_CHECKING_USER_HAS_PERMISSIONS
                             }
                         ];
                     })
@@ -483,6 +505,9 @@ export class ApiEffects {
                             {
                                 type: ADD_SINGLE_HAS_PERMISSION,
                                 payload: hasPermission
+                            },
+                            {
+                                type: START_CHECKING_USER_HAS_PERMISSIONS
                             }
                         ];
                     })
@@ -718,9 +743,9 @@ export class ApiEffects {
     );
 
     @Effect()
-    startActivatingUser = this.actions.pipe(
-        ofType(START_ACTIVATING_USER),
-        map((action: StartActivatingUser) => {
+    startAcceptingUser = this.actions.pipe(
+        ofType(START_ACCEPTING_USER),
+        map((action: StartAcceptingUser) => {
             return action.payload;
         }),
         switchMap((link: string) => {
@@ -755,8 +780,7 @@ export class ApiEffects {
                 this.http.patch(GetSpecialProfileApiURL(user.id), user).pipe(
                     catchError(error => {
                         this.snackbar.showErrorSnackBar(
-                            "error at saving user: " +
-                            error.error.detail
+                            "error at saving user: " + error.error.detail
                         );
                         return [];
                     }),
@@ -765,6 +789,99 @@ export class ApiEffects {
                             "successfully saved profile"
                         );
                         return [];
+                    })
+                )
+            );
+        })
+    );
+
+    @Effect()
+    startLoadingInactiveUsers = this.actions.pipe(
+        ofType(START_LOADING_INACTIVE_USERS),
+        switchMap(() => {
+            return from(
+                this.http.get(INACTIVE_USERS_API_URL).pipe(
+                    catchError(error => {
+                        this.snackbar.showErrorSnackBar(
+                            "error at loading inactive users: " +
+                                error.error.detail
+                        );
+                        return [];
+                    }),
+                    mergeMap((response: any) => {
+                        const inactive_users = FullUser.getFullUsersFromJsonArray(
+                            response
+                        );
+                        return [
+                            {
+                                type: SET_INACTIVE_USERS,
+                                payload: inactive_users
+                            }
+                        ];
+                    })
+                )
+            );
+        })
+    );
+
+    @Effect()
+    startActivatingInactiveUser = this.actions.pipe(
+        ofType(START_ACTIVATING_INACTIVE_USER),
+        map((action: StartActivatingInactiveUser) => {
+            return action.payload;
+        }),
+        switchMap((id: string) => {
+            return from(
+                this.http
+                    .post(INACTIVE_USERS_API_URL, {
+                        method: "activate",
+                        user_id: id
+                    })
+                    .pipe(
+                        catchError(error => {
+                            this.snackbar.showErrorSnackBar(
+                                "error at activating inactive user: " +
+                                    error.error.detail
+                            );
+                            return [];
+                        }),
+                        mergeMap((response: any) => {
+
+                            return [
+                                {
+                                    type: REMOVE_INACTIVE_USER,
+                                    payload: id
+                                }
+                            ];
+                        })
+                    )
+            );
+        })
+    );
+
+    @Effect()
+    startCheckingUserHasPermissions = this.actions.pipe(
+        ofType(START_CHECKING_USER_HAS_PERMISSIONS),
+        switchMap(() => {
+            return from(
+                this.http.get(USER_HAS_PERMISSIONS_API_URL).pipe(
+                    catchError(error => {
+                        this.snackbar.showErrorSnackBar(
+                            "error at checking user permissions: " +
+                                error.error.detail
+                        );
+                        return [];
+                    }),
+                    mergeMap((response: any) => {
+                        const user_permissions = HasPermission.getPermissionsFromJsonArray(
+                            response.user_permissions
+                        );
+                        return [
+                            {
+                                type: SET_USER_PERMISSIONS,
+                                payload: user_permissions
+                            }
+                        ];
                     })
                 )
             );

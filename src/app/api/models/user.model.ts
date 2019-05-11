@@ -25,8 +25,8 @@ export class RestrictedUser implements Filterable {
         this.name = name;
     }
 
-    static getRestrictedUsersFromJsonArray(jsonArray) {
-        const restrictedUsers: Array<RestrictedUser> = [];
+    static getRestrictedUsersFromJsonArray(jsonArray): RestrictedUser[] {
+        const restrictedUsers: RestrictedUser[] = [];
         Object.values(jsonArray).map(restrictedJsonUser => {
             restrictedUsers.push(
                 RestrictedUser.getRestrictedUserFromJson(restrictedJsonUser)
@@ -35,7 +35,7 @@ export class RestrictedUser implements Filterable {
         return restrictedUsers;
     }
 
-    static getRestrictedUserFromJson(json) {
+    static getRestrictedUserFromJson(json): RestrictedUser {
         if (json) return new RestrictedUser(json.id, json.name);
         return null;
     }
@@ -45,7 +45,7 @@ export class RestrictedUser implements Filterable {
     }
 }
 
-export class ForeignUser extends RestrictedUser{
+export class ForeignUser extends RestrictedUser {
     /**
      * ForeignUser represents a user from the own rlc but not the user himself -> contact information,
      * RestrictedUser < foreign < full
@@ -61,7 +61,7 @@ export class ForeignUser extends RestrictedUser{
         this.phone_number = phone_number;
     }
 
-    static getForeignUserFromJson(json) {
+    static getForeignUserFromJson(json): ForeignUser {
         if (json)
             return new ForeignUser(
                 json.id,
@@ -96,8 +96,8 @@ export class FullUser extends RestrictedUser {
         public street: string = "",
         public city: string = "",
         public postal_code: string = "",
-        public user_state: string = '',
-        public user_record_state: string = ''
+        public user_state: string = "",
+        public user_record_state: string = ""
     ) {
         super(id, name);
         this.email = email;
@@ -110,7 +110,7 @@ export class FullUser extends RestrictedUser {
         this.user_record_state = user_record_state;
     }
 
-    static getFullUserFromJson(json) {
+    static getFullUserFromJson(json): FullUser {
         if (json)
             return new FullUser(
                 json.id,
@@ -127,23 +127,11 @@ export class FullUser extends RestrictedUser {
         return null;
     }
 
-    /**
-     * compares this instance with another and returns updateObject with every field which will be changed
-     * used to generated the update object for patching user in backend
-     * @param updates potential updates for object
-     */
-    getUpdates(updates: FullUser) {
-        const changes = {};
-        if (this.birthday !== updates.birthday)
-            changes["birthday"] = ApiSandboxService.transformDateToString(
-                updates.birthday
-            );
-        if (this.phone_number !== updates.phone_number)
-            changes["phone_number"] = updates.phone_number;
-        if (this.street !== updates.street) changes["street"] = updates.street;
-        if (this.city !== updates.city) changes["city"] = updates.city;
-        if (this.postal_code !== updates.postal_code)
-            changes["postal_code"] = updates.postal_code;
-        return changes;
+    static getFullUsersFromJsonArray(jsonArray): FullUser[] {
+        const fullUsers: FullUser[] = [];
+        Object.values(jsonArray).map(fullJsonUser => {
+            fullUsers.push(FullUser.getFullUserFromJson(fullJsonUser));
+        });
+        return fullUsers;
     }
 }

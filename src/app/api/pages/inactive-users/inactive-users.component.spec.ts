@@ -16,14 +16,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-export const PERMISSION_CAN_CONSULT = 'can_consult';
-export const PERMISSION_CAN_VIEW_RECORDS = 'view_records_rlc';
-export const PERMISSION_CAN_PERMIT_RECORD_PERMISSION_REQUESTS = 'permit_record_permission_requests_rlc';
-export const PERMISSION_CAN_MANAGE_GROUPS_RLC = 'manage_groups_rlc';
-export const PERMISSION_CAN_MANAGE_GROUP = 'manage_group';
-export const PERMISSION_CAN_ADD_GROUP_RLC = 'add_group_rlc';
-export const PERMISSION_CAN_VIEW_PERMISSIONS_RLC = 'view_permissions_rlc';
-export const PERMISSION_CAN_MANAGE_PERMISSIONS_RLC = 'manage_permissions_rlc';
-export const PERMISSION_ACCEPT_NEW_USERS_RLC = 'accept_new_users_rlc';
-export const PERMISSION_ACTIVATE_INACTIVE_USERS = 'activate_inactive_users_rlc';
-export const PERMISSION_CAN_ADD_RECORD_RLC = "add_record_rlc";
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+
+import { InactiveUsersComponent } from "./inactive-users.component";
+
+describe("InactiveUsersComponent", () => {
+    let component: InactiveUsersComponent;
+    let fixture: ComponentFixture<InactiveUsersComponent>;
+
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [InactiveUsersComponent]
+        }).compileComponents();
+    }));
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(InactiveUsersComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
+
+    it("should create", () => {
+        expect(component).toBeTruthy();
+    });
+});

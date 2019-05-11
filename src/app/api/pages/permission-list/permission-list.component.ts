@@ -17,12 +17,14 @@
  ******************************************************************************/
 
 import { Component, OnInit } from "@angular/core";
-import {ApiSandboxService} from '../../services/api-sandbox.service';
-import {Permission} from '../../models/permission.model';
 import {Observable} from 'rxjs';
 import {Router} from '@angular/router';
-import {GetPermissionsForGroupApiURL} from '../../../statics/api_urls.statics';
+import {tap} from 'rxjs/operators';
+
 import {GetPermissionFrontUrl} from '../../../statics/frontend_links.statics';
+import {alphabeticalSorterByField} from '../../../shared/other/sorter-helper';
+import {ApiSandboxService} from '../../services/api-sandbox.service';
+import {Permission} from '../../models/permission.model';
 
 @Component({
     selector: "app-permission-list",
@@ -35,7 +37,9 @@ export class PermissionListComponent implements OnInit {
     constructor(private apiSB: ApiSandboxService, private router: Router) {}
 
     ngOnInit() {
-        this.permissions = this.apiSB.getAllPermissions();
+        this.permissions = this.apiSB.getAllPermissions().pipe(tap(results => {
+            alphabeticalSorterByField(results, 'name');
+        }));
     }
 
     onPermissionItemClick(permission: Permission){

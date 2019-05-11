@@ -79,7 +79,7 @@
                 </div>
                 <div class="create-record__containers">
                     <app-chip-autocomplete [allValuesObservable]="allConsultants"
-                                           placeholder="consultants"
+                                           placeholder="consultants*"
                                            (selectedValuesChanged)="selectedConsultantsChanged($event)"
                                            [errors]="consultantErrors" class="full_width">
                         <mat-error *ngIf="consultantErrors && consultantErrors.null">
@@ -89,7 +89,7 @@
                 </div>
                 <div class="create-record__containers">
                     <app-chip-autocomplete [allValuesObservable]="allRecordTags" class="full_width"
-                                           placeholder="tags"
+                                           placeholder="tags*"
                                            (selectedValuesChanged)="selectedRecordTagsChanged($event)"
                                            [errors]="recordTagErrors">
                         <mat-error *ngIf="recordTagErrors && recordTagErrors.null">

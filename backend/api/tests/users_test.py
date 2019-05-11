@@ -281,7 +281,7 @@ class UsersTests(TransactionTestCase):
         self.fixtures_has_permissions()
 
         user1 = UserProfile.objects.get(pk=62)
-        user1_perms = user1.get_overall_permissions()
+        user1_perms = user1.get_all_user_permissions()
         ids = []
         for perm in user1_perms:
             ids.append(perm.id)

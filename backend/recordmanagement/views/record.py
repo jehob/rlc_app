@@ -15,7 +15,6 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 
-import os
 from datetime import datetime
 
 import pytz
@@ -31,7 +30,7 @@ from backend.static import error_codes
 from backend.static.date_utils import parse_date
 from backend.static.emails import EmailSender
 from backend.static.frontend_links import FrontendLinks
-from backend.static.permissions import PERMISSION_VIEW_RECORDS_FULL_DETAIL_RLC
+from backend.static import permissions
 
 
 class RecordsListViewSet(viewsets.ViewSet):
@@ -54,6 +53,10 @@ class RecordsListViewSet(viewsets.ViewSet):
             serializer = serializers.RecordFullDetailSerializer(entries, many=True)
             return Response(serializer.data)
 
+        if not user.has_permission(permissions.PERMISSION_VIEW_RECORDS_RLC, for_rlc=user.rlc) and not user.has_permission(
+            permissions.PERMISSION_VIEW_RECORDS_FULL_DETAIL_RLC, for_rlc=user.rlc):
+            raise CustomError(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
+
         # entries = models.Record.objects.filter(from_rlc=user.rlc)
         entries = models.Record.objects.filter_by_rlc(user.rlc)
         for part in parts:
@@ -63,7 +66,7 @@ class RecordsListViewSet(viewsets.ViewSet):
                     working_on_record__in=consultants)).distinct()
 
         records = []
-        if user.has_permission(PERMISSION_VIEW_RECORDS_FULL_DETAIL_RLC, for_rlc=user.rlc):
+        if user.has_permission(permissions.PERMISSION_VIEW_RECORDS_FULL_DETAIL_RLC, for_rlc=user.rlc):
             queryset = entries
             serializer = serializers.RecordFullDetailSerializer(queryset, many=True)
             records += serializer.data
@@ -112,6 +115,8 @@ class RecordsListViewSet(viewsets.ViewSet):
 
 class RecordViewSet(APIView):
     def post(self, request):
+        if not request.user.has_permission(permissions.PERMISSION_CAN_ADD_RECORD_RLC, for_rlc=request.user.rlc):
+            raise CustomError(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
         data = request.data
         rlc = request.user.rlc
         if 'client_id' in data:
@@ -124,7 +129,7 @@ class RecordViewSet(APIView):
             client.save()
         else:
             client = models.Client(name=data['client_name'], phone_number=data['client_phone_number'],
-                                   birthday=data['client_birthday'], note=data['client_note'])
+                                   birthday=data['client_birthday'], note=data['client_note'], from_rlc=rlc)
             client.save()
         try:
             origin = models.OriginCountry.objects.get(pk=data['origin_country'])
@@ -178,7 +183,8 @@ class RecordViewSet(APIView):
             })
         else:
             serializer = serializers.RecordNoDetailSerializer(record)
-            permission_request = models.RecordPermission.objects.filter(record=record, request_from=user, state='re').first()
+            permission_request = models.RecordPermission.objects.filter(record=record, request_from=user,
+                                                                        state='re').first()
 
             if not permission_request:
                 state = 'nr'
