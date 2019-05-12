@@ -16,7 +16,7 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<mat-card>
+<mat-card class="records-permit-requests__card">
     <h1>Record permission requests</h1>
     <div *ngIf="recordPermissionRequests | async as catalog; else loading">
         <ng-container *ngIf="catalog.length; else noItems">
@@ -27,8 +27,7 @@
             </div>
             <ng-template #toProcessTable>
                 <table mat-table [dataSource]="(recordPermissionRequests | async | recordPermissionsRequested)">
-                    <ng-container matColumnDef="request_from"
-                                  class="records-permit-requests__to-process-column__header">
+                    <ng-container matColumnDef="request_from">
                         <th mat-header-cell *matHeaderCellDef
                             class="records-permit-requests__to-process-column__header">Requestor
                         </th>
