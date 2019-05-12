@@ -17,11 +17,13 @@
 from rest_framework import serializers
 from backend.recordmanagement import models
 from backend.api.serializers.user import UserProfileNameSerializer, UserProfileSerializer
+from backend.recordmanagement.serializers import RecordTokenSerializer
 
 
 class RecordPermissionSerializer(serializers.ModelSerializer):
     request_from = UserProfileNameSerializer(many=False, read_only=True)
     request_processed = UserProfileNameSerializer(many=False, read_only=True)
+    record = RecordTokenSerializer(many=False, read_only=True)
 
     class Meta:
         model = models.RecordPermission

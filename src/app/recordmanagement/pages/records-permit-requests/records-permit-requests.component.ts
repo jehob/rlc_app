@@ -56,6 +56,10 @@ export class RecordsPermitRequestsComponent implements OnInit {
     ngOnInit() {
         this.recordSB.startLoadingRecordPermissionRequests();
         this.recordPermissionRequests = this.recordSB.getRecordPermissionRequests();
+
+        this.recordSB.getRecordPermissionRequests().subscribe(requests => {
+           console.log('requests', requests);
+        });
     }
 
     permitRequest(request: RecordPermissionRequest) {

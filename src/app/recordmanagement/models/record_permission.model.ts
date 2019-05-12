@@ -17,13 +17,14 @@
  ******************************************************************************/
 
 import { RestrictedUser } from "../../api/models/user.model";
+import {TokenRecord} from './record.model';
 
 export class RecordPermissionRequest {
     constructor(
         public id: string,
         public request_from: RestrictedUser,
         public request_processed: RestrictedUser | null,
-        public record: string,
+        public record: TokenRecord,
         public requested: Date,
         public processed_on: Date,
         public can_edit: Boolean,
@@ -58,7 +59,7 @@ export class RecordPermissionRequest {
             json.id,
             RestrictedUser.getRestrictedUserFromJson(json.request_from),
             RestrictedUser.getRestrictedUserFromJson(json.request_processed),
-            json.record,
+            TokenRecord.getTokenRecordFromJson(json.record),
             new Date(json.requested),
             new Date(json.processed_on),
             json.can_edit === "true",

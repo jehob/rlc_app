@@ -16,7 +16,7 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<mat-card>
+<mat-card class="inactive-users__card">
     <h1>Inactive users</h1>
     <div *ngIf="inactive_users | async as catalog; else loading">
         <ng-container *ngIf="catalog.length; else noItems">

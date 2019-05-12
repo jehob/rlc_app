@@ -18,16 +18,31 @@
 
 import {Tag} from './tag.model';
 
-export class RestrictedRecord {
+export class TokenRecord {
     constructor(
         public id: number,
-        public token: string,
+        public token: string
+    ) {
+        this.id = id;
+        this.token = token;
+    }
+
+    static getTokenRecordFromJson(json: any): TokenRecord {
+        return new TokenRecord(json.id, json.record_token);
+    }
+}
+
+export class RestrictedRecord extends TokenRecord {
+    constructor(
+        id: number,
+        token: string,
         public last_contact_date: Date,
         public state: string,
         public tags: Tag[],
         public working_on_record: [number, string],
         public official_note: string,
     ) {
+        super(id, token);
         this.id = id;
         this.token = token;
         this.last_contact_date = last_contact_date;
@@ -37,7 +52,7 @@ export class RestrictedRecord {
         this.official_note = official_note;
     }
 
-    static getRestrictedRecordFromJson(json){
+    static getRestrictedRecordFromJson(json: any): RestrictedRecord {
         return new RestrictedRecord(
             json.id,
             json.record_token,

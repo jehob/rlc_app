@@ -42,8 +42,9 @@
                             class="records-permit-requests__to-process-column__header">Record
                         </th>
                         <td mat-cell *matCellDef="let recordPermissionRequest"
-                            (click)="onRequestClick(recordPermissionRequest)" class="is_clickable">
-                            <p>{{ recordPermissionRequest.record }}</p>
+                            (click)="onRequestClick(recordPermissionRequest)"
+                            class="is_clickable records-permit-requests__to-process-column__content">
+                            <p>{{ recordPermissionRequest.record.token }}</p>
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="requested">
@@ -112,7 +113,7 @@
                         </th>
                         <td mat-cell *matCellDef="let recordPermissionRequest"
                             (click)="onRequestClick(recordPermissionRequest)" class="is_clickable">
-                            <p>{{ recordPermissionRequest.record }}</p>
+                            <p>{{ recordPermissionRequest.record.token }}</p>
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="requested">
