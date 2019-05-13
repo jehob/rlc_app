@@ -62,6 +62,7 @@ export function logrocketMiddleware(reducer): ActionReducer<any, any> {
     declarations: [AppComponent],
     imports: [
         BrowserModule,
+        BrowserAnimationsModule,
         HttpClientModule,
         CustomMaterialModule,
         BrowserAnimationsModule,

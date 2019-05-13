@@ -282,7 +282,6 @@ export class RecordsLoadingEffects {
                                 }
                             ];
                         } else {
-                            console.log('response', response);
                             const record = RestrictedRecord.getRestrictedRecordFromJson(
                                 response.record
                             );
