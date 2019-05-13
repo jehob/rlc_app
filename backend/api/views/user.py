@@ -170,9 +170,12 @@ class LoginViewSet(viewsets.ViewSet):
         token, information and permissions of user
         all possible permissions, country states, countries, clients, record states, consultants
         """
-        request.data['username'] = request.data['username'].lower()
-        serializer = self.serializer_class(data=request.data)
-        LoginViewSet.check_if_user_active(request.data['username'])
+        data = {
+            'password': request.data['password'],
+            'username': request.data['username'].lower()
+        }
+        serializer = self.serializer_class(data=data)
+        LoginViewSet.check_if_user_active(data['username'])
         if serializer.is_valid():
             token, created = Token.objects.get_or_create(user=serializer.validated_data['user'])
             Token.objects.filter(user=token.user).exclude(key=token.key).delete()

@@ -87,7 +87,8 @@ class RecordDocumentByRecordViewSet(APIView):
             serializer = serializers.RecordDocumentSerializer(already_existing)
             return Response(serializer.data)
         else:
-            new_document = models.RecordDocument(record=record, name=information['key'], creator=request.user,
+            name = information['key'].split('/')[-1]
+            new_document = models.RecordDocument(record=record, name=name, creator=request.user,
                                                  file_size=information['size'])
             new_document.save()
 

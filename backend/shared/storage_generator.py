@@ -18,8 +18,9 @@
 from botocore.client import Config
 from django.conf import settings
 import boto3
-from django.core.files.storage import get_storage_class
-from storages.backends.s3boto import S3BotoStorage
+from django.core.files.storage import default_storage
+# from storages.backends.s3boto import S3BotoStorage
+from storages.backends.s3boto3 import S3Boto3Storage
 
 from backend.static.error_codes import *
 from backend.api.errors import CustomError
@@ -111,13 +112,13 @@ def check_file_and_get_information(file_dir, filekey):
     raise CustomError(ERROR__API__STORAGE__CHECK_FILE_NOT_FOUND)
 
 
-class CachedS3BotoStorage(S3BotoStorage):
+class CachedS3Boto3Storage(S3Boto3Storage):
     def __init__(self, *args, **kwargs):
-        super(CachedS3BotoStorage, self).__init__(*args, **kwargs)
-        self.local_storage = get_storage_class(
+        super(CachedS3Boto3Storage, self).__init__(*args, **kwargs)
+        self.local_storage = default_storage(
             "compressor.storage.GzipCompressorFileStorage")()
 
     def save(self, name, content):
-        name = super(CachedS3BotoStorage, self).save(name, content)
+        name = super(CachedS3Boto3Storage, self).save(name, content)
         self.local_storage._save(name, content)
         return name
