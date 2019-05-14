@@ -19,7 +19,6 @@ from botocore.client import Config
 from django.conf import settings
 import boto3
 from django.core.files.storage import default_storage
-# from storages.backends.s3boto import S3BotoStorage
 from storages.backends.s3boto3 import S3Boto3Storage
 
 from backend.static.error_codes import *
@@ -110,6 +109,13 @@ def check_file_and_get_information(file_dir, filekey):
                 "key": object['Key']
             }
     raise CustomError(ERROR__API__STORAGE__CHECK_FILE_NOT_FOUND)
+
+
+def download_file(source_file, dest_file):
+    s3_bucket = settings.AWS_S3_BUCKET_NAME
+    session = boto3.session.Session(region_name=settings.AWS_S3_REGION_NAME)
+    s3 = session.client('s3', config=Config(signature_version='s3v4'))
+    s3.download_file(s3_bucket, source_file, dest_file)
 
 
 class CachedS3Boto3Storage(S3Boto3Storage):

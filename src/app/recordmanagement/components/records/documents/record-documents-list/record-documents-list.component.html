@@ -22,6 +22,7 @@
             <app-record-document-item [record_document]="document"></app-record-document-item>
         </div>
     </div>
+    <button mat-flat-button color="primary" (click)="onDownloadAllClick()">download all</button>
     <div class="record-documents-list__dropper-container">
         <div (drop)="dropped($event)" class="record-documents-list__dropper" (dragover)="dragover($event)">
             <p>drop files here to upload</p>

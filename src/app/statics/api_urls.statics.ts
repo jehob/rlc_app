@@ -45,6 +45,7 @@ const SPECIAL_RECORD_BASE_API_URL = "api/records/record/";
 const DOWNLOAD_SIGNING_BASE_API_URL = "api/storage_down/";
 const RECORD_DOCUMENT_BASE_API_URL = "api/records/documents/";
 const PERMISSION_FOR_GROUP_BASE_API_URL = "api/permissions_for_group/";
+const DOWNLOAD_ALL_RECORD_DOCUMENTS_BASE_API_URL = "api/records/documents_download/";
 
 export const GetSpecialProfileApiURL = (id: string | number) => {
     return `${PROFILES_API_URL}${id}/`;
@@ -109,3 +110,8 @@ export const GetCheckUserActivationApiUrl = (link: string) => {
 export const GetActivateUserApiUrl = (link: string) => {
     return `${ACTIVATE_USER_ACTIVATION_API_URL}${link}/`;
 };
+
+export const GetDownloadAllRecordDocumentsApiUrl = (record_id: string) => {
+    return `${DOWNLOAD_ALL_RECORD_DOCUMENTS_BASE_API_URL}${record_id}/`;
+};
+

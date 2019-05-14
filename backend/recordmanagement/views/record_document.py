@@ -14,11 +14,15 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-
+import os
+import zipfile
+from io import StringIO, BytesIO
+import base64
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from datetime import datetime
+from django.core.files import File
 
 from backend.recordmanagement import models, serializers
 from backend.shared import storage_generator
@@ -94,3 +98,33 @@ class RecordDocumentByRecordViewSet(APIView):
 
             serializer = serializers.RecordDocumentSerializer(new_document)
             return Response(serializer.data)
+
+
+class RecordDocumentDownloadAllViewSet(APIView):
+    def get(self, request, id):
+        try:
+            record = models.Record.objects.get(pk=id)
+        except Exception as e:
+            raise CustomError(error_codes.ERROR__RECORD__RECORD__NOT_EXISTING)
+
+        if not record.user_has_permission(request.user):
+            raise CustomError(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
+
+        docs = list(models.RecordDocument.objects.filter(record=record))
+        filenames = []
+        for doc in docs:
+            storage_generator.download_file(doc.get_filekey(), doc.name)
+            filenames.append(doc.name)
+
+        zip_name = 'testzip.zip'
+        zip_file = zipfile.ZipFile(zip_name, "w")
+        for file in filenames:
+            zip_file.write(file)
+        zip_file.close()
+        for file in filenames:
+            os.remove(file)
+        encoded_file = base64.b64encode(open(zip_name, 'rb').read())
+        res = Response(encoded_file, content_type='application/zip')
+        res['Content-Disposition'] = 'attachment; filename="' + zip_name + '"'
+        os.remove(zip_name)
+        return res

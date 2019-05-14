@@ -18,7 +18,11 @@
 
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
+import * as FileSaver from 'file-saver';
+
+
 import {
+    GetDownloadAllRecordDocumentsApiUrl,
     GetDownloadApiUrl,
     GetUploadApiUrl,
     UPLOAD_SIGNING_BASE_API_URL
@@ -40,7 +44,12 @@ export class StorageService {
         this.http
             .get(GetUploadApiUrl(file, fileDir))
             .subscribe((response: any) => {
-                this.uploadFileDirect(file, response.data, response.url, finished);
+                this.uploadFileDirect(
+                    file,
+                    response.data,
+                    response.url,
+                    finished
+                );
             });
     }
 
@@ -64,13 +73,21 @@ export class StorageService {
             })
             .subscribe((response: any) => {
                 const presigned_posts = response.presigned_posts;
-                for (const post of presigned_posts){
-                    const file = Array.from(files).filter((filterFile: File) => {
-                        return post.data.fields.key === `${file_dir}/${filterFile.name}`
-                    })[0];
+                for (const post of presigned_posts) {
+                    const file = Array.from(files).filter(
+                        (filterFile: File) => {
+                            return (
+                                post.data.fields.key ===
+                                `${file_dir}/${filterFile.name}`
+                            );
+                        }
+                    )[0];
                     this.uploadFileDirect(file, post.data, post.url, () => {
                         this.filesUploaded++;
-                        if (this.filesUploaded === this.filesToUpload && this.filesUploadFinished)
+                        if (
+                            this.filesUploaded === this.filesToUpload &&
+                            this.filesUploadFinished
+                        )
                             this.filesUploadFinished();
                     });
                 }
@@ -101,6 +118,7 @@ export class StorageService {
 
     downloadFile(filekey: string) {
         this.http.get(GetDownloadApiUrl(filekey)).subscribe((response: any) => {
+            console.log('response from download file', response);
             if (!response.error) window.location.href = response.data;
             else {
                 this.snackbarService.showErrorSnackBar(
@@ -108,5 +126,47 @@ export class StorageService {
                 );
             }
         });
+    }
+
+    downloadAllFilesFromRecord(record: string): void {
+        console.log('storage service now inbound');
+        this.http
+            .get(GetDownloadAllRecordDocumentsApiUrl(record))
+            .subscribe((response: any) => {
+                // console.log('response from downloader', response);
+                // console.log('response from downloader length', response.length);
+                // console.log('decoded', atob(response));
+
+                // const bl = new Blob([response],  { "type": 'application/zip' });
+                const bl2 = this.b64toBlob(response, 'application/zip', 512);
+                FileSaver.saveAs(bl2, 'testzip.zip');
+            });
+    }
+
+
+    b64toBlob(b64Data, contentType, sliceSize) {
+        contentType = contentType || 'application/zip';
+        sliceSize = sliceSize || 512;
+        const b64DataString = b64Data.substr(b64Data.indexOf(',') + 1);
+        const byteCharacters = atob(b64DataString);
+        const byteArrays = [];
+
+        for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            const byteNumbers = new Array(slice.length);
+            for (let i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            const byteArray = new Uint8Array(byteNumbers);
+
+            byteArrays.push(byteArray);
+        }
+
+        const blob = new Blob(byteArrays, {
+            type: contentType
+        });
+        return blob;
     }
 }

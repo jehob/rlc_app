@@ -323,6 +323,16 @@ export class RecordsSandboxService {
         );
     }
 
+    downloadAllRecordDocuments() {
+        let record_id = null;
+        this.recordStore
+            .pipe(select((state: any) => state.records.special_record.record))
+            .subscribe(record => {
+                record_id = record.id;
+            });
+        this.storageService.downloadAllFilesFromRecord(record_id);
+    }
+
     startAddingNewRecordMessage(message: string) {
         this.recordStore.dispatch(new StartAddingNewRecordMessage(message));
     }

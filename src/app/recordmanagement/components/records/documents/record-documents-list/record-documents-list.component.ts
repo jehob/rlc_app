@@ -41,7 +41,6 @@ export class RecordDocumentsListComponent implements OnInit {
         event.preventDefault();
         const files = $event.dataTransfer.files;
         this.recordSB.uploadRecordDocuments(files);
-
     }
 
     selected($event){
@@ -56,5 +55,10 @@ export class RecordDocumentsListComponent implements OnInit {
 
     dragover($event){
         $event.preventDefault();
+    }
+
+    onDownloadAllClick(){
+        console.log('download all');
+        this.recordSB.downloadAllRecordDocuments();
     }
 }
