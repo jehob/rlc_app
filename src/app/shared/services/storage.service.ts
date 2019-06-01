@@ -166,11 +166,11 @@ export class StorageService {
         });
     }
 
-    downloadAllFilesFromRecord(record: string): void {
+    downloadAllFilesFromRecord(record: string, record_token: string): void {
         this.http
             .get(GetDownloadAllRecordDocumentsApiUrl(record))
             .subscribe((response: any) => {
-                StorageService.saveZipFile(response, "record_documents.zip");
+                StorageService.saveZipFile(response, `${record_token}_documents.zip`);
             });
     }
 }

@@ -325,12 +325,14 @@ export class RecordsSandboxService {
 
     downloadAllRecordDocuments() {
         let record_id = null;
+        let record_token = null;
         this.recordStore
             .pipe(select((state: any) => state.records.special_record.record))
             .subscribe(record => {
                 record_id = record.id;
+                record_token = record.token;
             });
-        this.storageService.downloadAllFilesFromRecord(record_id);
+        this.storageService.downloadAllFilesFromRecord(record_id, record_token);
     }
 
     startAddingNewRecordMessage(message: string) {
