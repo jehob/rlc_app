@@ -18,17 +18,16 @@
 
 import {Component, Input, OnInit} from '@angular/core';
 import {RecordDocument} from '../../../../models/record_document.model';
-import {RecordsSandboxService} from '../../../../services/records-sandbox.service';
-import {SetRecordDocumentTags} from '../../../../store/actions/records.actions';
-import {Tag} from '../../../../models/tag.model';
 import {Observable} from 'rxjs';
+import {Tag} from '../../../../models/tag.model';
+import {RecordsSandboxService} from '../../../../services/records-sandbox.service';
 
 @Component({
-    selector: "app-record-document-item",
-    templateUrl: "./record-document-item.component.html",
-    styleUrls: ["./record-document-item.component.scss"]
+    selector: "app-record-document-item-detail",
+    templateUrl: "./record-document-item-detail.component.html",
+    styleUrls: ["./record-document-item-detail.component.scss"]
 })
-export class RecordDocumentItemComponent implements OnInit {
+export class RecordDocumentItemDetailComponent implements OnInit {
     @Input()
     record_document: RecordDocument;
 
@@ -42,11 +41,6 @@ export class RecordDocumentItemComponent implements OnInit {
 
     ngOnInit() {
         this.selectedTags = this.record_document.tags;
-    }
-
-    onDownload(event){
-        event.stopPropagation();
-        this.recordSB.downloadRecordDocument(this.record_document.name);
     }
 
     selectedDocumentTagsChanged(selectedTags: Tag[]){

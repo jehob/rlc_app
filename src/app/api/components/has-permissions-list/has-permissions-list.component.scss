@@ -38,7 +38,21 @@
     padding-right: 15px;
 }
 
+.has-permission-list__checkbox-header {
+    padding-right: 15px;
+}
 
+.has-permission-list__remove-selected-button {
+    max-width: 150px;
+}
+
+.has-permission-list__remove-button-text {
+    overflow: hidden;
+}
+
+.has-permission-list__remove-button {
+    border-radius: 15px;
+}
 
 @media(max-width: 600px) {
     .mat-cell:first-of-type {

@@ -116,15 +116,4 @@ class RecordDocumentDownloadAllViewSet(APIView):
             storage_generator.download_file(doc.get_filekey(), doc.name)
             filenames.append(doc.name)
 
-        zip_name = 'testzip.zip'
-        zip_file = zipfile.ZipFile(zip_name, "w")
-        for file in filenames:
-            zip_file.write(file)
-        zip_file.close()
-        for file in filenames:
-            os.remove(file)
-        encoded_file = base64.b64encode(open(zip_name, 'rb').read())
-        res = Response(encoded_file, content_type='application/zip')
-        res['Content-Disposition'] = 'attachment; filename="' + zip_name + '"'
-        os.remove(zip_name)
-        return res
+        return storage_generator.zip_files_and_create_response(filenames, 'record.zip')

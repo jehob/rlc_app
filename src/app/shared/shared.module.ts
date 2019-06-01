@@ -24,6 +24,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AutocompleteComponent} from './components/autocomplete/autocomplete.component';
 import {GetColorOnHoverDirective} from './directives/get-color-on-hover.directive';
 import { AutoExpandDirective } from './directives/auto-expand.directive';
+import { ExpandableButtonComponent } from './components/expandable-button/expandable-button.component';
 
 @NgModule({
     imports: [
@@ -32,14 +33,15 @@ import { AutoExpandDirective } from './directives/auto-expand.directive';
         FormsModule,
         ReactiveFormsModule,
     ],
-    declarations: [ChipAutocompleteComponent, AutocompleteComponent, GetColorOnHoverDirective, AutoExpandDirective],
+    declarations: [ChipAutocompleteComponent, AutocompleteComponent, GetColorOnHoverDirective, AutoExpandDirective, ExpandableButtonComponent],
     exports: [
         CommonModule,
         CustomMaterialModule,
         ChipAutocompleteComponent,
         AutocompleteComponent,
         GetColorOnHoverDirective,
-        AutoExpandDirective
+        AutoExpandDirective,
+        ExpandableButtonComponent
     ]
 })
 export class SharedModule {

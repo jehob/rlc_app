@@ -20,7 +20,7 @@
         <h1>Record: {{ record.token }}</h1>
         <div>
             <button mat-flat-button color="warn" aria-label="Back" (click)="onBackClick()" type="button"
-                    class="full-record-detail__button" appGetColorOnHover>
+                    class="full-record-detail__button">
                 Back
             </button>
             <button mat-flat-button matSuffix color="primary" aria-label="Search" type="submit"
@@ -182,7 +182,12 @@
             <mat-panel-title>
                 Files
             </mat-panel-title>
+            <div class="full-record-detail__download-all-holder">
+                <app-expandable-button color="primary" icon="cloud_download" [styleParams]="{ fontSize: '14px' }"
+                                       content="download all" (click)="downloadAllRecordDocuments($event)"></app-expandable-button>
+            </div>
         </mat-expansion-panel-header>
+
         <app-record-documents-list [documents]="record_documents"></app-record-documents-list>
     </mat-expansion-panel>
 

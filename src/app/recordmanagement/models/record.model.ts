@@ -41,6 +41,7 @@ export class RestrictedRecord extends TokenRecord {
         public tags: Tag[],
         public working_on_record: [number, string],
         public official_note: string,
+        public is_restricted: boolean
     ) {
         super(id, token);
         this.id = id;
@@ -50,6 +51,7 @@ export class RestrictedRecord extends TokenRecord {
         this.tags = tags;
         this.working_on_record = working_on_record;
         this.official_note = official_note;
+        this.is_restricted = is_restricted;
     }
 
     static getRestrictedRecordFromJson(json: any): RestrictedRecord {
@@ -60,7 +62,8 @@ export class RestrictedRecord extends TokenRecord {
             json.state,
             Tag.getTagsFromJsonArray(json.tagged),
             json.working_on_record,
-            json.official_note
+            json.official_note,
+            true
         );
     }
 }
@@ -93,7 +96,7 @@ export class FullRecord extends RestrictedRecord {
         public status_described: string,
         public additional_facts: string,
     ) {
-        super(id, token, last_contact_date, state, tags, working_on_record, official_note);
+        super(id, token, last_contact_date, state, tags, working_on_record, official_note, false);
         this.created_on = created_on;
         this.last_edited = last_edited;
         this.first_contact_date = first_contact_date;

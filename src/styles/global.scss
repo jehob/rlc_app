@@ -53,6 +53,11 @@
     align-items: center;
 }
 
+.vertical {
+    display: flex;
+    flex-direction: column;
+}
+
 .button-mouseover-color {
     :hover {
         background-color: red;

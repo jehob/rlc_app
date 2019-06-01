@@ -16,28 +16,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { RecordDocumentItemComponent } from './record-document-item.component';
+import { ExpandableButtonComponent } from "./expandable-button.component";
 
-describe('RecordDocumentItemComponent', () => {
-  let component: RecordDocumentItemComponent;
-  let fixture: ComponentFixture<RecordDocumentItemComponent>;
+describe("ExpandableButtonComponent", () => {
+    let component: ExpandableButtonComponent;
+    let fixture: ComponentFixture<ExpandableButtonComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ RecordDocumentItemComponent ]
-    })
-    .compileComponents();
-  }));
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [ExpandableButtonComponent]
+        }).compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(RecordDocumentItemComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(ExpandableButtonComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it("should create", () => {
+        expect(component).toBeTruthy();
+    });
 });

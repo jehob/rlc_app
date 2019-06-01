@@ -97,8 +97,15 @@ export class ChipAutocompleteComponent implements OnInit, OnChanges {
                 )
             );
         });
-
         this.selectedValues = this.firstSelected ? this.firstSelected : [];
+
+        if (this.firstSelected) {
+            for (const preSelectedValue of this.firstSelected){
+                this.allValues = this.allValues.filter(
+                    value => value.getFilterableProperty() !== preSelectedValue.getFilterableProperty()
+                );
+            }
+        }
     }
 
     ngOnChanges(changes: SimpleChanges) {

@@ -16,19 +16,5 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { Component, OnInit } from "@angular/core";
-
-export interface Section {
-    id: string;
-    type: string;
-    status: string;
-}
-
-@Component({
-    selector: "app-dashboard",
-    templateUrl: "./dashboard.component.html",
-    styleUrls: ["./dashboard.component.scss"]
-})
-export class DashboardComponent {
-    constructor() {}
-}
+export const colorWarn = '#ff426b';
+export const colorPrimary = '#003c4d';

@@ -25,7 +25,8 @@
         <div *ngIf="otherUsers | async as catalog; else loading">
             <ng-container *ngIf="catalog.length; else noItems">
                 <mat-list>
-                    <mat-list-item *ngFor="let user of (otherUsers | async)" (click)="this.onUserClick(user)" class="is_clickable">
+                    <mat-list-item *ngFor="let user of (otherUsers | async)" (click)="this.onUserClick(user)"
+                                   class="is_clickable">
                         <mat-icon mat-list-icon>person</mat-icon>
                         <h4 mat-line class="is_link">{{ user.name }}</h4>
                     </mat-list-item>

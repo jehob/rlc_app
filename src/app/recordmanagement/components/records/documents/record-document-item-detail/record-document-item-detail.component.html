@@ -16,21 +16,19 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<div class="drawer-header">
-    <a (click)='showProfile()'><img src="../../../../../static/images/empty-profile.png" alt="Profile"></a>
-    <span><a routerLink="/profile">{{ name }}</a></span>
-    <span><a routerLink="/profile">{{ email }}</a></span>
-</div>
-<mat-divider></mat-divider>
-<div class="sidebar__nav-holder">
-    <ng-material-multilevel-menu [items]="actualSidebarItems" (selectedItem)="selectedItem($event)"
-                                 (selectedLabel)="selectedLabel($event)" [configuration]="config">
-    </ng-material-multilevel-menu>
-    <div class="sidebar__other-links">
-        <ul>
-            <li class="is_clickable sidebar__other-links__items"
-                [routerLink]="legalNoticeUrl">legal notice
-            </li>
-        </ul>
+<div class="record-document-item-detail__container">
+    <div>
+        <div>
+            <p>Description?</p>
+        </div>
+        <div>
+            <app-chip-autocomplete [allValuesObservable]="record_document_tags" class=""
+                                   placeholder="tags"
+                                   (selectedValuesChanged)="selectedDocumentTagsChanged($event)"
+                                   [firstSelected]="selectedTags">
+            </app-chip-autocomplete>
+        </div>
     </div>
+
+
 </div>

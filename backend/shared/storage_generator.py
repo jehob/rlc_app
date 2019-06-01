@@ -14,12 +14,15 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 
-
-from botocore.client import Config
-from django.conf import settings
+import os
+import zipfile
+import base64
 import boto3
+from django.conf import settings
 from django.core.files.storage import default_storage
+from rest_framework.response import Response
 from storages.backends.s3boto3 import S3Boto3Storage
+from botocore.client import Config
 
 from backend.static.error_codes import *
 from backend.api.errors import CustomError
@@ -116,6 +119,27 @@ def download_file(source_file, dest_file):
     session = boto3.session.Session(region_name=settings.AWS_S3_REGION_NAME)
     s3 = session.client('s3', config=Config(signature_version='s3v4'))
     s3.download_file(s3_bucket, source_file, dest_file)
+
+
+def zip_files_and_create_response(file_names, zip_file_name):
+    """
+    bundles all files in file_names to zip and creates response
+    deletes files and zip afterwards
+    :param file_names: list of filenames which should be included in the zip file
+    :param zip_file_name: name of the zip file
+    :return:
+    """
+    zip_file = zipfile.ZipFile(zip_file_name, "w")
+    for file in file_names:
+        zip_file.write(file)
+    zip_file.close()
+    for file in file_names:
+        os.remove(file)
+    encoded_file = base64.b64encode(open(zip_file_name, 'rb').read())
+    res = Response(encoded_file, content_type='application/zip')
+    res['Content-Disposition'] = 'attachment; filename="' + zip_file_name + '"'
+    os.remove(zip_file_name)
+    return res
 
 
 class CachedS3Boto3Storage(S3Boto3Storage):

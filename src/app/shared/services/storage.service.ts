@@ -18,8 +18,7 @@
 
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import * as FileSaver from 'file-saver';
-
+import * as FileSaver from "file-saver";
 
 import {
     GetDownloadAllRecordDocumentsApiUrl,
@@ -39,6 +38,46 @@ export class StorageService {
         private http: HttpClient,
         private snackbarService: SnackbarService
     ) {}
+
+    private static b64toBlob(b64Data, contentType, sliceSize) {
+        contentType = contentType || "application/zip";
+        sliceSize = sliceSize || 512;
+        const b64DataString = b64Data.substr(b64Data.indexOf(",") + 1);
+        const byteCharacters = atob(b64DataString);
+        const byteArrays = [];
+
+        for (
+            let offset = 0;
+            offset < byteCharacters.length;
+            offset += sliceSize
+        ) {
+            const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            const byteNumbers = new Array(slice.length);
+            for (let i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            const byteArray = new Uint8Array(byteNumbers);
+
+            byteArrays.push(byteArray);
+        }
+
+        const blob = new Blob(byteArrays, {
+            type: contentType
+        });
+        return blob;
+    }
+
+    public static saveZipFile(bytes, filename: string) {
+        /**
+         * base64 bytes of file
+         */
+        FileSaver.saveAs(
+            StorageService.b64toBlob(bytes, "application/zip", 512),
+            filename
+        );
+    }
 
     uploadFile(file: File, fileDir: string, finished?) {
         this.http
@@ -118,7 +157,6 @@ export class StorageService {
 
     downloadFile(filekey: string) {
         this.http.get(GetDownloadApiUrl(filekey)).subscribe((response: any) => {
-            console.log('response from download file', response);
             if (!response.error) window.location.href = response.data;
             else {
                 this.snackbarService.showErrorSnackBar(
@@ -129,44 +167,10 @@ export class StorageService {
     }
 
     downloadAllFilesFromRecord(record: string): void {
-        console.log('storage service now inbound');
         this.http
             .get(GetDownloadAllRecordDocumentsApiUrl(record))
             .subscribe((response: any) => {
-                // console.log('response from downloader', response);
-                // console.log('response from downloader length', response.length);
-                // console.log('decoded', atob(response));
-
-                // const bl = new Blob([response],  { "type": 'application/zip' });
-                const bl2 = this.b64toBlob(response, 'application/zip', 512);
-                FileSaver.saveAs(bl2, 'testzip.zip');
+                StorageService.saveZipFile(response, "record_documents.zip");
             });
-    }
-
-
-    b64toBlob(b64Data, contentType, sliceSize) {
-        contentType = contentType || 'application/zip';
-        sliceSize = sliceSize || 512;
-        const b64DataString = b64Data.substr(b64Data.indexOf(',') + 1);
-        const byteCharacters = atob(b64DataString);
-        const byteArrays = [];
-
-        for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-            const slice = byteCharacters.slice(offset, offset + sliceSize);
-
-            const byteNumbers = new Array(slice.length);
-            for (let i = 0; i < slice.length; i++) {
-                byteNumbers[i] = slice.charCodeAt(i);
-            }
-
-            const byteArray = new Uint8Array(byteNumbers);
-
-            byteArrays.push(byteArray);
-        }
-
-        const blob = new Blob(byteArrays, {
-            type: contentType
-        });
-        return blob;
     }
 }
