@@ -145,7 +145,7 @@ class Fixtures:
                 ('Krankheit im Asylverfahren',), ('Familienasyl',), ('UmF',),
                 ('Familienzusammenführung nach Dublin III',), ('Negativbescheid',), ('Relocation',), ('Resettlement',),
                 ('Asylbewerberleistungsgesetz',), ('Kirchenasyl',), ('Asylantrag',), ('Abschiebung',),
-                ('Untätigkeitsklage',), ('Studium',), ]
+                ('Untätigkeitsklage',), ('Studium',), ('Strafverfolgung',),]
         for tag in tags:
             AddMethods.add_record_tag(tag)
 

@@ -35,12 +35,12 @@ import {
     INACTIVE_USERS_FRONT_URL,
     LEGAL_NOTICE_FRONT_URL,
     OWN_PROFILE_FRONT_URL,
-    PERMISSIONS_FRONT_URL,
+    PERMISSIONS_FRONT_URL, PRIVACY_STATEMENT_FRONT_URL,
     PROFILES_FRONT_URL,
     RECORDS_ADD_FRONT_URL,
     RECORDS_FRONT_URL,
     RECORDS_PERMIT_REQUEST_FRONT_URL
-} from "../../../statics/frontend_links.statics";
+} from '../../../statics/frontend_links.statics';
 
 @Component({
     selector: "app-sidebar",
@@ -55,6 +55,7 @@ export class SidebarComponent implements OnInit {
     checkPermissionInterval = 15000;
 
     legalNoticeUrl = LEGAL_NOTICE_FRONT_URL;
+    privacyStatementUrl = PRIVACY_STATEMENT_FRONT_URL;
 
     show_tab_permissions = {
         records: false,
