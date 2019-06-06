@@ -33,7 +33,7 @@ import {
     MatGridListModule,
     MatTableModule,
     MatSortModule,
-     MatTooltipModule
+    MatTooltipModule, DateAdapter, MAT_DATE_FORMATS
 } from '@angular/material';
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatCardModule } from "@angular/material/card";
@@ -46,6 +46,7 @@ import { MatExpansionModule } from "@angular/material/expansion";
 import { MatListModule } from "@angular/material/list";
 import { MatIconModule } from "@angular/material/icon";
 import {MatToolbarModule} from '@angular/material/toolbar';
+import {MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from '@angular/material-moment-adapter';
 
 @NgModule({
     imports: [
@@ -105,7 +106,9 @@ import {MatToolbarModule} from '@angular/material/toolbar';
         {
             provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
             useValue: { duration: 2500, verticalPosition: "top" }
-        }
+        },
+        {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
+        {provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS}
     ]
 })
 export class CustomMaterialModule {}
