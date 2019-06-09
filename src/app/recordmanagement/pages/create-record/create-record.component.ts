@@ -19,7 +19,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { RecordsSandboxService } from "../../services/records-sandbox.service";
-import { MatDialog } from "@angular/material";
+import {DateAdapter, MatDatepickerInputEvent, MatDialog} from '@angular/material';
 import { SelectClientDialogComponent } from "../../components/select-client-dialog/select-client-dialog.component";
 import { FullClient } from "../../models/client.model";
 import { OriginCountry } from "../../models/country.model";
@@ -65,6 +65,7 @@ export class CreateRecordComponent implements OnInit {
                 dateInPastValidator
             ),
             client_birthday: new FormControl(date, dateInPastValidator),
+            // client_birthday: new FormControl(date),
             client_name: new FormControl("", [Validators.required]),
             client_phone_number: new FormControl(""),
             client_note: new FormControl(""),
@@ -72,7 +73,6 @@ export class CreateRecordComponent implements OnInit {
             record_note: new FormControl("")
         });
 
-        this.onClientBirthdayChanges();
 
         this.allConsultants = this.recordSB.getConsultants().pipe(
             tap(results => {
@@ -93,14 +93,9 @@ export class CreateRecordComponent implements OnInit {
 
     ngOnInit() {}
 
-    onClientBirthdayChanges() {
-        this.createRecordForm
-            .get("client_birthday")
-            .valueChanges.subscribe(val => {
-                this.recordSB.loadClientPossibilities(val);
-
-                this.openSelectClientDialog();
-            });
+    onClientBirthdayChange(event: MatDatepickerInputEvent<Date>){
+        this.recordSB.loadClientPossibilities(new Date(this.createRecordForm.get("client_birthday").value));
+        this.openSelectClientDialog();
     }
 
     selectedConsultantsChanged(selectedConsultants) {

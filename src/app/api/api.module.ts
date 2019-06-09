@@ -17,10 +17,11 @@
  ******************************************************************************/
 
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import {MatProgressSpinnerModule, MatTabsModule} from '@angular/material';
+import { MatProgressSpinnerModule, MatTabsModule } from "@angular/material";
 import { StoreModule } from "@ngrx/store";
 import { EffectsModule } from "@ngrx/effects";
 import { NgModule } from "@angular/core";
+import { NgMaterialMultilevelMenuModule } from "ng-material-multilevel-menu";
 
 import { ApiRoutingModule } from "./api-routing.module";
 import { ProfileComponent } from "./pages/profile/profile.component";
@@ -52,10 +53,11 @@ import {
     NewUserRequestProcessedPipe,
     NewUserRequestRequestedPipe
 } from "../recordmanagement/pipes/new_user_request.pipe";
-import { ActivateUserComponent } from './pages/auth/activate-user/activate-user.component';
-import { LegalNoticeComponent } from './pages/legal-notice/legal-notice.component';
-import { GroupDetailsComponent } from './components/group-details/group-details.component';
-import { InactiveUsersComponent } from './pages/inactive-users/inactive-users.component';
+import { ActivateUserComponent } from "./pages/auth/activate-user/activate-user.component";
+import { LegalNoticeComponent } from "./pages/legal-notice/legal-notice.component";
+import { GroupDetailsComponent } from "./components/group-details/group-details.component";
+import { InactiveUsersComponent } from "./pages/inactive-users/inactive-users.component";
+import { PrivacyStatementComponent } from './pages/privacy-statement/privacy-statement.component';
 
 @NgModule({
     imports: [
@@ -63,10 +65,11 @@ import { InactiveUsersComponent } from './pages/inactive-users/inactive-users.co
         SharedModule,
         FormsModule,
         ReactiveFormsModule,
-        StoreModule.forFeature('api', apiReducer),
+        StoreModule.forFeature("api", apiReducer),
         EffectsModule.forFeature([ApiEffects]),
         MatTabsModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        NgMaterialMultilevelMenuModule
     ],
     declarations: [
         ProfileComponent,
@@ -96,7 +99,8 @@ import { InactiveUsersComponent } from './pages/inactive-users/inactive-users.co
         ActivateUserComponent,
         LegalNoticeComponent,
         GroupDetailsComponent,
-        InactiveUsersComponent
+        InactiveUsersComponent,
+        PrivacyStatementComponent
     ],
     entryComponents: [
         AddGroupMemberComponent,

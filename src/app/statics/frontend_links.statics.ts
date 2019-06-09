@@ -17,7 +17,7 @@
  ******************************************************************************/
 
 import {RestrictedUser} from '../api/models/user.model';
-import {RestrictedRecord} from '../recordmanagement/models/record.model';
+import {RestrictedRecord, TokenRecord} from '../recordmanagement/models/record.model';
 import {RestrictedGroup} from '../api/models/group.model';
 import {Permission} from '../api/models/permission.model';
 
@@ -34,6 +34,7 @@ export const GROUPS_FRONT_URL = "groups";
 export const PERMISSIONS_FRONT_URL = "permissions";
 export const ACCEPT_NEW_USER_REQUESTS_FRONT_URL = "new_user_requests";
 export const LEGAL_NOTICE_FRONT_URL = "legal_notice";
+export const PRIVACY_STATEMENT_FRONT_URL = "privacy_statement";
 export const INACTIVE_USERS_FRONT_URL = "inactive_users";
 
 export const GetProfileFrontUrl = (profile: RestrictedUser | string): string => {
@@ -47,8 +48,8 @@ export const GetRecordSearchFrontUrl = (searchTerm: string): string => {
     return `${RECORDS_FRONT_URL}?search=${searchTerm}`;
 };
 
-export const GetRecordFrontUrl = (record: RestrictedRecord | string): string => {
-    if (record instanceof RestrictedRecord)
+export const GetRecordFrontUrl = (record: TokenRecord | string): string => {
+    if (record instanceof TokenRecord)
         return `${RECORDS_FRONT_URL}/${record.id}`;
     else
         return `${RECORDS_FRONT_URL}/${record}`;

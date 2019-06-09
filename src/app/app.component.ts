@@ -25,7 +25,7 @@ import { AppSandboxService } from "./api/services/app-sandbox.service";
 
 import {MediaMatcher} from '@angular/cdk/layout';
 import {ChangeDetectorRef, OnDestroy} from '@angular/core';
-import {MAIN_PAGE_FRONT_URL} from './statics/frontend_links.statics';
+import {LEGAL_NOTICE_FRONT_URL, MAIN_PAGE_FRONT_URL, PRIVACY_STATEMENT_FRONT_URL} from './statics/frontend_links.statics';
 
 @Component({
     selector: "app-root",
@@ -42,6 +42,9 @@ export class AppComponent implements OnDestroy{
     mobileQuery: MediaQueryList;
 
     private _mobileQueryListener: () => void;
+
+    privacyStatementUrl = PRIVACY_STATEMENT_FRONT_URL;
+    legalNoticeUrl = LEGAL_NOTICE_FRONT_URL;
 
     constructor(
         private route: ActivatedRoute,

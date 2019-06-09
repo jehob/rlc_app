@@ -24,6 +24,7 @@
     <div class="horizontal group-details__header">
         <h1>Members</h1>
         <button matSuffix mat-flat-button color="primary" (click)="onAddGroupMemberClick()" *ngIf="editGroupMembers">add
+            member
         </button>
     </div>
     <div *ngIf="(group.members).length === 0; else membersTable">
@@ -42,9 +43,9 @@
             <ng-container matColumnDef="remove" *ngIf="editGroupMembers">
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let member">
-                    <button matSuffix mat-flat-button color="warn" (click)="onRemoveGroupMemberClick(member.id)"
-                            appGetColorOnHover>remove
-                    </button>
+                    <app-expandable-button (buttonClicked)="onRemoveGroupMemberClick(member.id)" content="remove"
+                                           icon="delete" color="warn"
+                                           [styleParams]=" {fontSize: '14px'} "></app-expandable-button>
                 </td>
             </ng-container>
 

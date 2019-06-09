@@ -23,49 +23,16 @@
 </div>
 <mat-divider></mat-divider>
 <div class="sidebar__nav-holder">
-    <ul class="drawer-navigation">
-        <li routerLinkActive="active" *ngIf="show_record_tab" [routerLink]="recordsUrl"
-            [routerLinkActiveOptions]="{exact:true}"><a i18n="sidebar navigation for routing@@sidebar_records">
-            <mat-icon>folder</mat-icon>
-            Records</a></li>
-        <li [routerLink]="recordsAddUrl" *ngIf="show_add_record_tab" routerLinkActive="active"
-            [routerLinkActiveOptions]="{exact:true}"><a i18n="sidebar navigation for routing@@sidebar_records">
-            <mat-icon>create_new_folder</mat-icon>
-            Create record</a></li>
-        <li routerLinkActive="active" [routerLink]="profilesUrl"><a
-            i18n="sidebar navigation for routing@@sidebar_records">
-            <mat-icon>people_outline</mat-icon>
-            Profiles</a></li>
-        <li [routerLink]="recordsPermitRequestsUrl" *ngIf="show_record_permission_request_tab"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{exact:true}"><a i18n="sidebar navigation for routing@@sidebar_permit">
-            <mat-icon>offline_pin</mat-icon>
-            Permit requests</a></li>
-        <li [routerLink]="groupsUrl" routerLinkActive="active"
-            [routerLinkActiveOptions]="{exact:true}"><a i18n="sidebar navigation for routing@@sidebar_permit">
-            <mat-icon>group</mat-icon>
-            Groups</a></li>
-        <li [routerLink]="permissionsUrl" routerLinkActive="active"
-            [routerLinkActiveOptions]="{exact:true}"><a i18n="sidebar navigation for routing@@sidebar_permit">
-            <mat-icon>vpn_key</mat-icon>
-            Permissions</a></li>
-        <li [routerLink]="acceptNewUsersUrl" *ngIf="show_accept_new_user_requests_tab" routerLinkActive="active"
-            [routerLinkActiveOptions]="{exact:true}"><a i18n="sidebar navigation for routing@@sidebar_permit">
-            <mat-icon>person_add</mat-icon>
-            new users</a></li>
-        <li [routerLink]="inactiveUsersUrl" routerLinkActive="active" *ngIf="show_inactive_users_tab"
-            [routerLinkActiveOptions]="{exact:true}"><a i18n="sidebar navigation for routing@@sidebar_permit">
-            <mat-icon>perm_identity</mat-icon>
-            inactive users</a></li>
-        <mat-divider></mat-divider>
-        <li><a (click)="logout()">
-            <mat-icon>power_settings_new</mat-icon>
-            Logout</a></li>
-    </ul>
+    <ng-material-multilevel-menu [items]="actualSidebarItems" (selectedItem)="selectedItem($event)"
+                                 (selectedLabel)="selectedLabel($event)" [configuration]="config">
+    </ng-material-multilevel-menu>
     <div class="sidebar__other-links">
         <ul>
             <li class="is_clickable sidebar__other-links__items"
-                [routerLink]="legalNoticeUrl">legal notice
+                [routerLink]="legalNoticeUrl">Impressum
+            </li>
+            <li class="is_clickable sidebar__other-links__items"
+                [routerLink]="privacyStatementUrl">Datenschutzerklärung
             </li>
         </ul>
     </div>

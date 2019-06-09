@@ -16,7 +16,7 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<mat-card>
+<mat-card class="new-user-requests__card">
     <h1>new user requests</h1>
     <div *ngIf="newUserRequests | async as catalog; else loading">
         <ng-container *ngIf="catalog.length; else noItems">
@@ -26,12 +26,13 @@
             </div>
             <ng-template #toProcessTable>
                 <mat-accordion>
-                    <mat-expansion-panel *ngFor="let userRequest of (catalog | newUserRequestRequested)">
+                    <mat-expansion-panel *ngFor="let userRequest of (catalog | newUserRequestRequested)"
+                                         class="new-user-requests__actions-container">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
                                 {{userRequest.request_from.name}}
                             </mat-panel-title>
-                            <mat-panel-description>
+                            <mat-panel-description class="new-user-requests__action-buttons-container">
                                 <button mat-flat-button color="warn" (click)="onDeclineClick($event, userRequest)">
                                     decline
                                 </button>
@@ -63,28 +64,30 @@
             <ng-template #alreadyProcessedTable>
                 <table mat-table [dataSource]="(newUserRequests | async | newUserRequestProcessed)">
                     <ng-container matColumnDef="id">
-                        <th mat-header-cell *matHeaderCellDef>id</th>
+                        <th mat-header-cell *matHeaderCellDef class="new-user-requests__processed__header">id</th>
                         <td mat-cell *matCellDef="let newUserRequest">
                             {{ newUserRequest.id }}
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="from">
-                        <th mat-header-cell *matHeaderCellDef>from</th>
-                        <td mat-cell *matCellDef="let newUserRequest">
+                        <th mat-header-cell *matHeaderCellDef class="new-user-requests__processed__header">from</th>
+                        <td mat-cell *matCellDef="let newUserRequest" class="new-user-requests__processed__content">
                             {{ newUserRequest.request_from.name }}
 
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="processor">
-                        <th mat-header-cell *matHeaderCellDef>processor</th>
-                        <td mat-cell *matCellDef="let newUserRequest" class="is_clickable"
+                        <th mat-header-cell *matHeaderCellDef class="new-user-requests__processed__header">processor
+                        </th>
+                        <td mat-cell *matCellDef="let newUserRequest"
+                            class="new-user-requests__processed__content is_clickable"
                             (click)="onUserClick(newUserRequest.request_processed)">
                             {{ newUserRequest.request_processed.name }}
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="processed_date">
-                        <th mat-header-cell *matHeaderCellDef>process date</th>
-                        <td mat-cell *matCellDef="let newUserRequest">
+                        <th mat-header-cell *matHeaderCellDef class="new-user-requests__processed__header">process date</th>
+                        <td mat-cell *matCellDef="let newUserRequest" class="new-user-requests__processed__content-small">
                             {{ (newUserRequest.processed_on | date) }}
                         </td>
                     </ng-container>

@@ -42,11 +42,32 @@ mat-sidenav{
 .root-container {
     display: flex;
     flex-direction: column;
+    height: 100%;
     position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
+}
+
+.app__main-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.app__additional-link-container {
+    height: 20px;
+    max-height: 20px;
+    min-height: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    background-color: $c-real-background;
+}
+
+.app__nav-links-container > a {
+    margin: 5px;
 }
 
 .is-mobile .root-toolbar {

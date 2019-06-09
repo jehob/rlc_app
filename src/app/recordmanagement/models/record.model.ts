@@ -18,16 +18,32 @@
 
 import {Tag} from './tag.model';
 
-export class RestrictedRecord {
+export class TokenRecord {
     constructor(
         public id: number,
-        public token: string,
+        public token: string
+    ) {
+        this.id = id;
+        this.token = token;
+    }
+
+    static getTokenRecordFromJson(json: any): TokenRecord {
+        return new TokenRecord(json.id, json.record_token);
+    }
+}
+
+export class RestrictedRecord extends TokenRecord {
+    constructor(
+        id: number,
+        token: string,
         public last_contact_date: Date,
         public state: string,
         public tags: Tag[],
         public working_on_record: [number, string],
         public official_note: string,
+        public is_restricted: boolean
     ) {
+        super(id, token);
         this.id = id;
         this.token = token;
         this.last_contact_date = last_contact_date;
@@ -35,9 +51,10 @@ export class RestrictedRecord {
         this.tags = tags;
         this.working_on_record = working_on_record;
         this.official_note = official_note;
+        this.is_restricted = is_restricted;
     }
 
-    static getRestrictedRecordFromJson(json){
+    static getRestrictedRecordFromJson(json: any): RestrictedRecord {
         return new RestrictedRecord(
             json.id,
             json.record_token,
@@ -45,7 +62,8 @@ export class RestrictedRecord {
             json.state,
             Tag.getTagsFromJsonArray(json.tagged),
             json.working_on_record,
-            json.official_note
+            json.official_note,
+            true
         );
     }
 }
@@ -78,7 +96,7 @@ export class FullRecord extends RestrictedRecord {
         public status_described: string,
         public additional_facts: string,
     ) {
-        super(id, token, last_contact_date, state, tags, working_on_record, official_note);
+        super(id, token, last_contact_date, state, tags, working_on_record, official_note, false);
         this.created_on = created_on;
         this.last_edited = last_edited;
         this.first_contact_date = first_contact_date;

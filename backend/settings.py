@@ -96,7 +96,6 @@ if 'ON_HEROKU' in os.environ:
     TIMEOUT_TIMEDELTA = timedelta(minutes=10)
 else:
     TIMEOUT_TIMEDELTA = timedelta(weeks=10)
-    # TIMEOUT_TIMEDELTA = timedelta(seconds=5)
 
 
 # Templates
@@ -208,7 +207,7 @@ else:
 if 'ON_HEROKU' in os.environ and os.environ['ON_HEROKU']:
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    COMPRESS_STORAGE = 'backend.shared.storage_generator.CachedS3BotoStorage'
+    COMPRESS_STORAGE = 'backend.shared.storage_generator.CachedS3Boto3Storage'
 else:
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 

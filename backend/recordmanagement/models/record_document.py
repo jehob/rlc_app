@@ -16,6 +16,7 @@
 
 from django.db import models
 from backend.api.models import UserProfile
+from backend.static.storage_folders import get_storage_folder_record_document
 
 
 class RecordDocument(models.Model):
@@ -37,4 +38,4 @@ class RecordDocument(models.Model):
         return 'record_document: ' + str(self.id) + ':' + self.name
 
     def get_filekey(self):
-        return 'rlcs/' + str(self.record.from_rlc_id) + '/records/' + str(self.record.id) + '/' + self.name
+        return get_storage_folder_record_document(self.record.from_rlc_id, self.record.id) + self.name

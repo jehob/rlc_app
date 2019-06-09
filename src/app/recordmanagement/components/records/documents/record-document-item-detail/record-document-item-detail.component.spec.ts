@@ -1,4 +1,4 @@
-/*!
+/*
  * rlcapp - record and organization management software for refugee law clinics
  * Copyright (C) 2019  Dominik Walser
  *
@@ -15,14 +15,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
-.inactive-users__table-header {
-    padding-right: 15px;
-}
-.inactive-users__table-content {
-    padding-right: 15px;
-    width: 125px
-}
 
-.inactive-users__card {
-    max-width: 850px;
-}
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+
+import { RecordDocumentItemDetailComponent } from "./record-document-item-detail.component";
+
+describe("RecordDocumentItemDetailComponent", () => {
+    let component: RecordDocumentItemDetailComponent;
+    let fixture: ComponentFixture<RecordDocumentItemDetailComponent>;
+
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [RecordDocumentItemDetailComponent]
+        }).compileComponents();
+    }));
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(RecordDocumentItemDetailComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
+
+    it("should create", () => {
+        expect(component).toBeTruthy();
+    });
+});

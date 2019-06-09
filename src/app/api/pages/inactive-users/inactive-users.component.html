@@ -16,25 +16,25 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<mat-card>
+<mat-card class="inactive-users__card">
     <h1>Inactive users</h1>
     <div *ngIf="inactive_users | async as catalog; else loading">
         <ng-container *ngIf="catalog.length; else noItems">
             <table mat-table [dataSource]="(inactive_users | async)">
                 <ng-container matColumnDef="name">
-                    <th mat-header-cell *matHeaderCellDef>name</th>
-                    <td mat-cell *matCellDef="let user">
+                    <th mat-header-cell *matHeaderCellDef class="inactive-users__table-header">name</th>
+                    <td mat-cell *matCellDef="let user" class="inactive-users__table-content">
                         <p>{{user.name}}</p>
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="email">
-                    <th mat-header-cell *matHeaderCellDef>name</th>
-                    <td mat-cell *matCellDef="let user">
+                    <th mat-header-cell *matHeaderCellDef class="inactive-users__table-header">email</th>
+                    <td mat-cell *matCellDef="let user" class="inactive-users__table-content">
                         <p>{{user.email}}</p>
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="activate">
-                    <th mat-header-cell *matHeaderCellDef>name</th>
+                    <th mat-header-cell *matHeaderCellDef></th>
                     <td mat-cell *matCellDef="let user">
                         <button mat-flat-button color="primary" (click)="onActivateUser(user)">activate</button>
                     </td>

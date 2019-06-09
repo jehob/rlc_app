@@ -97,7 +97,7 @@ export class ProfileComponent implements OnInit {
         this.user.postal_code = this.userForm.value["postal_code"];
         this.user.phone_number = this.userForm.value["phone_number"];
         this.user.city = this.userForm.value["city"];
-        this.user.birthday = new Date(this.userForm.value["birthday"]);
+        this.user.birthday = ApiSandboxService.transformDate(this.userForm.value["birthday"]);
         if (this.selectedUserState)
             this.user.user_state = this.selectedUserState.abbreviation;
         if (this.selectedUserRecordState)

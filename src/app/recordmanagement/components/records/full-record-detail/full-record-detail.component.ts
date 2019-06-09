@@ -184,7 +184,7 @@ export class FullRecordDetailComponent implements OnInit, OnDestroy {
             "related_persons"
         ];
         this.record.contact = this.recordEditForm.value["contact"];
-        this.record.last_contact_date = this.convertDate(
+        this.record.last_contact_date = ApiSandboxService.transformDate(
             this.recordEditForm.value["last_contact_date"]
         );
         this.record.official_note = this.recordEditForm.value["official_note"];
@@ -211,7 +211,7 @@ export class FullRecordDetailComponent implements OnInit, OnDestroy {
 
         this.client.note = this.recordEditForm.value["client_note"];
         this.client.name = this.recordEditForm.value["client_name"];
-        this.client.birthday = this.convertDate(
+        this.client.birthday = ApiSandboxService.transformDate(
             this.recordEditForm.value["client_birthday"]
         );
         this.client.origin_country = this.origin_country.id;
@@ -242,12 +242,13 @@ export class FullRecordDetailComponent implements OnInit, OnDestroy {
         this.record.state = event.abbreviation;
     }
 
-    convertDate(date: string): Date {
-        return new Date(ApiSandboxService.transformDateToString(date));
-    }
-
     adjustTextAreaHeight(o) {
         o.style.height = "1px";
         o.style.height = 25 + o.scrollHeight + "px";
+    }
+
+    downloadAllRecordDocuments(event) {
+        event.stopPropagation();
+        this.recordSB.downloadAllRecordDocuments();
     }
 }

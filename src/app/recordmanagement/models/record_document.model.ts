@@ -46,13 +46,9 @@ export class RecordDocument {
     }
 
     static getRecordDocumentFromJson(json) {
-        let name = json.name;
-        if (name.split('/').length > 1)
-            name = name.split('/').pop();
-
         return new RecordDocument(
             json.id,
-            name,
+            json.name,
             json.creator,
             json.created_on,
             json.last_edited,

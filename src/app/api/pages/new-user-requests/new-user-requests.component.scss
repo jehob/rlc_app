@@ -15,3 +15,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
+
+.new-user-requests__card {
+    max-width: 850px;
+}
+
+.new-user-requests__action-buttons-container {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.new-user-requests__actions-container {
+    max-width: 500px;
+}
+
+.new-user-requests__processed__header {
+    padding-right: 15px;
+}
+.new-user-requests__processed__content {
+    padding-right: 15px;
+    width: 125px
+}
+
+.new-user-requests__processed__content-small {
+    padding-right: 15px;
+}

@@ -36,7 +36,7 @@ class Command(BaseCommand):
         users = self.get_and_create_users(rlc)
         main_user = self.get_and_create_dummy_user(rlc)
         self.create_groups(rlc, main_user, users)
-        clients = self.get_and_create_clients()
+        clients = self.get_and_create_clients(rlc)
         consultant_group = apimodels.Group.objects.filter(name='Berater', from_rlc=rlc).first()
         consultants = list(consultant_group.group_members.all())
         self.get_and_create_records(clients, consultants, rlc)
@@ -209,7 +209,7 @@ class Command(BaseCommand):
                                                  permission=self.get_permission(permission_name))
         has_permission.save()
 
-    def get_and_create_clients(self):
+    def get_and_create_clients(self, rlc):
         origin_countries = list(models.OriginCountry.objects.all())
         clients = [
             (
@@ -305,7 +305,7 @@ class Command(BaseCommand):
         ]
         clients_in_db = []
         for client in clients:
-            clients_in_db.append(self.get_and_create_client(client))
+            clients_in_db.append(self.get_and_create_client(client, rlc))
         return clients_in_db
 
     def get_and_create_records(self, clients, consultants, rlc):
@@ -451,12 +451,13 @@ class Command(BaseCommand):
             records_in_db.append(record)
         return records_in_db
 
-    def get_and_create_client(self, client):
+    def get_and_create_client(self, client, rlc):
         cl = models.Client(name=client[2], note=client[3], phone_number=client[4])
         cl.created_on = AddMethods.generate_date(client[0])
         cl.last_edited = AddMethods.generate_datetime(client[1])
         cl.birthday = AddMethods.generate_date(client[5])
         cl.origin_country = client[6]
+        cl.from_rlc = rlc
         cl.save()
         return cl
 
