@@ -39,4 +39,3 @@ class RecordDocument(models.Model):
 
     def get_filekey(self):
         return get_storage_folder_record_document(self.record.from_rlc_id, self.record.id) + self.name
-        # return self.name

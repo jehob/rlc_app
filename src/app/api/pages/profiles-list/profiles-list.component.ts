@@ -46,7 +46,6 @@ export class ProfilesListComponent implements OnInit {
         );
     }
 
-
     onUserClick(user: RestrictedUser) {
         this.router.navigateByUrl(GetProfileFrontUrl(user));
     }

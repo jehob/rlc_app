@@ -231,7 +231,7 @@ export class RecordsSandboxService {
         } else {
             newRecord = {
                 client_birthday: ApiSandboxService.transformDateToString(
-                    createFormValues.client_birthday
+                    new Date(createFormValues.client_birthday)
                 ),
                 client_name: createFormValues.client_name
             };
@@ -241,7 +241,7 @@ export class RecordsSandboxService {
             client_phone_number: createFormValues.client_phone_number,
             client_note: createFormValues.client_note,
             first_contact_date: ApiSandboxService.transformDateToString(
-                createFormValues.first_contact_date
+                new Date(createFormValues.first_contact_date)
             ),
             record_token: createFormValues.record_token,
             record_note: createFormValues.record_note,
@@ -321,6 +321,18 @@ export class RecordsSandboxService {
         this.storageService.downloadFile(
             getRecordFolder(rlc_id, record_id) + "/" + file_name
         );
+    }
+
+    downloadAllRecordDocuments() {
+        let record_id = null;
+        let record_token = null;
+        this.recordStore
+            .pipe(select((state: any) => state.records.special_record.record))
+            .subscribe(record => {
+                record_id = record.id;
+                record_token = record.token;
+            });
+        this.storageService.downloadAllFilesFromRecord(record_id, record_token);
     }
 
     startAddingNewRecordMessage(message: string) {

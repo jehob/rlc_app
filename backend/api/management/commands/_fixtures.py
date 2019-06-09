@@ -145,7 +145,7 @@ class Fixtures:
                 ('Krankheit im Asylverfahren',), ('Familienasyl',), ('UmF',),
                 ('Familienzusammenführung nach Dublin III',), ('Negativbescheid',), ('Relocation',), ('Resettlement',),
                 ('Asylbewerberleistungsgesetz',), ('Kirchenasyl',), ('Asylantrag',), ('Abschiebung',),
-                ('Untätigkeitsklage',), ('Studium',)]
+                ('Untätigkeitsklage',), ('Studium',), ('Strafverfolgung',),]
         for tag in tags:
             AddMethods.add_record_tag(tag)
 
@@ -158,7 +158,7 @@ class Fixtures:
                 ('Widerspruch',), ('Antwortschreiben',), ('Erwiderung',), ('Sachstandsanfrage',), ('Klageschrift',),
                 ('Akteneinsicht',), ('Anfrage',), ('Terminvereinbarung',), ('Attest',), ('Verschwiegenheitserklärung',),
                 ('Datenschutzerklärung',), ('Erklärung',), ('Vertrag',), ('Antrag',), ('Zeugnis',),
-                ('Zertifikat',), ('Vollmacht',)]
+                ('Zertifikat',), ('Vollmacht',), ('Anhörungsvorbereitung',), ]
         for tag in tags:
             AddMethods.add_record_document_tag(tag)
 

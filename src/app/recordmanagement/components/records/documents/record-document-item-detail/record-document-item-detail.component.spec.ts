@@ -16,19 +16,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { Component, OnInit } from "@angular/core";
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-export interface Section {
-    id: string;
-    type: string;
-    status: string;
-}
+import { RecordDocumentItemDetailComponent } from "./record-document-item-detail.component";
 
-@Component({
-    selector: "app-dashboard",
-    templateUrl: "./dashboard.component.html",
-    styleUrls: ["./dashboard.component.scss"]
-})
-export class DashboardComponent {
-    constructor() {}
-}
+describe("RecordDocumentItemDetailComponent", () => {
+    let component: RecordDocumentItemDetailComponent;
+    let fixture: ComponentFixture<RecordDocumentItemDetailComponent>;
+
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [RecordDocumentItemDetailComponent]
+        }).compileComponents();
+    }));
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(RecordDocumentItemDetailComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
+
+    it("should create", () => {
+        expect(component).toBeTruthy();
+    });
+});

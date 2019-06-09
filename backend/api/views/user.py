@@ -91,7 +91,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             user = UserProfile.objects.get(pk=user_id)
         except:
             raise CustomError(ERROR__API__ID_NOT_FOUND)
-        if request.user != user:
+        if request.user != user and not request.user.is_superuser:
             raise CustomError(ERROR__API__PERMISSION__INSUFFICIENT)
         data = request.data
         user.birthday = parse_date(data['birthday'])

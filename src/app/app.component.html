@@ -17,25 +17,34 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 <div class="root-container" [class.example-is-mobile]="mobileQuery.matches">
-    <mat-toolbar class="root-toolbar">
-        <button mat-icon-button (click)="toggleNav()"><mat-icon>menu</mat-icon></button>
-        <img src="../../static/images/rlc_intranet_logo.png" alt="RLC App" class="is_clickable" (click)="redirectToMainPage()">
-        <h1 (click)="redirectToMainPage()" class="is_clickable">RLC app</h1>
-    </mat-toolbar>
+    <div class="app__main-container">
+        <mat-toolbar class="root-toolbar">
+            <button mat-icon-button (click)="toggleNav()"><mat-icon>menu</mat-icon></button>
+            <img src="../../static/images/rlc_intranet_logo.png" alt="RLC App" class="is_clickable" (click)="redirectToMainPage()">
+            <h1 (click)="redirectToMainPage()" class="is_clickable">RLC app</h1>
+        </mat-toolbar>
 
-    <mat-sidenav-container class="sidenav-container"
-                            [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+        <mat-sidenav-container class="sidenav-container"
+                               [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
 
-        <mat-sidenav #snav [opened]="mobileQuery.matches ? 'false' : 'true'" [mode]="mobileQuery.matches ? 'over' : 'side'"
-                    [fixedInViewport]="mobileQuery.matches" fixedTopGap="56" *ngIf="(authState | async).authenticated">
-            <mat-nav-list>
-                <app-sidebar></app-sidebar>
-            </mat-nav-list>
-        </mat-sidenav>
+            <mat-sidenav #snav [opened]="mobileQuery.matches ? 'false' : 'true'" [mode]="mobileQuery.matches ? 'over' : 'side'"
+                         [fixedInViewport]="mobileQuery.matches" fixedTopGap="56" *ngIf="(authState | async).authenticated">
+                <mat-nav-list>
+                    <app-sidebar></app-sidebar>
+                </mat-nav-list>
+            </mat-sidenav>
 
-        <mat-sidenav-content>
-            <router-outlet></router-outlet>
-        </mat-sidenav-content>
-    </mat-sidenav-container>
+            <mat-sidenav-content>
+                <router-outlet></router-outlet>
+            </mat-sidenav-content>
+        </mat-sidenav-container>
+    </div>
+
+    <div class="app__additional-link-container" *ngIf="!(authState | async).authenticated">
+        <nav class="app__nav-links-container">
+
+            <a routerLink="{{legalNoticeUrl}}">Impressum</a>
+            <a routerLink="{{privacyStatementUrl}}">Datenschutzerklärung</a>
+        </nav>
+    </div>
 </div>
-

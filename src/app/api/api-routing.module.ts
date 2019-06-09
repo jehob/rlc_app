@@ -35,6 +35,7 @@ import { NewUserRequestsComponent } from "./pages/new-user-requests/new-user-req
 import { ActivateUserComponent } from "./pages/auth/activate-user/activate-user.component";
 import {LegalNoticeComponent} from './pages/legal-notice/legal-notice.component';
 import {InactiveUsersComponent} from './pages/inactive-users/inactive-users.component';
+import {PrivacyStatementComponent} from './pages/privacy-statement/privacy-statement.component';
 
 const apiRoutes: Routes = [
     {
@@ -97,7 +98,8 @@ const apiRoutes: Routes = [
     { path: "forgot-password", component: ForgotPasswordComponent },
     { path: "reset-password/:id", component: ResetPasswordComponent },
     { path: "activate_account/:link", component: ActivateUserComponent },
-    { path: "legal_notice", component: LegalNoticeComponent }
+    { path: "legal_notice", component: LegalNoticeComponent },
+    { path: "privacy_statement", component: PrivacyStatementComponent }
 ];
 
 @NgModule({

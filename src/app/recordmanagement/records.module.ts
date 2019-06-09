@@ -36,7 +36,6 @@ import { UsersFieldComponent } from "./components/users-field/users-field.compon
 import { RecordDocumentsListComponent } from "./components/records/documents/record-documents-list/record-documents-list.component";
 import { RecordMessagesComponent } from "./components/records/messages/record-messages/record-messages.component";
 import { RecordMessageItemComponent } from "./components/records/messages/record-message-item/record-message-item.component";
-import { RecordDocumentItemComponent } from "./components/records/documents/record-document-item/record-document-item.component";
 import { RecordsAddEffects } from "./store/effects/records-add.effects";
 import { RecordsLoadingEffects } from "./store/effects/records-loading.effects";
 import { RecordsPermitRequestsComponent } from "./pages/records-permit-requests/records-permit-requests.component";
@@ -44,6 +43,7 @@ import {
     RecordPermissionsProcessedPipe,
     RecordPermissionsRequestedPipe
 } from "./pipes/record_permission.pipe";
+import { RecordDocumentItemDetailComponent } from './components/records/documents/record-document-item-detail/record-document-item-detail.component';
 
 @NgModule({
     imports: [
@@ -69,10 +69,10 @@ import {
         RecordDocumentsListComponent,
         RecordMessagesComponent,
         RecordMessageItemComponent,
-        RecordDocumentItemComponent,
         RecordsPermitRequestsComponent,
         RecordPermissionsRequestedPipe,
-        RecordPermissionsProcessedPipe
+        RecordPermissionsProcessedPipe,
+        RecordDocumentItemDetailComponent
     ],
     entryComponents: [SelectClientDialogComponent],
      providers: [

@@ -16,17 +16,20 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title></title>
-</head>
-<body>
-<h1>RLC - Intranet notification</h1>
-<h2>Your registered for the RLC-Intranet</h2>
-<p>To use the system you have to be accepted by the admin of your rlc.</p>
-<p>Furthermore you have to activate your account by clicking on the following link: <a href="{{ url }}">{{ url }}</a>
-</p>
-<p>Have fun using the RLC-Intranet!</p>
-</body>
-</html>
+<div (mouseenter)="onMouseEnter()"
+     (mouseleave)="onMouseLeave()" class="is_clickable expandable-button__button"
+     [@unFold]="{value: foldState, params: {color: colorCode}}"
+     (click)="this.onButtonClick()" id="mainDiv">
+    <div class="expandable-button__container">
+        <div class="horizontal">
+            <mat-icon class="expandable-button__icon" [inline]="true" id="iconHolder">
+                {{this.icon}}
+            </mat-icon>
+            <div [@unFoldText]="{value: foldState, params: {width: realWidth}}" class="expandable-button__button-text"
+                 id="textHolder">
+                {{this.content}}
+            </div>
+        </div>
+    </div>
+
+</div>

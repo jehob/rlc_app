@@ -37,7 +37,7 @@ import {
 } from "@angular/material";
 import { map, startWith } from "rxjs/operators";
 import { Filterable } from "../../models/filterable.model";
-import {Tag} from '../../../recordmanagement/models/tag.model';
+import { Tag } from "../../../recordmanagement/models/tag.model";
 
 @Component({
     selector: "app-chip-autocomplete",
@@ -77,13 +77,24 @@ export class ChipAutocompleteComponent implements OnInit, OnChanges {
         });
     }
 
-    onFormFieldClick(){
+    onFormFieldClick() {
         this.valueInput.nativeElement.focus();
     }
 
     ngOnInit() {
+        this.selectedValues = this.firstSelected ? this.firstSelected : [];
+
         this.allValuesObservable.subscribe(values => {
             this.allValues = values;
+            if (this.selectedValues && this.allValues) {
+                for (const preSelectedValue of this.selectedValues) {
+                    this.allValues = this.allValues.filter(
+                        value =>
+                            value.getFilterableProperty() !==
+                            preSelectedValue.getFilterableProperty()
+                    );
+                }
+            }
 
             this.filteredValues = this.valuesForm.controls[
                 "filterValue"
@@ -97,8 +108,6 @@ export class ChipAutocompleteComponent implements OnInit, OnChanges {
                 )
             );
         });
-
-        this.selectedValues = this.firstSelected ? this.firstSelected : [];
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -129,7 +138,9 @@ export class ChipAutocompleteComponent implements OnInit, OnChanges {
         if (index >= 0) {
             this.selectedValues.splice(index, 1);
             this.selectedValuesChanged.emit(this.selectedValues);
-            this.allValues.push(value);
+
+            if (this.allValues.indexOf(value) === -1)
+                this.allValues.push(value);
         }
     }
 

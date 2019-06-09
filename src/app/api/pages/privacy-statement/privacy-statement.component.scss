@@ -1,4 +1,4 @@
-/*
+/*!
  * rlcapp - record and organization management software for refugee law clinics
  * Copyright (C) 2019  Dominik Walser
  *
@@ -16,19 +16,3 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { Component, OnInit } from "@angular/core";
-
-export interface Section {
-    id: string;
-    type: string;
-    status: string;
-}
-
-@Component({
-    selector: "app-dashboard",
-    templateUrl: "./dashboard.component.html",
-    styleUrls: ["./dashboard.component.scss"]
-})
-export class DashboardComponent {
-    constructor() {}
-}

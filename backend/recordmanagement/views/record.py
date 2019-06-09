@@ -27,10 +27,10 @@ from backend.api.errors import CustomError
 from backend.api.models import UserProfile
 from backend.recordmanagement import models, serializers
 from backend.static import error_codes
+from backend.static import permissions
 from backend.static.date_utils import parse_date
 from backend.static.emails import EmailSender
 from backend.static.frontend_links import FrontendLinks
-from backend.static import permissions
 
 
 class RecordsListViewSet(viewsets.ViewSet):
@@ -49,11 +49,12 @@ class RecordsListViewSet(viewsets.ViewSet):
                 consultants = UserProfile.objects.filter(name__icontains=part)
                 entries = entries.filter(
                     Q(tagged__name__icontains=part) | Q(note__icontains=part) | Q(
-                        working_on_record__in=consultants)).distinct()
+                        working_on_record__in=consultants) | Q(record_token__icontains=part)).distinct()
             serializer = serializers.RecordFullDetailSerializer(entries, many=True)
             return Response(serializer.data)
 
-        if not user.has_permission(permissions.PERMISSION_VIEW_RECORDS_RLC, for_rlc=user.rlc) and not user.has_permission(
+        if not user.has_permission(permissions.PERMISSION_VIEW_RECORDS_RLC,
+                                   for_rlc=user.rlc) and not user.has_permission(
             permissions.PERMISSION_VIEW_RECORDS_FULL_DETAIL_RLC, for_rlc=user.rlc):
             raise CustomError(error_codes.ERROR__API__PERMISSION__INSUFFICIENT)
 
@@ -63,7 +64,7 @@ class RecordsListViewSet(viewsets.ViewSet):
             consultants = UserProfile.objects.filter(name__icontains=part)
             entries = entries.filter(
                 Q(tagged__name__icontains=part) | Q(note__icontains=part) | Q(
-                    working_on_record__in=consultants)).distinct()
+                    working_on_record__in=consultants) | Q(record_token__icontains=part)).distinct()
 
         records = []
         if user.has_permission(permissions.PERMISSION_VIEW_RECORDS_FULL_DETAIL_RLC, for_rlc=user.rlc):

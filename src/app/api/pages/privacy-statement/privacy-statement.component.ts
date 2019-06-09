@@ -18,17 +18,13 @@
 
 import { Component, OnInit } from "@angular/core";
 
-export interface Section {
-    id: string;
-    type: string;
-    status: string;
-}
-
 @Component({
-    selector: "app-dashboard",
-    templateUrl: "./dashboard.component.html",
-    styleUrls: ["./dashboard.component.scss"]
+    selector: "app-privacy-statement",
+    templateUrl: "./privacy-statement.component.html",
+    styleUrls: ["./privacy-statement.component.scss"]
 })
-export class DashboardComponent {
+export class PrivacyStatementComponent implements OnInit {
     constructor() {}
+
+    ngOnInit() {}
 }
