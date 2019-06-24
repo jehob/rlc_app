@@ -19,7 +19,7 @@
 import { Injectable } from "@angular/core";
 import { Actions, Effect, ofType } from "@ngrx/effects";
 import { HttpClient } from "@angular/common/http";
-import { from, of } from "rxjs";
+import { from } from "rxjs";
 import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
 
 import { AppSandboxService } from "../../../api/services/app-sandbox.service";
@@ -30,7 +30,6 @@ import {
     START_LOADING_RECORDS,
     START_LOADING_SPECIAL_RECORD,
     StartLoadingClientPossibilities,
-    StartLoadingRecordPermissionRequests,
     StartLoadingRecords,
     StartLoadingSpecialRecord
 } from "../actions/records-start.actions";
