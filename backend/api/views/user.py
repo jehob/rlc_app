@@ -87,20 +87,29 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         try:
-            user_id = request.data['id']
+            user_id = kwargs['pk']
             user = UserProfile.objects.get(pk=user_id)
         except:
             raise CustomError(ERROR__API__ID_NOT_FOUND)
         if request.user != user and not request.user.is_superuser:
             raise CustomError(ERROR__API__PERMISSION__INSUFFICIENT)
         data = request.data
-        user.birthday = parse_date(data['birthday'])
-        user.postal_code = data['postal_code']
-        user.street = data['street']
-        user.city = data['city']
-        user.phone_number = data['phone_number']
-        user.user_state = data['user_state']
-        user.user_record_state = data['user_record_state']
+        if 'birthday' in data:
+            user.birthday = parse_date(data['birthday'])
+        if 'postal_code' in data:
+            user.postal_code = data['postal_code']
+        if 'street' in data:
+            user.street = data['street']
+        if 'city' in data:
+            user.city = data['city']
+        if 'phone_number' in data:
+            user.phone_number = data['phone_number']
+        if 'user_state' in data:
+            user.user_state = data['user_state']
+        if 'user_record_state' in data:
+            user.user_record_state = data['user_record_state']
+        if request.user.is_superuser and 'email' in data:
+            user.email = data['email']
         user.save()
         return Response(UserProfileSerializer(user).data)
 
