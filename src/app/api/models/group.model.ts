@@ -20,12 +20,12 @@ import {Filterable} from '../../shared/models/filterable.model';
 import {RestrictedUser} from './user.model';
 
 export class RestrictedGroup implements Filterable {
-   constructor(public id: string, public name: string){
-       this.id = id;
-       this.name = name;
-   }
+    constructor(public id: string, public name: string) {
+        this.id = id;
+        this.name = name;
+    }
 
-    static getRestrictedGroupsFromJsonArray(jsonArray){
+    static getRestrictedGroupsFromJsonArray(jsonArray) {
         const restrictedGroups: Array<RestrictedGroup> = [];
         Object.values(jsonArray).map(restrictedJsonUser => {
             restrictedGroups.push(
@@ -40,9 +40,9 @@ export class RestrictedGroup implements Filterable {
         return null;
     }
 
-   getFilterableProperty() {
-       return this.name;
-   }
+    getFilterableProperty() {
+        return this.name;
+    }
 }
 
 export class FullGroup extends RestrictedGroup {
@@ -54,7 +54,7 @@ export class FullGroup extends RestrictedGroup {
         public visible: boolean,
         public description: string,
         public note: string,
-    ){
+    ) {
         super(id, name);
         this.creator_id = creator_id;
         this.members = members;
@@ -63,7 +63,7 @@ export class FullGroup extends RestrictedGroup {
         this.note = note;
     }
 
-    static getFullGroupFromJson(json){
+    static getFullGroupFromJson(json) {
         if (json)
             return new FullGroup(
                 json.id,

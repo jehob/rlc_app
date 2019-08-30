@@ -19,6 +19,11 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {ShowGroupComponent} from './show-group.component';
+import {GroupDetailsComponent} from '../group-details/group-details.component';
+import {SharedModule} from '../../../shared/shared.module';
+import {ApiSandboxService} from '../../services/api-sandbox.service';
+import {RouterTestingModule} from '@angular/router/testing';
+import {SnackbarService} from '../../../shared/services/snackbar.service';
 
 describe('ShowGroupComponent', () => {
     let component: ShowGroupComponent;
@@ -26,7 +31,9 @@ describe('ShowGroupComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ShowGroupComponent]
+            imports: [SharedModule, RouterTestingModule],
+            declarations: [ShowGroupComponent, GroupDetailsComponent],
+            providers: [ApiSandboxService, SnackbarService],
         })
             .compileComponents();
     }));

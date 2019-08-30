@@ -26,7 +26,7 @@ describe('RecordDocumentsListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RecordDocumentsListComponent ]
+      declarations: [ RecordDocumentsListComponent]
     })
     .compileComponents();
   }));

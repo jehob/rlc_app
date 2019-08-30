@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { Component, OnInit } from "@angular/core";
+import {Component, OnInit, ViewChild} from '@angular/core';
 import { RecordsSandboxService } from "../../services/records-sandbox.service";
 import { Observable } from "rxjs";
 import {
@@ -30,6 +30,7 @@ import {
     GetRecordSearchFrontUrl
 } from "../../../statics/frontend_links.statics";
 import { tap } from "rxjs/internal/operators/tap";
+import {MatSort, MatTableDataSource} from '@angular/material';
 
 @Component({
     selector: "app-records",
@@ -38,11 +39,13 @@ import { tap } from "rxjs/internal/operators/tap";
 })
 export class RecordsListComponent implements OnInit {
     timeout = 400;
-    records: Observable<RestrictedRecord[]>;
-    fullAccess: boolean[];
+
     columns = ["access", "token", "state", "consultants", "tags"];
     value = "";
     timer = null;
+
+    dataSource;
+    @ViewChild(MatSort) sort: MatSort;
 
     constructor(
         private recordsSandbox: RecordsSandboxService,
@@ -60,27 +63,32 @@ export class RecordsListComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.records = this.recordsSandbox.getRecords().pipe(
-            tap(results => {
-                results.sort((a, b) => {
-                    if (isRestrictedRecord(a) && !isRestrictedRecord(b)) {
-                        return 1;
-                    } else if (
-                        !isRestrictedRecord(a) &&
-                        isRestrictedRecord(b)
-                    ) {
-                        return -1;
-                    }
-                    return 0;
-                });
-                this.fullAccess = new Array(results.length).fill(false);
-                results.forEach((record: RestrictedRecord, index) => {
-                    if (!isRestrictedRecord(record)){
-                        this.fullAccess[index] = true;
-                    }
-                })
-            })
-        );
+        this.recordsSandbox.getRecords().subscribe(records => {
+            this.dataSource = new MatTableDataSource(records);
+            this.dataSource.sort = this.sort;
+        });
+
+        // this.records = this.recordsSandbox.getRecords().pipe(
+        //     tap(results => {
+        //         results.sort((a, b) => {
+        //             if (isRestrictedRecord(a) && !isRestrictedRecord(b)) {
+        //                 return 1;
+        //             } else if (
+        //                 !isRestrictedRecord(a) &&
+        //                 isRestrictedRecord(b)
+        //             ) {
+        //                 return -1;
+        //             }
+        //             return 0;
+        //         });
+        //         this.fullAccess = new Array(results.length).fill(false);
+        //         results.forEach((record: RestrictedRecord, index) => {
+        //             if (!isRestrictedRecord(record)) {
+        //                 this.fullAccess[index] = true;
+        //             }
+        //         });
+        //     })
+        // );
     }
 
     onSearchClick() {

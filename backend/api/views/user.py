@@ -110,6 +110,8 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             user.user_record_state = data['user_record_state']
         if request.user.is_superuser and 'email' in data:
             user.email = data['email']
+        if request.user.is_superuser and 'name' in data:
+            user.email = data['name']
         user.save()
         return Response(UserProfileSerializer(user).data)
 
