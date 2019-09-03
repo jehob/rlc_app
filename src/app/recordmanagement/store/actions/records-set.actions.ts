@@ -19,13 +19,13 @@
 import { Action } from "@ngrx/store";
 import { RestrictedRecord } from "../../models/record.model";
 import { RecordDocument } from "../../models/record_document.model";
-import { RestrictedUser } from "../../../api/models/user.model";
+import { RestrictedUser } from "../../../core/models/user.model";
 import { OriginCountry } from "../../models/country.model";
 import { FullClient } from "../../models/client.model";
 import { Tag } from "../../models/tag.model";
 import { RecordMessage } from "../../models/record_message.model";
 import { RecordPermissionRequest } from "../../models/record_permission.model";
-import {State} from '../../../api/models/state.model';
+import {State} from '../../../core/models/state.model';
 
 export const SET_SPECIAL_RECORD = "SET_SPECIAL_RECORD";
 export const SET_SPECIAL_CLIENT = "SET_SPECIAL_CLIENT";

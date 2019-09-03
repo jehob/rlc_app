@@ -23,7 +23,7 @@ import { select, Store } from "@ngrx/store";
 import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
 import { from, of } from "rxjs";
 
-import { AppSandboxService } from "../../../api/services/app-sandbox.service";
+import { AppSandboxService } from "../../../core/services/app-sandbox.service";
 import { RecordsSandboxService } from "../../services/records-sandbox.service";
 import { RecordState } from "../../models/states.model";
 import {

@@ -46,8 +46,8 @@ import { RecordDocument } from "../models/record_document.model";
 import { RecordMessage } from "../models/record_message.model";
 import { RecordPermissionRequest } from "../models/record_permission.model";
 import {getIdObjects, getObjectsByField} from '../../shared/other/reducer-helper';
-import { RestrictedUser } from "../../api/models/user.model";
-import {State} from '../../api/models/state.model';
+import { RestrictedUser } from "../../core/models/user.model";
+import {State} from '../../core/models/state.model';
 
 export interface RecordsState {
     special_record: {

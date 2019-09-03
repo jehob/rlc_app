@@ -19,7 +19,7 @@
 import {RouterModule, Routes} from '@angular/router';
 import {FilesMainViewComponent} from './components/files-main-view/files-main-view.component';
 import {NgModule} from '@angular/core';
-import {AuthGuardService} from '../api/services/auth-guard.service';
+import {AuthGuardService} from '../core/services/auth-guard.service';
 
 const fileRoutes: Routes = [
     {

@@ -17,7 +17,7 @@
  ******************************************************************************/
 
 import { Component, Input, OnInit } from "@angular/core";
-import { RestrictedUser } from "../../../api/models/user.model";
+import { RestrictedUser } from "../../../core/models/user.model";
 import {Router} from '@angular/router';
 import {GetRecordSearchFrontUrl} from '../../../statics/frontend_links.statics';
 

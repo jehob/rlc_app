@@ -21,7 +21,7 @@ import { Observable } from "rxjs";
 import { Router } from "@angular/router";
 import { RecordsSandboxService } from "../../services/records-sandbox.service";
 import { RecordPermissionRequest } from "../../models/record_permission.model";
-import { RestrictedUser } from "../../../api/models/user.model";
+import { RestrictedUser } from "../../../core/models/user.model";
 import {GetProfileFrontUrl, GetRecordFrontUrl} from '../../../statics/frontend_links.statics';
 
 @Component({

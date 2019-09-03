@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { RestrictedUser } from "../../api/models/user.model";
+import { RestrictedUser } from "../../core/models/user.model";
 import {TokenRecord} from './record.model';
 
 export class RecordPermissionRequest {

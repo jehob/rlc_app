@@ -17,7 +17,7 @@
  ******************************************************************************/
 
 import {AbstractControl, FormGroup} from '@angular/forms';
-import {ApiSandboxService} from '../api/services/api-sandbox.service';
+import {CoreSandboxService} from '../core/services/core-sandbox.service';
 import moment from "moment";
 
 export const passwordValidator = (control: AbstractControl): { [key: string]: boolean } | null => {
@@ -42,7 +42,7 @@ export const matchValidator = (field1: string, field2: string) => {
 };
 
 export const dateInPastValidator = (control: AbstractControl): { [key: string]: boolean } | null => {
-    const value: Date = ApiSandboxService.transformDate(control.value);
+    const value: Date = CoreSandboxService.transformDate(control.value);
     if (moment().diff(moment(value)) < 0)
         return { inFuture: true };
     return null;

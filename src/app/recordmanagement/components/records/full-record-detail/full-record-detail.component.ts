@@ -27,8 +27,8 @@ import { FormControl, FormGroup } from "@angular/forms";
 import { RecordDocument } from "../../../models/record_document.model";
 import { RecordMessage } from "../../../models/record_message.model";
 import { Tag } from "../../../models/tag.model";
-import { State } from "../../../../api/models/state.model";
-import { ApiSandboxService } from "../../../../api/services/api-sandbox.service";
+import { State } from "../../../../core/models/state.model";
+import { CoreSandboxService } from "../../../../core/services/core-sandbox.service";
 import { dateInPastValidator } from "../../../../statics/validators.statics";
 import { alphabeticalSorterByField } from "../../../../shared/other/sorter-helper";
 import { tap } from "rxjs/internal/operators/tap";
@@ -184,7 +184,7 @@ export class FullRecordDetailComponent implements OnInit, OnDestroy {
             "related_persons"
         ];
         this.record.contact = this.recordEditForm.value["contact"];
-        this.record.last_contact_date = ApiSandboxService.transformDate(
+        this.record.last_contact_date = CoreSandboxService.transformDate(
             this.recordEditForm.value["last_contact_date"]
         );
         this.record.official_note = this.recordEditForm.value["official_note"];
@@ -211,7 +211,7 @@ export class FullRecordDetailComponent implements OnInit, OnDestroy {
 
         this.client.note = this.recordEditForm.value["client_note"];
         this.client.name = this.recordEditForm.value["client_name"];
-        this.client.birthday = ApiSandboxService.transformDate(
+        this.client.birthday = CoreSandboxService.transformDate(
             this.recordEditForm.value["client_birthday"]
         );
         this.client.origin_country = this.origin_country.id;

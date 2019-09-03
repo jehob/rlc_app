@@ -18,7 +18,7 @@
 
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
-import {ApiSandboxService} from '../../api/services/api-sandbox.service';
+import {CoreSandboxService} from '../../core/services/core-sandbox.service';
 import {SnackbarService} from '../../shared/services/snackbar.service';
 
 @Injectable({
@@ -27,7 +27,7 @@ import {SnackbarService} from '../../shared/services/snackbar.service';
 export class FilesSandboxSerivce {
     constructor(
         private router: Router,
-        private apiSandbox: ApiSandboxService,
+        private coreSB: CoreSandboxService,
         private snachbackService: SnackbarService
     ) {
 
