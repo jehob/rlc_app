@@ -20,7 +20,7 @@ import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 
 import { MatSnackBar } from "@angular/material";
-import { ApiSandboxService } from "../../../services/api-sandbox.service";
+import { CoreSandboxService } from "../../../services/core-sandbox.service";
 import { RestrictedRlc } from "../../../models/rlc.model";
 import {
     dateInPastValidator,
@@ -42,13 +42,13 @@ export class RegisterComponent implements OnInit {
 
     constructor(
         private snackBar: MatSnackBar,
-        private apiSB: ApiSandboxService
+        private coreSB: CoreSandboxService
     ) {
 
     }
 
     ngOnInit() {
-        this.apiSB.startLoadingRlcs();
+        this.coreSB.startLoadingRlcs();
         const date = new Date();
         date.setFullYear(date.getFullYear() - 20);
         this.userForm = new FormGroup(
@@ -73,7 +73,7 @@ export class RegisterComponent implements OnInit {
             matchValidator("password", "password_confirm")
         );
 
-        this.apiSB.getAllRlcs().subscribe((rlcs: RestrictedRlc[]) => {
+        this.coreSB.getAllRlcs().subscribe((rlcs: RestrictedRlc[]) => {
             if (rlcs) {
                 this.allRlcs = rlcs;
             }
@@ -93,7 +93,7 @@ export class RegisterComponent implements OnInit {
                 name: values.name,
                 email: values.email,
                 password: values.password,
-                birthday: ApiSandboxService.transformDateToString(
+                birthday: CoreSandboxService.transformDateToString(
                     values.birthday
                 ),
                 rlc: values.rlc
@@ -105,7 +105,7 @@ export class RegisterComponent implements OnInit {
                 user["postal_code"] = values.postal_code;
             if (values.city !== "") user["city"] = values.city;
 
-            this.apiSB.registerUser(user);
+            this.coreSB.registerUser(user);
         }
     }
 }

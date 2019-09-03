@@ -18,7 +18,7 @@
 
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Params } from "@angular/router";
-import { ApiSandboxService } from "../../../services/api-sandbox.service";
+import { CoreSandboxService } from "../../../services/core-sandbox.service";
 
 @Component({
     selector: "app-activate-user",
@@ -29,7 +29,7 @@ export class ActivateUserComponent implements OnInit {
     activationLink: string;
 
     constructor(
-        private apiSB: ApiSandboxService,
+        private coreSB: CoreSandboxService,
         public route: ActivatedRoute
     ) {}
 
@@ -37,11 +37,11 @@ export class ActivateUserComponent implements OnInit {
         this.route.params.subscribe((params: Params) => {
             this.activationLink = params["link"];
 
-            this.apiSB.startCheckingUserActivationLink(this.activationLink);
+            this.coreSB.startCheckingUserActivationLink(this.activationLink);
         });
     }
 
     onActivateClick() {
-        this.apiSB.startAcceptingUser(this.activationLink);
+        this.coreSB.startAcceptingUser(this.activationLink);
     }
 }
