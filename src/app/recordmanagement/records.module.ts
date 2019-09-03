@@ -16,34 +16,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import { NgModule } from "@angular/core";
-import { StoreModule } from "@ngrx/store";
-import { EffectsModule } from "@ngrx/effects";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import {NgModule} from '@angular/core';
+import {StoreModule} from '@ngrx/store';
+import {EffectsModule} from '@ngrx/effects';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
-import { RecordsRoutingModule } from "./records-routing.module";
-import { RecordsListComponent } from "./pages/record-list/records-list.component";
-import { recordsReducer } from "./store/records.reducers";
-import { RecordsEffects } from "./store/effects/records.effects";
-import { CreateRecordComponent } from "./pages/create-record/create-record.component";
-import { SelectClientDialogComponent } from "./components/select-client-dialog/select-client-dialog.component";
-import { RecordsSandboxService } from "./services/records-sandbox.service";
-import { SharedModule } from "../shared/shared.module";
-import { RecordComponent } from "./pages/record/record.component";
-import { FullRecordDetailComponent } from "./components/records/full-record-detail/full-record-detail.component";
-import { RestrictedRecordDetailComponent } from "./components/records/restricted-record-detail/restricted-record-detail.component";
-import { UsersFieldComponent } from "./components/users-field/users-field.component";
-import { RecordDocumentsListComponent } from "./components/records/documents/record-documents-list/record-documents-list.component";
-import { RecordMessagesComponent } from "./components/records/messages/record-messages/record-messages.component";
-import { RecordMessageItemComponent } from "./components/records/messages/record-message-item/record-message-item.component";
-import { RecordsAddEffects } from "./store/effects/records-add.effects";
-import { RecordsLoadingEffects } from "./store/effects/records-loading.effects";
-import { RecordsPermitRequestsComponent } from "./pages/records-permit-requests/records-permit-requests.component";
-import {
-    RecordPermissionsProcessedPipe,
-    RecordPermissionsRequestedPipe
-} from "./pipes/record_permission.pipe";
-import { RecordDocumentItemDetailComponent } from './components/records/documents/record-document-item-detail/record-document-item-detail.component';
+import {RecordsRoutingModule} from './records-routing.module';
+import {RecordsListComponent} from './pages/record-list/records-list.component';
+import {recordsReducer} from './store/records.reducers';
+import {RecordsEffects} from './store/effects/records.effects';
+import {CreateRecordComponent} from './pages/create-record/create-record.component';
+import {SelectClientDialogComponent} from './components/select-client-dialog/select-client-dialog.component';
+import {RecordsSandboxService} from './services/records-sandbox.service';
+import {SharedModule} from '../shared/shared.module';
+import {RecordComponent} from './pages/record/record.component';
+import {FullRecordDetailComponent} from './components/records/full-record-detail/full-record-detail.component';
+import {RestrictedRecordDetailComponent} from './components/records/restricted-record-detail/restricted-record-detail.component';
+import {UsersFieldComponent} from './components/users-field/users-field.component';
+import {RecordDocumentsListComponent} from './components/records/documents/record-documents-list/record-documents-list.component';
+import {RecordMessagesComponent} from './components/records/messages/record-messages/record-messages.component';
+import {RecordMessageItemComponent} from './components/records/messages/record-message-item/record-message-item.component';
+import {RecordsAddEffects} from './store/effects/records-add.effects';
+import {RecordsLoadingEffects} from './store/effects/records-loading.effects';
+import {RecordsPermitRequestsComponent} from './pages/records-permit-requests/records-permit-requests.component';
+import {RecordPermissionsProcessedPipe, RecordPermissionsRequestedPipe} from './pipes/record_permission.pipe';
+import {RecordDocumentItemDetailComponent} from './components/records/documents/record-document-item-detail/record-document-item-detail.component';
 
 @NgModule({
     imports: [
@@ -51,7 +48,7 @@ import { RecordDocumentItemDetailComponent } from './components/records/document
         SharedModule,
         FormsModule,
         ReactiveFormsModule,
-        StoreModule.forFeature("records", recordsReducer),
+        StoreModule.forFeature('records', recordsReducer),
         EffectsModule.forFeature([
             RecordsEffects,
             RecordsAddEffects,
@@ -75,8 +72,7 @@ import { RecordDocumentItemDetailComponent } from './components/records/document
         RecordDocumentItemDetailComponent
     ],
     entryComponents: [SelectClientDialogComponent],
-     providers: [
-     ]
+    providers: []
 })
 export class RecordsModule {
     constructor(private recordSB: RecordsSandboxService) {
