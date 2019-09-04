@@ -71,7 +71,7 @@ export class RecordsSandboxService {
     constructor(
         private router: Router,
         private recordStore: Store<RecordsState>,
-        private apiStore: Store<CoreState>,
+        private coreStateStore: Store<CoreState>,
         private coreSB: CoreSandboxService,
         private snackbarService: SnackbarService,
         private storageService: StorageService,
@@ -282,7 +282,7 @@ export class RecordsSandboxService {
                 record_id = record.id;
             });
         let rlc_id = null;
-        this.apiStore
+        this.coreStateStore
             .pipe(select((state: any) => state.api.rlc))
             .subscribe(rlc => {
                 rlc_id = rlc.id;
@@ -313,7 +313,7 @@ export class RecordsSandboxService {
                 record_id = record.id;
             });
         let rlc_id = null;
-        this.apiStore
+        this.coreStateStore
             .pipe(select((state: any) => state.api.rlc))
             .subscribe(rlc => {
                 rlc_id = rlc.id;
