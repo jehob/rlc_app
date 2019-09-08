@@ -39,6 +39,7 @@ import { environment } from "../environments/environment";
 import { AppSandboxService } from "./core/services/app-sandbox.service";
 import { StorageService } from "./shared/services/storage.service";
 import { SnackbarService } from "./shared/services/snackbar.service";
+import {FilesSandboxService} from './filemanagement/services/files-sandbox.service';
 
 const reduxMiddleware = LogRocket.reduxMiddleware();
 
@@ -75,6 +76,7 @@ export function logrocketMiddleware(reducer): ActionReducer<any, any> {
         AppSandboxService,
         CoreSandboxService,
         RecordsSandboxService,
+        FilesSandboxService,
         StorageService,
         SnackbarService,
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }

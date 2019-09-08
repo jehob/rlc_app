@@ -16,21 +16,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import {Injectable} from '@angular/core';
-import {Router} from '@angular/router';
-import {CoreSandboxService} from '../../core/services/core-sandbox.service';
-import {SnackbarService} from '../../shared/services/snackbar.service';
 
-@Injectable({
-    providedIn: "root"
-})
-export class FilesSandboxSerivce {
-    constructor(
-        private router: Router,
-        private coreSB: CoreSandboxService,
-        private snachbackService: SnackbarService
-    ) {
+import {FilesActions, LOAD_FILES} from './files.actions';
 
-    }
+export interface FilesState {
+    files: any;
 }
 
+export const initialState: FilesState = {
+    files: {}
+};
+
+export function filesReducer(state = initialState, action: FilesActions) {
+    switch (action.type) {
+        case LOAD_FILES:
+            return {
+                ...state
+            };
+        default:
+            return state;
+    }
+}
