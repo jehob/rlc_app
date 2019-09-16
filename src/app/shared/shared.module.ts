@@ -23,8 +23,8 @@ import {CustomMaterialModule} from '../custom-material.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AutocompleteComponent} from './components/autocomplete/autocomplete.component';
 import {GetColorOnHoverDirective} from './directives/get-color-on-hover.directive';
-import { AutoExpandDirective } from './directives/auto-expand.directive';
-import { ExpandableButtonComponent } from './components/expandable-button/expandable-button.component';
+import {AutoExpandDirective} from './directives/auto-expand.directive';
+import {ExpandableButtonComponent} from './components/expandable-button/expandable-button.component';
 
 @NgModule({
     imports: [
@@ -41,7 +41,8 @@ import { ExpandableButtonComponent } from './components/expandable-button/expand
         AutocompleteComponent,
         GetColorOnHoverDirective,
         AutoExpandDirective,
-        ExpandableButtonComponent
+        ExpandableButtonComponent,
+        ReactiveFormsModule
     ]
 })
 export class SharedModule {

@@ -102,7 +102,7 @@ class UsersTests(TransactionTestCase):
         rlc = Rlc(name='rlc1')
         rlc.save()
         response = client.post(self.base_url_create, {
-            "email": "peter_parker@gmx.de",
+            "email": "peter_parker@gmx.to",
             'name': 'Peter Parker',
             'password': 'abc123',
             'rlc': rlc.id
