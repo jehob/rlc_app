@@ -110,6 +110,8 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             user.user_record_state = data['user_record_state']
         if request.user.is_superuser and 'email' in data:
             user.email = data['email']
+        if request.user.is_superuser and 'name' in data:
+            user.email = data['name']
         user.save()
         return Response(UserProfileSerializer(user).data)
 
@@ -132,12 +134,13 @@ class UserProfileCreatorViewSet(viewsets.ModelViewSet):
         # Check if email already in use
         if UserProfile.objects.filter(email=request.data['email']).count() > 0:
             raise CustomError(ERROR__API__EMAIL__ALREADY_IN_USE)
+        data['email'] = data['email'].lower()
 
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
 
-        user = UserProfile.objects.get(email=request.data['email'])
+        user = UserProfile.objects.get(email=request.data['email'].lower())
         if 'rlc' not in request.data:
             raise CustomError(ERROR__API__REGISTER__NO_RLC_PROVIDED)
         user.rlc = Rlc.objects.get(pk=request.data['rlc'])

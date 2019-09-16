@@ -31,24 +31,25 @@
 
     <mat-card-content>
         <div class="records-list__table-container">
-            <table mat-table [dataSource]="(records | async)">
+<!--            <table mat-table [dataSource]="(records | async)" matSort>-->
+            <table mat-table [dataSource]="dataSource" matSort>
                 <ng-container matColumnDef="access" class="records-list__access-container">
-                    <th mat-header-cell *matHeaderCellDef>access</th>
-                    <td mat-cell *matCellDef="let record; let i = index">
-                        <mat-icon *ngIf="fullAccess[i]; else not_visible" matTooltip="full access">visibility</mat-icon>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>access</th>
+                    <td mat-cell *matCellDef="let record">
+                        <mat-icon *ngIf="!record.is_restricted; else not_visible" matTooltip="full access">visibility</mat-icon>
                         <ng-template #not_visible>
                             <mat-icon matTooltip="restricted access">visibility_off</mat-icon>
                         </ng-template>
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="token">
-                    <th mat-header-cell *matHeaderCellDef>token</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>token</th>
                     <td mat-cell *matCellDef="let record" (click)="this.onRecordSelect(record)" class="is_clickable">
                         <p>{{ record.token }}</p>
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="state" class="records-list__state-container">
-                    <th mat-header-cell *matHeaderCellDef>state</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>state</th>
                     <td mat-cell *matCellDef="let record">
                         <div [ngSwitch]="record.state">
                             <div class="circle-indicator circle-indicator__green"

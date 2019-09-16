@@ -17,7 +17,7 @@
  ******************************************************************************/
 
 import {
-    Component, ElementRef,
+    Component,
     EventEmitter,
     Input,
     OnChanges,
@@ -35,6 +35,7 @@ import {MatAutocompleteTrigger} from '@angular/material';
     selector: "app-autocomplete",
     templateUrl: "./autocomplete.component.html",
     styleUrls: ["./autocomplete.component.scss"]
+
 })
 export class AutocompleteComponent implements OnInit, OnChanges {
     valueForm: FormGroup;

@@ -20,7 +20,7 @@ import { GetColorOnHoverDirective } from "./get-color-on-hover.directive";
 
 describe("GetColorOnHoverDirective", () => {
     it("should create an instance", () => {
-        const directive = new GetColorOnHoverDirective();
+        const directive = new GetColorOnHoverDirective(null);
         expect(directive).toBeTruthy();
     });
 });
