@@ -27,18 +27,19 @@ import LogRocket from "logrocket";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
-import { AuthGuardService } from "./api/services/auth-guard.service";
+import { AuthGuardService } from "./core/services/auth-guard.service";
 import { CustomMaterialModule } from "./custom-material.module";
 import { reducers } from "./store/app.reducers";
-import { AuthEffects } from "./api/store/auth/auth.effects";
-import { ApiSandboxService } from "./api/services/api-sandbox.service";
-import { ApiModule } from "./api/api.module";
+import { AuthEffects } from "./core/store/auth/auth.effects";
+import { CoreSandboxService } from "./core/services/core-sandbox.service";
+import { CoreModule } from "./core/core.module";
 import { RecordsSandboxService } from "./recordmanagement/services/records-sandbox.service";
-import { AuthInterceptor } from "./api/services/auth.interceptor";
+import { AuthInterceptor } from "./core/services/auth.interceptor";
 import { environment } from "../environments/environment";
-import { AppSandboxService } from "./api/services/app-sandbox.service";
+import { AppSandboxService } from "./core/services/app-sandbox.service";
 import { StorageService } from "./shared/services/storage.service";
 import { SnackbarService } from "./shared/services/snackbar.service";
+import {FilesSandboxService} from './filemanagement/services/files-sandbox.service';
 
 const reduxMiddleware = LogRocket.reduxMiddleware();
 
@@ -64,7 +65,7 @@ export function logrocketMiddleware(reducer): ActionReducer<any, any> {
         HttpClientModule,
         CustomMaterialModule,
         BrowserAnimationsModule,
-        ApiModule,
+        CoreModule,
         AppRoutingModule,
         StoreModule.forRoot(reducers, { metaReducers: [logrocketMiddleware] }),
         EffectsModule.forRoot([AuthEffects]),
@@ -73,8 +74,9 @@ export function logrocketMiddleware(reducer): ActionReducer<any, any> {
     providers: [
         AuthGuardService,
         AppSandboxService,
-        ApiSandboxService,
+        CoreSandboxService,
         RecordsSandboxService,
+        FilesSandboxService,
         StorageService,
         SnackbarService,
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }

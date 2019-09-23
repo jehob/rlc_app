@@ -18,8 +18,8 @@
 
 import { Component, Input, OnInit } from "@angular/core";
 import { RecordMessage } from "../../../../models/record_message.model";
-import {ApiSandboxService} from '../../../../../api/services/api-sandbox.service';
-import {FullUser} from '../../../../../api/models/user.model';
+import {CoreSandboxService} from '../../../../../core/services/core-sandbox.service';
+import {FullUser} from '../../../../../core/models/user.model';
 
 @Component({
     selector: "app-record-message-item",
@@ -32,11 +32,11 @@ export class RecordMessageItemComponent implements OnInit {
 
     ownMessage: boolean;
 
-    constructor(private apiSB: ApiSandboxService) {}
+    constructor(private coreSB: CoreSandboxService) {}
 
     ngOnInit() {
         let own = null;
-        this.apiSB.getUser().subscribe((user: FullUser) => {
+        this.coreSB.getUser().subscribe((user: FullUser) => {
             own = user.id;
         }).unsubscribe();
 

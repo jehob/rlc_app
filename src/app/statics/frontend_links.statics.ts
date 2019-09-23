@@ -16,10 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>
  ******************************************************************************/
 
-import {RestrictedUser} from '../api/models/user.model';
+import {RestrictedUser} from '../core/models/user.model';
 import {RestrictedRecord, TokenRecord} from '../recordmanagement/models/record.model';
-import {RestrictedGroup} from '../api/models/group.model';
-import {Permission} from '../api/models/permission.model';
+import {RestrictedGroup} from '../core/models/group.model';
+import {Permission} from '../core/models/permission.model';
 
 export const MAIN_PAGE_FRONT_URL = "";
 export const REGISTER_FRONT_URL = "register";

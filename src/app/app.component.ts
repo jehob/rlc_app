@@ -18,10 +18,10 @@
 
 import { Component, ViewChild } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
-import { AuthState } from "./api/store/auth/auth.reducers";
+import { AuthState } from "./core/store/auth/auth.reducers";
 import { Observable } from "rxjs";
 import LogRocket from "logrocket";
-import { AppSandboxService } from "./api/services/app-sandbox.service";
+import { AppSandboxService } from "./core/services/app-sandbox.service";
 
 import {MediaMatcher} from '@angular/cdk/layout';
 import {ChangeDetectorRef, OnDestroy} from '@angular/core';
@@ -50,7 +50,7 @@ export class AppComponent implements OnDestroy{
         private route: ActivatedRoute,
         private router: Router,
         private appSB: AppSandboxService,
-        changeDetectorRef: ChangeDetectorRef, 
+        changeDetectorRef: ChangeDetectorRef,
         media: MediaMatcher
     ) {
         this.authState = this.appSB.startApp();

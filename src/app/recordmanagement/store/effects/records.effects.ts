@@ -44,7 +44,7 @@ import {
 import { FullRecord, RestrictedRecord } from "../../models/record.model";
 import { Tag } from "../../models/tag.model";
 import { FullClient } from "../../models/client.model";
-import { AppSandboxService } from "../../../api/services/app-sandbox.service";
+import { AppSandboxService } from "../../../core/services/app-sandbox.service";
 import { RecordsSandboxService } from "../../services/records-sandbox.service";
 import { RecordPermissionRequest } from "../../models/record_permission.model";
 

@@ -22,7 +22,7 @@ import { HttpClient } from "@angular/common/http";
 import { from } from "rxjs";
 import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
 
-import { AppSandboxService } from "../../../api/services/app-sandbox.service";
+import { AppSandboxService } from "../../../core/services/app-sandbox.service";
 import {
     START_LOADING_CLIENT_POSSIBILITIES,
     START_LOADING_RECORD_PERMISSION_REQUESTS,
@@ -58,17 +58,17 @@ import {
     SET_SPECIAL_RECORD_DOCUMENTS,
     SET_SPECIAL_RECORD_MESSAGES, SET_SPECIAL_RECORD_REQUEST_STATE
 } from '../actions/records-set.actions';
-import { RestrictedUser } from "../../../api/models/user.model";
+import { RestrictedUser } from "../../../core/models/user.model";
 import { OriginCountry } from "../../models/country.model";
 import { Tag } from "../../models/tag.model";
-import { ApiSandboxService } from "../../../api/services/api-sandbox.service";
+import { CoreSandboxService } from "../../../core/services/core-sandbox.service";
 import { FullClient } from "../../models/client.model";
 import { RecordDocument } from "../../models/record_document.model";
 import { RecordMessage } from "../../models/record_message.model";
 import { RESET_FULL_CLIENT_INFORMATION } from "../actions/records.actions";
 import { RecordPermissionRequest } from "../../models/record_permission.model";
 import { SnackbarService } from "../../../shared/services/snackbar.service";
-import {State} from '../../../api/models/state.model';
+import {State} from '../../../core/models/state.model';
 
 @Injectable()
 export class RecordsLoadingEffects {
@@ -196,7 +196,7 @@ export class RecordsLoadingEffects {
             return from(
                 this.http
                     .post(CLIENTS_BY_BIRTHDAY_API_URL, {
-                        birthday: ApiSandboxService.transformDateToString(birthday)
+                        birthday: CoreSandboxService.transformDateToString(birthday)
                     })
                     .pipe(
                         catchError(error => {

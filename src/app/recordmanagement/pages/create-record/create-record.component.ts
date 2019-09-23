@@ -23,7 +23,7 @@ import {DateAdapter, MatDatepickerInputEvent, MatDialog} from '@angular/material
 import { SelectClientDialogComponent } from "../../components/select-client-dialog/select-client-dialog.component";
 import { FullClient } from "../../models/client.model";
 import { OriginCountry } from "../../models/country.model";
-import { RestrictedUser } from "../../../api/models/user.model";
+import { RestrictedUser } from "../../../core/models/user.model";
 import { Tag } from "../../models/tag.model";
 import { Observable } from "rxjs";
 import { dateInPastValidator } from "../../../statics/validators.statics";

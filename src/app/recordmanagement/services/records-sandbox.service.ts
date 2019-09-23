@@ -43,20 +43,20 @@ import {
 } from '../store/actions/records.actions';
 import { FullClient } from "../models/client.model";
 import { OriginCountry } from "../models/country.model";
-import { RestrictedUser } from "../../api/models/user.model";
+import { RestrictedUser } from "../../core/models/user.model";
 import { Tag } from "../models/tag.model";
-import { ApiSandboxService } from "../../api/services/api-sandbox.service";
+import { CoreSandboxService } from "../../core/services/core-sandbox.service";
 import { FullRecord, RestrictedRecord } from "../models/record.model";
 import { StorageService } from "../../shared/services/storage.service";
 import { SnackbarService } from "../../shared/services/snackbar.service";
-import { ApiState } from "../../api/store/api.reducers";
+import { CoreState } from "../../core/store/core.reducers";
 import { getRecordFolder } from "../../statics/storage_folders.statics";
 import { RecordPermissionRequest } from "../models/record_permission.model";
 import {
     GetRecordFrontUrl,
     RECORDS_FRONT_URL
 } from "../../statics/frontend_links.statics";
-import { State } from "../../api/models/state.model";
+import { State } from "../../core/models/state.model";
 
 @Injectable({
     providedIn: "root"
@@ -71,8 +71,8 @@ export class RecordsSandboxService {
     constructor(
         private router: Router,
         private recordStore: Store<RecordsState>,
-        private apiStore: Store<ApiState>,
-        private apiSB: ApiSandboxService,
+        private coreStateStore: Store<CoreState>,
+        private coreSB: CoreSandboxService,
         private snackbarService: SnackbarService,
         private storageService: StorageService,
         private location: Location
@@ -230,7 +230,7 @@ export class RecordsSandboxService {
             };
         } else {
             newRecord = {
-                client_birthday: ApiSandboxService.transformDateToString(
+                client_birthday: CoreSandboxService.transformDateToString(
                     new Date(createFormValues.client_birthday)
                 ),
                 client_name: createFormValues.client_name
@@ -240,7 +240,7 @@ export class RecordsSandboxService {
             ...newRecord,
             client_phone_number: createFormValues.client_phone_number,
             client_note: createFormValues.client_note,
-            first_contact_date: ApiSandboxService.transformDateToString(
+            first_contact_date: CoreSandboxService.transformDateToString(
                 new Date(createFormValues.first_contact_date)
             ),
             record_token: createFormValues.record_token,
@@ -256,13 +256,13 @@ export class RecordsSandboxService {
     }
 
     successfullyCreatedRecord(response: any) {
-        this.apiSB.showSuccessSnackBar("you successfully created the record");
+        this.coreSB.showSuccessSnackBar("you successfully created the record");
         this.router.navigate([RECORDS_FRONT_URL]);
         // do more
     }
 
     successfullySavedRecord(response: any) {
-        this.apiSB.showSuccessSnackBar("you successfully saved the record");
+        this.coreSB.showSuccessSnackBar("you successfully saved the record");
         // do more
     }
 
@@ -282,7 +282,7 @@ export class RecordsSandboxService {
                 record_id = record.id;
             });
         let rlc_id = null;
-        this.apiStore
+        this.coreStateStore
             .pipe(select((state: any) => state.api.rlc))
             .subscribe(rlc => {
                 rlc_id = rlc.id;
@@ -313,7 +313,7 @@ export class RecordsSandboxService {
                 record_id = record.id;
             });
         let rlc_id = null;
-        this.apiStore
+        this.coreStateStore
             .pipe(select((state: any) => state.api.rlc))
             .subscribe(rlc => {
                 rlc_id = rlc.id;
@@ -340,7 +340,7 @@ export class RecordsSandboxService {
     }
 
     showError(error_message: string) {
-        this.apiSB.showErrorSnackBar(error_message);
+        this.coreSB.showErrorSnackBar(error_message);
     }
 
     startSettingDocumentTags(tags: Tag[], document_id: string) {
