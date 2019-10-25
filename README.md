@@ -1,5 +1,13 @@
 # Refuge Law Clinic - Application (rlc_app)
 
+Project moved to two seperate repositories!
+
+Backend: https://github.com/jehob/law-orga-backend/
+
+Frontend: https://github.com/jehob/law-orga-frontend
+
+________________
+
 Application for record and association management of refugee law clinics in germany.
 Contact Dominik Walser (jehob) for more information (dominik.walser@rlcm.de).
 
@@ -18,3 +26,4 @@ GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>
+
